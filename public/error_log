@@ -1,0 +1,4 @@
+[07-Dec-2024 19:29:48 UTC] PHP Warning:  require(/home/astrisde/dev-mode.yazen.ma/public../vendor/autoload.php): failed to open stream: No such file or directory in /home/astrisde/dev-mode.yazen.ma/public/index.php on line 34
+[07-Dec-2024 19:29:48 UTC] PHP Fatal error:  require(): Failed opening required '/home/astrisde/dev-mode.yazen.ma/public../vendor/autoload.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/astrisde/dev-mode.yazen.ma/public/index.php on line 34
+[07-Dec-2024 19:31:19 UTC] PHP Warning:  require(/home/astrisde/dev-mode.yazen.ma/public../vendor/autoload.php): failed to open stream: No such file or directory in /home/astrisde/dev-mode.yazen.ma/public/index.php on line 34
+[07-Dec-2024 19:31:19 UTC] PHP Fatal error:  require(): Failed opening required '/home/astrisde/dev-mode.yazen.ma/public../vendor/autoload.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/astrisde/dev-mode.yazen.ma/public/index.php on line 34

@@ -1,0 +1,134 @@
+p {
+    margin-bottom: 1rem;
+}
+
+.icon {
+    margin-right: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+/* Booking Process */
+.booking-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.step {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.step .number {
+    width: 40px;
+    height: 40px;
+    background-color: #eeb543;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+}
+
+.service-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.service-card {
+    padding: 1.5rem;
+    border: 1px solid #e7e7e7;
+    border-radius: 8px;
+}
+
+.service-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.service-card ul {
+    margin-left: 1.5rem;
+}
+
+.service-card li {
+    margin-bottom: 0.5rem;
+}
+
+/* List Styles */
+.feature-list,
+.standards-list,
+.support-list,
+.legal-list,
+.approval-list {
+    margin-left: 1.5rem;
+    margin-bottom: 1.5rem;
+    list-style-type: disc;
+}
+
+.feature-list li,
+.standards-list li,
+.support-list li,
+.legal-list li,
+.approval-list li {
+    margin-bottom: 0.75rem;
+}
+
+/* CTA Button */
+.cta-button {
+    display: inline-block;
+    background-color: #22574d;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #1a453d;
+    transform: translateY(-2px);
+}
+
+/* Section Colors */
+.who-we-are,
+.pricing-section,
+.quality-section,
+.transparency-section,
+.legal-section {
+    background-color: white;
+}
+
+.booking-process,
+.trust-section,
+.support-section,
+.listing-cta,
+.final-cta {
+    background-color: #f8f9fa;
+}
+
+/* Mission Statement */
+.mission-statement {
+    font-size: 1.25rem;
+    font-style: italic;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .booking-steps {
+        grid-template-columns: 1fr;
+    }
+}

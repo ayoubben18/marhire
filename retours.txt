@@ -1,0 +1,16 @@
+Landing Page
+------------------------------
+- titre en bleu      DONE
+- +390 to +400       DONE
+- map pin logo       DONE
+- speed icon         DONE
+- Supprimer API      DONE
+
+Dashboard
+--------------------------------------------------------------
+- colis - livre- en cours - echoue : ajouter dans un container separe  DONE
+- configuration villes DONE
+- chart (Livré, retourné) DONE
+- notification de bon retour et gestion envoi livreur DONE
+- Taux colis DONE
+- QR Scan au dashboard DONE

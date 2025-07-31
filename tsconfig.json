@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "allowJs": true,
+        "checkJs": false,
+        "jsx": "react-jsx",
+        "types": ["react", "react-dom", "tailwindcss"],
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "skipLibCheck": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./resources/js/*"]
+        }
+    },
+    "include": [
+        "./resources/**/*.css",
+        "./resources/**/*.blade.php",
+        "resources/**/*.tsx",
+        "resources/**/*.ts"
+, "resources/**/*.jsx"    ],
+    "exclude": ["node_modules"]
+}

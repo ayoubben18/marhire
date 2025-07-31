@@ -1,0 +1,35 @@
+.badge-secondary{
+background-color: #dce3e8 !important;
+border-color: #dce3e8 !important;
+color: #5b7282 !important;
+}
+.badge-warning{
+background-color: #faf6cf !important;
+border-color: #faf6cf !important;
+color: #1c2b36 !important;
+}
+.badge-success{
+background-color: #c7ebd1 !important;
+border-color: #c7ebd1 !important;
+color: #075e45 !important;
+}
+.badge-danger{
+background-color: #fadcd9 !important;
+border-color: #fadcd9 !important;
+color: #a1160a !important;
+}
+.badge-blue{
+background-color: #c7e5eb !important;
+border-color: #c7e5eb !important;
+color: #0888a2 !important;
+}
+.badge-orange{
+background-color: #ffe7c4 !important;
+border-color: #ffe7c4 !important;
+color: #c67600 !important;
+}
+.badge-op2{
+background-color: #ffdbdb !important;
+border-color: #ffdbdb !important;
+color: #0080db !important;
+}
