@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { MapPin, Calendar, Search, ChevronDown, Anchor } from "lucide-react";
+import { MapPin, Calendar, Search, ChevronDown, Anchor, Clock, Users, Info, ChevronLeft, ChevronRight } from "lucide-react";
 import LocationModal from "./LocationModal";
+import TimeModal from "./TimeModal";
 
 const BoatForm = () => {
     const [destination, setDestination] = useState("");
@@ -11,11 +12,23 @@ const BoatForm = () => {
     const [showBoatTypes, setShowBoatTypes] = useState(false);
     const [isSelectingEndDate, setIsSelectingEndDate] = useState(false);
     const [showDestinationModal, setShowDestinationModal] = useState(false);
+    const [time, setTime] = useState("");
+    const [showTimeModal, setShowTimeModal] = useState(false);
+    const [peopleCount, setPeopleCount] = useState(1);
+    const [showPeopleModal, setShowPeopleModal] = useState(false);
+    const [currentDate, setCurrentDate] = useState(new Date());
+    
+    const navigateMonth = (direction) => {
+        const newDate = new Date(currentDate);
+        newDate.setMonth(currentDate.getMonth() + direction);
+        setCurrentDate(newDate);
+    };
 
     const boatTypes = [
         { id: "any", name: "Any type" },
-        { id: "yakht", name: "Yacht" },
+        { id: "yacht", name: "Yacht" },
         { id: "speedboat", name: "Speedboat" },
+        { id: "sailboat", name: "Sailboat" },
         { id: "custom", name: "Custom" },
     ];
 
@@ -34,12 +47,8 @@ const BoatForm = () => {
     };
 
     const getDateRangeText = () => {
-        if (!startDate && !endDate) return "Jul 15 - Jul 16";
-        if (startDate && !endDate)
-            return `${formatDate(startDate)} - Select end date`;
-        if (startDate && endDate)
-            return `${formatDate(startDate)} - ${formatDate(endDate)}`;
-        return "Select dates";
+        if (!startDate) return "Select date";
+        return formatDate(startDate);
     };
 
     const handleDateClick = () => {
@@ -59,26 +68,30 @@ const BoatForm = () => {
     };
 
     const handleDateSelect = (selectedDate) => {
-        if (!startDate || isSelectingEndDate) {
-            if (!startDate) {
-                setStartDate(selectedDate);
-                setIsSelectingEndDate(true);
-            } else {
-                setEndDate(selectedDate);
-                setShowCalendar(false);
-                setIsSelectingEndDate(false);
+        setStartDate(selectedDate);
+        setEndDate(selectedDate); // For boat rentals, single day booking
+        
+        // Auto-set time to first available hour (48hr advance for boats)
+        const now = new Date();
+        const minBookingDateTime = new Date(now);
+        minBookingDateTime.setHours(minBookingDateTime.getHours() + 48);
+        
+        // Find first available hour between 8am-8pm for boats
+        for (let hour = 8; hour <= 20; hour++) {
+            const selectedDateTime = new Date(`${selectedDate} ${hour.toString().padStart(2, '0')}:00`);
+            if (selectedDateTime >= minBookingDateTime) {
+                setTime(`${hour.toString().padStart(2, '0')}:00`);
+                break;
             }
-        } else {
-            setStartDate(selectedDate);
-            setEndDate("");
-            setIsSelectingEndDate(true);
         }
+        
+        setShowCalendar(false);
+        setIsSelectingEndDate(false);
     };
 
     const generateCalendarDays = () => {
-        const today = new Date();
-        const currentMonth = today.getMonth();
-        const currentYear = today.getFullYear();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
         const firstDay = new Date(currentYear, currentMonth, 1);
         const lastDay = new Date(currentYear, currentMonth + 1, 0);
         const daysInMonth = lastDay.getDate();
@@ -115,11 +128,28 @@ const BoatForm = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
+        
+        const searchParams = {
+            category: 4, // Boat rental category
+            boat_type: selectedBoatType,
+            city: destination,
+            date: startDate,
+            time: time,
+            people: peopleCount,
+            start_date: startDate,
+            end_date: endDate,
+        };
+        
+        // Store in session storage
+        sessionStorage.setItem('searchParams', JSON.stringify(searchParams));
+        
         const params = new URLSearchParams({
             destination: destination,
             boat_type: selectedBoatType,
             start_date: startDate,
             end_date: endDate,
+            time: time,
+            people: peopleCount,
         });
 
         window.location.href = `/boat-search?${params.toString()}`;
@@ -127,10 +157,12 @@ const BoatForm = () => {
 
     useEffect(() => {
         console.log("Destination: ", getParam("destination") || "");
-        setSelectedBoatType(getParam("boat_type") || "Any Type");
+        setSelectedBoatType(getParam("boat_type") || "Any type");
         setDestination(getParam("destination") || "");
         setStartDate(getParam("start_date") || "");
         setEndDate(getParam("end_date") || "");
+        setTime(getParam("time") || "");
+        setPeopleCount(parseInt(getParam("people") || "1"));
     }, []);
 
     return (
@@ -245,14 +277,36 @@ const BoatForm = () => {
                         <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-50 p-4 w-80">
                             <div className="mb-4">
                                 <h3 className="font-semibold text-gray-800 mb-2">
-                                    {!startDate
-                                        ? "Select start date"
-                                        : isSelectingEndDate
-                                        ? "Select end date"
-                                        : "Select dates"}
+                                    Select rental date
                                 </h3>
-                                <div className="text-sm text-gray-600">
-                                    July 2025
+                                <div className="flex items-center justify-between">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigateMonth(-1);
+                                        }}
+                                        className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                                    >
+                                        <ChevronLeft className="w-5 h-5 text-gray-600" />
+                                    </button>
+                                    <div className="text-sm text-gray-600">
+                                        {(() => {
+                                            const monthNames = [
+                                                "January", "February", "March", "April", "May", "June",
+                                                "July", "August", "September", "October", "November", "December"
+                                            ];
+                                            return `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+                                        })()}
+                                    </div>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            navigateMonth(1);
+                                        }}
+                                        className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                                    >
+                                        <ChevronRight className="w-5 h-5 text-gray-600" />
+                                    </button>
                                 </div>
                             </div>
 
@@ -291,9 +345,14 @@ const BoatForm = () => {
                                     const { day, dateStr } = dayObj;
                                     const isSelected = isDateSelected(dateStr);
                                     const isInRange = isDateInRange(dateStr);
-                                    const isPast =
-                                        new Date(dateStr) <
-                                        new Date().setHours(0, 0, 0, 0);
+                                    
+                                    // Check if date is at least 48 hours in advance for boats
+                                    const twoDaysAhead = new Date();
+                                    twoDaysAhead.setDate(twoDaysAhead.getDate() + 2);
+                                    twoDaysAhead.setHours(0, 0, 0, 0);
+                                    const dayStart = new Date(dateStr);
+                                    dayStart.setHours(0, 0, 0, 0);
+                                    const isPast = dayStart < twoDaysAhead;
 
                                     return (
                                         <button
@@ -347,8 +406,53 @@ const BoatForm = () => {
                                     Done
                                 </button>
                             </div>
+                            
+                            {/* Constraint info */}
+                            <div className="mt-3 p-2 bg-blue-50 rounded-lg">
+                                <div className="flex items-start gap-2">
+                                    <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                                    <div className="text-xs text-blue-700">
+                                        <p className="font-medium">Booking Requirements:</p>
+                                        <p>• Minimum 48 hours advance booking</p>
+                                        <p>• Flexible multi-day rentals available</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
+                </div>
+
+                {/* Time Field */}
+                <div className="w-full lg:w-32 relative">
+                    <div
+                        onClick={() => setShowTimeModal(true)}
+                        className="w-full px-4 py-4 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 transition-all duration-200 bg-white flex items-center justify-between"
+                    >
+                        <div className="flex items-center gap-2">
+                            <Clock className="text-gray-400 w-5 h-5" />
+                            <span className="text-gray-900">{time}</span>
+                        </div>
+                    </div>
+                    <TimeModal
+                        open={showTimeModal}
+                        onSelect={(selectedTime) => setTime(selectedTime)}
+                        onClose={() => setShowTimeModal(false)}
+                        selectedDate={startDate}
+                        minHoursAdvance={48}
+                    />
+                </div>
+
+                {/* People Count Field */}
+                <div className="w-full lg:w-40 relative">
+                    <div
+                        onClick={() => setShowPeopleModal(true)}
+                        className="w-full px-4 py-4 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 transition-all duration-200 bg-white flex items-center justify-between"
+                    >
+                        <div className="flex items-center gap-2">
+                            <Users className="text-gray-400 w-5 h-5" />
+                            <span className="text-gray-900">{peopleCount} {peopleCount === 1 ? 'person' : 'people'}</span>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Search Button */}
@@ -363,12 +467,47 @@ const BoatForm = () => {
                 </div>
             </div>
 
-            {(showCalendar || showDestinationModal) && (
+            {/* People Count Modal */}
+            {showPeopleModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30" onClick={() => setShowPeopleModal(false)}>
+                    <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-xs relative" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="text-lg font-semibold mb-4 text-center">Number of People</h3>
+                        <div className="flex items-center justify-center space-x-4">
+                            <button
+                                type="button"
+                                onClick={() => setPeopleCount((prev) => Math.max(1, prev - 1))}
+                                className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-bold text-2xl"
+                                disabled={peopleCount <= 1}
+                            >
+                                -
+                            </button>
+                            <span className="text-2xl font-bold">{peopleCount}</span>
+                            <button
+                                type="button"
+                                onClick={() => setPeopleCount((prev) => Math.min(50, prev + 1))}
+                                className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-bold text-2xl"
+                                disabled={peopleCount >= 50}
+                            >
+                                +
+                            </button>
+                        </div>
+                        <button
+                            className="mt-6 w-full py-2 rounded-lg bg-green-600 text-white font-semibold transition"
+                            onClick={() => setShowPeopleModal(false)}
+                        >
+                            Done
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {(showCalendar || showDestinationModal || showTimeModal) && (
                 <div
                     className="fixed inset-0 z-40"
                     onClick={() => {
-                        setShowCalendar(null);
+                        setShowCalendar(false);
                         setShowDestinationModal(false);
+                        setShowTimeModal(false);
                     }}
                 />
             )}

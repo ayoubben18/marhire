@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MapPin, Calendar, Search } from "lucide-react";
+import { MapPin, Calendar, Search, Users, Clock, Info, ChevronLeft, ChevronRight } from "lucide-react";
 import LocationModal from "./LocationModal";
 
 const ThingsToDoForm = () => {
@@ -9,6 +9,17 @@ const ThingsToDoForm = () => {
     const [showCalendar, setShowCalendar] = useState(false);
     const [showDestinationModal, setShowDestinationModal] = useState(false);
     const [isSelectingEndDate, setIsSelectingEndDate] = useState(false);
+    const [peopleCount, setPeopleCount] = useState(1);
+    const [showPeopleModal, setShowPeopleModal] = useState(false);
+    const [timePreference, setTimePreference] = useState("morning");
+    const [showTimeModal, setShowTimeModal] = useState(false);
+    const [currentDate, setCurrentDate] = useState(new Date());
+    
+    const navigateMonth = (direction) => {
+        const newDate = new Date(currentDate);
+        newDate.setMonth(currentDate.getMonth() + direction);
+        setCurrentDate(newDate);
+    };
 
     const formatDate = (dateString) => {
         if (!dateString) return "";
@@ -20,18 +31,24 @@ const ThingsToDoForm = () => {
     };
 
     const getDateRangeText = () => {
-        if (!startDate && !endDate) return "Jul 15 - Jul 16";
-        if (startDate && !endDate)
-            return `${formatDate(startDate)} - Select end date`;
-        if (startDate && endDate)
-            return `${formatDate(startDate)} - ${formatDate(endDate)}`;
-        return "Select dates";
+        if (!startDate) return "Select date";
+        return formatDate(startDate);
+    };
+    
+    const getMonthYearDisplay = () => {
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        return `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
     };
 
     useEffect(() => {
         setDestination(getParam('destination') || '');
         setStartDate(getParam('start_date') || '');
         setEndDate(getParam('end_date') || '');
+        setPeopleCount(parseInt(getParam('people') || '1'));
+        setTimePreference(getParam('time_preference') || 'morning');
     }, []);
 
     const handleDateClick = () => {
@@ -45,28 +62,39 @@ const ThingsToDoForm = () => {
     };
 
     const handleDateSelect = (selectedDate) => {
-        if (!startDate || isSelectingEndDate) {
-            if (!startDate) {
-                setStartDate(selectedDate);
-                setIsSelectingEndDate(true);
-            } else {
-                setEndDate(selectedDate);
-                setShowCalendar(false);
-                setIsSelectingEndDate(false);
-            }
-        } else {
-            setStartDate(selectedDate);
-            setEndDate("");
-            setIsSelectingEndDate(true);
-        }
+        setStartDate(selectedDate);
+        setEndDate(selectedDate); // For activities, end date is same as start date
+        
+        // Note: Time preference is handled differently for Things to Do
+        // It uses morning/afternoon/evening preference instead of specific times
+        // The timePreference state is already set separately
+        
+        setShowCalendar(false);
+        setIsSelectingEndDate(false);
     };
 
     const handleSearch = (e) => {
         e.preventDefault();
+        
+        const searchParams = {
+            category: 5, // Things to do category
+            date: startDate,
+            people: peopleCount,
+            time_preference: timePreference,
+            destination: destination,
+            start_date: startDate,
+            end_date: endDate,
+        };
+        
+        // Store in session storage
+        sessionStorage.setItem('searchParams', JSON.stringify(searchParams));
+        
         const params = new URLSearchParams({
             destination: destination,
             start_date: startDate,
             end_date: endDate,
+            people: peopleCount,
+            time_preference: timePreference,
         });
 
         window.location.href = `/thingstodo-search?${params.toString()}`;
@@ -74,9 +102,8 @@ const ThingsToDoForm = () => {
 
     // Generate calendar days for current month
     const generateCalendarDays = () => {
-        const today = new Date();
-        const currentMonth = today.getMonth();
-        const currentYear = today.getFullYear();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
         const firstDay = new Date(currentYear, currentMonth, 1);
         const lastDay = new Date(currentYear, currentMonth + 1, 0);
         const daysInMonth = lastDay.getDate();
@@ -160,14 +187,30 @@ const ThingsToDoForm = () => {
                     <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-50 p-4 w-80">
                         <div className="mb-4">
                             <h3 className="font-semibold text-gray-800 mb-2">
-                                {!startDate
-                                    ? "Select start date"
-                                    : isSelectingEndDate
-                                    ? "Select end date"
-                                    : "Select dates"}
+                                Select activity date
                             </h3>
-                            <div className="text-sm text-gray-600">
-                                July 2025
+                            <div className="flex items-center justify-between">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigateMonth(-1);
+                                    }}
+                                    className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                                >
+                                    <ChevronLeft className="w-5 h-5 text-gray-600" />
+                                </button>
+                                <div className="text-sm text-gray-600">
+                                    {getMonthYearDisplay()}
+                                </div>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigateMonth(1);
+                                    }}
+                                    className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                                >
+                                    <ChevronRight className="w-5 h-5 text-gray-600" />
+                                </button>
                             </div>
                         </div>
 
@@ -203,9 +246,14 @@ const ThingsToDoForm = () => {
                                 const { day, dateStr } = dayObj;
                                 const isSelected = isDateSelected(dateStr);
                                 const isInRange = isDateInRange(dateStr);
-                                const isPast =
-                                    new Date(dateStr) <
-                                    new Date().setHours(0, 0, 0, 0);
+                                
+                                // Check if date is at least 48 hours in advance for activities
+                                const twoDaysAhead = new Date();
+                                twoDaysAhead.setDate(twoDaysAhead.getDate() + 2);
+                                twoDaysAhead.setHours(0, 0, 0, 0);
+                                const dayStart = new Date(dateStr);
+                                dayStart.setHours(0, 0, 0, 0);
+                                const isPast = dayStart < twoDaysAhead;
 
                                 return (
                                     <button
@@ -258,8 +306,46 @@ const ThingsToDoForm = () => {
                                 Done
                             </button>
                         </div>
+                        
+                        {/* Constraint info */}
+                        <div className="mt-3 p-2 bg-blue-50 rounded-lg">
+                            <div className="flex items-start gap-2">
+                                <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                                <div className="text-xs text-blue-700">
+                                    <p className="font-medium">Booking Requirements:</p>
+                                    <p>• Minimum 48 hours advance booking</p>
+                                    <p>• Flexible date selection for activities</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 )}
+            </div>
+
+            {/* People Count Field */}
+            <div className="w-full lg:w-40 relative">
+                <div
+                    onClick={() => setShowPeopleModal(true)}
+                    className="w-full px-4 py-4 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 transition-all duration-200 bg-white flex items-center justify-between"
+                >
+                    <div className="flex items-center gap-2">
+                        <Users className="text-gray-400 w-5 h-5" />
+                        <span className="text-gray-900">{peopleCount} {peopleCount === 1 ? 'person' : 'people'}</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Time Preference Field */}
+            <div className="w-full lg:w-40 relative">
+                <div
+                    onClick={() => setShowTimeModal(true)}
+                    className="w-full px-4 py-4 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 transition-all duration-200 bg-white flex items-center justify-between"
+                >
+                    <div className="flex items-center gap-2">
+                        <Clock className="text-gray-400 w-5 h-5" />
+                        <span className="text-gray-900 capitalize">{timePreference}</span>
+                    </div>
+                </div>
             </div>
 
             {/* Search Button */}
@@ -273,11 +359,72 @@ const ThingsToDoForm = () => {
                 </button>
             </div>
 
+            {/* People Count Modal */}
+            {showPeopleModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30" onClick={() => setShowPeopleModal(false)}>
+                    <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-xs relative" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="text-lg font-semibold mb-4 text-center">Number of People</h3>
+                        <div className="flex items-center justify-center space-x-4">
+                            <button
+                                type="button"
+                                onClick={() => setPeopleCount((prev) => Math.max(1, prev - 1))}
+                                className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-bold text-2xl"
+                                disabled={peopleCount <= 1}
+                            >
+                                -
+                            </button>
+                            <span className="text-2xl font-bold">{peopleCount}</span>
+                            <button
+                                type="button"
+                                onClick={() => setPeopleCount((prev) => Math.min(50, prev + 1))}
+                                className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-bold text-2xl"
+                                disabled={peopleCount >= 50}
+                            >
+                                +
+                            </button>
+                        </div>
+                        <button
+                            className="mt-6 w-full py-2 rounded-lg bg-green-600 text-white font-semibold transition"
+                            onClick={() => setShowPeopleModal(false)}
+                        >
+                            Done
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Time Preference Modal */}
+            {showTimeModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30" onClick={() => setShowTimeModal(false)}>
+                    <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-xs relative" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="text-lg font-semibold mb-4 text-center">Preferred Time</h3>
+                        <div className="space-y-2">
+                            {['morning', 'afternoon', 'evening', 'night'].map(time => (
+                                <button
+                                    key={time}
+                                    onClick={() => {
+                                        setTimePreference(time);
+                                        setShowTimeModal(false);
+                                    }}
+                                    className={`w-full py-3 px-4 rounded-lg transition ${
+                                        timePreference === time 
+                                            ? 'bg-green-600 text-white' 
+                                            : 'bg-gray-100 hover:bg-gray-200 text-gray-900'
+                                    }`}
+                                >
+                                    <span className="capitalize">{time}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {(showCalendar || showDestinationModal) && (
                 <div
                     className="fixed inset-0 z-40"
                     onClick={() => {
-                        setShowCalendar(null);
+                        setShowCalendar(false);
                         setShowDestinationModal(false);
                     }}
                 />

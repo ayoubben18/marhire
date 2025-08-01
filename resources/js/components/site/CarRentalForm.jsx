@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, MapPin, Clock, ChevronDown, Search } from "lucide-react";
+import { Calendar, MapPin, Clock, ChevronDown, Search, Info, ChevronLeft, ChevronRight } from "lucide-react";
 import { IoLocationOutline } from "react-icons/io5";
 import { useMediaQuery } from "react-responsive";
 import axios from "axios";
@@ -8,18 +8,20 @@ import TimeModal from "./TimeModal";
 export default function CarRentalForm() {
     const [pickupLocation, setPickupLocation] = useState("");
     const [dropoffLocation, setDropoffLocation] = useState("Same as pickup");
-    const [pickupDate, setPickupDate] = useState("2025-06-25");
-    const [pickupTime, setPickupTime] = useState("10:00");
-    const [dropoffDate, setDropoffDate] = useState("2025-06-28");
-    const [dropoffTime, setDropoffTime] = useState("10:00");
+    const [pickupDate, setPickupDate] = useState("");
+    const [pickupTime, setPickupTime] = useState("");
+    const [dropoffDate, setDropoffDate] = useState("");
+    const [dropoffTime, setDropoffTime] = useState("");
     const [showPickupModal, setShowPickupModal] = useState(false);
     const [showDropOffModal, setShowDropOffModal] = useState(false);
     const [showCalendar, setShowCalendar] = useState(null);
     const [showPickupTimeModal, setShowPickupTimeModal] = useState(false);
     const [showDropOffTimeModal, setShowDropOffTimeModal] = useState(false);
+    const [dateError, setDateError] = useState("");
     const isMobile = useMediaQuery({ maxWidth: 900 });
 
     const formatDate = (dateString) => {
+        if (!dateString) return "Select date";
         const date = new Date(dateString);
         const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         const months = [
@@ -71,7 +73,14 @@ export default function CarRentalForm() {
         return urlParams.get(name);
     };
 
-    const currentDate = new Date();
+    const [currentDate, setCurrentDate] = useState(new Date());
+    
+    const navigateMonth = (direction) => {
+        const newDate = new Date(currentDate);
+        newDate.setMonth(currentDate.getMonth() + direction);
+        setCurrentDate(newDate);
+    };
+    
     const calendarDays = generateCalendarDays(
         currentDate.getFullYear(),
         currentDate.getMonth()
@@ -131,14 +140,28 @@ export default function CarRentalForm() {
     );
 
     function formatYMD(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
+        const d = new Date(date);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
         return `${year}-${month}-${day}`;
     }
 
     const handleSearch = (e) => {
         e.preventDefault();
+        const searchParams = {
+            category: 2, // Car rental category
+            pickup_location: pickupLocation,
+            dropoff_location: dropoffLocation,
+            pickup_date: pickupDate,
+            dropoff_date: dropoffDate,
+            pickup_time: pickupTime,
+            dropoff_time: dropoffTime,
+        };
+        
+        // Store in session storage
+        sessionStorage.setItem('searchParams', JSON.stringify(searchParams));
+        
         const params = new URLSearchParams({
             pickup: pickupLocation,
             dropoff: dropoffLocation,
@@ -152,19 +175,12 @@ export default function CarRentalForm() {
     };
 
     useEffect(() => {
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
-
-        const dropoff = new Date(tomorrow);
-        dropoff.setDate(tomorrow.getDate() + 3);
-
         setPickupLocation(getParam("pickup") || "");
         setDropoffLocation(getParam("dropoff") || "Same as pickup");
-        setPickupDate(getParam("pickup_date") || formatYMD(tomorrow));
-        setDropoffDate(getParam("dropoff_date") || formatYMD(dropoff));
-        setPickupTime(getParam("pickup_time") || "10:00");
-        setDropoffTime(getParam("dropoff_time") || "10:00");
+        setPickupDate(getParam("pickup_date") || "");
+        setDropoffDate(getParam("dropoff_date") || "");
+        setPickupTime(getParam("pickup_time") || "");
+        setDropoffTime(getParam("dropoff_time") || "");
     }, []);
 
     return (
@@ -247,6 +263,15 @@ export default function CarRentalForm() {
                             {showCalendar === "pickup" && (
                                 <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl p-4 z-[100] w-80">
                                     <div className="flex items-center justify-between mb-4">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                navigateMonth(-1);
+                                            }}
+                                            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                                        >
+                                            <ChevronLeft className="w-5 h-5 text-gray-600" />
+                                        </button>
                                         <h3 className="font-semibold text-gray-900">
                                             {currentDate.toLocaleDateString(
                                                 "en-US",
@@ -256,6 +281,15 @@ export default function CarRentalForm() {
                                                 }
                                             )}
                                         </h3>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                navigateMonth(1);
+                                            }}
+                                            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                                        >
+                                            <ChevronRight className="w-5 h-5 text-gray-600" />
+                                        </button>
                                     </div>
 
                                     <div className="grid grid-cols-7 gap-1 mb-2">
@@ -283,26 +317,58 @@ export default function CarRentalForm() {
                                                 day.getMonth() ===
                                                 currentDate.getMonth();
                                             const isSelected =
-                                                day
-                                                    .toISOString()
-                                                    .split("T")[0] ===
-                                                pickupDate;
+                                                formatYMD(day) === pickupDate;
                                             const isToday =
                                                 day.toDateString() ===
                                                 new Date().toDateString();
+
+                                            // Check if date is at least 24 hours in advance
+                                            const now = new Date();
+                                            const tomorrow = new Date();
+                                            tomorrow.setDate(tomorrow.getDate() + 1);
+                                            tomorrow.setHours(0, 0, 0, 0);
+                                            
+                                            const dayStart = new Date(day);
+                                            dayStart.setHours(0, 0, 0, 0);
+                                            
+                                            // Disable all dates before tomorrow (24hr advance requirement)
+                                            const isDisabled = dayStart < tomorrow;
 
                                             return (
                                                 <button
                                                     key={index}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        setPickupDate(
-                                                            day
-                                                                .toISOString()
-                                                                .split("T")[0]
-                                                        );
-                                                        setShowCalendar(null);
+                                                        if (!isDisabled) {
+                                                            const selectedDate = formatYMD(day);
+                                                            setPickupDate(selectedDate);
+                                                            
+                                                            // Auto-set dropoff date to 3 days later
+                                                            const dropoff = new Date(day);
+                                                            dropoff.setDate(dropoff.getDate() + 3);
+                                                            setDropoffDate(formatYMD(dropoff));
+                                                            
+                                                            // Auto-set pickup time to first available hour (24hr advance)
+                                                            const now = new Date();
+                                                            const minBookingDateTime = new Date(now);
+                                                            minBookingDateTime.setHours(minBookingDateTime.getHours() + 24);
+                                                            
+                                                            // Find first available hour
+                                                            for (let hour = 0; hour < 24; hour++) {
+                                                                const selectedDateTime = new Date(`${selectedDate} ${hour.toString().padStart(2, '0')}:00`);
+                                                                if (selectedDateTime >= minBookingDateTime) {
+                                                                    const timeStr = `${hour.toString().padStart(2, '0')}:00`;
+                                                                    setPickupTime(timeStr);
+                                                                    setDropoffTime(timeStr);
+                                                                    break;
+                                                                }
+                                                            }
+                                                            
+                                                            setDateError("");
+                                                            setShowCalendar(null);
+                                                        }
                                                     }}
+                                                    disabled={isDisabled}
                                                     className={`
                             p-2 text-sm rounded-md hover:bg-blue-50 transition-colors
                             ${
@@ -311,12 +377,17 @@ export default function CarRentalForm() {
                                     : "text-gray-900"
                             }
                             ${
-                                isSelected
+                                isDisabled
+                                    ? "cursor-not-allowed opacity-50 bg-gray-100"
+                                    : "hover:bg-blue-50 cursor-pointer"
+                            }
+                            ${
+                                isSelected && !isDisabled
                                     ? "bg-blue-500 text-white hvr-bg-green"
                                     : ""
                             }
                             ${
-                                isToday && !isSelected
+                                isToday && !isSelected && !isDisabled
                                     ? "bg-blue-100 text-green-600"
                                     : ""
                             }
@@ -327,12 +398,27 @@ export default function CarRentalForm() {
                                             );
                                         })}
                                     </div>
+                                    
+                                    {/* Constraint info */}
+                                    <div className="mt-3 p-2 bg-blue-50 rounded-lg">
+                                        <div className="flex items-start gap-2">
+                                            <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                                            <div className="text-xs text-blue-700">
+                                                <p className="font-medium">Booking Requirements:</p>
+                                                <p>• Minimum 24 hours advance booking</p>
+                                                <p>• Minimum 3-day rental period</p>
+                                                <p>• Drop-off date auto-set to 3 days after pickup</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             )}
                             <TimeModal
                                 open={showPickupTimeModal}
                                 onSelect={(time) => setPickupTime(time)}
                                 onClose={() => setShowPickupTimeModal(false)}
+                                selectedDate={pickupDate}
+                                minHoursAdvance={24}
                             />
                         </div>
 
@@ -369,6 +455,15 @@ export default function CarRentalForm() {
                             {showCalendar === "dropoff" && (
                                 <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl p-4 z-[100] w-80">
                                     <div className="flex items-center justify-between mb-4">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                navigateMonth(-1);
+                                            }}
+                                            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                                        >
+                                            <ChevronLeft className="w-5 h-5 text-gray-600" />
+                                        </button>
                                         <h3 className="font-semibold text-gray-900">
                                             {currentDate.toLocaleDateString(
                                                 "en-US",
@@ -378,6 +473,15 @@ export default function CarRentalForm() {
                                                 }
                                             )}
                                         </h3>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                navigateMonth(1);
+                                            }}
+                                            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                                        >
+                                            <ChevronRight className="w-5 h-5 text-gray-600" />
+                                        </button>
                                     </div>
 
                                     <div className="grid grid-cols-7 gap-1 mb-2">
@@ -405,26 +509,35 @@ export default function CarRentalForm() {
                                                 day.getMonth() ===
                                                 currentDate.getMonth();
                                             const isSelected =
-                                                day
-                                                    .toISOString()
-                                                    .split("T")[0] ===
-                                                dropoffDate;
+                                                formatYMD(day) === dropoffDate;
                                             const isToday =
                                                 day.toDateString() ===
                                                 new Date().toDateString();
+                                            
+                                            // Check minimum 3-day rental
+                                            let isDisabled = false;
+                                            if (pickupDate) {
+                                                const pickup = new Date(pickupDate);
+                                                const minDropoff = new Date(pickup);
+                                                minDropoff.setDate(minDropoff.getDate() + 3);
+                                                minDropoff.setHours(0, 0, 0, 0);
+                                                const dayStart = new Date(day);
+                                                dayStart.setHours(0, 0, 0, 0);
+                                                isDisabled = dayStart < minDropoff;
+                                            }
 
                                             return (
                                                 <button
                                                     key={index}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        setDropoffDate(
-                                                            day
-                                                                .toISOString()
-                                                                .split("T")[0]
-                                                        );
-                                                        setShowCalendar(null);
+                                                        if (!isDisabled) {
+                                                            setDropoffDate(formatYMD(day));
+                                                            setDateError("");
+                                                            setShowCalendar(null);
+                                                        }
                                                     }}
+                                                    disabled={isDisabled}
                                                     className={`
                             p-2 text-sm rounded-md hover:bg-blue-50 transition-colors
                             ${
@@ -433,12 +546,17 @@ export default function CarRentalForm() {
                                     : "text-gray-900"
                             }
                             ${
-                                isSelected
+                                isDisabled
+                                    ? "cursor-not-allowed opacity-50 bg-gray-100"
+                                    : "hover:bg-blue-50 cursor-pointer"
+                            }
+                            ${
+                                isSelected && !isDisabled
                                     ? "bg-blue-500 text-white hvr-bg-green"
                                     : ""
                             }
                             ${
-                                isToday && !isSelected
+                                isToday && !isSelected && !isDisabled
                                     ? "bg-blue-100 text-green-600"
                                     : ""
                             }
@@ -449,12 +567,32 @@ export default function CarRentalForm() {
                                             );
                                         })}
                                     </div>
+                                    
+                                    {/* Minimum rental info */}
+                                    {pickupDate && (
+                                        <div className="mt-3 p-2 bg-blue-50 rounded-lg">
+                                            <div className="flex items-start gap-2">
+                                                <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                                                <div className="text-xs text-blue-700">
+                                                    <p>Minimum 3-day rental period required</p>
+                                                    <p>Earliest drop-off: {(() => {
+                                                        const pickup = new Date(pickupDate);
+                                                        const minDropoff = new Date(pickup);
+                                                        minDropoff.setDate(minDropoff.getDate() + 3);
+                                                        return formatDate(formatYMD(minDropoff));
+                                                    })()}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                             <TimeModal
                                 open={showDropOffTimeModal}
                                 onSelect={(time) => setDropoffTime(time)}
                                 onClose={() => setShowDropOffTimeModal(false)}
+                                selectedDate={dropoffDate}
+                                minHoursAdvance={24}
                             />
                         </div>
 

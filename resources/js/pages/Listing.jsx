@@ -32,6 +32,7 @@ import axios from "axios";
 const Listing = ({ slug }) => {
     const [loading, setLoading] = useState(true);
     const [listing, setListing] = useState(null);
+    const [searchParams, setSearchParams] = useState(null);
 
     const fetchListing = async () => {
         try {
@@ -47,6 +48,35 @@ const Listing = ({ slug }) => {
     };
 
     useEffect(() => {
+        // Read search parameters from session storage or URL
+        const storedParams = sessionStorage.getItem('searchParams');
+        if (storedParams) {
+            try {
+                const params = JSON.parse(storedParams);
+                // Validate params structure
+                if (params && typeof params === 'object') {
+                    setSearchParams(params);
+                } else {
+                    console.error('Invalid search params structure');
+                    sessionStorage.removeItem('searchParams');
+                }
+            } catch (e) {
+                console.error('Error parsing search params:', e);
+                // Remove corrupted data
+                sessionStorage.removeItem('searchParams');
+            }
+        }
+        
+        // Also check URL parameters as fallback
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!searchParams && urlParams.toString()) {
+            const params = {};
+            for (const [key, value] of urlParams) {
+                params[key] = value;
+            }
+            setSearchParams(params);
+        }
+        
         setTimeout(() => {
             fetchListing();
         }, 1200);
@@ -131,6 +161,7 @@ const Listing = ({ slug }) => {
                             listingId={listing?.id}
                             categoryId={listing?.category_id}
                             listing={listing}
+                            searchParams={searchParams}
                         />
                         <SingleListingPricing loading={loading} />
                     </div>

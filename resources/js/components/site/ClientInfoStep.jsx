@@ -1,5 +1,8 @@
 import React from "react";
 import { FormControlLabel, Checkbox } from "@mui/material";
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
+import '../../../css/phone-input-custom.css';
 
 const ClientInfoStep = ({
     fullName,
@@ -52,14 +55,44 @@ const ClientInfoStep = ({
                     )}
                 </div>
                 <div>
-                    <input
-                        type="tel"
-                        value={whatsAppNumber}
-                        onChange={(e) => handleFieldChange('whatsAppNumber', e.target.value)}
-                        placeholder="WhatsApp Number with Country Code *"
-                        className={`w-full px-3 py-3 text-lg border ${errors.whatsAppNumber ? 'border-red-500' : 'border-gray-300'} rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
-                        required
-                    />
+                    <div className={`phone-input-wrapper ${errors.whatsAppNumber ? 'error' : ''}`}>
+                        <PhoneInput
+                            country={'us'}
+                            value={whatsAppNumber}
+                            onChange={(phone) => handleFieldChange('whatsAppNumber', phone.startsWith('+') ? phone : '+' + phone)}
+                            placeholder="Enter WhatsApp number"
+                            enableSearch={true}
+                            searchPlaceholder="Search country..."
+                            containerStyle={{
+                                width: '100%'
+                            }}
+                            inputStyle={{
+                                width: '100%',
+                                height: '52px',
+                                fontSize: '1.125rem',
+                                paddingLeft: '48px',
+                                paddingRight: '12px',
+                                borderRadius: '0.75rem',
+                                border: errors.whatsAppNumber ? '1px solid #ef4444' : '1px solid #d1d5db',
+                                backgroundColor: '#ffffff'
+                            }}
+                            buttonStyle={{
+                                borderRadius: '0.75rem 0 0 0.75rem',
+                                border: errors.whatsAppNumber ? '1px solid #ef4444' : '1px solid #d1d5db',
+                                borderRight: 'none',
+                                backgroundColor: '#f9fafb',
+                                padding: '0 8px'
+                            }}
+                            dropdownStyle={{
+                                borderRadius: '0.5rem'
+                            }}
+                            searchStyle={{
+                                borderRadius: '0.5rem',
+                                padding: '8px 12px',
+                                margin: '8px'
+                            }}
+                        />
+                    </div>
                     {errors.whatsAppNumber && (
                         <p className="text-red-500 text-sm mt-1">{errors.whatsAppNumber[0]}</p>
                     )}

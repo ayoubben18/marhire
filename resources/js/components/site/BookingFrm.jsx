@@ -16,8 +16,9 @@ import {
     clearFieldError,
     prepareSubmissionData
 } from "../../utils/bookingHelpers";
+import { mapSearchParams, isDateValid, getMinValidDate } from "../../utils/searchParamsMapping";
 
-const BookingFrm = ({ loading, listingId, categoryId, listing }) => {
+const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) => {
     // Step management state
     const [currentStep, setCurrentStep] = useState(0);
     const [searchParamsLoaded, setSearchParamsLoaded] = useState(false);
@@ -296,6 +297,12 @@ const BookingFrm = ({ loading, listingId, categoryId, listing }) => {
         setTimePreference("morning");
         setSelectedDurationOption("");
     };
+    
+    // Method to clear search params manually
+    const clearSearchParams = () => {
+        sessionStorage.removeItem('searchParams');
+        setSearchParamsLoaded(false);
+    };
 
     const handleFieldChange = (field, value) => {
         // Clear error for the field when user modifies it
@@ -553,6 +560,8 @@ const BookingFrm = ({ loading, listingId, categoryId, listing }) => {
             if (response.data.success && response.data.confirmation_number) {
                 setConfirmationNumber(response.data.confirmation_number);
                 setShowSuccess(true);
+                // Clear search params after successful booking
+                sessionStorage.removeItem('searchParams');
                 resetForm();
             }
         } catch (error) {
@@ -649,120 +658,161 @@ const BookingFrm = ({ loading, listingId, categoryId, listing }) => {
     
     // Handle search parameters from URL or session storage
     React.useEffect(() => {
-        // Check URL parameters first
-        const urlParams = new URLSearchParams(window.location.search);
+        if (!searchParams) return;
+        
         let paramsFound = false;
+        
+        try {
+            // Map search params to booking form fields
+            const mappedParams = mapSearchParams(searchParams, categoryId);
+            
+            if (!mappedParams || Object.keys(mappedParams).length === 0) {
+                return;
+            }
         
         // Car rental parameters
         if (categoryId === 2) {
-            const pickupLoc = urlParams.get('pickup') || sessionStorage.getItem('search_pickup');
-            const dropoffLoc = urlParams.get('dropoff') || sessionStorage.getItem('search_dropoff');
-            const pickupDate = urlParams.get('pickup_date') || sessionStorage.getItem('search_pickup_date');
-            const dropoffDate = urlParams.get('dropoff_date') || sessionStorage.getItem('search_dropoff_date');
-            const pickupTimeParam = urlParams.get('pickup_time') || sessionStorage.getItem('search_pickup_time');
-            const dropoffTimeParam = urlParams.get('dropoff_time') || sessionStorage.getItem('search_dropoff_time');
-            
-            if (pickupLoc) {
-                setPickupLocation(pickupLoc);
+            if (mappedParams.pickupLocation) {
+                setPickupLocation(mappedParams.pickupLocation);
                 paramsFound = true;
             }
-            if (dropoffLoc) {
-                setDropoffLocation(dropoffLoc);
+            if (mappedParams.dropoffLocation) {
+                setDropoffLocation(mappedParams.dropoffLocation);
                 paramsFound = true;
             }
-            if (pickupDate) {
-                setStartDate(pickupDate);
+            if (mappedParams.startDate) {
+                // Validate pickup date is at least 24hrs in advance
+                if (isDateValid(mappedParams.startDate, 1)) {
+                    setStartDate(mappedParams.startDate);
+                } else {
+                    // Auto-adjust to valid date
+                    setStartDate(getMinValidDate(categoryId));
+                }
                 paramsFound = true;
             }
-            if (dropoffDate) {
-                setEndDate(dropoffDate);
+            if (mappedParams.endDate) {
+                // Validate dropoff date is at least 3 days after pickup
+                const pickupDate = new Date(mappedParams.startDate || startDate || getMinValidDate(categoryId));
+                const dropoffDate = new Date(mappedParams.endDate);
+                const minDropoff = new Date(pickupDate);
+                minDropoff.setDate(minDropoff.getDate() + 3);
+                
+                if (dropoffDate >= minDropoff) {
+                    setEndDate(mappedParams.endDate);
+                } else {
+                    // Auto-adjust to minimum 3 days
+                    const year = minDropoff.getFullYear();
+                    const month = String(minDropoff.getMonth() + 1).padStart(2, "0");
+                    const day = String(minDropoff.getDate()).padStart(2, "0");
+                    setEndDate(`${year}-${month}-${day}`);
+                }
                 paramsFound = true;
             }
-            if (pickupTimeParam) {
-                setPickupTime(pickupTimeParam);
+            if (mappedParams.pickupTime) {
+                setPickupTime(mappedParams.pickupTime);
                 paramsFound = true;
             }
-            if (dropoffTimeParam) {
-                setDropoffTime(dropoffTimeParam);
+            if (mappedParams.dropoffTime) {
+                setDropoffTime(mappedParams.dropoffTime);
                 paramsFound = true;
             }
         }
         
         // Private driver parameters
         if (categoryId === 3) {
-            const date = urlParams.get('date') || sessionStorage.getItem('search_date');
-            const persons = urlParams.get('persons') || sessionStorage.getItem('search_persons');
-            const serviceType = urlParams.get('service_type') || sessionStorage.getItem('search_service_type');
-            
-            if (date) {
-                setStartDate(date);
+            if (mappedParams.startDate) {
+                // Validate date is at least 24hrs in advance
+                if (isDateValid(mappedParams.startDate, 1)) {
+                    setStartDate(mappedParams.startDate);
+                } else {
+                    setStartDate(getMinValidDate(categoryId));
+                }
                 paramsFound = true;
             }
-            if (persons) {
-                setNumberOfPeople(parseInt(persons) || 1);
+            if (mappedParams.numberOfPeople) {
+                setNumberOfPeople(parseInt(mappedParams.numberOfPeople) || 1);
+                setNumberOfPassengers(parseInt(mappedParams.numberOfPeople) || 1);
                 paramsFound = true;
             }
-            if (serviceType) {
-                setAirportOrIntercity(serviceType);
+            if (mappedParams.serviceTypes && Array.isArray(mappedParams.serviceTypes)) {
+                setServiceTypes(mappedParams.serviceTypes);
+                paramsFound = true;
+            }
+            if (mappedParams.roadTypes && Array.isArray(mappedParams.roadTypes)) {
+                setRoadTypes(mappedParams.roadTypes);
+                paramsFound = true;
+            }
+            if (mappedParams.pickupCity) {
+                setPickupCity(mappedParams.pickupCity);
+                paramsFound = true;
+            }
+            if (mappedParams.dropoffCity) {
+                setDropoffCity(mappedParams.dropoffCity);
                 paramsFound = true;
             }
         }
         
         // Boat rental parameters
         if (categoryId === 4) {
-            const date = urlParams.get('date') || sessionStorage.getItem('search_date');
-            const dest = urlParams.get('destination') || sessionStorage.getItem('search_destination');
-            const persons = urlParams.get('persons') || sessionStorage.getItem('search_persons');
-            
-            if (date) {
-                setStartDate(date);
+            if (mappedParams.startDate) {
+                // Validate date is at least 48hrs in advance
+                if (isDateValid(mappedParams.startDate, 2)) {
+                    setStartDate(mappedParams.startDate);
+                } else {
+                    setStartDate(getMinValidDate(categoryId));
+                }
                 paramsFound = true;
             }
-            if (dest) {
-                setDestination(dest);
+            if (mappedParams.boatPickupTime) {
+                setBoatPickupTime(mappedParams.boatPickupTime);
                 paramsFound = true;
             }
-            if (persons) {
-                setNumberOfPeople(parseInt(persons) || 1);
+            if (mappedParams.destination) {
+                setDestination(mappedParams.destination);
+                paramsFound = true;
+            }
+            if (mappedParams.numberOfPeople) {
+                setNumberOfPeople(parseInt(mappedParams.numberOfPeople) || 1);
+                paramsFound = true;
+            }
+            if (mappedParams.boatDuration) {
+                setBoatDuration(mappedParams.boatDuration);
                 paramsFound = true;
             }
         }
         
         // Activity parameters
         if (categoryId === 5) {
-            const date = urlParams.get('date') || sessionStorage.getItem('search_date');
-            const actType = urlParams.get('activity_type') || sessionStorage.getItem('search_activity_type');
-            const persons = urlParams.get('persons') || sessionStorage.getItem('search_persons');
-            
-            if (date) {
-                setStartDate(date);
+            if (mappedParams.startDate) {
+                // Validate date is at least 48hrs in advance
+                if (isDateValid(mappedParams.startDate, 2)) {
+                    setStartDate(mappedParams.startDate);
+                } else {
+                    setStartDate(getMinValidDate(categoryId));
+                }
                 paramsFound = true;
             }
-            if (actType) {
-                setActivityType(actType);
+            if (mappedParams.numberOfPeople) {
+                setNumberOfPeople(parseInt(mappedParams.numberOfPeople) || 1);
                 paramsFound = true;
             }
-            if (persons) {
-                setNumberOfPeople(parseInt(persons) || 1);
+            if (mappedParams.timePreference) {
+                setTimePreference(mappedParams.timePreference);
+                paramsFound = true;
+            }
+            if (mappedParams.activityType) {
+                setActivityType(mappedParams.activityType);
                 paramsFound = true;
             }
         }
         
         setSearchParamsLoaded(paramsFound);
         
-        // Clear session storage after loading
-        sessionStorage.removeItem('search_pickup');
-        sessionStorage.removeItem('search_dropoff');
-        sessionStorage.removeItem('search_pickup_date');
-        sessionStorage.removeItem('search_dropoff_date');
-        sessionStorage.removeItem('search_pickup_time');
-        sessionStorage.removeItem('search_dropoff_time');
-        sessionStorage.removeItem('search_date');
-        sessionStorage.removeItem('search_destination');
-        sessionStorage.removeItem('search_persons');
-        sessionStorage.removeItem('search_service_type');
-        sessionStorage.removeItem('search_activity_type');
-    }, [categoryId]);
+        } catch (error) {
+            console.error('Error processing search params:', error);
+            setErrors({ general: 'Unable to load search parameters. Please enter details manually.' });
+        }
+    }, [categoryId, searchParams]);
 
     // Get category icon
     const getCategoryIcon = () => {

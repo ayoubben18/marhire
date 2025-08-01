@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, MapPin, Clock, ChevronDown, Search } from "lucide-react";
+import { Calendar, MapPin, Clock, ChevronDown, Search, Info, ChevronLeft, ChevronRight } from "lucide-react";
 import LocationModal from "./LocationModal";
 import TimeModal from "./TimeModal";
 import { useMediaQuery } from "react-responsive";
@@ -25,20 +25,18 @@ function Modal({ open, onClose, children }) {
 export default function PrivateDriverForm() {
     const [pickupLocation, setPickupLocation] = useState("");
     const [dropoffLocation, setDropoffLocation] = useState("Same as pickup");
-    const [pickupDate, setPickupDate] = useState("2025-06-25");
-    const [pickupTime, setPickupTime] = useState("10:00");
-    const [dropoffDate, setDropoffDate] = useState("2025-06-28");
-    const [dropoffTime, setDropoffTime] = useState("10:00");
+    const [pickupDate, setPickupDate] = useState("");
+    const [pickupTime, setPickupTime] = useState("");
     const [guests, setGuests] = useState(1);
     const [showGuestsModal, setShowGuestsModal] = useState(false);
     const [showCalendar, setShowCalendar] = useState(null);
     const [showPickupModal, setShowPickupModal] = useState(false);
     const [showPickupTimeModal, setShowPickupTimeModal] = useState(false);
-    const [showDropOffTimeModal, setShowDropOffTimeModal] = useState(false);
     const [showDropOffModal, setShowDropOffModal] = useState(false);
     const isMobile = useMediaQuery({ maxWidth: 900 });
 
     const formatDate = (dateString) => {
+        if (!dateString) return "Select date";
         const date = new Date(dateString);
         const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         const months = [
@@ -82,7 +80,14 @@ export default function PrivateDriverForm() {
         return days;
     };
 
-    const currentDate = new Date();
+    const [currentDate, setCurrentDate] = useState(new Date());
+    
+    const navigateMonth = (direction) => {
+        const newDate = new Date(currentDate);
+        newDate.setMonth(currentDate.getMonth() + direction);
+        setCurrentDate(newDate);
+    };
+    
     const calendarDays = generateCalendarDays(
         currentDate.getFullYear(),
         currentDate.getMonth()
@@ -95,13 +100,30 @@ export default function PrivateDriverForm() {
 
     const handleSearch = (e) => {
         e.preventDefault();
+        
+        // Determine service type based on locations
+        const serviceType = dropoffLocation === "Same as pickup" ? "hourly" : "point-to-point";
+        
+        const searchParams = {
+            category: 3, // Private driver category
+            service_type: serviceType,
+            city_a: pickupLocation,
+            city_b: dropoffLocation === "Same as pickup" ? pickupLocation : dropoffLocation,
+            date: pickupDate,
+            time: pickupTime,
+            pickup_date: pickupDate,
+            pickup_time: pickupTime,
+            persons: guests,
+        };
+        
+        // Store in session storage
+        sessionStorage.setItem('searchParams', JSON.stringify(searchParams));
+        
         const params = new URLSearchParams({
             pickup: pickupLocation,
             dropoff: dropoffLocation,
             pickup_date: pickupDate,
-            dropoff_date: dropoffDate,
             pickup_time: pickupTime,
-            dropoff_time: dropoffTime,
             persons: guests,
         });
 
@@ -116,19 +138,10 @@ export default function PrivateDriverForm() {
     }
 
     useEffect(() => {
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
-
-        const dropoff = new Date(tomorrow);
-        dropoff.setDate(tomorrow.getDate() + 3);
-
         setPickupLocation(getParam("pickup") || "");
         setDropoffLocation(getParam("dropoff") || "Same as pickup");
-        setPickupDate(getParam("pickup_date") || formatYMD(tomorrow));
-        setDropoffDate(getParam("dropoff_date") || formatYMD(dropoff));
-        setPickupTime(getParam("pickup_time") || "10:00");
-        setDropoffTime(getParam("dropoff_time") || "10:00");
+        setPickupDate(getParam("pickup_date") || "");
+        setPickupTime(getParam("pickup_time") || "");
         setGuests(getParam("persons") || 1);
     }, []);
 
@@ -195,7 +208,7 @@ export default function PrivateDriverForm() {
                         <div className="w-full lg:flex-1 border-r border-gray-200 relative overflow-visible">
                             <div className="p-6">
                                 <label className="block text-sm font-medium text-gray-500 mb-2">
-                                    Pick-up Date
+                                    Date
                                 </label>
                                 <div className="flex items-center justify-between">
                                     <button
@@ -225,6 +238,15 @@ export default function PrivateDriverForm() {
                             {showCalendar === "pickup" && (
                                 <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl p-4 z-[100] w-80">
                                     <div className="flex items-center justify-between mb-4">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                navigateMonth(-1);
+                                            }}
+                                            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                                        >
+                                            <ChevronLeft className="w-5 h-5 text-gray-600" />
+                                        </button>
                                         <h3 className="font-semibold text-gray-900">
                                             {currentDate.toLocaleDateString(
                                                 "en-US",
@@ -234,6 +256,15 @@ export default function PrivateDriverForm() {
                                                 }
                                             )}
                                         </h3>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                navigateMonth(1);
+                                            }}
+                                            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                                        >
+                                            <ChevronRight className="w-5 h-5 text-gray-600" />
+                                        </button>
                                     </div>
                                     <div className="grid grid-cols-7 gap-1 mb-2">
                                         {[
@@ -259,25 +290,51 @@ export default function PrivateDriverForm() {
                                                 day.getMonth() ===
                                                 currentDate.getMonth();
                                             const isSelected =
-                                                day
-                                                    .toISOString()
-                                                    .split("T")[0] ===
-                                                pickupDate;
+                                                formatYMD(day) === pickupDate;
                                             const isToday =
                                                 day.toDateString() ===
                                                 new Date().toDateString();
+                                            
+                                            // Check if date is at least 48 hours in advance (private driver requirement)
+                                            const now = new Date();
+                                            const dayStart = new Date(day);
+                                            dayStart.setHours(0, 0, 0, 0);
+                                            
+                                            // Private driver services require 48-hour advance booking
+                                            const minDate = new Date(now);
+                                            minDate.setDate(minDate.getDate() + 2);
+                                            minDate.setHours(0, 0, 0, 0);
+                                            
+                                            const isDisabled = dayStart < minDate;
+                                            
                                             return (
                                                 <button
                                                     key={index}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        setPickupDate(
-                                                            day
-                                                                .toISOString()
-                                                                .split("T")[0]
-                                                        );
-                                                        setShowCalendar(null);
+                                                        if (!isDisabled) {
+                                                            const selectedDate = formatYMD(day);
+                                                            setPickupDate(selectedDate);
+                                                            
+                                                            // Auto-set pickup time to first available hour (48hr advance)
+                                                            const now = new Date();
+                                                            const minBookingDateTime = new Date(now);
+                                                            minBookingDateTime.setHours(minBookingDateTime.getHours() + 48);
+                                                            
+                                                            // Find first available hour
+                                                            for (let hour = 0; hour < 24; hour++) {
+                                                                const selectedDateTime = new Date(`${selectedDate} ${hour.toString().padStart(2, '0')}:00`);
+                                                                if (selectedDateTime >= minBookingDateTime) {
+                                                                    const timeStr = `${hour.toString().padStart(2, '0')}:00`;
+                                                                    setPickupTime(timeStr);
+                                                                    break;
+                                                                }
+                                                            }
+                                                            
+                                                            setShowCalendar(null);
+                                                        }
                                                     }}
+                                                    disabled={isDisabled}
                                                     className={`
                                                         p-2 text-sm rounded-md hover:bg-blue-50 transition-colors
                                                         ${
@@ -286,13 +343,18 @@ export default function PrivateDriverForm() {
                                                                 : "text-gray-900"
                                                         }
                                                         ${
-                                                            isSelected
+                                                            isDisabled
+                                                                ? "cursor-not-allowed opacity-50 bg-gray-100"
+                                                                : "hover:bg-blue-50 cursor-pointer"
+                                                        }
+                                                        ${
+                                                            isSelected && !isDisabled
                                                                 ? "bg-blue-500 text-white hvr-bg-green"
                                                                 : ""
                                                         }
                                                         ${
                                                             isToday &&
-                                                            !isSelected
+                                                            !isSelected && !isDisabled
                                                                 ? "bg-blue-100 text-green-600"
                                                                 : ""
                                                         }
@@ -302,6 +364,18 @@ export default function PrivateDriverForm() {
                                                 </button>
                                             );
                                         })}
+                                    </div>
+                                    
+                                    {/* Constraint info */}
+                                    <div className="mt-3 p-2 bg-blue-50 rounded-lg">
+                                        <div className="flex items-start gap-2">
+                                            <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                                            <div className="text-xs text-blue-700">
+                                                <p className="font-medium">Booking Requirements:</p>
+                                                <p>• Minimum 24 hours advance booking</p>
+                                                <p>• Same-day service only</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             )}
@@ -309,130 +383,11 @@ export default function PrivateDriverForm() {
                                 open={showPickupTimeModal}
                                 onSelect={(time) => setPickupTime(time)}
                                 onClose={() => setShowPickupTimeModal(false)}
+                                selectedDate={pickupDate}
+                                minHoursAdvance={24}
                             />
                         </div>
 
-                        {/* Drop-off Date */}
-                        <div className="w-full lg:flex-1 border-r border-gray-200 relative overflow-visible">
-                            <div className="p-6">
-                                <label className="block text-sm font-medium text-gray-500 mb-2">
-                                    Drop-off Date
-                                </label>
-                                <div className="flex items-center justify-between">
-                                    <button
-                                        onClick={() =>
-                                            setShowCalendar(
-                                                showCalendar === "dropoff"
-                                                    ? null
-                                                    : "dropoff"
-                                            )
-                                        }
-                                        className="text-lg font-bold text-gray-900 hvr-text-green transition-colors"
-                                    >
-                                        {formatDate(dropoffDate)}
-                                    </button>
-                                    <div className="relative">
-                                        <button
-                                            className="text-lg font-bold text-gray-900 hvr-text-green transition-colors"
-                                            onClick={() =>
-                                                setShowDropOffTimeModal(true)
-                                            }
-                                        >
-                                            {dropoffTime}
-                                        </button>
-                                        {/* <ChevronDown className="absolute right-0 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" /> */}
-                                    </div>
-                                </div>
-                            </div>
-                            {showCalendar === "dropoff" && (
-                                <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl p-4 z-[100] w-80">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <h3 className="font-semibold text-gray-900">
-                                            {currentDate.toLocaleDateString(
-                                                "en-US",
-                                                {
-                                                    month: "long",
-                                                    year: "numeric",
-                                                }
-                                            )}
-                                        </h3>
-                                    </div>
-                                    <div className="grid grid-cols-7 gap-1 mb-2">
-                                        {[
-                                            "Su",
-                                            "Mo",
-                                            "Tu",
-                                            "We",
-                                            "Th",
-                                            "Fr",
-                                            "Sa",
-                                        ].map((day) => (
-                                            <div
-                                                key={day}
-                                                className="text-center text-xs font-medium text-gray-500 py-2"
-                                            >
-                                                {day}
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="grid grid-cols-7 gap-1">
-                                        {calendarDays.map((day, index) => {
-                                            const isCurrentMonth =
-                                                day.getMonth() ===
-                                                currentDate.getMonth();
-                                            const isSelected =
-                                                day
-                                                    .toISOString()
-                                                    .split("T")[0] ===
-                                                dropoffDate;
-                                            const isToday =
-                                                day.toDateString() ===
-                                                new Date().toDateString();
-                                            return (
-                                                <button
-                                                    key={index}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setDropoffDate(
-                                                            day
-                                                                .toISOString()
-                                                                .split("T")[0]
-                                                        );
-                                                        setShowCalendar(null);
-                                                    }}
-                                                    className={`
-                                                        p-2 text-sm rounded-md hover:bg-blue-50 transition-colors
-                                                        ${
-                                                            !isCurrentMonth
-                                                                ? "text-gray-300"
-                                                                : "text-gray-900"
-                                                        }
-                                                        ${
-                                                            isSelected
-                                                                ? "bg-blue-500 text-white hvr-bg-green"
-                                                                : ""
-                                                        }
-                                                        ${
-                                                            isToday &&
-                                                            !isSelected
-                                                                ? "bg-blue-100 text-green-600"
-                                                                : ""
-                                                        }
-                                                    `}
-                                                >
-                                                    {day.getDate()}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            )}
-                            <TimeModal
-                                open={showDropOffTimeModal}
-                                onSelect={(time) => setDropoffTime(time)}
-                                onClose={() => setShowDropOffTimeModal(false)}
-                            />
-                        </div>
 
                         {/* Search Button */}
                         {!isMobile ? (
@@ -498,8 +453,7 @@ export default function PrivateDriverForm() {
             {(showCalendar ||
                 showPickupModal ||
                 showDropOffModal ||
-                showPickupTimeModal ||
-                showDropOffTimeModal) && (
+                showPickupTimeModal) && (
                 <div
                     className="fixed inset-0 z-40"
                     onClick={() => {
@@ -507,7 +461,6 @@ export default function PrivateDriverForm() {
                         setShowPickupModal(false);
                         setShowDropOffModal(false);
                         setShowPickupTimeModal(false);
-                        setShowDropOffTimeModal(false);
                     }}
                 />
             )}
