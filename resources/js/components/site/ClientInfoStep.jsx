@@ -164,15 +164,15 @@ const ClientInfoStep = ({
                         label={
                             <span className={errors.termsAccepted ? 'text-red-500' : ''}>
                                 I agree to the{" "}
-                                <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                <a href="/terms-conditions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                                     Terms & Conditions
                                 </a>
                                 ,{" "}
-                                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                                     Privacy Policy
                                 </a>
                                 , and{" "}
-                                <a href="/cancellation" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                <a href="/cancellation-policy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                                     Cancellation Policy
                                 </a>
                                 {" *"}

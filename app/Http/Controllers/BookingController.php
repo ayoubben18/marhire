@@ -520,7 +520,8 @@ class BookingController extends Controller
                 'status' => 'Pending',
                 'booking_source' => 'Client Booking',
                 'discount_or_extra' => $request->discount_or_extra ?? 0,
-                'created_by' => -1 // Guest booking (using default value)
+                'created_by' => -1, // Guest booking (using default value)
+                'terms_accepted' => $request->termsAccepted
             ];
 
             // Add category-specific fields
