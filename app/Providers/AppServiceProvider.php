@@ -30,6 +30,11 @@ class AppServiceProvider extends ServiceProvider
         if($this->app->environment('production')) {
             \URL::forceScheme('https');
         }
+        
+        // Force HTTPS when behind a proxy (like ngrok)
+        if (request()->server('HTTP_X_FORWARDED_PROTO') == 'https') {
+            \URL::forceScheme('https');
+        }
 
         // VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
         //     return (new MailMessage)
