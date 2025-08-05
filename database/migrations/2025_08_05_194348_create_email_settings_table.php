@@ -15,9 +15,9 @@ class CreateEmailSettingsTable extends Migration
     {
         Schema::create('email_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->unique();
+            $table->string('key', 100)->unique();
             $table->json('value');
-            $table->string('group')->nullable();
+            $table->string('group', 50)->nullable();
             $table->timestamps();
             
             $table->index(['group', 'key']);
