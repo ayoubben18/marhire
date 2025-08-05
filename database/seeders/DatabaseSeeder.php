@@ -14,5 +14,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
+        
+        // Email system seeders
+        $this->call([
+            EmailTemplateSeeder::class,
+            EmailSettingsSeeder::class,
+            UpdateEmailTemplatesFromDocs::class,
+        ]);
     }
 }
