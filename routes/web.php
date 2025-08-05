@@ -17,6 +17,8 @@ use App\Http\Controllers\SocieteController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\TermsController;
 use App\Http\Controllers\UtilisateurController;
+use App\Http\Controllers\Admin\EmailTemplateController;
+use App\Http\Controllers\Admin\EmailSettingsController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -227,6 +229,23 @@ Route::name('profile.')->middleware('auth')->prefix('profile')->group(function (
     Route::get('/', [ProfileController::class, 'get'])->name('get');
     Route::post('/', [ProfileController::class, 'save'])->name('save');
     Route::post('upload', [ProfileController::class, 'upload'])->name('upload');
+});
+
+//Email Templates
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/email-templates', [EmailTemplateController::class, 'index'])->name('email-templates.index');
+    Route::get('/email-templates/{template}/edit', [EmailTemplateController::class, 'edit'])->name('email-templates.edit');
+    Route::put('/email-templates/{template}', [EmailTemplateController::class, 'update'])->name('email-templates.update');
+    Route::post('/email-templates/{template}/reset', [EmailTemplateController::class, 'reset'])->name('email-templates.reset');
+    Route::get('/email-templates/{template}/preview', [EmailTemplateController::class, 'preview'])->name('email-templates.preview');
+    
+    // Email Settings
+    Route::get('/email-settings', [EmailSettingsController::class, 'index'])->name('email-settings');
+    Route::post('/email-settings', [EmailSettingsController::class, 'update'])->name('email-settings.update');
+    Route::post('/email-settings/test', [EmailSettingsController::class, 'sendTest'])->name('email-settings.test');
+    
+    // Email History
+    Route::get('/email-history', [\App\Http\Controllers\Admin\EmailHistoryController::class, 'index'])->name('email-history');
 });
 
 Route::get('clear', function () {

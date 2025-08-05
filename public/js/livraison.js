@@ -27,7 +27,7 @@ $(document).ready(function () {
                 <td>${colis.destinataire}</td>
                 <td>${formatDate(colis.created_at)}</td>
                 <td>
-                    <span class="money">${colis.prix + " MAD"}</span>
+                    <span class="money">€${colis.prix}</span>
                 </td>
                 <td>${colis.quartier}</td>
                 <td>

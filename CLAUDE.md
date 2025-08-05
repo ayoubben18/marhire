@@ -34,3 +34,6 @@ npm run dev  # Compile new changes instead of npm run production
 - Database name: marhire
 - Important tables: listings, bookings, agencies, cities, categories
 - The cities table uses `city_name` column, not `name`
+
+## Development Notes
+- Prefer using `npm run dev` over `npm run production` for development work

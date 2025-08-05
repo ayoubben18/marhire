@@ -6,6 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
+use App\Services\Email\EmailServiceInterface;
+use App\Services\Email\EmailService;
+use App\Repositories\EmailLogRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,7 +19,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // 
+        // Bind EmailService interface
+        $this->app->bind(EmailServiceInterface::class, EmailService::class);
+        
+        // Register EmailLogRepository as singleton
+        $this->app->singleton(EmailLogRepository::class, function ($app) {
+            return new EmailLogRepository();
+        });
     }
 
     /**
@@ -27,12 +36,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        if($this->app->environment('production')) {
-            \URL::forceScheme('https');
-        }
         
-        // Force HTTPS when behind a proxy (like ngrok)
-        if (request()->server('HTTP_X_FORWARDED_PROTO') == 'https') {
+        // Only force HTTPS if the request is actually coming through HTTPS
+        // This allows the app to work on both HTTP and HTTPS
+        if (request()->secure() || request()->server('HTTP_X_FORWARDED_PROTO') == 'https') {
             \URL::forceScheme('https');
         }
 

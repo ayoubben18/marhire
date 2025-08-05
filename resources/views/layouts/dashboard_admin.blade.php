@@ -251,6 +251,24 @@
                                 </li>
 
                                 <li class="nk-menu-item has-sub">
+                                    <a href="javascript:void(0);" class="nk-menu-link nk-menu-toggle">
+                                        <span class="nk-menu-icon"><em class="icon ni ni-bell"></em></span>
+                                        <span class="nk-menu-text">Notifications</span>
+                                    </a>
+                                    <ul class="nk-menu-sub">
+                                        <li class="nk-menu-item">
+                                            <a href="{{ route('admin.email-templates.index') }}" class="nk-menu-link"><span class="nk-menu-text">Email Templates</span></a>
+                                        </li>
+                                        <li class="nk-menu-item">
+                                            <a href="{{ route('admin.email-settings') }}" class="nk-menu-link"><span class="nk-menu-text">Email Settings</span></a>
+                                        </li>
+                                        <li class="nk-menu-item">
+                                            <a href="{{ route('admin.email-history') }}" class="nk-menu-link"><span class="nk-menu-text">Email History</span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="nk-menu-item has-sub">
                                     <a href="#" class="nk-menu-link nk-menu-toggle">
                                         <span class="nk-menu-icon"><em class="icon ti ti-settings"></em></span>
                                         <span class="nk-menu-text">Settings</span>
@@ -259,7 +277,6 @@
                                         <li class="nk-menu-item">
                                             <a href="{{ route('parametrage.get') }}" class="nk-menu-link"><span class="nk-menu-text">Générale</span></a>
                                         </li>
-                                       
                                     </ul>
                                 </li>
                             </ul>

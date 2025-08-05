@@ -1054,9 +1054,9 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                                                     <div className="p-2">
                                                         <p className="font-semibold mb-2">Available Rates:</p>
                                                         <div className="space-y-1">
-                                                            <p>• Hourly (0.5-1.5h): ${priceDetails.priceBreakdown.hourly}/hour</p>
-                                                            <p>• Half-day (2-4h): ${priceDetails.priceBreakdown.halfDay} flat</p>
-                                                            <p>• Full-day (4.5-8h): ${priceDetails.priceBreakdown.fullDay} flat</p>
+                                                            <p>• Hourly (0.5-1.5h): €{priceDetails.priceBreakdown.hourly}/hour</p>
+                                                            <p>• Half-day (2-4h): €{priceDetails.priceBreakdown.halfDay} flat</p>
+                                                            <p>• Full-day (4.5-8h): €{priceDetails.priceBreakdown.fullDay} flat</p>
                                                         </div>
                                                     </div>
                                                 }
@@ -1068,7 +1068,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                                         )}
                                     </div>
                                     <span className="text-2xl font-bold text-blue-600">
-                                        ${priceDetails.price}
+                                        €{priceDetails.price}
                                     </span>
                                 </div>
                                 {priceDetails.rateDescription && (

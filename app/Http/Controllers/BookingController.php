@@ -14,7 +14,10 @@ use App\Models\SubCategoryOption;
 use App\Models\City;
 use App\Models\CustomBookingOption;
 use App\Models\DriverPricing;
+use App\Models\ScheduledReminder;
+use App\Models\EmailSetting;
 use App\Services\BookingValidationService;
+use App\Services\Email\EmailServiceInterface;
 use App\Mail\BookingClientConfirmation;
 use App\Mail\BookingProviderNotification;
 use Carbon\Carbon;
@@ -144,6 +147,15 @@ class BookingController extends Controller
             ]);
         }
 
+        // Send booking created emails (with settings check)
+        $emailService = app(EmailServiceInterface::class);
+        $booking->load('listing.category');
+        
+        if (EmailSetting::isEmailEnabled($booking->listing->category, 'booking_received')) {
+            $emailService->send($booking->email, 'booking_received', $booking);
+            $emailService->send(EmailSetting::getAdminEmail(), 'booking_received', $booking);
+        }
+
         return back()->with('inserted', true);
     }
 
@@ -189,13 +201,42 @@ class BookingController extends Controller
 
     public function changeStatus(Request $request)
     {
-        $booking = Booking::findOrFail($request->id);
+        $booking = Booking::with('listing.category')->findOrFail($request->id);
+        $oldStatus = $booking->status;
+        $newStatus = $request->status;
 
-        //Send Notification
-        
+        // Update booking status
         $booking->update([
-            'status' => $request->status
+            'status' => $newStatus
         ]);
+
+        // Send emails based on status change
+        $emailService = app(EmailServiceInterface::class);
+        
+        if ($newStatus === 'confirmed' && $oldStatus !== 'confirmed') {
+            // Booking confirmed - send confirmation emails if enabled
+            if (EmailSetting::isEmailEnabled($booking->listing->category, 'booking_confirmed')) {
+                $emailService->send($booking->email, 'booking_confirmed', $booking);
+                $emailService->send(EmailSetting::getAdminEmail(), 'booking_confirmed', $booking);
+            }
+            
+            // Schedule reminder if applicable and enabled
+            if (EmailSetting::isEmailEnabled($booking->listing->category, 'booking_reminder')) {
+                $this->scheduleReminderIfNeeded($booking);
+            }
+            
+        } elseif ($newStatus === 'cancelled' && $oldStatus !== 'cancelled') {
+            // Booking cancelled - send cancellation emails if enabled
+            if (EmailSetting::isEmailEnabled($booking->listing->category, 'booking_cancelled')) {
+                $emailService->send($booking->email, 'booking_cancelled', $booking);
+                $emailService->send(EmailSetting::getAdminEmail(), 'booking_cancelled', $booking);
+            }
+            
+            // Cancel any pending reminders
+            ScheduledReminder::where('booking_id', $booking->id)
+                ->where('status', 'pending')
+                ->update(['status' => 'cancelled']);
+        }
 
         return 'success';
     }
@@ -546,7 +587,16 @@ class BookingController extends Controller
             // Generate confirmation number using booking ID
             $confirmationNumber = 'BK' . date('Ymd') . '-' . str_pad($booking->id, 4, '0', STR_PAD_LEFT);
 
-            // Send confirmation emails
+            // Send booking created emails using EmailService (with settings check)
+            $emailService = app(EmailServiceInterface::class);
+            $booking->load('listing.category');
+            
+            if (EmailSetting::isEmailEnabled($booking->listing->category, 'booking_received')) {
+                $emailService->send($booking->email, 'booking_received', $booking);
+                $emailService->send(EmailSetting::getAdminEmail(), 'booking_received', $booking);
+            }
+
+            // Keep existing email sending for backward compatibility
             $this->sendBookingEmails($booking, $confirmationNumber);
 
             return response()->json([
@@ -770,7 +820,7 @@ class BookingController extends Controller
                 'addons' => $addonDetails,
                 'total_addons' => round($totalAddons, 2),
                 'total' => round($priceCalculation['base_price'] + $totalAddons, 2),
-                'currency' => 'MAD'
+                'currency' => '€'
             ];
 
             // Add any notifications (like drop-off fee notice)
@@ -1041,5 +1091,72 @@ class BookingController extends Controller
             ],
             'notifications' => []
         ];
+    }
+
+    /**
+     * Schedule reminder if needed
+     *
+     * @param Booking $booking
+     * @return void
+     */
+    private function scheduleReminderIfNeeded(Booking $booking)
+    {
+        $serviceDateTime = $this->getServiceDateTime($booking);
+        
+        if (!$serviceDateTime) {
+            return;
+        }
+        
+        $reminderHours = EmailSetting::getReminderHours();
+        $reminderTime = Carbon::parse($serviceDateTime)->subHours($reminderHours);
+        
+        // Only schedule if reminder time is in the future
+        if ($reminderTime->isFuture()) {
+            ScheduledReminder::create([
+                'booking_id' => $booking->id,
+                'send_at' => $reminderTime,
+                'status' => 'pending'
+            ]);
+        }
+    }
+
+    /**
+     * Get service date/time based on category
+     *
+     * @param Booking $booking
+     * @return string|null
+     */
+    private function getServiceDateTime(Booking $booking)
+    {
+        if (!$booking->listing || !$booking->listing->category) {
+            return null;
+        }
+        
+        $category = $booking->listing->category->slug ?? '';
+        
+        switch ($category) {
+            case 'car_rental':
+                return $booking->pickup_date . ' ' . ($booking->pickup_time ?? '09:00:00');
+            case 'private_driver':
+                return $booking->pickup_date . ' ' . $booking->pickup_time;
+            case 'boat_rental':
+                return $booking->booking_date . ' ' . ($booking->departure_time ?? '09:00:00');
+            case 'things_to_do':
+                return $booking->activity_date . ' ' . ($booking->activity_time ?? '09:00:00');
+            default:
+                // Fallback to check by category_id if slug not available
+                switch ((int) $booking->category_id) {
+                    case 2: // Car rental
+                        return $booking->pickup_date . ' ' . ($booking->pickup_time ?? '09:00:00');
+                    case 3: // Private driver
+                        return $booking->prefered_date . ' ' . ($booking->pickup_time ?? '09:00:00');
+                    case 4: // Boat rental
+                        return $booking->prefered_date . ' ' . ($booking->pickup_time ?? '09:00:00');
+                    case 5: // Things to do
+                        return $booking->prefered_date . ' ' . ($booking->pickup_time ?? '09:00:00');
+                    default:
+                        return null;
+                }
+        }
     }
 }

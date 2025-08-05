@@ -28,7 +28,7 @@ $(document).ready(function () {
                 <td>${produit.designation}</td>
                 <td>${formatDate(produit.created_at)}</td>
                 <td>
-                    <span class="money">${produit.prix + " MAD"}</span>
+                    <span class="money">€${produit.prix}</span>
                 </td>
                 <td>${produit.qte}</td>
                 <td>
