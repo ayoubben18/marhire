@@ -586,12 +586,23 @@ class BookingValidationService
         }
         
         // Validate duration option exists for this listing
-        if ($request->has('duration_option_id') && $request->duration_option_id) {
-            $durationExists = $listing->actPricings()
-                ->where('id', $request->duration_option_id)
+        // Check custom_booking_option_id first (primary field), then duration_option_id as fallback
+        $optionId = $request->custom_booking_option_id ?? $request->duration_option_id;
+        
+        if ($optionId) {
+            // First check customBookingOptions (primary)
+            $optionExists = $listing->customBookingOptions()
+                ->where('id', $optionId)
                 ->exists();
+            
+            // If not found, check actPricings as fallback
+            if (!$optionExists) {
+                $optionExists = $listing->actPricings()
+                    ->where('id', $optionId)
+                    ->exists();
+            }
                 
-            if (!$durationExists) {
+            if (!$optionExists) {
                 throw ValidationException::withMessages([
                     'duration_option_id' => ['Selected duration option is not available for this activity.']
                 ]);
