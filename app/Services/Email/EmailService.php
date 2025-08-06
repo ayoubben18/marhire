@@ -47,7 +47,7 @@ class EmailService implements EmailServiceInterface
         config(['mail.from.name' => EmailSetting::getSenderName()]);
         
         // Generate PDF for confirmed bookings
-        if ($emailType === 'booking_confirmed' && $booking->status === 'confirmed' && !$pdfPath) {
+        if ($emailType === 'booking_confirmed' && strtolower($booking->status) === 'confirmed' && !$pdfPath) {
             try {
                 $invoiceData = $this->prepareInvoiceData($booking);
                 $pdfPath = $this->pdfService->generateInvoice($invoiceData);
@@ -87,6 +87,12 @@ class EmailService implements EmailServiceInterface
                 // Use database template
                 $subject = $this->replaceVariables($template->subject, $booking);
                 $body = $this->replaceVariables($template->body_html, $booking);
+                
+                Log::info('Sending email with DatabaseTemplateEmail', [
+                    'recipient' => $recipient,
+                    'has_pdf' => !empty($pdfPath),
+                    'pdf_path' => $pdfPath
+                ]);
                 
                 Mail::to($recipient)->send(new DatabaseTemplateEmail($subject, $body, $pdfPath));
             } else {
@@ -183,7 +189,8 @@ class EmailService implements EmailServiceInterface
     {
         return [
             'booking_id' => $booking->id,
-            'booking_reference' => $booking->reference ?? 'N/A',
+            'booking_reference' => $booking->invoice_no ?? 'N/A',
+            'invoice_no' => $booking->invoice_no ?? 'N/A',
             'customer_name' => $booking->name,
             'customer_email' => $booking->email,
             'listing_title' => $booking->listing->title ?? 'N/A',
@@ -197,19 +204,39 @@ class EmailService implements EmailServiceInterface
     
     protected function replaceVariables($text, $booking)
     {
-        $adminEmail = config('mail.admin_address', 'admin@marhire.com');
+        // Handle date formatting properly
+        $checkInDate = $booking->check_in;
+        $checkOutDate = $booking->check_out;
+        
+        // Format dates if they exist
+        if ($checkInDate && !is_string($checkInDate)) {
+            $checkInDate = \Carbon\Carbon::parse($checkInDate)->format('M d, Y');
+        } elseif ($checkInDate && is_string($checkInDate)) {
+            $checkInDate = \Carbon\Carbon::parse($checkInDate)->format('M d, Y');
+        }
+        
+        if ($checkOutDate && !is_string($checkOutDate)) {
+            $checkOutDate = \Carbon\Carbon::parse($checkOutDate)->format('M d, Y');
+        } elseif ($checkOutDate && is_string($checkOutDate)) {
+            $checkOutDate = \Carbon\Carbon::parse($checkOutDate)->format('M d, Y');
+        }
         
         $replacements = [
             '{{client_name}}' => $booking->name,
             '{{client_email}}' => $booking->email,
-            '{{booking_reference}}' => $booking->reference ?? 'N/A',
+            '{{booking_reference}}' => $booking->invoice_no ?: 'N/A', // Use stored invoice_no
+            '{{invoice_no}}' => $booking->invoice_no ?: 'N/A', // Use stored invoice_no
             '{{booking_id}}' => $booking->id,
             '{{listing_title}}' => $booking->listing->title ?? 'N/A',
-            '{{total_amount}}' => number_format($booking->total_amount, 2),
-            '{{currency}}' => $booking->currency ?? '€',
-            '{{admin_email}}' => $adminEmail,
-            '{{check_in_date}}' => $booking->check_in ? $booking->check_in->format('M d, Y') : 'N/A',
-            '{{check_out_date}}' => $booking->check_out ? $booking->check_out->format('M d, Y') : 'N/A',
+            '{{service}}' => $booking->listing->title ?? 'N/A',
+            '{{total_amount}}' => number_format($booking->total_amount, 2), // No currency symbol here
+            '{{total}}' => number_format($booking->total_amount, 2), // No currency symbol here
+            '{{currency}}' => '€', // Currency symbol separate
+            '{{admin_email}}' => EmailSetting::getAdminEmail(),
+            '{{check_in_date}}' => $checkInDate ?: 'N/A',
+            '{{check_out_date}}' => $checkOutDate ?: 'N/A',
+            '{{check_in}}' => $checkInDate ?: 'N/A',
+            '{{check_out}}' => $checkOutDate ?: 'N/A',
         ];
         
         return str_replace(array_keys($replacements), array_values($replacements), $text);
@@ -217,22 +244,42 @@ class EmailService implements EmailServiceInterface
     
     protected function prepareInvoiceData(Booking $booking): array
     {
+        // Load booking addons with their details
+        $booking->load('addons.addon');
+        
+        // Prepare addons array for display
+        $addons = [];
+        foreach ($booking->addons as $bookingAddon) {
+            $addons[] = [
+                'name' => $bookingAddon->addon->addon ?? 'Unknown Addon',
+                'price' => $bookingAddon->price
+            ];
+        }
+        
         return [
             'booking_id' => $booking->id,
-            'invoice_number' => 'INV-' . $booking->id,
+            'invoice_number' => $booking->invoice_no ?? ('INV-' . $booking->id),
             'invoice_date' => now()->format('F d, Y'),
             'status' => ucfirst($booking->status),
             
             // Customer info
             'client_name' => $booking->name,
             'client_email' => $booking->email,
-            'client_phone' => $booking->phone ?? 'N/A',
+            'client_phone' => $booking->whatsapp ?? $booking->whatsapp_number ?? 'N/A',
             
             // Booking details
             'service_name' => $booking->listing->title ?? 'N/A',
-            'check_in' => $booking->check_in ? $booking->check_in->format('F d, Y') : 'N/A',
-            'check_out' => $booking->check_out ? $booking->check_out->format('F d, Y') : 'N/A',
+            'check_in' => $booking->check_in ? \Carbon\Carbon::parse($booking->check_in)->format('F d, Y') : 'N/A',
+            'check_out' => $booking->check_out ? \Carbon\Carbon::parse($booking->check_out)->format('F d, Y') : 'N/A',
             'total_amount' => $booking->total_amount,
+            
+            // Pricing breakdown
+            'booking_price' => $booking->booking_price,
+            'addons' => $addons,
+            'total_addons' => $booking->total_addons,
+            'discount_or_extra' => $booking->discount_or_extra,
+            'discount_label' => $booking->discount_or_extra < 0 ? 'Discount' : 'Extra Charge',
+            'grand_total' => $booking->total_price,
             
             // Company info
             'company_email' => 'info@marhire.com',

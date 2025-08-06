@@ -19,6 +19,7 @@ import Blog from "./pages/Blog";
 import Legal from "./pages/Legal";
 import Article from "./pages/Article";
 import SubCategory from "./pages/SubCategory";
+import { initBookingEmailManager } from "./components/BookingEmailManager";
 
 const totalBookingsPerMonthCard = document.getElementById(
     "totalBookingsPerMonthCard"
@@ -139,3 +140,6 @@ if (articleRoot) {
 
     root.render(<Article slug={slug} />);
 }
+
+// Initialize the Booking Email Manager
+initBookingEmailManager();

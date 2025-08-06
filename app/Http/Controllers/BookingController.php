@@ -16,6 +16,7 @@ use App\Models\CustomBookingOption;
 use App\Models\DriverPricing;
 use App\Models\ScheduledReminder;
 use App\Models\EmailSetting;
+use App\Models\EmailLog;
 use App\Services\BookingValidationService;
 use App\Services\Email\EmailServiceInterface;
 use App\Mail\BookingClientConfirmation;
@@ -210,28 +211,13 @@ class BookingController extends Controller
             'status' => $newStatus
         ]);
 
-        // Send emails based on status change
-        $emailService = app(EmailServiceInterface::class);
-        
-        if ($newStatus === 'confirmed' && $oldStatus !== 'confirmed') {
-            // Booking confirmed - send confirmation emails if enabled
-            if (EmailSetting::isEmailEnabled($booking->listing->category, 'booking_confirmed')) {
-                $emailService->send($booking->email, 'booking_confirmed', $booking);
-                $emailService->send(EmailSetting::getAdminEmail(), 'booking_confirmed', $booking);
-            }
-            
+        // Only handle reminder scheduling on status change, not email sending
+        if (strtolower($newStatus) === 'confirmed' && strtolower($oldStatus) !== 'confirmed') {
             // Schedule reminder if applicable and enabled
             if (EmailSetting::isEmailEnabled($booking->listing->category, 'booking_reminder')) {
                 $this->scheduleReminderIfNeeded($booking);
             }
-            
-        } elseif ($newStatus === 'cancelled' && $oldStatus !== 'cancelled') {
-            // Booking cancelled - send cancellation emails if enabled
-            if (EmailSetting::isEmailEnabled($booking->listing->category, 'booking_cancelled')) {
-                $emailService->send($booking->email, 'booking_cancelled', $booking);
-                $emailService->send(EmailSetting::getAdminEmail(), 'booking_cancelled', $booking);
-            }
-            
+        } elseif (strtolower($newStatus) === 'cancelled' && strtolower($oldStatus) !== 'cancelled') {
             // Cancel any pending reminders
             ScheduledReminder::where('booking_id', $booking->id)
                 ->where('status', 'pending')
@@ -591,13 +577,20 @@ class BookingController extends Controller
             $emailService = app(EmailServiceInterface::class);
             $booking->load('listing.category');
             
+            // Send booking_received email to customer and admin
             if (EmailSetting::isEmailEnabled($booking->listing->category, 'booking_received')) {
+                // Send to customer
                 $emailService->send($booking->email, 'booking_received', $booking);
+                // Send to admin
                 $emailService->send(EmailSetting::getAdminEmail(), 'booking_received', $booking);
+                
+                Log::info('Booking emails sent', [
+                    'booking_id' => $booking->id,
+                    'customer_email' => $booking->email,
+                    'admin_email' => EmailSetting::getAdminEmail(),
+                    'status' => $booking->status
+                ]);
             }
-
-            // Keep existing email sending for backward compatibility
-            $this->sendBookingEmails($booking, $confirmationNumber);
 
             return response()->json([
                 'success' => true,
@@ -839,6 +832,107 @@ class BookingController extends Controller
                 'success' => false,
                 'message' => 'Error calculating price: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Get email status for a booking
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getEmailStatus($id)
+    {
+        $booking = Booking::findOrFail($id);
+        $emailLogs = EmailLog::where('booking_id', $id)
+            ->select('email_type', 'status', 'created_at', 'error_message', 'pdf_path')
+            ->get()
+            ->groupBy('email_type');
+        
+        // Only three email types - no reminders
+        $emailTypes = ['booking_received', 'booking_confirmed', 'booking_cancelled'];
+        $status = [];
+        
+        foreach ($emailTypes as $type) {
+            $logs = $emailLogs->get($type);
+            if ($logs && $logs->count() > 0) {
+                // Get the most recent log for this email type
+                $log = $logs->sortByDesc('created_at')->first();
+                $status[$type] = [
+                    'sent' => $log->status === 'sent',
+                    'date' => $log->created_at ? $log->created_at->format('M d, Y H:i') : null,
+                    'status' => $log->status,
+                    'error' => $log->error_message,
+                    'has_pdf' => !empty($log->pdf_path)
+                ];
+            } else {
+                $status[$type] = [
+                    'sent' => false,
+                    'date' => null,
+                    'status' => 'not_sent',
+                    'error' => null,
+                    'has_pdf' => false
+                ];
+            }
+        }
+        
+        return response()->json(['status' => $status]);
+    }
+
+    /**
+     * Send email for a booking
+     *
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sendEmail(Request $request, $id)
+    {
+        $request->validate([
+            'email_type' => 'required|in:booking_received,booking_confirmed,booking_cancelled'
+        ]);
+        
+        $booking = Booking::with('listing.category')->findOrFail($id);
+        $emailType = $request->email_type;
+        
+        try {
+            $emailService = app(EmailServiceInterface::class);
+            
+            // Send to customer
+            $customerSuccess = $emailService->send($booking->email, $emailType, $booking);
+            
+            if ($customerSuccess) {
+                // Also send to admin
+                $adminEmail = EmailSetting::getAdminEmail();
+                if ($adminEmail) {
+                    $emailService->send($adminEmail, $emailType, $booking);
+                }
+                
+                // Get updated email status
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Email sent successfully',
+                    'history' => $this->getEmailStatus($id)->getData()
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send email',
+                    'history' => $this->getEmailStatus($id)->getData()
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error sending email for booking ' . $id, [
+                'email_type' => $emailType,
+                'error' => $e->getMessage()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while sending the email',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+                'history' => $this->getEmailStatus($id)->getData()
+            ]);
         }
     }
 

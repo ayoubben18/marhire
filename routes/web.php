@@ -200,6 +200,8 @@ Route::name('bookings.')->middleware('auth')->prefix('bookings')->group(function
     Route::post('getListings', [BookingController::class, 'getListings'])->name('getListings');
     Route::post('getActivityListings', [BookingController::class, 'getActivityListings'])->name('getActivityListings');
     Route::get('calendarData', [BookingController::class, 'calendarData'])->name('calendarData');
+    Route::get('{id}/email-status', [BookingController::class, 'getEmailStatus'])->name('email-status');
+    Route::post('{id}/send-email', [BookingController::class, 'sendEmail'])->name('send-email');
 });
 
 //Utilisateur

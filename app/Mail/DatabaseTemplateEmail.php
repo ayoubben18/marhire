@@ -40,7 +40,22 @@ class DatabaseTemplateEmail extends Mailable
             // Handle storage path
             $fullPath = storage_path('app/' . $this->pdfPath);
             if (file_exists($fullPath)) {
-                $mail->attach($fullPath);
+                $mail->attach($fullPath, [
+                    'as' => 'invoice.pdf',
+                    'mime' => 'application/pdf',
+                ]);
+                
+                // Log successful attachment
+                \Log::info('PDF attached to email', [
+                    'pdf_path' => $this->pdfPath,
+                    'full_path' => $fullPath,
+                    'file_exists' => file_exists($fullPath)
+                ]);
+            } else {
+                \Log::warning('PDF file not found for attachment', [
+                    'pdf_path' => $this->pdfPath,
+                    'full_path' => $fullPath
+                ]);
             }
         }
         

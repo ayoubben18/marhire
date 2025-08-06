@@ -2,6 +2,41 @@
 
 @section('title', 'Bookings')
 
+@push('scripts')
+<script src="{{ mix('js/dashboard.js') }}" defer></script>
+@endpush
+
+@push('styles')
+<style>
+    /* Prevent flickering and layout shifts */
+    #booking-email-manager {
+        position: fixed;
+        z-index: 9999;
+        pointer-events: none;
+    }
+    
+    #booking-email-manager .modal {
+        pointer-events: auto;
+    }
+    
+    /* Smooth transitions for modal appearance */
+    #booking-email-manager .modal.fade {
+        transition: opacity 0.15s linear;
+    }
+    
+    /* Prevent table layout shift during initialization */
+    .datatable-init {
+        min-height: 200px;
+    }
+    
+    /* Ensure email button doesn't cause layout jumps */
+    .send-email {
+        display: inline-block;
+        vertical-align: middle;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="nk-block-head nk-block-head-sm">
     <div class="nk-block-between">
@@ -74,6 +109,10 @@
                                 </a>
                                 <a href="javascript:void(0)" data-toggle="modal" data-target="#deleteModal" class="delete" data-id="{{ $booking->id }}">
                                     <i class="icon ni ni-trash action-link"></i>
+                                </a>
+                                <span style="margin: 0 5px;">|</span>
+                                <a href="javascript:void(0)" class="send-email" data-toggle="modal" data-target="#emailModal" data-id="{{ $booking->id }}" data-status="{{ $booking->status }}" style="color: #5b9bd1;">
+                                    <i class="icon ni ni-mail action-link"></i>
                                 </a>
                             </td>
                         </tr>
@@ -155,10 +194,38 @@
 </div>
 <!-- End Modal -->
 
+<!-- React Email Modal Container -->
+<div id="booking-email-manager"></div>
 
 <script type="text/javascript">
- 
     $(document).ready(function(){
+        // DataTables is already initialized by scripts.js, no need to reinitialize
+        
+        // Handle email button click - open React modal
+        $(document).on('click', '.send-email', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            let bookingId = $(this).data('id');
+            console.log('Opening email modal for booking:', bookingId);
+            
+            // Call the React component's function with retry mechanism
+            if (window.openBookingEmailModal) {
+                window.openBookingEmailModal(bookingId);
+            } else {
+                console.warn('React email modal not ready, retrying...');
+                // Single quick retry after minimal delay
+                requestAnimationFrame(() => {
+                    if (window.openBookingEmailModal) {
+                        window.openBookingEmailModal(bookingId);
+                    } else {
+                        alert('Email modal is still loading. Please try again in a moment.');
+                    }
+                });
+            }
+        });
+        
+        // Keep existing delete and status change handlers
+        
         $('body').on('click', '.delete', function() {
             let id = $(this).data('id');
             $('#delete_id').val(id);

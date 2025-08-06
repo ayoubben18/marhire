@@ -140,11 +140,40 @@
                 </div>
             </div>
             
+            <!-- Pricing Breakdown -->
+            <div class="section">
+                <div class="section-title">Pricing Breakdown</div>
+                <div class="row">
+                    <span class="label">Base Booking Price:</span>
+                    <span class="value">€{{ number_format($invoiceData['booking_price'], 2) }}</span>
+                </div>
+                
+                @if(!empty($invoiceData['addons']))
+                    @foreach($invoiceData['addons'] as $addon)
+                    <div class="row">
+                        <span class="label">{{ $addon['name'] }}:</span>
+                        <span class="value">€{{ number_format($addon['price'], 2) }}</span>
+                    </div>
+                    @endforeach
+                    <div class="row">
+                        <span class="label">Total Addons:</span>
+                        <span class="value">€{{ number_format($invoiceData['total_addons'], 2) }}</span>
+                    </div>
+                @endif
+                
+                @if($invoiceData['discount_or_extra'] != 0)
+                <div class="row">
+                    <span class="label">{{ $invoiceData['discount_label'] }}:</span>
+                    <span class="value">€{{ number_format(abs($invoiceData['discount_or_extra']), 2) }}</span>
+                </div>
+                @endif
+            </div>
+            
             <!-- Total Amount -->
             <div class="total-section">
                 <div class="row">
-                    <span class="label">Total Amount:</span>
-                    <span class="total">€{{ number_format($invoiceData['total_amount'], 2) }}</span>
+                    <span class="label">Grand Total:</span>
+                    <span class="total">€{{ number_format($invoiceData['grand_total'], 2) }}</span>
                 </div>
             </div>
             
