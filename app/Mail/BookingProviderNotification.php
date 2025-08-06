@@ -49,7 +49,7 @@ class BookingProviderNotification extends Mailable implements ShouldQueue
         $subject = "MarHire: New Booking #{$this->confirmationNumber}";
 
         return $this->subject($subject)
-                    ->from('contact@marhire.com', 'MarHire')
+                    ->from(config('mail.from.address'), config('mail.from.name'))
                     ->view('emails.booking-provider')
                     ->with([
                         'booking' => $this->booking,

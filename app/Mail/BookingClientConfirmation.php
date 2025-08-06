@@ -46,7 +46,7 @@ class BookingClientConfirmation extends Mailable implements ShouldQueue
         $subject = "MarHire: Booking Confirmation #{$this->confirmationNumber}";
 
         return $this->subject($subject)
-                    ->from('contact@marhire.com', 'MarHire')
+                    ->from(config('mail.from.address'), config('mail.from.name'))
                     ->view('emails.booking-client')
                     ->with([
                         'booking' => $this->booking,

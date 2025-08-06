@@ -26,7 +26,7 @@ class SendContactMail extends Mailable
     public function build()
     {
         return $this->subject('Marhire: Nouveau contact message')
-        ->from('contact@marhire.com', 'Marhire')
+        ->from(config('mail.from.address'), config('mail.from.name'))
         ->view('emails.contact');
     }
 }
