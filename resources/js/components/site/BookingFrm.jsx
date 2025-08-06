@@ -19,6 +19,9 @@ import {
 import { mapSearchParams, isDateValid, getMinValidDate } from "../../utils/searchParamsMapping";
 
 const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) => {
+    // Convert categoryId to number to ensure proper comparison
+    const numericCategoryId = parseInt(categoryId) || 0;
+    
     // Step management state
     const [currentStep, setCurrentStep] = useState(0);
     const [searchParamsLoaded, setSearchParamsLoaded] = useState(false);
@@ -94,7 +97,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
 
     // Validate Step 1 (Booking Details)
     const isStep1Valid = () => {
-        switch(categoryId) {
+        switch(numericCategoryId) {
             case 2: // Car rental
                 if (!startDate || !endDate || !pickupLocation || 
                     !dropoffLocation || !pickupTime || !dropoffTime) {
@@ -226,7 +229,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         if (!startDate || isSelectingEndDate) {
             if (!startDate) {
                 setStartDate(selectedDate);
-                if (categoryId === 2) { // Car rental needs end date
+                if (numericCategoryId === 2) { // Car rental needs end date
                     setIsSelectingEndDate(true);
                 } else {
                     setShowCalendar(false);
@@ -239,7 +242,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         } else {
             setStartDate(selectedDate);
             setEndDate("");
-            if (categoryId === 2) {
+            if (numericCategoryId === 2) {
                 setIsSelectingEndDate(true);
             }
         }
@@ -412,7 +415,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
             // Prepare form data based on category
             const formData = {
                 listing_id: listingId,
-                category_id: categoryId,
+                category_id: numericCategoryId,
                 fullName: fullName,
                 email: email,
                 whatsAppNumber: whatsAppNumber,
@@ -424,7 +427,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
             };
             
             // Add category-specific fields
-            switch(categoryId) {
+            switch(numericCategoryId) {
                 case 2: // Car rental
                     formData.dateOfBirth = dateOfBirth;
                     // Calculate age from dateOfBirth
@@ -524,7 +527,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
             }
             
             // Calculate price locally with advanced pricing logic
-            const calculatedPrice = calculatePrice(categoryId, listing?.price || listing?.price_per_day || listing?.price_per_person || 100, { 
+            const calculatedPrice = calculatePrice(numericCategoryId, listing?.price || listing?.price_per_day || listing?.price_per_person || 100, { 
                 startDate, 
                 endDate, 
                 duration, 
@@ -664,14 +667,14 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         
         try {
             // Map search params to booking form fields
-            const mappedParams = mapSearchParams(searchParams, categoryId);
+            const mappedParams = mapSearchParams(searchParams, numericCategoryId);
             
             if (!mappedParams || Object.keys(mappedParams).length === 0) {
                 return;
             }
         
         // Car rental parameters
-        if (categoryId === 2) {
+        if (numericCategoryId === 2) {
             if (mappedParams.pickupLocation) {
                 setPickupLocation(mappedParams.pickupLocation);
                 paramsFound = true;
@@ -686,13 +689,13 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     setStartDate(mappedParams.startDate);
                 } else {
                     // Auto-adjust to valid date
-                    setStartDate(getMinValidDate(categoryId));
+                    setStartDate(getMinValidDate(numericCategoryId));
                 }
                 paramsFound = true;
             }
             if (mappedParams.endDate) {
                 // Validate dropoff date is at least 3 days after pickup
-                const pickupDate = new Date(mappedParams.startDate || startDate || getMinValidDate(categoryId));
+                const pickupDate = new Date(mappedParams.startDate || startDate || getMinValidDate(numericCategoryId));
                 const dropoffDate = new Date(mappedParams.endDate);
                 const minDropoff = new Date(pickupDate);
                 minDropoff.setDate(minDropoff.getDate() + 3);
@@ -719,13 +722,13 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         }
         
         // Private driver parameters
-        if (categoryId === 3) {
+        if (numericCategoryId === 3) {
             if (mappedParams.startDate) {
                 // Validate date is at least 24hrs in advance
                 if (isDateValid(mappedParams.startDate, 1)) {
                     setStartDate(mappedParams.startDate);
                 } else {
-                    setStartDate(getMinValidDate(categoryId));
+                    setStartDate(getMinValidDate(numericCategoryId));
                 }
                 paramsFound = true;
             }
@@ -753,13 +756,13 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         }
         
         // Boat rental parameters
-        if (categoryId === 4) {
+        if (numericCategoryId === 4) {
             if (mappedParams.startDate) {
                 // Validate date is at least 48hrs in advance
                 if (isDateValid(mappedParams.startDate, 2)) {
                     setStartDate(mappedParams.startDate);
                 } else {
-                    setStartDate(getMinValidDate(categoryId));
+                    setStartDate(getMinValidDate(numericCategoryId));
                 }
                 paramsFound = true;
             }
@@ -782,13 +785,13 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         }
         
         // Activity parameters
-        if (categoryId === 5) {
+        if (numericCategoryId === 5) {
             if (mappedParams.startDate) {
                 // Validate date is at least 48hrs in advance
                 if (isDateValid(mappedParams.startDate, 2)) {
                     setStartDate(mappedParams.startDate);
                 } else {
-                    setStartDate(getMinValidDate(categoryId));
+                    setStartDate(getMinValidDate(numericCategoryId));
                 }
                 paramsFound = true;
             }
@@ -812,11 +815,11 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
             console.error('Error processing search params:', error);
             setErrors({ general: 'Unable to load search parameters. Please enter details manually.' });
         }
-    }, [categoryId, searchParams]);
+    }, [numericCategoryId, searchParams]);
 
     // Get category icon
     const getCategoryIcon = () => {
-        switch(categoryId) {
+        switch(numericCategoryId) {
             case 2: return <Car className="w-5 h-5 mr-2" />;
             case 3: return <Car className="w-5 h-5 mr-2" />;
             case 4: return <Anchor className="w-5 h-5 mr-2" />;
@@ -827,7 +830,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
 
     // Get category name
     const getCategoryName = () => {
-        switch(categoryId) {
+        switch(numericCategoryId) {
             case 2: return "Car Rental";
             case 3: return "Private Driver";
             case 4: return "Boat Rental";
@@ -838,7 +841,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
 
     // Memoize price calculations to prevent infinite loops
     const priceDetails = useMemo(() => {
-        return calculatePriceWithDetails(categoryId, listing?.price || listing?.price_per_day || listing?.price_per_person || 100, { 
+        return calculatePriceWithDetails(numericCategoryId, listing?.price || listing?.price_per_day || listing?.price_per_person || 100, { 
             startDate, 
             endDate, 
             duration, 
@@ -854,7 +857,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
             pickupTime,
             dropoffTime
         });
-    }, [categoryId, listing, startDate, endDate, duration, numberOfPeople, selectedAddons, boatDuration, selectedDurationOption, serviceTypes, roadTypes, pickupCity, dropoffCity, pickupTime, dropoffTime]);
+    }, [numericCategoryId, listing, startDate, endDate, duration, numberOfPeople, selectedAddons, boatDuration, selectedDurationOption, serviceTypes, roadTypes, pickupCity, dropoffCity, pickupTime, dropoffTime]);
 
     return (
         !loading && (
@@ -964,7 +967,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                 {/* Step Content */}
                 {currentStep === 0 && (
                     <BookingDetailsStep
-                        categoryId={categoryId}
+                        categoryId={numericCategoryId}
                         listing={listing}
                         startDate={startDate}
                         setStartDate={setStartDate}
@@ -1038,7 +1041,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                         setTermsAccepted={setTermsAccepted}
                         handleFieldChange={handleFieldChange}
                         errors={errors}
-                        categoryId={categoryId}
+                        categoryId={numericCategoryId}
                     />
                 )}
                 
