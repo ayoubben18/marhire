@@ -15,6 +15,11 @@ class ListingAddonAffected extends Model
         'listing_id'
     ];
 
+    protected $casts = [
+        'addon_id' => 'integer',
+        'listing_id' => 'integer'
+    ];
+
     public function addon()
     {
         return $this->belongsTo(ListingAddon::class, 'addon_id');

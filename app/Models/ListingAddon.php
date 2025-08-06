@@ -16,6 +16,11 @@ class ListingAddon extends Model
         'price'
     ];
 
+    protected $casts = [
+        'category_id' => 'integer',
+        'price' => 'float'
+    ];
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');

@@ -28,6 +28,12 @@ class Agency extends Model
         'id_user'
     ];
 
+    protected $casts = [
+        'category_id' => 'integer',
+        'id_city' => 'integer',
+        'id_user' => 'integer'
+    ];
+
     public function city()
     {
         return $this->belongsTo(City::class, 'id_city');

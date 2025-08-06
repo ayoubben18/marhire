@@ -74,7 +74,32 @@ class Listing extends Model
     ];
 
     protected $casts = [
-        'custom_duration_options' => 'array'
+        'custom_duration_options' => 'array',
+        'category_id' => 'integer',
+        'city_id' => 'integer',
+        'car_model' => 'integer',
+        'car_type' => 'integer',
+        'vehicule_type' => 'integer',
+        'vehicule_model' => 'integer',
+        'year' => 'integer',
+        'seats' => 'integer',
+        'doors' => 'integer',
+        'provider_id' => 'integer',
+        'deposit_amount' => 'float',
+        'capacity' => 'integer',
+        'max_passengers' => 'integer',
+        'max_luggage' => 'integer',
+        'activity_type' => 'integer',
+        'group_size_min' => 'integer',
+        'group_size_max' => 'integer',
+        'service_type' => 'integer',
+        'price_per_hour' => 'float',
+        'price_per_half_day' => 'float',
+        'price_per_day' => 'float',
+        'price_per_week' => 'float',
+        'price_per_month' => 'float',
+        'price_per_person' => 'float',
+        'price_per_group' => 'float'
     ];
 
     public function category()
