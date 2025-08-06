@@ -119,41 +119,23 @@ class Booking extends Model
     }
 
     /**
-     * Generate a unique invoice number for this booking
+     * Generate a unique invoice number for this booking using booking ID
      */
-    public static function generateInvoiceNumber()
+    public static function generateInvoiceNumber($bookingId = null)
     {
-        // Use database transaction to ensure uniqueness
-        return \DB::transaction(function () {
-            $yearMonth = date('Ym');
-            $dateString = date('Ymd');
-            
-            // Get or create counter for this month
-            $counter = \DB::table('invoice_counters')
-                ->where('year_month', $yearMonth)
-                ->lockForUpdate()
-                ->first();
-            
-            if (!$counter) {
-                // Create new counter for this month starting at 500
-                \DB::table('invoice_counters')->insert([
-                    'year_month' => $yearMonth,
-                    'last_number' => 500,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-                $nextNumber = 501;
-            } else {
-                // Increment the counter
-                $nextNumber = $counter->last_number + 1;
-                \DB::table('invoice_counters')
-                    ->where('year_month', $yearMonth)
-                    ->update(['last_number' => $nextNumber, 'updated_at' => now()]);
-            }
-            
-            // Generate invoice number: INV-YYYYMMDD-XXXX
-            return 'INV-' . $dateString . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
-        });
+        // If no booking ID provided, get the next auto-increment value
+        if (!$bookingId) {
+            $statement = \DB::select("SHOW TABLE STATUS LIKE 'bookings'");
+            $bookingId = $statement[0]->Auto_increment;
+        }
+        
+        // Simple formula: 500 + booking ID
+        // This ensures consistency and no synchronization issues
+        $dateString = date('Ymd');
+        $invoiceNumber = 500 + $bookingId;
+        
+        // Format: INV-YYYYMMDD-####
+        return 'INV-' . $dateString . '-' . str_pad($invoiceNumber, 4, '0', STR_PAD_LEFT);
     }
     
     /**
@@ -167,6 +149,15 @@ class Booking extends Model
             // Generate invoice number if not set
             if (!$booking->invoice_no) {
                 $booking->invoice_no = self::generateInvoiceNumber();
+            }
+        });
+        
+        static::created(function ($booking) {
+            // Update invoice number with actual booking ID if needed
+            $expectedInvoiceNo = self::generateInvoiceNumber($booking->id);
+            if ($booking->invoice_no !== $expectedInvoiceNo) {
+                $booking->invoice_no = $expectedInvoiceNo;
+                $booking->saveQuietly(); // Save without triggering events
             }
         });
     }

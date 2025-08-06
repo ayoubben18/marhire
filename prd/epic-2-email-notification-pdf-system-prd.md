@@ -131,10 +131,12 @@ The MarHire Email Notification & PDF System is a comprehensive communication and
 ### 4.1 Technology Stack
 - **Email Service**: Laravel Mail with EmailService interface
 - **PDF Generation**: barryvdh/laravel-dompdf package
-- **Queue System**: Not implemented (synchronous sending)
+- **Queue System**: Database queue driver with ProcessEmailQueue job
 - **Scheduler**: Laravel Task Scheduling for reminders (every 5 minutes)
 - **Storage**: Local filesystem at storage/app/invoices/
 - **Template Engine**: Database-stored HTML templates with variable replacement
+- **Frontend Components**: React/TypeScript for email modal interface
+- **UI Framework**: Bootstrap with NioBoard admin theme
 
 ### 4.2 Database Schema (As Implemented)
 
@@ -169,7 +171,8 @@ The MarHire Email Notification & PDF System is a comprehensive communication and
 - error_message
 - pdf_path
 - email_data (json)
-- retry_count
+- retry_count (tracks retry attempts, max 3)
+- has_pdf (boolean flag for PDF attachment)
 - sent_at
 - created_at
 - updated_at
@@ -182,12 +185,33 @@ The MarHire Email Notification & PDF System is a comprehensive communication and
 - created_at
 - updated_at
 
+**jobs table (Laravel Queue):**
+- id
+- queue
+- payload
+- attempts
+- reserved_at
+- available_at
+- created_at
+
+**failed_jobs table:**
+- id
+- uuid
+- connection
+- queue
+- payload
+- exception
+- failed_at
+
 ### 4.3 Security Considerations
 - Email addresses validated before sending
 - PDF access restricted to authorized users
-- Rate limiting on email sends
+- Rate limiting on email sends (max 3 retries)
 - SPF/DKIM configuration for deliverability
 - Sanitization of user inputs in templates
+- CSRF protection on all email actions
+- Status-based email validation (prevents mismatched email types)
+- Secure PDF download with authentication check
 
 ## 5. User Interface Design
 
@@ -212,6 +236,30 @@ The MarHire Email Notification & PDF System is a comprehensive communication and
 - Download attached PDF
 - Resend failed emails
 - Export to CSV
+
+**Bookings List Enhancement:**
+- Action buttons column with:
+  - Status change (clipboard icon)
+  - Edit (pencil icon)
+  - Delete (trash icon)
+  - Send Email (mail icon, blue)
+  - Download Invoice (download icon, green)
+
+**Email Management Modal (React):**
+- Booking header with ID, status badge, invoice number
+- Email History section:
+  - Table view with all email types
+  - Expandable history (click chevron to expand)
+  - Status badges with retry counts
+  - PDF attachment indicators
+  - Error messages for failures
+  - Retry button for failed emails
+  - Resend button for successful emails
+- Send Email section:
+  - Dropdown for email type selection
+  - Status validation warnings
+  - Send button with loading state
+- Real-time updates after actions
 
 ### 5.2 Customer Email Templates
 
@@ -297,14 +345,65 @@ The MarHire Email Notification & PDF System is a comprehensive communication and
 - Works consistently across all categories
 - Simpler maintenance and better user understanding
 
+### Story 2.8: Queue Implementation ✅
+- Database queue driver configured
+- ProcessEmailQueue job for async email processing
+- Background processing with php artisan queue:work
+- Automatic retry on failure (max 3 attempts)
+- Failed job tracking in failed_jobs table
+
+### Story 2.9: Admin Actions Column Enhancement ✅
+- Added quick-action buttons in bookings table
+- Change status icon with modal
+- Edit booking link
+- Delete booking with confirmation
+- Send email button with modal
+- Download invoice button (green icon)
+
+### Story 2.10: Email Status Badge with Modal ✅
+- Visual status badges showing email delivery state
+- Color-coded: green (sent), yellow (pending), red (failed)
+- Click-to-open detailed modal showing:
+  - Last attempt timestamp
+  - Error messages for failures
+  - Recipient email address
+  - PDF attachment status
+
+### Story 2.11: Email Modal with Complete History ✅
+- React-based BookingEmailModal component
+- Complete email history for all types (received/confirmed/cancelled)
+- Expandable history view (max-height 200px with scroll)
+- Retry functionality for failed emails (max 3 attempts)
+- Status-based email validation (prevents wrong email type for status)
+- Real-time status updates after actions
+- Color-coded status badges with attempt counters
+- PDF attachment indicators
+
+### Story 2.12: Invoice Numbering System ✅
+- Deterministic invoice numbering: INV-YYYYMMDD-{500+booking_id}
+- Removed invoice_counters table dependency
+- Consistent invoice numbers across all bookings
+- Automatic generation on booking creation
+- Fixed historical booking invoice discrepancies
+
+### Story 2.13: Admin Invoice Download ✅
+- Direct invoice download regardless of booking status
+- Quick-access download button in actions column
+- PDF generation on-demand for any booking
+- Uses same invoice template as email attachments
+- Accessible even for pending/cancelled bookings
+
 ## 8. Success Criteria
 
 **Launch Readiness:**
-- All email types sending successfully
-- PDFs generating correctly for all categories
-- Admin panel fully functional
-- <1% email failure rate in testing
-- Page load <2s for admin panel
+- All email types sending successfully ✅
+- PDFs generating correctly for all categories ✅
+- Admin panel fully functional ✅
+- <1% email failure rate in testing ✅
+- Page load <2s for admin panel ✅
+- Queue system processing emails reliably ✅
+- Email retry mechanism working (max 3 attempts) ✅
+- Invoice numbering consistent across all bookings ✅
 
 **Post-Launch Success:**
 - 99.5% email delivery rate
@@ -312,6 +411,8 @@ The MarHire Email Notification & PDF System is a comprehensive communication and
 - 90% admin satisfaction with configuration tools
 - No critical bugs in first 30 days
 - Positive impact on booking completion rates
+- Average email processing time <30 seconds
+- Failed email retry success rate >80%
 
 ## 9. Future Enhancements
 
@@ -359,6 +460,8 @@ The MarHire Email Notification & PDF System is a comprehensive communication and
 - {{admin_email}} - Admin email address
 - {{check_in_date}} - Check-in/Start date (formatted as 'M d, Y')
 - {{check_out_date}} - Check-out/End date (formatted as 'M d, Y')
+- {{invoice_no}} - Invoice number (INV-YYYYMMDD-{500+booking_id})
+- {{booking_status}} - Current booking status
 
 **Note:** The system uses a simple str_replace method for variable substitution, keeping templates easy to edit and maintain.
 
@@ -372,12 +475,61 @@ The MarHire Email Notification & PDF System is a comprehensive communication and
 7. Terms & Conditions: Key policies
 8. Footer: Contact info, website
 
-### C. Email Sending Best Practices
-- Use queues for all emails
-- Implement exponential backoff for retries
-- Monitor bounce rates
-- Maintain list hygiene
-- Use authentication (SPF/DKIM/DMARC)
-- Include unsubscribe links
-- Test across email clients
-- Monitor spam scores
+### C. Email Sending Best Practices (As Implemented)
+- ✅ Use queues for all emails (database queue driver)
+- ✅ Implement retry mechanism (max 3 attempts)
+- ✅ Track all email attempts in email_logs
+- ✅ Status-based validation (correct email for booking status)
+- ✅ Error message logging for debugging
+- ✅ PDF attachment tracking
+- ✅ Admin notification copies
+- ✅ Real-time status updates in UI
+- Monitor bounce rates (future)
+- Use authentication (SPF/DKIM/DMARC) (future)
+- Include unsubscribe links (future)
+- Monitor spam scores (future)
+
+### D. Project Architecture Updates
+
+**New Components Added:**
+
+1. **Backend Services:**
+   - `app/Services/Email/EmailService.php` - Core email handling
+   - `app/Services/PDF/PDFService.php` - Invoice generation
+   - `app/Jobs/ProcessEmailQueue.php` - Async email processing
+   - `app/Console/Commands/SendScheduledReminders.php` - Reminder scheduler
+
+2. **Controllers:**
+   - `app/Http/Controllers/Admin/EmailTemplateController.php`
+   - `app/Http/Controllers/Admin/EmailSettingsController.php`
+   - `app/Http/Controllers/Admin/EmailHistoryController.php`
+   - Enhanced `BookingController` with email methods:
+     - `getEmailStatus()` - Returns complete email history
+     - `sendEmail()` - Sends emails with validation
+     - `retryEmail()` - Retries failed emails
+     - `downloadInvoice()` - Generate and download PDFs
+
+3. **Frontend Components:**
+   - `resources/js/components/BookingEmailModal.tsx` - React email management
+   - `resources/js/components/BookingEmailManager.tsx` - Modal container
+   - `public/js/dashboard.js` - Compiled React bundle
+
+4. **Database Migrations:**
+   - `2024_01_20_000001_create_email_templates_table.php`
+   - `2024_01_20_000002_create_email_settings_table.php`
+   - `2024_01_20_000003_create_email_logs_table.php`
+   - `2024_01_20_000004_create_scheduled_reminders_table.php`
+   - `2024_01_20_000005_create_jobs_table.php`
+   - `2024_01_20_000006_create_failed_jobs_table.php`
+   - `2025_08_06_180000_cleanup_invoice_counters.php`
+
+5. **Configuration Files:**
+   - `config/mail.php` - Added retry settings
+   - `config/queue.php` - Database queue configuration
+
+6. **Routes Added (web.php):**
+   - GET `/bookings/{id}/email-status` - Get email history
+   - POST `/bookings/{id}/send-email` - Send email
+   - POST `/bookings/{id}/retry-email` - Retry failed email
+   - GET `/bookings/{id}/download-invoice` - Download PDF
+   - Admin email management routes under `/admin/`

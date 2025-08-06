@@ -114,6 +114,9 @@
                                 <a href="javascript:void(0)" class="send-email" data-toggle="modal" data-target="#emailModal" data-id="{{ $booking->id }}" data-status="{{ $booking->status }}" style="color: #5b9bd1;">
                                     <i class="icon ni ni-mail action-link"></i>
                                 </a>
+                                <a href="{{ route('bookings.download-invoice', $booking->id) }}" title="Download Invoice" style="color: #28a745;">
+                                    <i class="icon ni ni-file-download action-link"></i>
+                                </a>
                             </td>
                         </tr>
                         @endforeach

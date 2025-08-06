@@ -19,6 +19,7 @@ use App\Models\EmailSetting;
 use App\Models\EmailLog;
 use App\Services\BookingValidationService;
 use App\Services\Email\EmailServiceInterface;
+use App\Services\PDFService;
 use App\Mail\BookingClientConfirmation;
 use App\Mail\BookingProviderNotification;
 use Carbon\Carbon;
@@ -845,7 +846,8 @@ class BookingController extends Controller
     {
         $booking = Booking::findOrFail($id);
         $emailLogs = EmailLog::where('booking_id', $id)
-            ->select('email_type', 'status', 'created_at', 'error_message', 'pdf_path')
+            ->select('id', 'email_type', 'status', 'created_at', 'error_message', 'pdf_path', 'recipient_email', 'retry_count')
+            ->orderBy('created_at', 'desc')
             ->get()
             ->groupBy('email_type');
         
@@ -856,27 +858,41 @@ class BookingController extends Controller
         foreach ($emailTypes as $type) {
             $logs = $emailLogs->get($type);
             if ($logs && $logs->count() > 0) {
-                // Get the most recent log for this email type
-                $log = $logs->sortByDesc('created_at')->first();
+                // Get all logs for this email type, sorted by created_at DESC
+                $logsArray = $logs->map(function($log) {
+                    return [
+                        'id' => $log->id,
+                        'status' => $log->status,
+                        'created_at' => $log->created_at ? $log->created_at->format('Y-m-d H:i:s') : null,
+                        'recipient_email' => $log->recipient_email,
+                        'error_message' => $log->error_message,
+                        'retry_count' => $log->retry_count ?? 0,
+                        'has_pdf' => !empty($log->pdf_path)
+                    ];
+                })->toArray();
+                
+                // Get the latest log to determine can_retry and can_resend
+                $latestLog = $logs->first();
+                $maxRetries = config('mail.max_retries', 3);
+                
                 $status[$type] = [
-                    'sent' => $log->status === 'sent',
-                    'date' => $log->created_at ? $log->created_at->format('M d, Y H:i') : null,
-                    'status' => $log->status,
-                    'error' => $log->error_message,
-                    'has_pdf' => !empty($log->pdf_path)
+                    'logs' => array_values($logsArray),
+                    'can_retry' => $latestLog->status === 'failed' && ($latestLog->retry_count ?? 0) < $maxRetries,
+                    'can_resend' => $latestLog->status === 'sent'
                 ];
             } else {
                 $status[$type] = [
-                    'sent' => false,
-                    'date' => null,
-                    'status' => 'not_sent',
-                    'error' => null,
-                    'has_pdf' => false
+                    'logs' => [],
+                    'can_retry' => false,
+                    'can_resend' => false
                 ];
             }
         }
         
-        return response()->json(['status' => $status]);
+        return response()->json([
+            'booking' => $booking,
+            'email_status' => $status
+        ]);
     }
 
     /**
@@ -894,6 +910,41 @@ class BookingController extends Controller
         
         $booking = Booking::with('listing.category')->findOrFail($id);
         $emailType = $request->email_type;
+        
+        // Validate email type matches booking status
+        $statusMismatch = false;
+        $expectedStatus = '';
+        
+        switch ($emailType) {
+            case 'booking_received':
+                if (strtolower($booking->status) !== 'pending') {
+                    $statusMismatch = true;
+                    $expectedStatus = 'Pending';
+                }
+                break;
+            case 'booking_confirmed':
+                if (strtolower($booking->status) !== 'confirmed') {
+                    $statusMismatch = true;
+                    $expectedStatus = 'Confirmed';
+                }
+                break;
+            case 'booking_cancelled':
+                if (strtolower($booking->status) !== 'cancelled') {
+                    $statusMismatch = true;
+                    $expectedStatus = 'Cancelled';
+                }
+                break;
+        }
+        
+        if ($statusMismatch) {
+            return response()->json([
+                'success' => false,
+                'message' => "Cannot send this email type. Please update the booking status to '{$expectedStatus}' first.",
+                'mismatch' => true,
+                'current_status' => $booking->status,
+                'required_status' => $expectedStatus
+            ], 422);
+        }
         
         try {
             $emailService = app(EmailServiceInterface::class);
@@ -933,6 +984,172 @@ class BookingController extends Controller
                 'error' => config('app.debug') ? $e->getMessage() : null,
                 'history' => $this->getEmailStatus($id)->getData()
             ]);
+        }
+    }
+
+    /**
+     * Retry sending a failed email
+     *
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function retryEmail(Request $request, $id)
+    {
+        $request->validate([
+            'email_log_id' => 'required|integer|exists:email_logs,id'
+        ]);
+
+        try {
+            $emailLog = EmailLog::findOrFail($request->email_log_id);
+            
+            // Verify this log belongs to the booking
+            if ($emailLog->booking_id != $id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Email log does not belong to this booking'
+                ], 403);
+            }
+            
+            // Get booking with relationships
+            $booking = Booking::with('listing.category')->findOrFail($id);
+            
+            // Validate email type matches booking status
+            $statusMismatch = false;
+            $expectedStatus = '';
+            
+            switch ($emailLog->email_type) {
+                case 'booking_received':
+                    if (strtolower($booking->status) !== 'pending') {
+                        $statusMismatch = true;
+                        $expectedStatus = 'Pending';
+                    }
+                    break;
+                case 'booking_confirmed':
+                    if (strtolower($booking->status) !== 'confirmed') {
+                        $statusMismatch = true;
+                        $expectedStatus = 'Confirmed';
+                    }
+                    break;
+                case 'booking_cancelled':
+                    if (strtolower($booking->status) !== 'cancelled') {
+                        $statusMismatch = true;
+                        $expectedStatus = 'Cancelled';
+                    }
+                    break;
+            }
+            
+            if ($statusMismatch) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Cannot retry this email type. Please update the booking status to '{$expectedStatus}' first.",
+                    'mismatch' => true,
+                    'current_status' => $booking->status,
+                    'required_status' => $expectedStatus
+                ], 422);
+            }
+            
+            // Check max retries
+            $maxRetries = config('mail.max_retries', 3);
+            if ($emailLog->retry_count >= $maxRetries) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Maximum retry attempts reached'
+                ]);
+            }
+            
+            // Increment retry count
+            $emailLog->increment('retry_count');
+            
+            // Apply optional delay
+            if ($delay = config('mail.retry_delay_seconds', 0)) {
+                sleep($delay);
+            }
+            
+            // Resend the email using the same type
+            $emailService = app(EmailServiceInterface::class);
+            $success = $emailService->send($emailLog->recipient_email, $emailLog->email_type, $booking);
+            
+            if ($success) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Email retry successful',
+                    'history' => $this->getEmailStatus($id)->getData()
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to retry email',
+                    'history' => $this->getEmailStatus($id)->getData()
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error retrying email for booking ' . $id, [
+                'email_log_id' => $request->email_log_id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while retrying the email',
+                'error' => config('app.debug') ? $e->getMessage() : null,
+                'history' => $this->getEmailStatus($id)->getData()
+            ]);
+        }
+    }
+
+    /**
+     * Download invoice for a booking
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function downloadInvoice($id)
+    {
+        try {
+            $booking = Booking::with([
+                'listing.category',
+                'listing.city',
+                'listing.provider'
+            ])->findOrFail($id);
+            
+            // Generate the PDF (always generate fresh to ensure latest data)
+            $emailService = app(EmailServiceInterface::class);
+            
+            // Use reflection to access the private method
+            $reflection = new \ReflectionClass($emailService);
+            $method = $reflection->getMethod('prepareInvoiceData');
+            $method->setAccessible(true);
+            $invoiceData = $method->invoke($emailService, $booking);
+            
+            // Generate PDF
+            $pdfService = new PDFService();
+            $relativePath = $pdfService->generateInvoice($invoiceData);
+            
+            if (!$relativePath) {
+                return response()->json(['error' => 'Failed to generate invoice'], 500);
+            }
+            
+            // Convert relative path to absolute path
+            $filePath = storage_path('app/' . $relativePath);
+            
+            if (!file_exists($filePath)) {
+                return response()->json(['error' => 'Invoice file not found after generation'], 500);
+            }
+            
+            // Return the PDF as download
+            return response()->download($filePath, 'invoice-' . $booking->invoice_no . '.pdf', [
+                'Content-Type' => 'application/pdf',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error downloading invoice for booking ' . $id, [
+                'error' => $e->getMessage()
+            ]);
+            
+            return response()->json([
+                'error' => 'Failed to download invoice',
+                'message' => config('app.debug') ? $e->getMessage() : 'An error occurred'
+            ], 500);
         }
     }
 

@@ -118,4 +118,17 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Email Retry Settings
+    |--------------------------------------------------------------------------
+    |
+    | These settings control the retry logic for failed emails, including
+    | the maximum number of retry attempts and optional delay between retries.
+    |
+    */
+
+    'max_retries' => env('MAIL_MAX_RETRIES', 3),
+    'retry_delay_seconds' => env('MAIL_RETRY_DELAY_SECONDS', 0),
+
 ];

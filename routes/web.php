@@ -202,6 +202,8 @@ Route::name('bookings.')->middleware('auth')->prefix('bookings')->group(function
     Route::get('calendarData', [BookingController::class, 'calendarData'])->name('calendarData');
     Route::get('{id}/email-status', [BookingController::class, 'getEmailStatus'])->name('email-status');
     Route::post('{id}/send-email', [BookingController::class, 'sendEmail'])->name('send-email');
+    Route::post('{id}/retry-email', [BookingController::class, 'retryEmail'])->name('retry-email');
+    Route::get('{id}/download-invoice', [BookingController::class, 'downloadInvoice'])->name('download-invoice');
 });
 
 //Utilisateur
