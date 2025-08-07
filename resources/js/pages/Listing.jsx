@@ -163,7 +163,7 @@ const Listing = ({ slug }) => {
                             listing={listing}
                             searchParams={searchParams}
                         />
-                        <SingleListingPricing loading={loading} />
+                        {/* Price summary card removed - now shown in booking form */}
                     </div>
                 </div>
             </div>

@@ -1305,13 +1305,35 @@ span.verified {
 .listing-container {
     display: flex;
     gap: 40px;
+    width: 100%;
+    box-sizing: border-box;
 }
 .listing-container__left {
     flex: 6;
     width: 70%;
+    min-width: 0; /* Prevent overflow */
 }
 .listing-container__right {
     flex: 3;
+    min-width: 0; /* Prevent overflow */
+}
+
+/* Ensure images are responsive */
+.listing-container img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Make content sections responsive */
+.singlelisting-cancelation,
+.singlelisting-short-description,
+.singlelisting-specs,
+.singlelisting-included,
+.singlelisting-addons,
+.singlelisting-policies {
+    width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
 }
 .singlelisting-infos {
     border: 1px solid #e0e0e0;
@@ -1381,7 +1403,9 @@ span.verified {
     margin-top: 24px;
 }
 .singlelisting__agency__logo {
-    height: 24px;
+    height: 40px;
+    max-width: 120px;
+    object-fit: contain;
 }
 .singlelisting__h3 {
     font-size: 12pt;
@@ -1429,6 +1453,44 @@ span.verified {
     margin-bottom: 16px;
     border-radius: 12px;
     min-height: 220px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: box-shadow 0.3s ease;
+}
+
+.singlelisting-booking:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+/* Responsive form elements */
+.singlelisting-booking input,
+.singlelisting-booking select,
+.singlelisting-booking textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.singlelisting-booking .MuiFormControl-root {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+/* Responsive button */
+.singlelisting-booking button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+}
+
+/* Responsive stepper for very small screens */
+@media (max-width: 480px) {
+    .singlelisting-booking .MuiStepLabel-label {
+        display: none;
+    }
+    .singlelisting-booking .MuiStepIcon-root {
+        width: 24px;
+        height: 24px;
+    }
 }
 .singlelisting-card__item {
     flex: 1;
@@ -2025,6 +2087,344 @@ h2.agency__category {
     .listing-container {
         display: flex;
         flex-direction: column;
-        gap: 0px;
+        gap: 20px;
+        padding: 10px;
+    }
+    .singlelisting-booking {
+        padding: 12px;
+        min-height: auto;
+    }
+    .singlelisting-booking .MuiStepLabel-label {
+        font-size: 11px;
+    }
+}
+
+/* Enhanced Responsive Design for Listing Page */
+
+/* Tablet screens */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .listing-container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        padding: 15px;
+    }
+    .listing-container__left,
+    .listing-container__right {
+        width: 100%;
+    }
+    .singlelisting-booking {
+        padding: 16px;
+        min-height: auto;
+    }
+}
+
+/* Small laptops (11-13 inch) and 14 inch screens - Switch to stacked */
+@media (min-width: 1025px) and (max-width: 1366px) {
+    .listing-container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .listing-container__left {
+        width: 100%;
+    }
+    .listing-container__right {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .singlelisting-booking {
+        padding: 20px;
+        min-height: auto;
+    }
+    .singlelisting-booking .MuiStepper-root {
+        padding: 12px 0;
+    }
+    .singlelisting-booking .MuiStepLabel-label {
+        font-size: 14px;
+    }
+}
+
+/* 14-15 inch laptops */
+@media (min-width: 1367px) and (max-width: 1600px) {
+    .listing-container {
+        display: flex;
+        gap: 30px;
+        padding: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    .listing-container__left {
+        flex: 5.5;
+        width: 65%;
+    }
+    .listing-container__right {
+        flex: 3.5;
+        width: 35%;
+        /* Removed sticky positioning for normal scrolling */
+        height: fit-content;
+    }
+    .singlelisting-booking {
+        padding: 16px;
+        min-height: auto;
+    }
+}
+
+/* Larger screens (16+ inch) */
+@media (min-width: 1601px) {
+    .listing-container {
+        display: flex;
+        gap: 40px;
+        padding: 20px;
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+    .listing-container__left {
+        flex: 6;
+        width: 70%;
+    }
+    .listing-container__right {
+        flex: 3;
+        width: 30%;
+        /* Removed sticky positioning for normal scrolling */
+        height: fit-content;
+    }
+}
+
+/* Enhanced Listing Card Styles for Beautiful Interface */
+
+/* Override existing styles for better appearance */
+.singlelisting-infos {
+    border: 1px solid #e5e7eb !important;
+    padding: 24px !important;
+    margin-bottom: 24px !important;
+    border-radius: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 30px !important;
+    background: white !important;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08) !important;
+    min-height: 300px !important;
+}
+
+.singlelisting-infos__content {
+    flex: 1 !important;
+    padding-right: 20px !important;
+}
+
+.singlelisting-infos__image {
+    flex: 0 0 420px !important;
+    height: 250px !important;
+    overflow: hidden !important;
+    border-radius: 12px !important;
+    background: linear-gradient(145deg, #f8f9fa, #e9ecef) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.singlelisting-infos__image > img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    transition: transform 0.3s ease !important;
+}
+
+.singlelisting-infos__image:hover > img {
+    transform: scale(1.05) !important;
+}
+
+/* Better typography for title and location */
+.singlelisting__name {
+    font-size: 20pt !important;
+    font-weight: 700 !important;
+    color: #1a1a1a !important;
+    line-height: 1.3 !important;
+    margin-bottom: 12px !important;
+}
+
+.singlelisting__location {
+    font-size: 13pt !important;
+    color: #666 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-bottom: 20px !important;
+}
+
+/* Better features grid */
+.singlelisting__features {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    margin-top: 20px !important;
+}
+
+.singlelisting__feature {
+    font-size: 12pt !important;
+    color: #555 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 8px 0 !important;
+}
+
+/* Fix agency logo size */
+.singlelisting__agency {
+    padding: 15px 0 !important;
+    border-top: 1px solid #e5e7eb !important;
+    margin-top: auto !important;
+}
+
+.singlelisting__agency__logo {
+    height: 32px !important;
+    max-width: 100px !important;
+    object-fit: contain !important;
+}
+
+/* Responsive adjustments for medium screens - side-by-side layout */
+@media (min-width: 768px) and (max-width: 1366px) {
+    .singlelisting-infos {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+        gap: 25px !important;
+        min-height: auto !important;
+    }
+    
+    .singlelisting-infos__image {
+        flex: 0 0 auto !important;
+        width: 35% !important;
+        min-width: 280px !important;
+        max-width: 380px !important;
+        height: auto !important;
+        margin-top: 0 !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+    }
+    
+    .singlelisting-infos__image img {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 3/2 !important;
+        object-fit: cover !important;
+    }
+    
+    .singlelisting-infos__content {
+        flex: 1 !important;
+        padding-right: 0 !important;
+        min-width: 0 !important;
+    }
+    
+    .singlelisting__name {
+        font-size: 20pt !important;
+    }
+    
+    .singlelisting__features {
+        grid-template-columns: repeat(2, 1fr) !important;
+        margin-top: 15px !important;
+    }
+    
+    .singlelisting__agency__logo {
+        height: 32px !important;
+        max-width: 100px !important;
+        width: auto !important;
+        object-fit: contain !important;
+        margin-top: 15px !important;
+    }
+}
+
+/* Adjust for narrower screens within the range */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .singlelisting-infos__image {
+        width: 40% !important;
+        min-width: 250px !important;
+        max-width: 320px !important;
+    }
+    
+    .singlelisting__name {
+        font-size: 18pt !important;
+    }
+    
+    .singlelisting__features {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Small tablets (528px to 767px) */
+@media (min-width: 528px) and (max-width: 767px) {
+    .singlelisting-infos {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    .singlelisting-infos__image {
+        flex: 1 !important;
+        width: 100% !important;
+        height: 200px !important;
+        margin-top: 15px !important;
+        border-radius: 10px !important;
+    }
+    
+    .singlelisting-infos__content {
+        padding-right: 0 !important;
+    }
+    
+    .singlelisting__name {
+        font-size: 16pt !important;
+    }
+    
+    .singlelisting__features {
+        grid-template-columns: repeat(2, 1fr) !important;
+        font-size: 11pt !important;
+    }
+}
+
+/* Mobile (below 528px) */
+@media (max-width: 527px) {
+    .singlelisting-infos {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    .singlelisting-infos__image {
+        flex: 1 !important;
+        width: 100% !important;
+        height: 180px !important;
+        margin-top: 15px !important;
+        border-radius: 8px !important;
+    }
+    
+    .singlelisting-infos__content {
+        padding-right: 0 !important;
+    }
+    
+    .singlelisting__name {
+        font-size: 16pt !important;
+    }
+    
+    .singlelisting__features {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .singlelisting-infos {
+        padding: 16px !important;
+    }
+    
+    .singlelisting-infos__image {
+        height: 220px !important;
+    }
+    
+    .singlelisting__name {
+        font-size: 16pt !important;
+    }
+    
+    .singlelisting__features {
+        grid-template-columns: 1fr !important;
     }
 }

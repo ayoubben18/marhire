@@ -1047,50 +1047,78 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                 
                 {/* Price Display (visible on both steps) */}
                 <div className="mb-4 p-4 bg-gray-50 rounded-xl">
-                    <>
-                                <div className="flex justify-between items-center mb-2">
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-lg font-semibold">Total Price:</span>
-                                        {priceDetails.priceBreakdown && (
-                                            <Tooltip 
-                                                title={
-                                                    <div className="p-2">
-                                                        <p className="font-semibold mb-2">Available Rates:</p>
-                                                        <div className="space-y-1">
-                                                            <p>• Hourly (0.5-1.5h): €{priceDetails.priceBreakdown.hourly}/hour</p>
-                                                            <p>• Half-day (2-4h): €{priceDetails.priceBreakdown.halfDay} flat</p>
-                                                            <p>• Full-day (4.5-8h): €{priceDetails.priceBreakdown.fullDay} flat</p>
-                                                        </div>
-                                                    </div>
-                                                }
-                                                arrow
-                                                placement="top"
-                                            >
-                                                <Info className="w-5 h-5 text-gray-500 cursor-help" />
-                                            </Tooltip>
-                                        )}
-                                    </div>
-                                    <span className="text-2xl font-bold text-blue-600">
-                                        €{priceDetails.price}
-                                    </span>
+                    <div className="space-y-3">
+                        {/* Base Price */}
+                        <div className="flex justify-between items-center">
+                            <span className="text-gray-600">Base Price:</span>
+                            <span className="font-semibold">€{priceDetails.basePrice || (priceDetails.price - priceDetails.addonsTotal) || priceDetails.price}</span>
+                        </div>
+                        
+                        {/* Addons breakdown */}
+                        {selectedAddons && selectedAddons.length > 0 && listing?.addons && (
+                            <>
+                                <div className="border-t pt-2">
+                                    <div className="text-sm font-medium text-gray-700 mb-2">Add-ons:</div>
+                                    {selectedAddons.map(addonId => {
+                                        const addon = listing.addons.find(item => item.addon.id === addonId);
+                                        if (!addon) return null;
+                                        return (
+                                            <div key={addonId} className="flex justify-between items-center text-sm pl-3">
+                                                <span className="text-gray-600">• {addon.addon.addon}</span>
+                                                <span>€{addon.addon.price}</span>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
-                                {priceDetails.rateDescription && (
-                                    <div className="text-sm text-gray-600 flex items-center gap-2">
-                                        <span className={`px-2 py-1 rounded-md ${
-                                            priceDetails.rateType === 'hourly' ? 'bg-blue-100 text-blue-700' :
-                                            priceDetails.rateType === 'halfDay' ? 'bg-green-100 text-green-700' :
-                                            priceDetails.rateType === 'fullDay' ? 'bg-purple-100 text-purple-700' :
-                                            priceDetails.rateType === 'daily' ? 'bg-orange-100 text-orange-700' :
-                                            priceDetails.rateType === 'weekly' ? 'bg-yellow-100 text-yellow-700' :
-                                            priceDetails.rateType === 'monthly' ? 'bg-red-100 text-red-700' :
-                                            'bg-gray-100 text-gray-700'
-                                        }`}>
-                                            Using {priceDetails.rateType} rate
-                                        </span>
-                                        <span>{priceDetails.rateDescription}</span>
-                                    </div>
-                                )}
                             </>
+                        )}
+                        
+                        {/* Total */}
+                        <div className="border-t pt-3">
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-lg font-bold">Total Price:</span>
+                                    {priceDetails.priceBreakdown && (
+                                        <Tooltip 
+                                            title={
+                                                <div className="p-2">
+                                                    <p className="font-semibold mb-2">Available Rates:</p>
+                                                    <div className="space-y-1">
+                                                        <p>• Hourly (0.5-1.5h): €{priceDetails.priceBreakdown.hourly}/hour</p>
+                                                        <p>• Half-day (2-4h): €{priceDetails.priceBreakdown.halfDay} flat</p>
+                                                        <p>• Full-day (4.5-8h): €{priceDetails.priceBreakdown.fullDay} flat</p>
+                                                    </div>
+                                                </div>
+                                            }
+                                            arrow
+                                            placement="top"
+                                        >
+                                            <Info className="w-5 h-5 text-gray-500 cursor-help" />
+                                        </Tooltip>
+                                    )}
+                                </div>
+                                <span className="text-2xl font-bold text-blue-600">
+                                    €{priceDetails.price}
+                                </span>
+                            </div>
+                            {priceDetails.rateDescription && (
+                                <div className="text-sm text-gray-600 flex items-center gap-2 mt-2">
+                                    <span className={`px-2 py-1 rounded-md ${
+                                        priceDetails.rateType === 'hourly' ? 'bg-blue-100 text-blue-700' :
+                                        priceDetails.rateType === 'halfDay' ? 'bg-green-100 text-green-700' :
+                                        priceDetails.rateType === 'fullDay' ? 'bg-purple-100 text-purple-700' :
+                                        priceDetails.rateType === 'daily' ? 'bg-orange-100 text-orange-700' :
+                                        priceDetails.rateType === 'weekly' ? 'bg-yellow-100 text-yellow-700' :
+                                        priceDetails.rateType === 'monthly' ? 'bg-red-100 text-red-700' :
+                                        'bg-gray-100 text-gray-700'
+                                    }`}>
+                                        Using {priceDetails.rateType} rate
+                                    </span>
+                                    <span>{priceDetails.rateDescription}</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
                 
                 {/* Navigation Buttons */}

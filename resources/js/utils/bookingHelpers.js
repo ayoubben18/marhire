@@ -239,15 +239,22 @@ export const calculatePrice = (categoryId, basePrice, params = {}) => {
  * @returns {object} Object with price and pricing details
  */
 export const calculatePriceWithDetails = (categoryId, basePrice, params = {}) => {
-    const price = calculatePrice(categoryId, basePrice, params);
+    const baseCalculatedPrice = calculatePrice(categoryId, basePrice, params);
+    
+    // Calculate addons separately
+    const { selectedAddons, listing } = params;
+    const addonsTotal = calculateAddonsTotal(selectedAddons, listing);
+    
     const details = {
-        price,
+        price: baseCalculatedPrice,
+        basePrice: baseCalculatedPrice - addonsTotal,
+        addonsTotal: addonsTotal,
         rateType: '',
         rateDescription: '',
         priceBreakdown: null
     };
     
-    const { startDate, endDate, boatDuration, listing } = params;
+    const { startDate, endDate, boatDuration } = params;
     
     switch (categoryId) {
         case 2: // Car Rental
