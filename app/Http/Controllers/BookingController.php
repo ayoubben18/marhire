@@ -1122,9 +1122,9 @@ class BookingController extends Controller
             $method->setAccessible(true);
             $invoiceData = $method->invoke($emailService, $booking);
             
-            // Generate PDF
+            // Generate PDF with category-specific template
             $pdfService = new PDFService();
-            $relativePath = $pdfService->generateInvoice($invoiceData);
+            $relativePath = $pdfService->generateInvoice($invoiceData, $booking->category_id);
             
             if (!$relativePath) {
                 return response()->json(['error' => 'Failed to generate invoice'], 500);

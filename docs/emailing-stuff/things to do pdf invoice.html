@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MarHire Activity Booking Invoice</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 40px;
+      color: #333;
+      background: #f7f7f7;
+    }
+
+    .invoice-box {
+      background: #fff;
+      padding: 30px 40px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      border-left: 5px solid #225f54;
+    }
+
+    h1 {
+      color: #225f54;
+      margin-bottom: 5px;
+    }
+
+    .top-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .top-section div {
+      font-size: 14px;
+    }
+
+    .section-title {
+      margin-top: 30px;
+      font-size: 18px;
+      color: #225f54;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    table th, table td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .terms {
+      font-size: 13px;
+      margin-top: 20px;
+      color: #666;
+    }
+
+    @media print {
+      body {
+        background: none;
+      }
+
+      .invoice-box {
+        box-shadow: none;
+        border-left: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="invoice-box">
+    <div class="top-section">
+      <div class="top-left">
+        <h1>MarHire Activity Booking Invoice</h1>
+      </div>
+      <div>
+        <strong>Invoice No:</strong> INV-20250801-00123<br />
+        <strong>Date:</strong> August 1, 2025<br />
+        <strong>Time:</strong> 14:30<br />
+        <strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">Confirmed</span>
+      </div>
+    </div>
+
+    <div class="section-title">Client Information</div>
+    <p>
+      <strong>Name:</strong> John Doe<br />
+      <strong>Email:</strong> john@example.com<br />
+      <strong>Phone:</strong> +44 7911 123456<br />
+      <strong>Country:</strong> United Kingdom<br />
+      <strong>Note:</strong> Pickup from hotel requested<br />
+    </p>
+
+    <div class="section-title">Booking Details</div>
+    <p>
+      <strong>Activity:</strong> Camel Ride in Agafay Desert<br />
+      <strong>Duration:</strong> 2 Hours<br />
+      <strong>Date:</strong> 2025-08-10 at 17:00<br />
+      <strong>Type:</strong> Private<br />
+          </p>
+
+    <div class="section-title">Charges</div>
+    <table>
+      <thead>
+        <tr style="background-color: #f0f0f0;">
+          <th style="color: #225f54;">Item</th>
+          <th style="color: #225f54; text-align: right;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Activity Fee (2 × €25)</td><td style="text-align: right;">€50.00</td></tr>
+        <tr><td>Add-on: Traditional Mint Tea</td><td style="text-align: right;">€5.00</td></tr>
+        <tr><td>Pickup & Guide Included</td><td style="text-align: right;">Included</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><td>Subtotal</td><td style="text-align: right;">€55.00</td></tr>
+      </tfoot>
+    </table>
+
+    <div class="section-title">Tax & Discounts</div>
+    <table>
+      <tbody>
+        <tr><td>Tax (0%)</td><td style="text-align: right;">€0.00</td></tr>
+        <tr><td>Discount</td><td style="text-align: right;">– €0.00</td></tr>
+        <tr style="border-top: 2px solid #ccc;"><th>Total</th><th style="text-align: right;">€55.00</th></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">Activity Terms & Policies</div>
+    <div class="terms">
+      - Activities must be booked at least 2 days in advance<br />
+      - Pickup is included if specified in the listing<br />
+      - Add-ons and upgrades are optional and based on availability<br />
+      - Please be ready 15 minutes before pickup or meeting time<br />
+      - For full terms, see our <a href="https://www.marhire.com/terms" target="_blank">Terms & Conditions</a> and <a href="https://www.marhire.com/cancellation-policy" target="_blank">Cancellation Policy</a>
+    </div>
+
+    <div class="footer" style="border-top: 1px solid #ddd; padding-top: 20px; margin-top: 40px;">
+      <p style="font-size: 14px; color: #444;">
+        📞 <a href="tel:+212660745055" style="color: #225f54; text-decoration: none; margin-right: 15px;">+212 660 745 055</a>
+        📧 <a href="mailto:info@marhire.com" style="color: #225f54; text-decoration: none; margin-right: 15px;">info@marhire.com</a>
+        🌐 <a href="https://www.marhire.com" target="_blank" style="color: #225f54; text-decoration: none;">www.marhire.com</a>
+      </p>
+      <p style="margin-top: 10px; font-size: 13px; color: #888;">
+        Thank you for booking with <strong style="color: #225f54;">MarHire</strong>. We hope you enjoy your activity experience!
+      </p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MarHire Car Rental Invoice</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 40px;
+      color: #333;
+      background: #f7f7f7;
+    }
+
+    .invoice-box {
+      background: #fff;
+      padding: 30px 40px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      border-left: 5px solid #225f54;
+    }
+
+    h1 {
+      color: #225f54;
+      margin-bottom: 5px;
+    }
+
+    .top-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .top-section div {
+      font-size: 14px;
+    }
+
+    .section-title {
+      margin-top: 30px;
+      font-size: 18px;
+      color: #225f54;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    table th, table td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    .terms {
+      font-size: 13px;
+      margin-top: 20px;
+      color: #666;
+    }
+
+    .status-confirmed {
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    .status-pending {
+      color: #f0ad4e;
+      font-weight: bold;
+    }
+
+    .status-cancelled {
+      color: #d9534f;
+      font-weight: bold;
+    }
+
+    @media print {
+      body {
+        background: none;
+      }
+
+      .invoice-box {
+        box-shadow: none;
+        border-left: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="invoice-box">
+    <div class="top-section">
+      <div class="top-left">
+        <h1>MarHire Car Rental Invoice</h1>
+      </div>
+      <div>
+        <strong>Invoice No:</strong> {{ $invoiceData['invoice_number'] }}<br />
+        <strong>Date:</strong> {{ $invoiceData['invoice_date'] }}<br />
+        <strong>Time:</strong> {{ date('H:i') }}<br />
+        <strong>Status:</strong> 
+        @if(strtolower($invoiceData['status']) == 'confirmed')
+          <span class="status-confirmed">Confirmed</span>
+        @elseif(strtolower($invoiceData['status']) == 'pending')
+          <span class="status-pending">Pending</span>
+        @else
+          <span class="status-cancelled">Cancelled</span>
+        @endif
+      </div>
+    </div>
+
+    <div class="section-title">Client Information</div>
+    <p>
+      <strong>Name:</strong> {{ $invoiceData['client_name'] }}<br />
+      <strong>Email:</strong> {{ $invoiceData['client_email'] }}<br />
+      <strong>Phone:</strong> {{ $invoiceData['client_phone'] }}<br />
+      @if(isset($invoiceData['client_dob']) && $invoiceData['client_dob'])
+      <strong>Date of Birth:</strong> {{ $invoiceData['client_dob'] }}<br />
+      @endif
+      @if(isset($invoiceData['client_country']) && $invoiceData['client_country'])
+      <strong>Country:</strong> {{ $invoiceData['client_country'] }}<br />
+      @endif
+      @if(isset($invoiceData['client_note']) && $invoiceData['client_note'] && $invoiceData['client_note'] !== 'N/A')
+      <strong>Note:</strong> {{ $invoiceData['client_note'] }}<br />
+      @endif
+    </p>
+
+    <div class="section-title">Booking Details</div>
+    <p>
+      <strong>Car:</strong> {{ $invoiceData['service_name'] }} – {{ $invoiceData['transmission'] ?? 'Manual' }} <br />
+      @if(isset($invoiceData['rental_duration']))
+      <strong>Rental Duration:</strong> {{ $invoiceData['rental_duration'] }}<br />
+      @endif
+      <strong>Pickup:</strong> {{ $invoiceData['pickup_location'] ?? 'N/A' }} – {{ $invoiceData['pickup_date'] ?? $invoiceData['check_in'] }} at {{ $invoiceData['pickup_time'] ?? '10:00' }}<br />
+      <strong>Drop-off:</strong> {{ $invoiceData['dropoff_location'] ?? $invoiceData['pickup_location'] ?? 'N/A' }} – {{ $invoiceData['dropoff_date'] ?? $invoiceData['check_out'] }} at {{ $invoiceData['dropoff_time'] ?? '10:00' }}
+    </p>
+
+    <div class="section-title">Charges</div>
+    <table>
+      <thead>
+        <tr style="background-color: #f0f0f0;">
+          <th style="color: #225f54;">Item</th>
+          <th style="color: #225f54; text-align: right;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Base Rental{{ isset($invoiceData['rental_duration']) && isset($invoiceData['daily_rate']) ? ' (' . $invoiceData['rental_duration'] . ' × €' . number_format($invoiceData['daily_rate'], 0) . ')' : '' }}</td><td style="text-align: right;">€{{ number_format($invoiceData['booking_price'], 2) }}</td></tr>
+        @if(!empty($invoiceData['addons']))
+          @foreach($invoiceData['addons'] as $addon)
+          <tr><td>Add-on: {{ $addon['name'] }}</td><td style="text-align: right;">€{{ number_format($addon['price'], 2) }}</td></tr>
+          @endforeach
+        @endif
+        <tr><td>Full Insurance Included (with excess)</td><td style="text-align: right;">Included</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><td>Subtotal</td><td style="text-align: right;">€{{ number_format($invoiceData['booking_price'] + $invoiceData['total_addons'], 2) }}</td></tr>
+      </tfoot>
+    </table>
+
+    <div class="section-title">Tax & Discounts</div>
+    <table>
+      <tbody>
+        <tr><td>Tax (0%)</td><td style="text-align: right;">€0.00</td></tr>
+        @if(isset($invoiceData['discount_or_extra']) && $invoiceData['discount_or_extra'] != 0)
+        <tr><td>{{ $invoiceData['discount_or_extra'] < 0 ? 'Discount' : 'Extra Charge' }}</td><td style="text-align: right;">{{ $invoiceData['discount_or_extra'] < 0 ? '–' : '' }} €{{ number_format(abs($invoiceData['discount_or_extra']), 2) }}</td></tr>
+        @else
+        <tr><td>Discount</td><td style="text-align: right;">– €0.00</td></tr>
+        @endif
+        <tr style="border-top: 2px solid #ccc;"><th>Total</th><th style="text-align: right;">€{{ number_format($invoiceData['grand_total'], 2) }}</th></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title">Rental Terms & Policies</div>
+    <div class="terms">
+      - Minimum rental duration: 3 full days<br />
+      - Bookings must be made at least 2 days in advance<br />
+      - Fuel policy: Same to Same – Please refill the tank to the same level<br />
+      - Mileage: Unlimited kilometers based on number of days booked<br />
+      - A refundable deposit may be required upon pickup, depending on the vehicle<br />
+      - Full insurance is included (with excess)<br />
+      - Add-ons are subject to availability<br />
+      - For full terms, see our <a href="https://www.marhire.com/terms" target="_blank">Terms & Conditions</a> and <a href="https://www.marhire.com/cancellation-policy" target="_blank">Cancellation Policy</a>
+    </div>
+
+    <div class="footer" style="border-top: 1px solid #ddd; padding-top: 20px; margin-top: 40px;">
+      <p style="font-size: 14px; color: #444;">
+        📞 <a href="tel:{{ str_replace(' ', '', $invoiceData['company_phone']) }}" style="color: #225f54; text-decoration: none; margin-right: 15px;">{{ $invoiceData['company_phone'] }}</a>
+        📧 <a href="mailto:{{ $invoiceData['company_email'] }}" style="color: #225f54; text-decoration: none; margin-right: 15px;">{{ $invoiceData['company_email'] }}</a>
+        🌐 <a href="https://www.marhire.com" target="_blank" style="color: #225f54; text-decoration: none;">www.marhire.com</a>
+      </p>
+      <p style="margin-top: 10px; font-size: 13px; color: #888;">
+        Thank you for booking with <strong style="color: #225f54;">MarHire Car</strong>. We look forward to serving you in Morocco.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
