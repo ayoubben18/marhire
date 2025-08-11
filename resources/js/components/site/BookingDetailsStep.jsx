@@ -398,7 +398,7 @@ const BookingDetailsStep = ({
             <div className="relative">
                 {categoryId === 2 ? (
                     // Car Rental - Two separate date pickers
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                    <div className="date-fields-container grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                         {/* Start Date */}
                         <div className="relative dropdown-container">
                             <label className="block text-sm font-medium text-gray-700 mb-1">{t('booking.pickupDate')} *</label>
@@ -638,29 +638,6 @@ const BookingDetailsStep = ({
             {/* Car Rental specific fields */}
             {categoryId === 2 && (
                 <>
-                    {/* Vehicle Details (Auto-filled) */}
-                    {listing && (
-                        <div className="mb-4 p-4 bg-gray-50 rounded-xl">
-                            <Typography variant="subtitle2" className="text-gray-600 mb-2">{t('booking.vehicleDetails')}</Typography>
-                            <div className="flex flex-wrap gap-2">
-                                <Chip label={listing.title} size="small" />
-                                {/* Display car types - handle both new multi-select and legacy single type */}
-                                {(listing.car_types && Array.isArray(listing.car_types) && listing.car_types.length > 0) ? (
-                                    listing.car_types.map((carType, index) => (
-                                        <Chip key={index} label={carType} size="small" />
-                                    ))
-                                ) : listing.car_types_new && listing.car_types_new.length > 0 ? (
-                                    listing.car_types_new.map((carType, index) => (
-                                        <Chip key={index} label={carType} size="small" />
-                                    ))
-                                ) : (
-                                    <Chip label={listing.car_type || t('booking.standard')} size="small" />
-                                )}
-                                {listing?.city?.city_name && <Chip label={listing.city.city_name} size="small" />}
-                            </div>
-                        </div>
-                    )}
-                    
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                         <div>
                             <Select
@@ -796,17 +773,6 @@ const BookingDetailsStep = ({
             {/* Private Driver specific fields */}
             {categoryId === 3 && (
                 <>
-                    {/* Vehicle Info (Auto-filled) */}
-                    {listing && (
-                        <div className="mb-4 p-4 bg-gray-50 rounded-xl">
-                            <Typography variant="subtitle2" className="text-gray-600 mb-2">Vehicle & Provider Info</Typography>
-                            <div className="flex flex-wrap gap-2">
-                                <Chip label={listing.vehicule_type || t('booking.standard')} size="small" />
-                                {listing?.provider?.agency_name && <Chip label={listing.provider.agency_name} size="small" />}
-                            </div>
-                        </div>
-                    )}
-                    
                     {/* Service Type Selection - RADIO BUTTONS */}
                     <div className="mb-4">
                         <FormLabel component="legend" className="mb-2">Service Type *</FormLabel>
@@ -976,17 +942,6 @@ const BookingDetailsStep = ({
             {/* Boat Rental specific fields */}
             {categoryId === 4 && (
                 <>
-                    {/* Boat Info (Auto-filled) */}
-                    {listing && (
-                        <div className="mb-4 p-4 bg-gray-50 rounded-xl">
-                            <Typography variant="subtitle2" className="text-gray-600 mb-2">Boat Details</Typography>
-                            <div className="flex flex-wrap gap-2">
-                                {listing.departure_location && <Chip label={`Departure: ${listing.departure_location}`} size="small" />}
-                                {listing.with_captain === 'Yes' && <Chip label={t('booking.withCaptain')} size="small" color="primary" />}
-                            </div>
-                        </div>
-                    )}
-                    
                     {/* Pick-up Time with 8am-8pm restriction */}
                     <div className="mb-4">
                         <Select
@@ -1084,18 +1039,6 @@ const BookingDetailsStep = ({
             {/* Activity specific fields */}
             {categoryId === 5 && (
                 <>
-                    {/* Activity Info (Auto-filled) */}
-                    {listing && (
-                        <div className="mb-4 p-4 bg-gray-50 rounded-xl">
-                            <Typography variant="subtitle2" className="text-gray-600 mb-2">Activity Details</Typography>
-                            <div className="flex flex-wrap gap-2">
-                                {listing.activity_type && <Chip label={listing.activity_type} size="small" />}
-                                {listing.private_or_group && <Chip label={listing.private_or_group} size="small" color="secondary" />}
-                                {listing.meeting_point && <Chip label={`Meeting: ${listing.meeting_point}`} size="small" />}
-                            </div>
-                        </div>
-                    )}
-                    
                     {/* Time Preference */}
                     <div className="mb-4">
                         <Select

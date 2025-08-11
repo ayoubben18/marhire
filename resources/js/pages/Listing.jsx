@@ -103,11 +103,11 @@ const Listing = ({ slug }) => {
         }, 1200);
     }, [currentLocale]);
 
-    // Enable sticky for desktop screens
+    // Enable sticky for laptop and desktop screens
     useEffect(() => {
         const checkStickyEligibility = () => {
-            // Enable sticky for screens >= 1367px width
-            setEnableSticky(window.innerWidth >= 1367);
+            // Enable sticky for screens >= 1025px width (laptops and desktops)
+            setEnableSticky(window.innerWidth >= 1025);
         };
 
         // Check on mount and resize
