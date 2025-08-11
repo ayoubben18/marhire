@@ -2149,6 +2149,33 @@ h2.agency__category {
     }
 }
 
+/* Sticky booking form - only when enabled by JavaScript */
+@media (min-width: 1367px) {
+    .listing-container__right.sticky-enabled {
+        position: sticky;
+        top: 90px;
+        align-self: flex-start;
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    /* Thin scrollbar styling */
+    .listing-container__right.sticky-enabled::-webkit-scrollbar {
+        width: 6px;
+    }
+    .listing-container__right.sticky-enabled::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+    .listing-container__right.sticky-enabled::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+    }
+    .listing-container__right.sticky-enabled::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+}
+
 /* 14-15 inch laptops */
 @media (min-width: 1367px) and (max-width: 1600px) {
     .listing-container {
@@ -2165,7 +2192,6 @@ h2.agency__category {
     .listing-container__right {
         flex: 3.5;
         width: 35%;
-        /* Removed sticky positioning for normal scrolling */
         height: fit-content;
     }
     .singlelisting-booking {
@@ -2190,7 +2216,6 @@ h2.agency__category {
     .listing-container__right {
         flex: 3;
         width: 30%;
-        /* Removed sticky positioning for normal scrolling */
         height: fit-content;
     }
 }

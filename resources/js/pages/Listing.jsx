@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 
 // Core components
 import BookingFrm from "../components/site/BookingFrm";
-import SingleListingBottom from "../components/site/SingleListingBottom";
 
 // Import listing components that we're currently using
 import ListingBreadcrumbs from "../components/site/listing/ListingBreadcrumbs";
@@ -26,7 +25,7 @@ import ListingDescription from "../components/site/listing/ListingDescription";
 // import TrustBadges from "../components/site/listing/TrustBadges";
 // import ListingPolicies from "../components/site/listing/ListingPolicies";
 // import SingleListingAddons from "../components/site/SingleListingAddons";
-// import RelatedProducts from "../components/site/RelatedProducts";
+import RelatedProducts from "../components/site/RelatedProducts";
 
 // Helper function to get translated field
 const getTranslatedField = (listing, field, locale) => {
@@ -47,6 +46,7 @@ const Listing = ({ slug }) => {
     const [loading, setLoading] = useState(true);
     const [listing, setListing] = useState(null);
     const [searchParams, setSearchParams] = useState(null);
+    const [enableSticky, setEnableSticky] = useState(false);
 
     const fetchListing = async () => {
         try {
@@ -102,6 +102,20 @@ const Listing = ({ slug }) => {
             fetchListing();
         }, 1200);
     }, [currentLocale]);
+
+    // Enable sticky for desktop screens
+    useEffect(() => {
+        const checkStickyEligibility = () => {
+            // Enable sticky for screens >= 1367px width
+            setEnableSticky(window.innerWidth >= 1367);
+        };
+
+        // Check on mount and resize
+        checkStickyEligibility();
+        window.addEventListener('resize', checkStickyEligibility);
+
+        return () => window.removeEventListener('resize', checkStickyEligibility);
+    }, []);
 
 
     return (
@@ -193,9 +207,13 @@ const Listing = ({ slug }) => {
                             listing={listing}
                         />
 
-                        {/* Components will be added here one by one */}
+                        {/* 13. Related Products */}
+                        <RelatedProducts
+                            category={listing?.category_id}
+                            loading={loading}
+                        />
                     </div>
-                    <div className="listing-container__right">
+                    <div className={`listing-container__right ${enableSticky ? 'sticky-enabled' : ''}`}>
                         {/* 16. Sticky Booking Form */}
                         <BookingFrm 
                             loading={loading} 
@@ -207,7 +225,6 @@ const Listing = ({ slug }) => {
                     </div>
                 </div>
             </div>
-            <SingleListingBottom listing={listing} />
             <Footer />
         </>
     );
