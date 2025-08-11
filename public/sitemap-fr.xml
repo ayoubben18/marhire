@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+ <url>
+  <loc>http://localhost/fr/</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/"/>
+  <changefreq>daily</changefreq>
+  <priority>1</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/about-us</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/about-us"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/about-us"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/about-us"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/about-us"/>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/how-we-work</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/how-we-work"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/how-we-work"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/how-we-work"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/how-we-work"/>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/list-your-property</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/list-your-property"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/list-your-property"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/list-your-property"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/list-your-property"/>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/faq</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/faq"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/faq"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/faq"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/faq"/>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/support</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/support"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/support"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/support"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/support"/>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/blog</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/blog"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/blog"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/blog"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/blog"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/terms-conditions</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/terms-conditions"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/terms-conditions"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/terms-conditions"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/terms-conditions"/>
+  <changefreq>yearly</changefreq>
+  <priority>0.7</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/privacy-policy</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/privacy-policy"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/privacy-policy"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/privacy-policy"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/privacy-policy"/>
+  <changefreq>yearly</changefreq>
+  <priority>0.7</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/cookie-policy</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/cookie-policy"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/cookie-policy"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/cookie-policy"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/cookie-policy"/>
+  <changefreq>yearly</changefreq>
+  <priority>0.7</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/cancellation-policy</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/cancellation-policy"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/cancellation-policy"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/cancellation-policy"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/cancellation-policy"/>
+  <changefreq>yearly</changefreq>
+  <priority>0.7</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/insurance-conditions</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/insurance-conditions"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/insurance-conditions"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/insurance-conditions"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/insurance-conditions"/>
+  <changefreq>yearly</changefreq>
+  <priority>0.7</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/car-rental</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/car-rental"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/car-rental"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/car-rental"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/car-rental"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/private-driver</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/private-driver"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/private-driver"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/private-driver"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/private-driver"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/boats</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/boats"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/boats"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/boats"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/boats"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/things-to-do</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/things-to-do"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/things-to-do"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/things-to-do"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/things-to-do"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/city/casablanca</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/city/casablanca"/>
+  <lastmod>2025-04-29T13:57:52+01:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/city/agadir</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/city/agadir"/>
+  <lastmod>2025-04-29T13:58:00+01:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/city/rabat</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/city/rabat"/>
+  <lastmod>2025-04-29T13:58:09+01:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/city/marrakech</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/city/marrakech"/>
+  <lastmod>2025-04-29T13:58:19+01:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/city/fez</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/city/fez"/>
+  <lastmod>2025-04-29T13:58:46+01:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/city/tangier</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/city/tangier"/>
+  <lastmod>2025-04-29T13:58:56+01:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/city/tetouan</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/city/tetouan"/>
+  <lastmod>2025-04-29T23:04:33+01:00</lastmod>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/city/essaouira</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/city/essaouira"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/car-rental/city/casablanca</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/car-rental/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/car-rental/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/car-rental/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/car-rental/city/casablanca"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/car-rental/city/agadir</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/car-rental/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/car-rental/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/car-rental/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/car-rental/city/agadir"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/car-rental/city/rabat</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/car-rental/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/car-rental/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/car-rental/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/car-rental/city/rabat"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/car-rental/city/marrakech</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/car-rental/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/car-rental/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/car-rental/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/car-rental/city/marrakech"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/car-rental/city/fez</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/car-rental/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/car-rental/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/car-rental/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/car-rental/city/fez"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/car-rental/city/tangier</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/car-rental/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/car-rental/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/car-rental/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/car-rental/city/tangier"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/car-rental/city/tetouan</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/car-rental/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/car-rental/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/car-rental/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/car-rental/city/tetouan"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/car-rental/city/essaouira</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/car-rental/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/car-rental/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/car-rental/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/car-rental/city/essaouira"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/private-driver/city/casablanca</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/private-driver/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/private-driver/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/private-driver/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/private-driver/city/casablanca"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/private-driver/city/agadir</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/private-driver/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/private-driver/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/private-driver/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/private-driver/city/agadir"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/private-driver/city/rabat</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/private-driver/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/private-driver/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/private-driver/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/private-driver/city/rabat"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/private-driver/city/marrakech</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/private-driver/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/private-driver/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/private-driver/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/private-driver/city/marrakech"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/private-driver/city/fez</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/private-driver/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/private-driver/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/private-driver/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/private-driver/city/fez"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/private-driver/city/tangier</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/private-driver/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/private-driver/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/private-driver/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/private-driver/city/tangier"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/private-driver/city/tetouan</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/private-driver/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/private-driver/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/private-driver/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/private-driver/city/tetouan"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/private-driver/city/essaouira</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/private-driver/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/private-driver/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/private-driver/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/private-driver/city/essaouira"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/boats/city/casablanca</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/boats/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/boats/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/boats/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/boats/city/casablanca"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/boats/city/agadir</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/boats/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/boats/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/boats/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/boats/city/agadir"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/boats/city/rabat</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/boats/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/boats/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/boats/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/boats/city/rabat"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/boats/city/marrakech</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/boats/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/boats/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/boats/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/boats/city/marrakech"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/boats/city/fez</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/boats/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/boats/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/boats/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/boats/city/fez"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/boats/city/tangier</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/boats/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/boats/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/boats/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/boats/city/tangier"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/boats/city/tetouan</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/boats/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/boats/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/boats/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/boats/city/tetouan"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/boats/city/essaouira</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/boats/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/boats/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/boats/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/boats/city/essaouira"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/things-to-do/city/casablanca</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/things-to-do/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/things-to-do/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/things-to-do/city/casablanca"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/things-to-do/city/casablanca"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/things-to-do/city/agadir</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/things-to-do/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/things-to-do/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/things-to-do/city/agadir"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/things-to-do/city/agadir"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/things-to-do/city/rabat</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/things-to-do/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/things-to-do/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/things-to-do/city/rabat"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/things-to-do/city/rabat"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/things-to-do/city/marrakech</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/things-to-do/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/things-to-do/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/things-to-do/city/marrakech"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/things-to-do/city/marrakech"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/things-to-do/city/fez</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/things-to-do/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/things-to-do/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/things-to-do/city/fez"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/things-to-do/city/fez"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/things-to-do/city/tangier</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/things-to-do/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/things-to-do/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/things-to-do/city/tangier"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/things-to-do/city/tangier"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/things-to-do/city/tetouan</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/things-to-do/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/things-to-do/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/things-to-do/city/tetouan"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/things-to-do/city/tetouan"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/category/things-to-do/city/essaouira</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/category/things-to-do/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/category/things-to-do/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/category/things-to-do/city/essaouira"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/category/things-to-do/city/essaouira"/>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/article/le-mans-circuit-guide-hertz-racing-gold</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/article/le-mans-circuit-guide-hertz-racing-gold"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/article/le-mans-circuit-guide-hertz-racing-gold"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/article/le-mans-circuit-guide-hertz-racing-gold"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/article/le-mans-circuit-guide-hertz-racing-gold"/>
+  <lastmod>2025-07-14T15:33:28+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/article/the-low-carb-foodie-guide-to-florence-italy</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/article/the-low-carb-foodie-guide-to-florence-italy"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/article/the-low-carb-foodie-guide-to-florence-italy"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/article/the-low-carb-foodie-guide-to-florence-italy"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/article/the-low-carb-foodie-guide-to-florence-italy"/>
+  <lastmod>2025-07-14T16:00:38+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/article/experience-the-grand-canyon-at-night</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/article/experience-the-grand-canyon-at-night"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/article/experience-the-grand-canyon-at-night"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/article/experience-the-grand-canyon-at-night"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/article/experience-the-grand-canyon-at-night"/>
+  <lastmod>2025-07-14T16:01:02+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/article/10-ways-successful-people-spend-their-free-time</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/article/10-ways-successful-people-spend-their-free-time"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/article/10-ways-successful-people-spend-their-free-time"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/article/10-ways-successful-people-spend-their-free-time"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/article/10-ways-successful-people-spend-their-free-time"/>
+  <lastmod>2025-07-14T16:01:26+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/article/a-road-trip-through-virginias-civil-war-sites</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/article/a-road-trip-through-virginias-civil-war-sites"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/article/a-road-trip-through-virginias-civil-war-sites"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/article/a-road-trip-through-virginias-civil-war-sites"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/article/a-road-trip-through-virginias-civil-war-sites"/>
+  <lastmod>2025-07-14T16:01:52+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/article/a-road-trip-through-virginias-civil-war-sites-1</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/article/a-road-trip-through-virginias-civil-war-sites-1"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/article/a-road-trip-through-virginias-civil-war-sites-1"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/article/a-road-trip-through-virginias-civil-war-sites-1"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/article/a-road-trip-through-virginias-civil-war-sites-1"/>
+  <lastmod>2025-07-14T16:02:22+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/article/best-things-to-do-in-san-francisco</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/article/best-things-to-do-in-san-francisco"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/article/best-things-to-do-in-san-francisco"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/article/best-things-to-do-in-san-francisco"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/article/best-things-to-do-in-san-francisco"/>
+  <lastmod>2025-07-14T16:02:50+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/article/10-ways-successful-people-spend-their-free-time-1</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/article/10-ways-successful-people-spend-their-free-time-1"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/article/10-ways-successful-people-spend-their-free-time-1"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/article/10-ways-successful-people-spend-their-free-time-1"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/article/10-ways-successful-people-spend-their-free-time-1"/>
+  <lastmod>2025-07-24T20:22:38+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/details/slug4</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/details/slug4"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/details/slug4"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/details/slug4"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/details/slug4"/>
+  <lastmod>2025-07-15T10:21:16+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.9</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/agency/top-cars</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/agency/top-cars"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/agency/top-cars"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/agency/top-cars"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/agency/top-cars"/>
+  <lastmod>2025-07-16T20:12:59+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/agency/fezcar</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/agency/fezcar"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/agency/fezcar"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/agency/fezcar"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/agency/fezcar"/>
+  <lastmod>2025-07-16T20:06:55+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/agency/boat-agency</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/agency/boat-agency"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/agency/boat-agency"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/agency/boat-agency"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/agency/boat-agency"/>
+  <lastmod>2025-05-14T13:10:39+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/agency/activity-agency</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/agency/activity-agency"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/agency/activity-agency"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/agency/activity-agency"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/agency/activity-agency"/>
+  <lastmod>2025-05-14T13:10:54+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/agency/private-car-agency</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/agency/private-car-agency"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/agency/private-car-agency"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/agency/private-car-agency"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/agency/private-car-agency"/>
+  <lastmod>2025-05-14T13:11:12+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+ <url>
+  <loc>http://localhost/fr/agency/next-moto</loc>
+  <xhtml:link rel="alternate" hreflang="en" href="http://localhost/agency/next-moto"/>
+  <xhtml:link rel="alternate" hreflang="fr" href="http://localhost/fr/agency/next-moto"/>
+  <xhtml:link rel="alternate" hreflang="es" href="http://localhost/es/agency/next-moto"/>
+  <xhtml:link rel="alternate" hreflang="x-default" href="http://localhost/agency/next-moto"/>
+  <lastmod>2025-07-16T13:05:32+01:00</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+ </url>
+</urlset>

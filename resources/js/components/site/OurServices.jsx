@@ -1,34 +1,36 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 
 const OurServices = () => {
+    const { t } = useTranslation();
     const services = [
         {
             image: "https://marhire.bytech.ma/images/services/rentalx600.webp",
-            name: "Car Rentals",
-            desc: "Cars of all types cheap, luxury, family vans, or SUVs. Delivered at the airport with full insurance, many without deposit.",
-            cta: "Explore Cars",
+            name: t("services.carRentals"),
+            desc: t("services.exploreCars"),
+            cta: t("services.exploreCars"),
         },
         {
             image: "https://marhire.bytech.ma/images/services/privatex600.webp",
-            name: "Private Drivers",
-            desc: "Professional bilingual chauffeurs for business, tourism, or airport transfers.",
-            cta: "Explore Drivers",
+            name: t("services.privateDrivers"),
+            desc: t("services.exploreDrivers"),
+            cta: t("services.exploreDrivers"),
         },
         {
             image: "https://marhire.bytech.ma/images/services/boatx600.webp",
-            name: "Boat Rentals",
-            desc: "Book a luxury yacht, fishing boat, or speedboat for parties or sunset cruises.",
-            cta: "Explore Boats",
+            name: t("services.boatRentals"),
+            desc: t("services.exploreBoats"),
+            cta: t("services.exploreBoats"),
         },
         {
             image: "https://marhire.bytech.ma/images/services/activityx600.webp",
-            name: "Activities & Tours",
-            desc: "Quad biking, camel rides, jet skis, and cultural walks all over Morocco.",
-            cta: "Explore Activities",
+            name: t("services.activitiesTours"),
+            desc: t("services.exploreActivities"),
+            cta: t("services.exploreActivities"),
         },
     ];
 
@@ -36,10 +38,9 @@ const OurServices = () => {
         <section id="explore-popular">
             <div className="section-head">
                 <h2 className="section-title">
-                    Our Services
+                    {t("home.servicesTitle", { defaultValue: "Our Services" })}
                 </h2>
-                <h3 className="section-subtitle">
-                </h3>
+                <h3 className="section-subtitle"></h3>
             </div>
 
             <Swiper

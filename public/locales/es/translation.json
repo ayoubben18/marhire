@@ -1,0 +1,544 @@
+{
+    "common": {
+        "loading": "Cargando...",
+        "error": "Error",
+        "success": "Éxito",
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "delete": "Eliminar",
+        "edit": "Editar",
+        "submit": "Enviar",
+        "search": "Buscar",
+        "back": "Atrás",
+        "next": "Siguiente",
+        "previous": "Anterior",
+        "select": "Seleccionar",
+        "close": "Cerrar",
+        "yes": "Sí",
+        "no": "No",
+        "confirm": "Confirmar",
+        "or": "o",
+        "see_more": "Ver Más",
+        "show_less": "Ver Menos",
+        "click_to_enlarge": "Haz clic para ampliar",
+        "no_images_available": "No hay imágenes disponibles",
+        "no_image_available": "No hay imagen disponible",
+        "image_not_available": "Imagen no disponible",
+        "image_error": "Imagen no disponible",
+        "car_rental_image": "Imagen de Alquiler de Coches",
+        "and": "y",
+        "from": "Desde",
+        "to": "Hasta",
+        "currency": "MAD",
+        "perDay": "/día",
+        "perHour": "/hora",
+        "bookNow": "Reservar Ahora",
+        "loadMore": "Cargar Más",
+        "findSimilar": "Encontrar todo similar",
+        "morocco": "Marruecos",
+        "sending": "Enviando...",
+        "sendMessage": "Enviar Mensaje"
+    },
+    "messages": {
+        "whatsappInterest": "Hola, estoy interesado en reservar este alquiler.\n\nTítulo: {{title}}\n\nURL: {{url}}\n\n¿Podría proporcionar más detalles sobre disponibilidad, precios y el proceso de reserva?\n\n¡Gracias!"
+    },
+    "cities": {
+        "morocco": "Marruecos",
+        "agadir": "Agadir",
+        "marrakech": "Marrakech",
+        "casablanca": "Casablanca",
+        "fes": "Fes",
+        "tangier": "Tangier",
+        "rabat": "Rabat",
+        "essaouira": "Essaouira"
+    },
+    "navigation": {
+        "home": "Inicio",
+        "about": "Acerca de MarHire",
+        "support": "Soporte",
+        "howWeWork": "Cómo Trabajamos",
+        "listProperty": "Anunciar Su Propiedad",
+        "faqs": "Preguntas Frecuentes",
+        "travelArticles": "Artículos de Viaje",
+        "sitemap": "Mapa del Sitio",
+        "contact": "Contacto",
+        "language": "Idioma",
+        "selectLanguage": "Seleccionar Idioma",
+        "whatsappChatSupport": "Soporte Chat WhatsApp",
+        "travelShop": "Tienda de Viajes",
+        "supportHelpCenter": "Soporte / Centro de Ayuda",
+        "searchPlaceholder": "Listado, Ciudad, etc",
+        "carRentals": "Alquiler de Coches",
+        "privateDrivers": "Conductores Privados",
+        "boatRentals": "Alquiler de Barcos",
+        "thingsToDo": "Actividades"
+    },
+    "footer": {
+        "company": "Empresa",
+        "legalPolicy": "Legal y Políticas",
+        "languageSupport": "Idioma y Soporte",
+        "contact": "Contacto",
+        "termsConditions": "Términos y Condiciones",
+        "privacyPolicy": "Política de Privacidad",
+        "cookiePolicy": "Política de Cookies",
+        "cancellationPolicy": "Política de Cancelación",
+        "insuranceConditions": "Condiciones de Seguro",
+        "helpCenter": "Centro de Ayuda",
+        "localAssistance": "Asistencia Local 24/7",
+        "paymentMethods": "Métodos de Pago",
+        "socialMedia": "Redes Sociales",
+        "copyright": "© 2025 MarHire.com. Todos los derechos reservados. MarHire es una marca registrada bajo MarHire LLC."
+    },
+    "services": {
+        "carRentals": "Alquiler de Coches",
+        "privateDrivers": "Conductores Privados",
+        "boatRentals": "Alquiler de Barcos",
+        "activitiesTours": "Actividades y Tours",
+        "exploreCars": "Coches de todo tipo económicos, de lujo, furgonetas familiares o SUV. Entregados en el aeropuerto con seguro completo, muchos sin depósito.",
+        "exploreDrivers": "Choferes profesionales bilingües para negocios, turismo o traslados al aeropuerto.",
+        "exploreBoats": "Reserve un yate de lujo, barco de pesca o lancha rápida para fiestas o cruceros al atardecer.",
+        "exploreActivities": "Quad, paseos en camello, motos de agua y caminatas culturales por todo Marruecos."
+    },
+    "booking": {
+        "yourInformation": "Su Información",
+        "selectDates": "Seleccionar fechas",
+        "selectEndDate": "Seleccionar fecha final",
+        "selectDate": "Seleccionar fecha",
+        "selectPickupDate": "Seleccionar fecha de recogida",
+        "selectDropoffDate": "Seleccionar fecha de devolución",
+        "selectPickupDateFirst": "Seleccione primero la fecha de recogida",
+        "thankYou": "¡Gracias!",
+        "successMessage": "Su reserva ha sido enviada exitosamente.",
+        "confirmationNumber": "Número de Confirmación",
+        "receivedMessage": "Hemos recibido su solicitud y nuestro equipo está revisando los detalles.",
+        "confirmationSoon": "Recibirá una confirmación en breve por email o WhatsApp.",
+        "errors": {
+            "invalidListing": "Listado inválido. Actualice la página e intente nuevamente.",
+            "requiredFields": "Complete todos los campos obligatorios",
+            "processingError": "Ocurrió un error al procesar su reserva. Inténtelo nuevamente.",
+            "loadingError": "No se pudieron cargar los parámetros de búsqueda. Ingrese los detalles manualmente.",
+            "fixErrors": "Corrija los siguientes errores"
+        },
+        "fullName": "Nombre Completo",
+        "email": "Email",
+        "phone": "Número de Teléfono",
+        "whatsapp": "Número de WhatsApp",
+        "country": "País de Residencia",
+        "flightNumber": "Número de Vuelo (opcional)",
+        "additionalNotes": "Notas Adicionales (opcional)",
+        "dateOfBirth": "Fecha de Nacimiento",
+        "mustBe18": "Debe tener 18 años o más",
+        "agreeToTerms": "Acepto los",
+        "calculating": "Calculando...",
+        "standard": "Estándar",
+        "intercity": "Interurbano",
+        "leisure": "Ocio",
+        "morning": "Mañana",
+        "afternoon": "Tarde",
+        "evening": "Noche",
+        "required": "Obligatorio",
+        "optional": "Opcional",
+        "processing": "Procesando...",
+        "bookingDetails": "Detalles de la Reserva",
+        "pickupDate": "Fecha de Recogida",
+        "dropoffDate": "Fecha de Devolución",
+        "selectPickupCity": "Seleccionar Ciudad de Recogida",
+        "selectDropoffCity": "Seleccionar Ciudad de Devolución",
+        "pickupTime": "Hora de Recogida",
+        "dropoffTime": "Hora de Devolución",
+        "selectPickupTime": "Seleccionar Hora de Recogida",
+        "selectDropoffTime": "Seleccionar Hora de Devolución",
+        "vehicleDetails": "Detalles del Vehículo",
+        "boatDetails": "Detalles del Barco",
+        "activityDetails": "Detalles de la Actividad",
+        "addons": "Opciones Adicionales",
+        "duration": "Duración",
+        "selectDuration": "Seleccionar Duración",
+        "serviceType": "Tipo de Servicio",
+        "roadType": "Tipo de Ruta",
+        "numberOfPeople": "Número de Personas",
+        "numberOfPassengers": "Número de Pasajeros",
+        "numberOfLuggage": "Número de Equipajes",
+        "serviceTypes": {
+            "airportTransfer": "Traslado al Aeropuerto",
+            "intercity": "Interurbano"
+        },
+        "roadTypes": {
+            "oneWay": "Solo Ida",
+            "roundTrip": "Ida y Vuelta"
+        },
+        "timeSlots": {
+            "morning": "Mañana",
+            "afternoon": "Tarde",
+            "evening": "Noche",
+            "night": "Madrugada"
+        },
+        "advanceBooking24Hour": "Aviso: La reserva debe realizarse con al menos 24 horas de anticipación",
+        "advanceBooking48Hour": "Aviso: La reserva debe realizarse con al menos 48 horas de anticipación",
+        "advanceBookingCarRental": "Para alquiler de coches, debe reservar con al menos 24 horas de anticipación para garantizar disponibilidad.",
+        "advanceBookingPrivateDriver": "Para servicios de conductor privado, reserve con al menos 48 horas de anticipación.",
+        "advanceBookingBoatRental": "Para alquiler de barcos, se requiere reserva con 48 horas de anticipación para preparación.",
+        "advanceBookingActivities": "Las actividades requieren reserva con 48 horas de anticipación para organización adecuada.",
+        "advanceBookingGeneral": "Se requiere reserva anticipada para garantizar disponibilidad del servicio.",
+        "currentMoroccoTime": "Hora Actual de Marruecos",
+        "noAddonsAvailable": "No hay opciones adicionales disponibles para este vehículo",
+        "basePrice": "Precio Base",
+        "totalPrice": "Precio Total",
+        "clear": "Limpiar",
+        "done": "Hecho",
+        "next": "Siguiente",
+        "withCaptain": "Con Capitán",
+        "unknownAddon": "Opción Desconocida",
+        "oneHour": "1 Hora",
+        "hours": "Horas",
+        "minutes": "Minutos",
+        "pickupMustBeIn": "La recogida debe ser en {{city}}",
+        "dropoffFeeNotice": "Puede aplicar una tarifa por devolución en ubicaciones diferentes de recogida y devolución."
+    },
+    "filters": {
+        "carType": "Tipo de Coche",
+        "carBrand": "Marca de Coche",
+        "transmission": "Transmisión",
+        "manual": "Manual",
+        "automatic": "Automático",
+        "fuelType": "Tipo de Combustible",
+        "petrol": "Gasolina",
+        "diesel": "Diésel",
+        "electric": "Eléctrico",
+        "hybrid": "Híbrido",
+        "priceRange": "Rango de Precio",
+        "depositRequired": "Depósito Requerido",
+        "mileagePolicy": "Política de Kilometraje",
+        "unlimited": "Km Ilimitados",
+        "limited100": "100 km/día",
+        "limited150": "150 km/día",
+        "limited200": "200 km/día",
+        "limited250": "250 km/día",
+        "airportTransfer": "Traslado Aeropuerto",
+        "multilingualDriver": "Conductor Multilingüe"
+    },
+    "features": {
+        "verifiedPartners": "Socios Locales Verificados",
+        "transparentPricing": "Precios Transparentes",
+        "multilingualSupport": "Soporte Multilingüe",
+        "digitalExperience": "Experiencia 100% Digital",
+        "captainIncluded": "Capitán Incluido en Todos los Alquileres",
+        "fuelCrewSnacks": "Combustible, Tripulación y Aperitivos Incluidos",
+        "fishingSunsetParty": "Opciones de Pesca, Atardecer y Fiestas Privadas"
+    },
+    "units": {
+        "day": "día",
+        "hour": "hora",
+        "person": "persona",
+        "perDay": "Por día",
+        "perHour": "Por hora",
+        "perPerson": "Por persona",
+        "week": "semana",
+        "month": "mes",
+        "halfDay": "medio día"
+    },
+    "months": {
+        "january": "Enero",
+        "february": "Febrero",
+        "march": "Marzo",
+        "april": "Abril",
+        "may": "Mayo",
+        "june": "Junio",
+        "july": "Julio",
+        "august": "Agosto",
+        "september": "Septiembre",
+        "october": "Octubre",
+        "november": "Noviembre",
+        "december": "Diciembre"
+    },
+    "weekdays": {
+        "monday": "Lunes",
+        "tuesday": "Martes",
+        "wednesday": "Miércoles",
+        "thursday": "Jueves",
+        "friday": "Viernes",
+        "saturday": "Sábado",
+        "sunday": "Domingo",
+        "mon": "Lun",
+        "tue": "Mar",
+        "wed": "Mié",
+        "thu": "Jue",
+        "fri": "Vie",
+        "sat": "Sáb",
+        "sun": "Dom"
+    },
+    "time": {
+        "am": "AM",
+        "pm": "PM"
+    },
+    "listing": {
+        "cancellation": {
+            "title": "Cancelación Gratuita",
+            "description": "Asegure este precio hoy, cancele gratis hasta 6 horas antes de la recogida para obtener un reembolso del 100%."
+        },
+        "specs": {
+            "title": "Especificaciones",
+            "carSpecs": "Especificaciones del Coche",
+            "boatSpecs": "Especificaciones del Barco",
+            "driverSpecs": "Información del Conductor",
+            "activitySpecs": "Detalles de la Actividad",
+            "model": "Modelo",
+            "year": "Año",
+            "transmission": "Transmisión",
+            "fuel": "Tipo de Combustible",
+            "seats": "Asientos",
+            "doors": "Puertas",
+            "mileage": "Política de Kilometraje",
+            "deposit": "Depósito",
+            "airConditioning": "Aire Acondicionado",
+            "captain": "Capitán",
+            "capacity": "Capacidad",
+            "type": "Tipo",
+            "languages": "Idiomas Hablados",
+            "vehicleType": "Tipo de Vehículo",
+            "maxPassengers": "Máx Pasajeros",
+            "maxLuggage": "Máx Equipaje",
+            "duration": "Duración",
+            "groupSize": "Tamaño del Grupo",
+            "difficulty": "Nivel de Dificultad",
+            "included": "Con Capitán",
+            "notIncluded": "Sin Capitán",
+            "people": "personas",
+            "bags": "maletas",
+            "location": "Ubicación",
+            "manual": "Manual",
+            "automatic": "Automático",
+            "ac": "A/A",
+            "noAc": "Sin A/A",
+            "noDeposit": "Sin Depósito",
+            "depositRequired": "Depósito Requerido",
+            "unlimited": "Ilimitado",
+            "fuel": "Combustible",
+            "lifeJackets": "Chalecos Salvavidas",
+            "wifi": "Wi-Fi",
+            "meals": "Comidas",
+            "tips": "Propinas",
+            "multilingual": "Conductor Multilingüe",
+            "fullDay": "Día Completo 8h",
+            "fuelIncluded": "Combustible Incluido"
+        },
+        "included": {
+            "title": "Qué está Incluido",
+            "notIncluded": "No Incluido"
+        },
+        "addons": {
+            "title": "Opciones Adicionales",
+            "price": "Precio"
+        },
+        "policies": {
+            "title": "Políticas de Alquiler",
+            "deposit": {
+                "title": "Depósito Requerido",
+                "required": "Se requiere un depósito de seguridad para este alquiler",
+                "notRequired": "No se requiere depósito para este alquiler"
+            },
+            "cancellation": "Política de Cancelación",
+            "mileage": "Política de Kilometraje",
+            "fuel": "Política de Combustible",
+            "driver": "Requisitos del Conductor",
+            "insurance": "Información de Seguro",
+            "fullInsurance": "Seguro Completo",
+            "bookingPolicy": "Política de Reserva",
+            "cancellationRules": "Reglas de Cancelación/Reembolso"
+        },
+        "description": {
+            "title": "Descripción",
+            "shortDescription": "Resumen"
+        },
+        "gallery": {
+            "viewAll": "Ver Todas las Fotos",
+            "photo": "Foto"
+        },
+        "pricing": {
+            "from": "Desde",
+            "total": "Precio Total",
+            "breakdown": "Desglose de Precios",
+            "basePrice": "Precio Base",
+            "taxes": "Impuestos y Tasas",
+            "insurance": "Seguro",
+            "extras": "Extras"
+        },
+        "relatedProducts": {
+            "title": "También te Puede Gustar",
+            "similarListings": "Listados Similares"
+        }
+    },
+    "categories": {
+        "carRental": "Alquiler de Coche",
+        "privateDriver": "Conductor Privado",
+        "boatRental": "Alquiler de Barco",
+        "activity": "Actividad"
+    },
+    "footerRec": {
+        "exploreMarhire": "Explorar MarHire",
+        "discoverMorocco": "Descubrir Marruecos",
+        "carRentalCity": "Alquiler de Coches en {{city}}",
+        "luxuryCarMorocco": "Alquiler de Coches de Lujo Marruecos",
+        "cheapCarMorocco": "Alquiler de Coches Baratos Marruecos",
+        "privateDriverCity": "Conductor Privado {{city}}",
+        "airportTransferMorocco": "Traslado Aeropuerto Marruecos",
+        "intercityDriversMorocco": "Conductores Interurbanos Marruecos",
+        "boatRentalCity": "Alquiler de Barcos {{city}}",
+        "yachtCharterMorocco": "Alquiler de Yates Marruecos",
+        "sunsetCruiseAgadir": "Crucero al Atardecer Agadir",
+        "fishingBoatsMorocco": "Barcos de Pesca Marruecos",
+        "partyBoatRentals": "Alquiler de Barcos para Fiestas",
+        "camelRidesMorocco": "Paseos en Camello en Marruecos",
+        "quadBikingMorocco": "Quad en Marruecos",
+        "surfingMorocco": "Surf en Marruecos",
+        "hikingMorocco": "Senderismo en Marruecos",
+        "culturalToursMorocco": "Tours Culturales en Marruecos",
+        "jetSkiBeachMorocco": "Jet Ski y Actividades de Playa en Marruecos"
+    },
+    "home": {
+        "hero": {
+            "title": "Explora Marruecos con Expertos Locales Verificados"
+        },
+        "features": {
+            "trustedPartners": "Socios Locales de Confianza",
+            "noHiddenFees": "Sin Tarifas Ocultas",
+            "instantBooking": "Reserva Instantánea",
+            "noDeposit": "Sin Depósito"
+        },
+        "tabs": {
+            "cars": "Coches",
+            "boats": "Barcos",
+            "drivers": "Conductores Privados",
+            "activities": "Actividades"
+        },
+        "popular": {
+            "title": "Explora Destinos Populares en Marruecos",
+            "subtitle": "Explora Marruecos por Ciudad y Servicio",
+            "listings": "Listados",
+            "explore": "Explorar"
+        },
+        "recommended": {
+            "cars": {
+                "title": "Mejores Ofertas de Alquiler de Coches",
+                "description": "Sin Depósito | Kilómetros Ilimitados | Recogida en Aeropuerto",
+                "cta": "Explorar Todos los Coches →"
+            },
+            "drivers": {
+                "title": "Conductores Privados de Confianza",
+                "description": "Multilingües | Traslados Aeropuerto | Viajes de Negocios",
+                "cta": "Reservar Conductor Privado →"
+            },
+            "boats": {
+                "title": "Alquiler de Barcos y Cruceros Privados",
+                "description": "Con Capitán | Paseos al Atardecer | Grupal o Privado",
+                "cta": "Explorar Barcos y Cruceros →"
+            },
+            "activities": {
+                "title": "Mejores Actividades en Marruecos",
+                "description": "Tours Locales | Familiar | Reserva Instantánea",
+                "cta": "Descubrir Actividades →"
+            }
+        },
+        "why": {
+            "title": "Por Qué los Viajeros Aman MarHire",
+            "subtitle": "Como experto en viajes, puedo decir con confianza que MarHire es más que una plataforma de reservas - es su socio local de confianza para descubrir Marruecos",
+            "features": {
+                "localExperts": {
+                    "title": "Expertos Locales, Experiencias Locales",
+                    "desc": "Nuestros listados son seleccionados por marroquíes que conocen el país mejor que nadie. Obtienes recomendaciones reales, actividades culturalmente ricas y precios locales — no solo lo que se comercializa masivamente para turistas."
+                },
+                "transparentPricing": {
+                    "title": "Precios Transparentes, Sin Tarifas Ocultas",
+                    "desc": "Lo que ves es lo que pagas. MarHire solo se asocia con agencias locales verificadas que se comprometen a no tener cargos sorpresa y políticas de reserva claras."
+                },
+                "humanSupport": {
+                    "title": "Soporte Humano 24/7",
+                    "desc": "Nuestro equipo es local, multilingüe y está disponible en WhatsApp, teléfono o email para ayudarte antes, durante y después de tu viaje."
+                },
+                "airportPickup": {
+                    "title": "Recogida en Aeropuerto, En Cualquier Lugar",
+                    "desc": "Ya sea que aterrices en Agadir, Marrakech o Fez, tu coche o conductor te estará esperando. El viaje sin estrés comienza en la puerta del aeropuerto."
+                },
+                "handpicked": {
+                    "title": "Listados Seleccionados y Revisados",
+                    "desc": "No listamos todo — solo lo mejor. Cada coche, conductor, barco o actividad es revisado por calidad, comodidad y satisfacción del viajero."
+                },
+                "bookNowPayLater": {
+                    "title": "Reserva Ahora, Paga Después",
+                    "desc": "Muchos de nuestros servicios te permiten reservar sin tarjeta de crédito y pagar al llegar — perfecto para viajeros que valoran la flexibilidad."
+                }
+            }
+        },
+        "faq": {
+            "title": "Preguntas Frecuentes",
+            "items": [
+                {
+                    "q": "¿Qué hace a MarHire diferente de otros sitios web de reservas de viajes?",
+                    "a": "MarHire es una plataforma con base en Marruecos que ofrece servicios seleccionados a mano de proveedores locales verificados. A diferencia de las plataformas internacionales, MarHire garantiza sin tarifas ocultas, soporte local personalizado y listados cuidadosamente revisados por seguridad, confiabilidad y autenticidad. No solo estás reservando un servicio - estás experimentando Marruecos como un local."
+                },
+                {
+                    "q": "¿Realmente puedo alquilar un coche en Marruecos sin depósito?",
+                    "a": "Sí, MarHire ofrece muchas opciones sin depósito requerido, particularmente para coches económicos y familiares. Estos listados están claramente marcados, dando a los viajeros tranquilidad y más flexibilidad, especialmente si prefieres pagar a la llegada o en efectivo."
+                },
+                {
+                    "q": "¿Son confiables y profesionales los conductores privados en MarHire?",
+                    "a": "Todos los conductores privados son verificados, multilingües y entrenados para brindar servicio excepcional. No solo te transportan sino que también ofrecen perspectivas culturales, recomendaciones locales e itinerarios flexibles. Ya sea un viaje de negocios o un tour por el desierto, estás en buenas manos."
+                },
+                {
+                    "q": "¿Cómo asegura MarHire la calidad de sus servicios?",
+                    "a": "Cada coche, barco y tour es listado por una agencia local con licencia y revisado manualmente. Recopilamos comentarios reales de clientes y actualizamos continuamente los listados para mantener estándares altos. La transparencia y calidad son nuestras prioridades."
+                },
+                {
+                    "q": "¿Qué está incluido cuando reservo con MarHire?",
+                    "a": "La reserva generalmente incluye el servicio principal (coche, conductor, tour o barco), seguro y opciones adicionales como Wi-Fi, combustible o agua cuando están disponibles. Cada página de listado especifica exactamente qué está incluido, así que no hay sorpresas."
+                }
+            ]
+        }
+    },
+    "languages": {
+        "en": "English",
+        "fr": "Français",
+        "es": "Español"
+    },
+    "support": {
+        "title": "Soporte y Centro de Ayuda",
+        "subtitle": "Contáctanos en cualquier momento — antes, durante o después de tu reserva.",
+        "subtitle2": "Nuestro equipo responde rápido vía WhatsApp, teléfono o email.",
+        "whatsappSupport": "Soporte WhatsApp",
+        "emailSupport": "Soporte Email",
+        "phoneSupport": "Soporte Telefónico",
+        "liveChatWith": "Chat en vivo con nuestro equipo 24/7 en",
+        "whatsApp": "WhatsApp",
+        "emailUsAt": "Envíanos un email en cualquier momento a",
+        "responseTime": "Respondemos en un día hábil.",
+        "preferToTalk": "¿Prefieres hablar? Llámanos al",
+        "businessHours": "durante horario comercial.",
+        "sendUsMessage": "Envíanos un Mensaje",
+        "yourName": "Tu Nombre",
+        "yourEmail": "Tu Email",
+        "phoneOptional": "Teléfono (opcional)",
+        "howCanWeHelp": "¿Cómo podemos ayudarte?",
+        "successMessage": "✅ ¡Gracias! Tu mensaje ha sido enviado. Te contactaremos pronto.",
+        "errorMessage": "❌ Completa todos los campos obligatorios.",
+        "lookingForAnswers": "¿Buscas respuestas rápidas?",
+        "visitOur": "Visita nuestra",
+        "faqPage": "página de FAQ",
+        "forDetails": "para detalles sobre reservas, pagos, reembolsos y más."
+    },
+    "rates": {
+        "availableRates": "Tarifas Disponibles:",
+        "usingHourlyRate": "Usando tarifa por hora",
+        "usingHalfDayRate": "Usando tarifa de medio día",
+        "usingFullDayRate": "Usando tarifa de día completo",
+        "usingDailyRate": "Usando tarifa diaria",
+        "hourlyRate": "Por hora (0.5-1.5h): €{{price}}/hora",
+        "halfDayRate": "Medio día (2-4h): €{{price}} fijo",
+        "fullDayRate": "Día completo (4.5-8h): €{{price}} fijo",
+        "dailyRate": "Diario: €{{price}}/día",
+        "weeklyRate": "Semanal: €{{price}}/semana",
+        "monthlyRate": "Mensual: €{{price}}/mes"
+    },
+    "forms": {
+        "searchCountry": "Buscar país..."
+    }
+}

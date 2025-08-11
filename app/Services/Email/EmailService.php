@@ -25,7 +25,7 @@ class EmailService implements EmailServiceInterface
         $this->pdfService = $pdfService;
     }
 
-    public function send(string $recipient, string $emailType, Booking $booking, ?string $pdfPath = null): bool
+    public function send(string $recipient, string $emailType, Booking $booking, ?string $pdfPath = null, ?string $locale = null): bool
     {
         // Check if email is enabled for this category/type (skip check for already processed emails)
         $booking->load('listing.category');
@@ -46,11 +46,34 @@ class EmailService implements EmailServiceInterface
         config(['mail.from.address' => EmailSetting::getSenderEmail()]);
         config(['mail.from.name' => EmailSetting::getSenderName()]);
         
+        // Determine locale - use booking language if available, otherwise use passed locale, fallback to default
+        if (!$locale) {
+            $locale = $booking->booking_language ?? config('app.locale');
+        }
+        
+        // Debug logging
+        Log::info('EmailService language detection:', [
+            'booking_id' => $booking->id,
+            'booking_language_field' => $booking->booking_language,
+            'locale_param' => $locale,
+            'config_locale' => config('app.locale'),
+            'email_type' => $emailType,
+            'recipient' => $recipient
+        ]);
+        
+        // Validate locale is supported
+        $supportedLocales = config('app.supported_locales', ['en']);
+        if (!in_array($locale, $supportedLocales)) {
+            $locale = config('app.fallback_locale', 'en');
+        }
+        
         // Generate PDF for confirmed bookings
         if ($emailType === 'booking_confirmed' && strtolower($booking->status) === 'confirmed' && !$pdfPath) {
             try {
                 $invoiceData = $this->prepareInvoiceData($booking);
-                $pdfPath = $this->pdfService->generateInvoice($invoiceData, $booking->category_id);
+                // Get booking language, default to 'en'
+                $bookingLocale = $booking->booking_language ?? 'en';
+                $pdfPath = $this->pdfService->generateInvoice($invoiceData, $booking->category_id, $bookingLocale);
             } catch (\Exception $e) {
                 Log::warning('Failed to generate PDF invoice', [
                     'booking_id' => $booking->id,
@@ -72,16 +95,22 @@ class EmailService implements EmailServiceInterface
         ]);
 
         try {
-            // Try to get template from database
-            $template = EmailTemplate::where('event_type', $emailType)
-                ->where(function($q) use ($booking) {
-                    $q->whereNull('category');
-                    if (isset($booking->listing->category->slug)) {
-                        $q->orWhere('category', $booking->listing->category->slug);
-                    }
-                })
-                ->where('is_active', true)
-                ->first();
+            // Try to get template from database with locale
+            $template = $this->findTemplate($emailType, $locale, $booking);
+            
+            // Fallback to English if locale-specific template not found
+            if (!$template && $locale !== 'en') {
+                $template = $this->findTemplate($emailType, 'en', $booking);
+                    
+                if ($template) {
+                    Log::warning('Email template fallback to English', [
+                        'requested_locale' => $locale,
+                        'email_type' => $emailType,
+                        'booking_id' => $booking->id,
+                        'category' => $booking->listing->category->slug ?? null
+                    ]);
+                }
+            }
             
             if ($template) {
                 // Use database template
@@ -90,11 +119,12 @@ class EmailService implements EmailServiceInterface
                 
                 Log::info('Sending email with DatabaseTemplateEmail', [
                     'recipient' => $recipient,
+                    'locale' => $locale,
                     'has_pdf' => !empty($pdfPath),
                     'pdf_path' => $pdfPath
                 ]);
                 
-                Mail::to($recipient)->send(new DatabaseTemplateEmail($subject, $body, $pdfPath));
+                Mail::to($recipient)->send(new DatabaseTemplateEmail($subject, $body, $pdfPath, $locale));
             } else {
                 // Fallback to blade templates if database template doesn't exist
                 Mail::to($recipient)->send(new SimpleBookingEmail($emailLog));
@@ -183,6 +213,28 @@ class EmailService implements EmailServiceInterface
     {
         $adminEmail = config('mail.admin_address', 'admin@marhire.com');
         return $email === $adminEmail ? 'admin' : 'customer';
+    }
+    
+    /**
+     * Find email template by event type, locale and booking category
+     *
+     * @param string $eventType
+     * @param string $locale
+     * @param Booking $booking
+     * @return EmailTemplate|null
+     */
+    private function findTemplate(string $eventType, string $locale, Booking $booking): ?EmailTemplate
+    {
+        return EmailTemplate::where('event_type', $eventType)
+            ->where('locale', $locale)
+            ->where(function($q) use ($booking) {
+                $q->whereNull('category');
+                if (isset($booking->listing->category->slug)) {
+                    $q->orWhere('category', $booking->listing->category->slug);
+                }
+            })
+            ->where('is_active', true)
+            ->first();
     }
 
     protected function prepareEmailData(Booking $booking, string $emailType): array
@@ -292,6 +344,7 @@ class EmailService implements EmailServiceInterface
             '{{client_phone}}' => $clientPhone,
             '{{client_dob}}' => $clientDob,
             '{{client_note}}' => $clientNote,
+            '{{client_notes}}' => $clientNote, // Support both singular and plural
             '{{booking_reference}}' => $booking->invoice_no ?: 'N/A',
             '{{invoice_no}}' => $booking->invoice_no ?: 'N/A',
             '{{booking_id}}' => $booking->id,

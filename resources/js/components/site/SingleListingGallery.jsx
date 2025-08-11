@@ -2,21 +2,84 @@ import React, { useState, useEffect } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useTranslation } from "react-i18next";
+import SmartImage from "../SmartImage";
+
+// Helper function to get translated field
+const getTranslatedField = (listing, field, locale) => {
+    if (listing?.translated_fields && listing.translated_fields[field]) {
+        if (listing.translated_fields[field][locale]) {
+            return listing.translated_fields[field][locale];
+        }
+        if (listing.translated_fields[field]['en']) {
+            return listing.translated_fields[field]['en'];
+        }
+    }
+    return listing?.[field] || '';
+};
 
 const SingleListingGallery = ({ listing, loading }) => {
-    const images = [
-        "/images/img1.png",
-        "/images/img2.png",
-        "/images/img3.png",
-        "/images/img4.png",
-        "/images/img5.png",
-    ];
+    const { t, i18n } = useTranslation();
+    const currentLocale = i18n.language;
+    
     const [activePricing, setActivePricing] = useState(1);
+    const [imageErrors, setImageErrors] = useState({});
 
     useEffect(() => {
         console.log("rendering");
         console.log(listing);
     });
+
+    // Handle image load error - try alternative format
+    const handleImageError = (originalPath, imageIndex) => {
+        console.warn(`Image failed to load: ${originalPath}`);
+        setImageErrors(prev => ({
+            ...prev,
+            [imageIndex]: true
+        }));
+    };
+
+    // Get proper image URL with leading slash
+    const getImageUrl = (filePath) => {
+        if (!filePath) return null;
+        // If path already starts with http or /, use as is
+        if (filePath.startsWith('http') || filePath.startsWith('/')) {
+            return filePath;
+        }
+        // Otherwise prepend leading slash
+        return `/${filePath}`;
+    };
+
+    // Get fallback image URL (try to convert WebP to original format)
+    const getFallbackImageUrl = (filePath) => {
+        if (!filePath) return null;
+        
+        const imageUrl = getImageUrl(filePath);
+        
+        if (imageUrl.endsWith('.webp')) {
+            // Try common original formats
+            const basePath = imageUrl.replace('.webp', '');
+            return [`${basePath}.jpg`, `${basePath}.jpeg`, `${basePath}.png`];
+        }
+        
+        return null;
+    };
+
+    // Get optimized gallery images (prefer WebP when available)
+    const getOptimizedGalleries = () => {
+        if (!listing?.galleries) return [];
+        
+        const galleries = listing.galleries;
+        const webpImages = galleries.filter(img => img.file_path.endsWith('.webp'));
+        const originalImages = galleries.filter(img => !img.file_path.endsWith('.webp'));
+        
+        // If we have WebP versions, prefer them
+        if (webpImages.length > 0) {
+            return webpImages;
+        }
+        
+        return originalImages;
+    };
 
     return loading || !listing ? (
         <div className="singlelisting-infos">
@@ -32,12 +95,34 @@ const SingleListingGallery = ({ listing, loading }) => {
         <>
             <div className="gallery-card">
                 <div className="gallery-grid">
-                    {listing.galleries &&
-                        listing.galleries.map((img, idx) => (
-                            <div className="main-image" key={idx}>
-                                <img src={`/${img.file_path}`} />
+                    {getOptimizedGalleries().map((img, idx) => {
+                        const hasError = imageErrors[idx];
+                        return (
+                            <div className="main-image" key={`${img.id}-${idx}`}>
+                                <SmartImage 
+                                    src={getImageUrl(img.file_path)}
+                                    fallbackSrcs={getFallbackImageUrl(img.file_path)}
+                                    alt={`${getTranslatedField(listing, 'title', currentLocale)} - Image ${idx + 1}`}
+                                    onError={() => handleImageError(img.file_path, idx)}
+                                    loading="lazy"
+                                    style={{ display: hasError ? 'none' : 'block' }}
+                                />
+                                {hasError && (
+                                    <div className="image-error-placeholder" style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        background: '#f5f5f5',
+                                        color: '#666',
+                                        minHeight: '200px',
+                                        fontSize: '14px'
+                                    }}>
+                                        {t('common.image_not_available', 'Image not available')}
+                                    </div>
+                                )}
                             </div>
-                        ))}
+                        );
+                    })}
 
                     {/* <div className="small-image more">
                         <img src={images[4]} alt="Gallery 5" />
@@ -45,10 +130,10 @@ const SingleListingGallery = ({ listing, loading }) => {
                     </div> */}
                 </div>
                 <div className="pt-3 px-2">
-                    <h1 className="singlelisting__name">{listing.title}</h1>
+                    <h1 className="singlelisting__name">{getTranslatedField(listing, 'title', currentLocale)}</h1>
                     <h2 className="singlelisting__location">
                         <FaLocationDot size={16} color="#f21500" />{" "}
-                        {listing.city.city_name}, Maroc
+                        {listing.city.city_name}, {t("common.morocco")}
                     </h2>
                 </div>
             </div>

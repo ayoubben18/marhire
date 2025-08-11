@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Listing extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Translatable;
 
     protected $fillable = [
         'title',
@@ -70,11 +71,13 @@ class Listing extends Model
         'price_per_month',
         'price_per_person',
         'price_per_group',
-        'custom_duration_options'
+        'custom_duration_options',
+        'car_types_new'
     ];
 
     protected $casts = [
         'custom_duration_options' => 'array',
+        'car_types_new' => 'array',
         'category_id' => 'integer',
         'city_id' => 'integer',
         'car_model' => 'integer',
@@ -101,6 +104,123 @@ class Listing extends Model
         'price_per_person' => 'float',
         'price_per_group' => 'float'
     ];
+
+    /**
+     * The attributes that are translatable
+     *
+     * @var array
+     */
+    protected $translatable = [
+        'title',
+        'description',
+        'short_description',
+        'special_notes',
+        'cancellation_policy',
+        'rental_terms',
+        'pickup_info',
+        'meta_title',
+        'meta_description'
+    ];
+
+    /**
+     * Get translations relationship
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function translations()
+    {
+        return $this->hasMany(ListingTranslation::class);
+    }
+
+    /**
+     * Scope to load all translations efficiently
+     * This prevents N+1 queries by loading all 3 language translations at once
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithAllTranslations($query)
+    {
+        return $query->with(['translations' => function ($q) {
+            // Load all 3 languages at once
+            $q->whereIn('locale', ['en', 'fr', 'es']);
+        }]);
+    }
+    
+    /**
+     * Load translations for current locale and English fallback only
+     * This optimizes queries when full page reload happens on language change
+     */
+    public function scopeWithCurrentTranslations($query)
+    {
+        $currentLocale = app()->getLocale();
+        $locales = ['en']; // Always include English as fallback
+        
+        // Add current locale if it's not English
+        if ($currentLocale !== 'en' && in_array($currentLocale, ['fr', 'es'])) {
+            $locales[] = $currentLocale;
+        }
+        
+        return $query->with(['translations' => function ($q) use ($locales) {
+            $q->whereIn('locale', $locales);
+        }]);
+    }
+
+    /**
+     * Get translated data for frontend consumption
+     * Returns all translations organized by field and locale
+     *
+     * @return array
+     */
+    public function getTranslatedData()
+    {
+        $data = [];
+        
+        foreach ($this->translatable as $field) {
+            $data[$field] = $this->getAllTranslations($field);
+            
+            // Ensure all languages have a value (fallback to English)
+            foreach (['en', 'fr', 'es'] as $locale) {
+                if (!isset($data[$field][$locale])) {
+                    // Use English as fallback, or original attribute
+                    $data[$field][$locale] = $data[$field]['en'] ?? $this->attributes[$field] ?? null;
+                }
+            }
+        }
+        
+        return $data;
+    }
+    
+    /**
+     * Get optimized translated data for current locale only
+     * Returns translations for current locale with English fallback
+     * 
+     * @return array
+     */
+    public function getCurrentTranslatedData()
+    {
+        $currentLocale = app()->getLocale();
+        $data = [];
+        
+        foreach ($this->translatable as $field) {
+            // Get current locale translation with English fallback
+            $translations = $this->getAllTranslations($field);
+            
+            // Only return current locale and English
+            $data[$field] = [
+                'en' => $translations['en'] ?? $this->attributes[$field] ?? null,
+            ];
+            
+            if ($currentLocale !== 'en') {
+                $data[$field][$currentLocale] = $translations[$currentLocale] 
+                    ?? $translations['en'] 
+                    ?? $this->attributes[$field] 
+                    ?? null;
+            }
+        }
+        
+        return $data;
+    }
 
     public function category()
     {
@@ -166,6 +286,85 @@ class Listing extends Model
     public function driverPricings()
     {
         return $this->hasMany(DriverPricing::class, 'listing_id');
+    }
+
+    /**
+     * Get car types as array (backward compatibility accessor)
+     * Prioritizes new JSON field over old CSV field
+     * 
+     * @return array
+     */
+    public function getCarTypesAttribute()
+    {
+        // Use new JSON field if available
+        if (!is_null($this->car_types_new)) {
+            return $this->car_types_new;
+        }
+        
+        // Fallback to old CSV field
+        if (!empty($this->attributes['car_type'])) {
+            $values = explode(',', $this->attributes['car_type']);
+            return array_map('trim', array_filter($values, function($value) {
+                return $value !== '' && $value !== '0';
+            }));
+        }
+        
+        return [];
+    }
+
+    /**
+     * Set car types (accepts both array and CSV string)
+     * Always stores in new JSON field
+     * 
+     * @param mixed $value
+     */
+    public function setCarTypesAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->car_types_new = array_filter($value, function($val) {
+                return !empty($val) && $val !== '0';
+            });
+        } elseif (is_string($value)) {
+            $values = explode(',', $value);
+            $this->car_types_new = array_map('trim', array_filter($values, function($val) {
+                return !empty(trim($val)) && trim($val) !== '0';
+            }));
+        } else {
+            $this->car_types_new = [];
+        }
+    }
+
+    /**
+     * Check if deposit is required for this listing
+     * Handles the optional nature of deposits for boat rentals
+     * 
+     * @return bool
+     */
+    public function isDepositRequired()
+    {
+        // For boat rentals (category_id = 4), deposit is optional
+        if ($this->category_id == 4) {
+            return !empty($this->deposit_required) && 
+                   strtolower($this->deposit_required) === 'yes';
+        }
+        
+        // For other categories, use existing logic
+        return !empty($this->deposit_required) && 
+               strtolower($this->deposit_required) === 'yes';
+    }
+
+    /**
+     * Get deposit amount with proper validation
+     * 
+     * @return float|null
+     */
+    public function getDepositAmountAttribute($value)
+    {
+        if (!$this->isDepositRequired()) {
+            return null;
+        }
+        
+        return !empty($value) ? (float) $value : null;
     }
 
 }

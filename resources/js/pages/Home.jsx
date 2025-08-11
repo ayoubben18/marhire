@@ -14,37 +14,39 @@ import FooterRecommendation from "../components/site/FooterRecommendation";
 import { useMediaQuery } from 'react-responsive';
 import BannerMobile from "../components/site/BannerMobile";
 import FreeTexts from "../components/site/FreeTexts";
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
+    const { t } = useTranslation();
     const features = [
         {
-            title: "Local Experts, Local Experiences",
-            desc: "Our listings are curated by Moroccans who know the country better than anyone. You get real recommendations, culturally rich activities, and local prices — not just what's mass-marketed to tourists.",
+            title: t('home.why.features.localExperts.title'),
+            desc: t('home.why.features.localExperts.desc'),
             icon: 'https://marhire.bytech.ma/images/icons/icon2.webp',
         },
         {
-            title: "Transparent Pricing, No Hidden Fees",
-            desc: "What you see is what you pay. MarHire partners only with verified local agencies who commit to no surprise charges and clear booking policies.",
+            title: t('home.why.features.transparentPricing.title'),
+            desc: t('home.why.features.transparentPricing.desc'),
             icon: 'https://marhire.bytech.ma/images/icons/icon1.svg',
         },
         {
-            title: "24/7 Human Support",
-            desc: "Our team is local, multilingual, and available on WhatsApp, phone, or email to help you before, during, and after your trip.",
+            title: t('home.why.features.humanSupport.title'),
+            desc: t('home.why.features.humanSupport.desc'),
             icon: 'https://marhire.bytech.ma/images/icons/icon5.webp',
         },
         {
-            title: "Airport Pickup, Anywhere",
-            desc: "Whether you land in Agadir, Marrakech, or Fes, your car or driver will be waiting. Stress-free travel starts at the airport gate.",
+            title: t('home.why.features.airportPickup.title'),
+            desc: t('home.why.features.airportPickup.desc'),
             icon: 'https://marhire.bytech.ma/images/icons/icon6.svg',
         },
         {
-            title: "Handpicked, Reviewed Listings",
-            desc: "We don't list everything — only the best. Every car, driver, boat, or activity is reviewed for quality, comfort, and traveler satisfaction.",
+            title: t('home.why.features.handpicked.title'),
+            desc: t('home.why.features.handpicked.desc'),
             icon: 'https://marhire.bytech.ma/images/icons/icon7.webp',
         },
         {
-            title: "Book Now, Pay Later",
-            desc: "Many of our services let you reserve without a credit card and pay upon arrival — perfect for travelers who value flexibility.",
+            title: t('home.why.features.bookNowPayLater.title'),
+            desc: t('home.why.features.bookNowPayLater.desc'),
             icon: 'https://marhire.bytech.ma/images/icons/icon3.webp',
         },
     ];
@@ -59,8 +61,8 @@ const Home = () => {
             <Recommended type="boats" classes="bg-yellow"/>
             <Recommended type="activities" classes="bg-silver"/>
             <WhyChooseUs
-                title="Why Travelers Love MarHire"
-                subtitle="As a travel expert, I can confidently say that MarHire is more than a booking platform  it's your trusted local partner for discovering Morocco"
+                title={t('home.why.title')}
+                subtitle={t('home.why.subtitle')}
                 features={features}
             />
             <FAQSection />

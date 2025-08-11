@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { getLocalizedUrl } from "../../utils/localeManager";
 import {
     FaFacebookF,
     FaInstagram,
@@ -77,65 +79,67 @@ const FooterSection = ({ title, children }) => {
 };
 
 const Footer = () => {
+    const { t } = useTranslation();
+    
     return (
         <footer style={{ color: "#203233" }} className="footer">
             <div className="footer-container">
-                <FooterSection title="Company">
+                <FooterSection title={t('footer.company')}>
                     <ul>
                         <li>
-                            <a href="/about-us">About MarHire</a>
+                            <a href={getLocalizedUrl('/about-us')}>{t('navigation.about')}</a>
                         </li>
                         <li>
-                            <a href="/support">Support</a>
+                            <a href={getLocalizedUrl('/support')}>{t('navigation.support')}</a>
                         </li>
                         <li>
-                            <a href="/how-we-work">How We Work</a>
+                            <a href={getLocalizedUrl('/how-we-work')}>{t('navigation.howWeWork')}</a>
                         </li>
                         <li>
-                            <a href="/list-your-property">List Your Property</a>
+                            <a href={getLocalizedUrl('/list-your-property')}>{t('navigation.listProperty')}</a>
                         </li>
                         <li>
-                            <a href="/faq">FAQs</a>
+                            <a href={getLocalizedUrl('/faq')}>{t('navigation.faqs')}</a>
                         </li>
                         <li>
-                            <a href="/blog">Travel Articles</a>
+                            <a href={getLocalizedUrl('/blog')}>{t('navigation.travelArticles')}</a>
                         </li>
                         <li>
-                            <a href="/sitemap.xml">Sitemap</a>
+                            <a href="/sitemap.xml">{t('navigation.sitemap')}</a>
                         </li>
                     </ul>
                 </FooterSection>
-                <FooterSection title="Legal & Policy">
+                <FooterSection title={t('footer.legalPolicy')}>
                     <ul>
                         <li>
-                            <a href="/terms-conditions">Terms & Conditions</a>
+                            <a href={getLocalizedUrl('/terms-conditions')}>{t('footer.termsConditions')}</a>
                         </li>
                         <li>
-                            <a href="/privacy-policy">Privacy Policy</a>
+                            <a href={getLocalizedUrl('/privacy-policy')}>{t('footer.privacyPolicy')}</a>
                         </li>
                         <li>
-                            <a href="/cookie-policy">Cookie Policy</a>
+                            <a href={getLocalizedUrl('/cookie-policy')}>{t('footer.cookiePolicy')}</a>
                         </li>
                         <li>
-                            <a href="/cancellation-policy">Cancelation Policy</a>
+                            <a href={getLocalizedUrl('/cancellation-policy')}>{t('footer.cancellationPolicy')}</a>
                         </li>
                         <li>
-                            <a href="/insurance-conditions">Insurance Conditions</a>
+                            <a href={getLocalizedUrl('/insurance-conditions')}>{t('footer.insuranceConditions')}</a>
                         </li>
                     </ul>
                 </FooterSection>
-                <FooterSection title="Language & Support">
+                <FooterSection title={t('footer.languageSupport')}>
                     <ul>
                         <li>
-                            <a href="/support">Help Center</a>
+                            <a href={getLocalizedUrl('/support')}>{t('footer.helpCenter')}</a>
                         </li>
                         <li>
                             <a href="http://wa.me/212660745055">
-                                WhatsApp Chat Support
+                                {t('navigation.whatsappChatSupport')}
                             </a>
                         </li>
                         <li>
-                            <a href="/support">24/7 Local Assistance</a>
+                            <a href={getLocalizedUrl('/support')}>{t('footer.localAssistance')}</a>
                         </li>
                     </ul>
                 </FooterSection>
@@ -281,7 +285,7 @@ const Footer = () => {
 
             <div className="footer-socs">
                 <div className="footer-socs--col">
-                    <div className="footer-socs--title">Payment Methods</div>
+                    <div className="footer-socs--title">{t('footer.paymentMethods')}</div>
                     <div className="footer-payments">
                         {paymentIcons.map((payment, i) => (
                             <img src={payment.path} key={i} className="payment-icon" alt={payment.name}/>
@@ -289,7 +293,7 @@ const Footer = () => {
                     </div>
                 </div>
                 <div>
-                    <div className="footer-socs--title">Social Media</div>
+                    <div className="footer-socs--title">{t('footer.socialMedia')}</div>
                     <div className="footer-socials">
                         {socialLinks.map((s, i) => (
                             <a
@@ -336,8 +340,7 @@ const Footer = () => {
             </div>
             <div className="footer-bottom">
                 <p className="copyright">
-                    © 2025 MarHire.com. All rights reserved. MarHire is a
-                    registered brand under MarHire LLC.
+                    {t('footer.copyright')}
                 </p>
                 {/* <div className="footer-payments">
                     {paymentIcons.map((icon, i) => (

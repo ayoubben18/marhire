@@ -1,2 +1,10 @@
 User-agent: *
-Disallow:
+Disallow: /admin/
+Disallow: /api/
+Allow: /
+
+# Sitemaps
+Sitemap: https://marhire.com/sitemap.xml
+Sitemap: https://marhire.com/sitemap-en.xml
+Sitemap: https://marhire.com/sitemap-fr.xml
+Sitemap: https://marhire.com/sitemap-es.xml

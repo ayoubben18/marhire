@@ -16,20 +16,61 @@ import {
     Info,
     UserRound,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import SmartImage from "../SmartImage";
+
+// Helper function to get translated field
+const getTranslatedField = (listing, field, locale) => {
+    if (listing?.translated_fields && listing.translated_fields[field]) {
+        if (listing.translated_fields[field][locale]) {
+            return listing.translated_fields[field][locale];
+        }
+        if (listing.translated_fields[field]['en']) {
+            return listing.translated_fields[field]['en'];
+        }
+    }
+    return listing?.[field] || '';
+};
 
 const SingleListingInfoCard = ({ listing, loading }) => {
+    const { t, i18n } = useTranslation();
+    const currentLocale = i18n.language;
     const [activePricing, setActivePricing] = useState(1);
     const [features, setFeatures] = useState([]);
+    const [imageError, setImageError] = useState(false);
+
+    // Get proper image URL with leading slash
+    const getImageUrl = (filePath) => {
+        if (!filePath) return null;
+        if (filePath.startsWith('http') || filePath.startsWith('/')) {
+            return filePath;
+        }
+        return `/${filePath}`;
+    };
+
+    // Get fallback image URLs
+    const getFallbackImageUrl = (filePath) => {
+        if (!filePath) return null;
+        
+        const imageUrl = getImageUrl(filePath);
+        
+        if (imageUrl.endsWith('.webp')) {
+            const basePath = imageUrl.replace('.webp', '');
+            return [`${basePath}.jpg`, `${basePath}.jpeg`, `${basePath}.png`];
+        }
+        
+        return null;
+    };
 
     useEffect(() => {
         if (listing) {
             setFeatures([
                 {
-                    name: `${listing.seats} Seats`,
+                    name: `${listing.seats} ${t("listing.specs.seats")}`,
                     icon: <UserRound size={16} />,
                 },
                 {
-                    name: `${listing.doors} Doors`,
+                    name: `${listing.doors} ${t("listing.specs.doors")}`,
                     icon: <GiCarDoor size={16} />,
                 },
                 { name: `${listing.year}`, icon: <Calendar size={16} /> },
@@ -38,12 +79,12 @@ const SingleListingInfoCard = ({ listing, loading }) => {
                     icon: <Gauge size={16} />,
                 },
                 {
-                    name: `Fuel: ${listing.fuel_policy}`,
+                    name: `${t("listing.specs.fuel")}: ${listing.fuel_policy}`,
                     icon: <Fuel size={16} />,
                 },
             ]);
         }
-    });
+    }, [listing, t]);
 
     return loading ? (
         <div className="singlelisting-infos">
@@ -59,10 +100,10 @@ const SingleListingInfoCard = ({ listing, loading }) => {
         <>
             <div className="singlelisting-infos">
                 <div className="singlelisting-infos__content">
-                    <h1 className="singlelisting__name">{listing.title}</h1>
+                    <h1 className="singlelisting__name">{getTranslatedField(listing, 'title', currentLocale)}</h1>
                     <h2 className="singlelisting__location">
                         <FaLocationDot size={16} color="#f21500" />{" "}
-                        {listing.city.city_name} , Maroc
+                        {listing.city.city_name}, {t("common.morocco")}
                     </h2>
                     <div className="singlelisting__features grid-3">
                         {features.map((feature, indx) => (
@@ -78,7 +119,7 @@ const SingleListingInfoCard = ({ listing, loading }) => {
                     <div className="singlelisting__agency">
                         {listing.provider.agency_logo && (
                             <img
-                                src={`/${listing.provider.agency_logo}`}
+                                src={listing.provider.agency_logo}
                                 alt="agency Logo"
                                 className="singlelisting__agency__logo"
                             />
@@ -86,13 +127,26 @@ const SingleListingInfoCard = ({ listing, loading }) => {
                     </div>
                 </div>
                 <div className="singlelisting-infos__image">
-                    <img
-                        src={
-                            listing.galleries && listing.galleries.length
-                                ? "/" + listing.galleries[0].file_path
-                                : ""
-                        }
-                    />
+                    {listing.galleries && listing.galleries.length > 0 && !imageError ? (
+                        <SmartImage
+                            src={getImageUrl(listing.galleries[0].file_path)}
+                            fallbackSrcs={getFallbackImageUrl(listing.galleries[0].file_path)}
+                            alt={`${getTranslatedField(listing, 'title', currentLocale)} - Main Image`}
+                            onError={() => setImageError(true)}
+                        />
+                    ) : (
+                        <div className="image-placeholder" style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            background: '#f5f5f5',
+                            color: '#666',
+                            minHeight: '120px',
+                            fontSize: '14px'
+                        }}>
+                            {t('common.image_not_available', 'Image not available')}
+                        </div>
+                    )}
                 </div>
             </div>
             {listing.category_id == 2 && (
@@ -108,7 +162,7 @@ const SingleListingInfoCard = ({ listing, loading }) => {
                         <span className="singlelisting__price">
                             {listing.price_per_day} €
                         </span>
-                        <span className="price-label">/ day</span>
+                        <span className="price-label">{t("common.perDay")}</span>
                     </div>
 
                     <div
@@ -122,7 +176,7 @@ const SingleListingInfoCard = ({ listing, loading }) => {
                         <span className="singlelisting__price">
                             {listing.price_per_week} €
                         </span>
-                        <span className="price-label">/ week</span>
+                        <span className="price-label">/ {t("units.week")}</span>
                     </div>
                     <div
                         className={`singlelisting-card__item ${
@@ -135,7 +189,7 @@ const SingleListingInfoCard = ({ listing, loading }) => {
                         <span className="singlelisting__price">
                             {listing.price_per_month} €
                         </span>
-                        <span className="price-label">/ month</span>
+                        <span className="price-label">/ {t("units.month")}</span>
                     </div>
                 </div>
             )}
@@ -153,7 +207,7 @@ const SingleListingInfoCard = ({ listing, loading }) => {
                         <span className="singlelisting__price">
                             {listing.price_per_hour} €
                         </span>
-                        <span className="price-label">/ hour</span>
+                        <span className="price-label">{t("common.perHour")}</span>
                     </div>
 
                     <div
@@ -167,7 +221,7 @@ const SingleListingInfoCard = ({ listing, loading }) => {
                         <span className="singlelisting__price">
                             {listing.price_per_half_day} €
                         </span>
-                        <span className="price-label">/ half-day</span>
+                        <span className="price-label">/ {t("units.halfDay")}</span>
                     </div>
                     <div
                         className={`singlelisting-card__item ${
@@ -180,7 +234,7 @@ const SingleListingInfoCard = ({ listing, loading }) => {
                         <span className="singlelisting__price">
                             {listing.price_per_day} €
                         </span>
-                        <span className="price-label">/ day</span>
+                        <span className="price-label">{t("common.perDay")}</span>
                     </div>
                 </div>
             )}

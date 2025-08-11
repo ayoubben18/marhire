@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+---
+
+always run tests and whatever in a way that does not drop my database or remove anything ok because my data is critical for my website to run

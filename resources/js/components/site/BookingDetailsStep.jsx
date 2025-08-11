@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Calendar, MapPin, Clock, ChevronDown, Users, Car, Anchor, Activity } from "lucide-react";
 import { Alert, FormControlLabel, Checkbox, FormGroup, FormLabel, Radio, RadioGroup, Select, MenuItem, TextField, Typography, Chip } from "@mui/material";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const BookingDetailsStep = ({
     categoryId,
@@ -69,10 +70,26 @@ const BookingDetailsStep = ({
     calendarYear,
     setCalendarYear
 }) => {
+    const { t } = useTranslation();
     // Local states for category-specific fields
     const [cities, setCities] = useState([]);
     const [addons, setAddons] = useState([]);
     const [durationOptions, setDurationOptions] = useState([]);
+    
+    // Helper function to format duration display
+    const formatDuration = (duration) => {
+        if (duration === '30min' || duration === '0.5h') return '30 min';
+        if (duration.includes('h')) {
+            const hours = parseFloat(duration.replace('h', ''));
+            if (hours === 1) return '1 hour';
+            if (hours % 1 === 0.5) {
+                const wholeHours = Math.floor(hours);
+                return `${wholeHours}h 30min`;
+            }
+            return `${hours} hour${hours > 1 ? 's' : ''}`;
+        }
+        return duration;
+    };
     
     // Load cities on component mount
     useEffect(() => {
@@ -151,7 +168,7 @@ const BookingDetailsStep = ({
         if (categoryId === 2 && listing?.addons?.length > 0) {
             const carAddons = listing.addons.map(addonItem => ({
                 id: addonItem?.addon?.id,
-                name: addonItem?.addon?.addon || 'Unknown Addon',
+                name: addonItem?.addon?.addon || t('booking.unknownAddon'),
                 price: addonItem?.addon?.price || 0
             })).filter(addon => addon.id); // Filter out any invalid addons
             setAddons(carAddons);
@@ -178,7 +195,7 @@ const BookingDetailsStep = ({
     const formatTime = (time) => {
         const [hours, minutes] = time.split(":");
         const hour = parseInt(hours);
-        const ampm = hour >= 12 ? "PM" : "AM";
+        const ampm = hour >= 12 ? t('time.pm') : t('time.am');
         const displayHour = hour % 12 || 12;
         return `${displayHour}:${minutes}`;
     };
@@ -348,23 +365,23 @@ const BookingDetailsStep = ({
 
     return (
         <div className="mb-4">
-            <h3 className="text-lg font-semibold mb-3">Booking Details</h3>
+            <h3 className="text-lg font-semibold mb-3">{t('booking.bookingDetails')}</h3>
             
             {/* Advance Booking Notice */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 flex items-start gap-2">
                 <Clock className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
                 <div className="text-sm">
                     <p className="text-blue-900 font-medium">
-                        {[3, 4, 5].includes(categoryId) ? '48-Hour' : '24-Hour'} Advance Booking Required
+                        {[3, 4, 5].includes(categoryId) ? t('booking.advanceBooking48Hour') : t('booking.advanceBooking24Hour')}
                     </p>
                     <p className="text-blue-700 mt-1">
-                        {categoryId === 2 && 'Car rentals must be booked at least 24 hours in advance with a minimum duration of 3 days.'}
-                        {categoryId === 3 && 'Private driver services must be booked at least 2 days (48 hours) in advance based on Morocco time (UTC+1).'}
-                        {categoryId === 4 && 'Boat rentals must be booked at least 2 days (48 hours) in advance based on Morocco time (UTC+1).'}
-                        {categoryId === 5 && 'Activities must be booked at least 2 days (48 hours) in advance based on Morocco time (UTC+1).'}
-                        {![2, 3, 4, 5].includes(categoryId) && 'All bookings must be made at least 24 hours in advance based on Morocco time (UTC+1).'}
+                        {categoryId === 2 && t('booking.advanceBookingCarRental')}
+                        {categoryId === 3 && t('booking.advanceBookingPrivateDriver')}
+                        {categoryId === 4 && t('booking.advanceBookingBoatRental')}
+                        {categoryId === 5 && t('booking.advanceBookingActivities')}
+                        {![2, 3, 4, 5].includes(categoryId) && t('booking.advanceBookingGeneral')}
                         <span className="block text-xs mt-1 text-blue-600">
-                            Current Morocco time: {getMoroccoTime().toLocaleString('en-US', { 
+                            {t('booking.currentMoroccoTime')}: {getMoroccoTime().toLocaleString('en-US', { 
                                 timeZone: 'Africa/Casablanca',
                                 month: 'short', 
                                 day: 'numeric', 
@@ -384,7 +401,7 @@ const BookingDetailsStep = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                         {/* Start Date */}
                         <div className="relative dropdown-container">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Pickup Date *</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('booking.pickupDate')} *</label>
                             <div
                                 onClick={() => {
                                     setShowCalendar('start');
@@ -392,7 +409,7 @@ const BookingDetailsStep = ({
                                 className="w-full px-3 py-3 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 transition-all duration-200 bg-white flex items-center justify-between"
                             >
                                 <span className={`${!startDate ? "text-gray-500" : "text-gray-900"}`}>
-                                    {startDate ? formatDate(startDate) : "Select pickup date"}
+                                    {startDate ? formatDate(startDate) : t('booking.selectPickupDate')}
                                 </span>
                                 <Calendar className="text-gray-400 w-5 h-5" />
                             </div>
@@ -403,11 +420,11 @@ const BookingDetailsStep = ({
                         
                         {/* End Date */}
                         <div className="relative dropdown-container">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Dropoff Date *</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('booking.dropoffDate')} *</label>
                             <div
                                 onClick={() => {
                                     if (!startDate) {
-                                        alert('Please select pickup date first');
+                                        alert(t('booking.selectPickupDateFirst'));
                                         return;
                                     }
                                     setShowCalendar('end');
@@ -415,7 +432,7 @@ const BookingDetailsStep = ({
                                 className="w-full px-3 py-3 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 transition-all duration-200 bg-white flex items-center justify-between"
                             >
                                 <span className={`${!endDate ? "text-gray-500" : "text-gray-900"}`}>
-                                    {endDate ? formatDate(endDate) : "Select dropoff date"}
+                                    {endDate ? formatDate(endDate) : t('booking.selectDropoffDate')}
                                 </span>
                                 <Calendar className="text-gray-400 w-5 h-5" />
                             </div>
@@ -438,7 +455,7 @@ const BookingDetailsStep = ({
                                         : "text-gray-900"
                                 }`}
                             >
-                                {startDate ? formatDate(startDate) : "Select Date"}
+                                {startDate ? formatDate(startDate) : t('booking.selectDate')}
                             </span>
                             <Calendar className="text-gray-400 w-5 h-5" />
                         </div>
@@ -453,9 +470,9 @@ const BookingDetailsStep = ({
                             <h3 className="font-semibold text-gray-800 mb-2">
                                 {categoryId === 2
                                     ? showCalendar === 'start'
-                                        ? "Select pickup date"
-                                        : "Select dropoff date"
-                                    : "Select date"}
+                                        ? t('booking.selectPickupDate')
+                                        : t('booking.selectDropoffDate')
+                                    : t('booking.selectDate')}
                             </h3>
                             <div className="text-xs text-gray-500 mt-1">
                                 * Bookings must be at least {[3, 4, 5].includes(categoryId) ? '48 hours (2 days)' : '24 hours'} in advance
@@ -604,14 +621,14 @@ const BookingDetailsStep = ({
                                 }}
                                 className="text-sm text-gray-600 hover:text-gray-800"
                             >
-                                Clear
+                                {t('booking.clear')}
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setShowCalendar(false)}
                                 className="text-sm bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-700"
                             >
-                                Done
+                                {t('booking.done')}
                             </button>
                         </div>
                     </div>
@@ -624,10 +641,21 @@ const BookingDetailsStep = ({
                     {/* Vehicle Details (Auto-filled) */}
                     {listing && (
                         <div className="mb-4 p-4 bg-gray-50 rounded-xl">
-                            <Typography variant="subtitle2" className="text-gray-600 mb-2">Vehicle Details</Typography>
+                            <Typography variant="subtitle2" className="text-gray-600 mb-2">{t('booking.vehicleDetails')}</Typography>
                             <div className="flex flex-wrap gap-2">
                                 <Chip label={listing.title} size="small" />
-                                <Chip label={listing.car_type || 'Standard'} size="small" />
+                                {/* Display car types - handle both new multi-select and legacy single type */}
+                                {(listing.car_types && Array.isArray(listing.car_types) && listing.car_types.length > 0) ? (
+                                    listing.car_types.map((carType, index) => (
+                                        <Chip key={index} label={carType} size="small" />
+                                    ))
+                                ) : listing.car_types_new && listing.car_types_new.length > 0 ? (
+                                    listing.car_types_new.map((carType, index) => (
+                                        <Chip key={index} label={carType} size="small" />
+                                    ))
+                                ) : (
+                                    <Chip label={listing.car_type || t('booking.standard')} size="small" />
+                                )}
                                 {listing?.city?.city_name && <Chip label={listing.city.city_name} size="small" />}
                             </div>
                         </div>
@@ -643,14 +671,14 @@ const BookingDetailsStep = ({
                                 error={!!errors.pickup_location}
                                 disabled={listing?.city_id ? true : false}
                             >
-                                <MenuItem value="" disabled>Select Pickup City *</MenuItem>
+                                <MenuItem value="" disabled>{t('booking.selectPickupCity')} *</MenuItem>
                                 {cities.map(city => (
                                     <MenuItem key={city.id} value={city.id}>{city.name}</MenuItem>
                                 ))}
                             </Select>
                             {listing?.city_id && (
                                 <Typography variant="caption" color="textSecondary">
-                                    Pickup must be in {cities.find(c => c.id === listing.city_id)?.name || 'listing city'}
+                                    {t('booking.pickupMustBeIn', { city: cities.find(c => c.id === listing.city_id)?.name || 'listing city' })}
                                 </Typography>
                             )}
                             {errors.pickup_location && (
@@ -665,7 +693,7 @@ const BookingDetailsStep = ({
                                 className={`w-full ${errors.dropoff_location ? 'error' : ''}`}
                                 error={!!errors.dropoff_location}
                             >
-                                <MenuItem value="" disabled>Select Dropoff City *</MenuItem>
+                                <MenuItem value="" disabled>{t('booking.selectDropoffCity')} *</MenuItem>
                                 {cities.map(city => (
                                     <MenuItem key={city.id} value={city.id}>{city.name}</MenuItem>
                                 ))}
@@ -680,7 +708,7 @@ const BookingDetailsStep = ({
                                 onChange={(e) => setPickupTime(e.target.value)}
                                 className={`w-full px-3 py-3 text-lg border ${errors.pickup_time ? 'border-red-500' : 'border-gray-300'} rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                             >
-                                <option value="">Pickup Time *</option>
+                                <option value="">{t('booking.pickupTime')} *</option>
                                 {Array.from({ length: 24 }, (_, i) => {
                                     // Check if this time is valid (24+ hours from now)
                                     let isDisabled = false;
@@ -712,7 +740,7 @@ const BookingDetailsStep = ({
                                 onChange={(e) => setDropoffTime(e.target.value)}
                                 className={`w-full px-3 py-3 text-lg border ${errors.dropoff_time ? 'border-red-500' : 'border-gray-300'} rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                             >
-                                <option value="">Dropoff Time *</option>
+                                <option value="">{t('booking.dropoffTime')} *</option>
                                 {Array.from({ length: 24 }, (_, i) => (
                                     <option key={i} value={`${i.toString().padStart(2, '0')}:00`}>
                                         {i.toString().padStart(2, '0')}:00
@@ -751,7 +779,7 @@ const BookingDetailsStep = ({
                             </FormGroup>
                         ) : (
                             <Typography variant="body2" color="textSecondary" className="italic">
-                                No add-ons available for this vehicle
+                                {t('booking.noAddonsAvailable')}
                             </Typography>
                         )}
                     </div>
@@ -759,7 +787,7 @@ const BookingDetailsStep = ({
                     {/* Drop-off fee message */}
                     {pickupLocation && dropoffLocation && pickupLocation !== dropoffLocation && (
                         <Alert severity="info" className="mb-3">
-                            A drop-off fee may apply for different pickup and dropoff locations.
+                            {t('booking.dropoffFeeNotice')}
                         </Alert>
                     )}
                 </>
@@ -773,7 +801,7 @@ const BookingDetailsStep = ({
                         <div className="mb-4 p-4 bg-gray-50 rounded-xl">
                             <Typography variant="subtitle2" className="text-gray-600 mb-2">Vehicle & Provider Info</Typography>
                             <div className="flex flex-wrap gap-2">
-                                <Chip label={listing.vehicule_type || 'Standard'} size="small" />
+                                <Chip label={listing.vehicule_type || t('booking.standard')} size="small" />
                                 {listing?.provider?.agency_name && <Chip label={listing.provider.agency_name} size="small" />}
                             </div>
                         </div>
@@ -954,7 +982,7 @@ const BookingDetailsStep = ({
                             <Typography variant="subtitle2" className="text-gray-600 mb-2">Boat Details</Typography>
                             <div className="flex flex-wrap gap-2">
                                 {listing.departure_location && <Chip label={`Departure: ${listing.departure_location}`} size="small" />}
-                                {listing.with_captain === 'Yes' && <Chip label="With Captain" size="small" color="primary" />}
+                                {listing.with_captain === 'Yes' && <Chip label={t('booking.withCaptain')} size="small" color="primary" />}
                             </div>
                         </div>
                     )}
@@ -999,7 +1027,11 @@ const BookingDetailsStep = ({
                     <div className="mb-4">
                         <FormLabel component="legend" className="mb-2">Duration *</FormLabel>
                         <div className="grid grid-cols-4 gap-2">
-                            {['30min', '1h', '1.5h', '2h', '2.5h', '3h', '3.5h', '4h', '4.5h', '5h', '5.5h', '6h', '6.5h', '7h', '7.5h', '8h'].map(duration => (
+                            {/* Use dynamic duration options from listing or fallback to defaults */}
+                            {(listing?.duration_options 
+                                ? listing.duration_options.split(',').map(d => d.trim())
+                                : ['30min', '1h', '1.5h', '2h', '2.5h', '3h', '3.5h', '4h', '4.5h', '5h', '5.5h', '6h', '6.5h', '7h', '7.5h', '8h']
+                            ).map(duration => (
                                 <label
                                     key={duration}
                                     className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-all ${
@@ -1014,7 +1046,7 @@ const BookingDetailsStep = ({
                                         onChange={(e) => setBoatDuration(duration)}
                                         value={duration}
                                     />
-                                    <span className="text-sm">{duration}</span>
+                                    <span className="text-sm">{formatDuration(duration)}</span>
                                 </label>
                             ))}
                         </div>
@@ -1035,7 +1067,7 @@ const BookingDetailsStep = ({
                                     handleFieldChange('number_of_people', value);
                                 }
                             }}
-                            label="Number of People *"
+                            label={t('booking.numberOfPeople') + ' *'}
                             variant="outlined"
                             fullWidth
                             inputProps={{ 
@@ -1101,10 +1133,10 @@ const BookingDetailsStep = ({
                                         let formattedDuration = option.name;
                                         if (option.name.includes('h') && !option.name.toLowerCase().includes('half')) {
                                             const hours = parseFloat(option.name.replace('h', ''));
-                                            formattedDuration = hours === 1 ? '1 Hour' : `${hours} Hours`;
+                                            formattedDuration = hours === 1 ? t('booking.oneHour') : `${hours} ${t('booking.hours')}`;
                                         } else if (option.name.includes('min')) {
                                             const minutes = option.name.replace('min', '');
-                                            formattedDuration = `${minutes} Minutes`;
+                                            formattedDuration = `${minutes} ${t('booking.minutes')}`;
                                         } else if (option.name.toLowerCase() === 'half day') {
                                             formattedDuration = 'Half Day (4 Hours)';
                                         } else if (option.name.toLowerCase() === 'full day') {
@@ -1138,10 +1170,10 @@ const BookingDetailsStep = ({
                                         let formattedDuration = pricing.element;
                                         if (pricing.element.includes('h')) {
                                             const hours = parseFloat(pricing.element.replace('h', ''));
-                                            formattedDuration = hours === 1 ? '1 Hour' : `${hours} Hours`;
+                                            formattedDuration = hours === 1 ? t('booking.oneHour') : `${hours} ${t('booking.hours')}`;
                                         } else if (pricing.element.includes('min')) {
                                             const minutes = pricing.element.replace('min', '');
-                                            formattedDuration = `${minutes} Minutes`;
+                                            formattedDuration = `${minutes} ${t('booking.minutes')}`;
                                         } else if (pricing.element.toLowerCase() === 'half day') {
                                             formattedDuration = 'Half Day (4 Hours)';
                                         } else if (pricing.element.toLowerCase() === 'full day') {
@@ -1183,7 +1215,7 @@ const BookingDetailsStep = ({
                                     handleFieldChange('number_of_people', value);
                                 }
                             }}
-                            label="Number of People *"
+                            label={t('booking.numberOfPeople') + ' *'}
                             variant="outlined"
                             fullWidth
                             inputProps={{ 

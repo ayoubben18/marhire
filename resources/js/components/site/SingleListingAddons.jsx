@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 
 const label = { inputProps: { "aria-label": "Addons" } };
 
 const SingleListingAddons = ({ addons = [], loading }) => {
+    const { t } = useTranslation();
+    
     return (
         !loading && (
             <div className="singlelisting-card">
-                <h3 className="singlelisting__h3">Add-ons / Extras</h3>
+                <h3 className="singlelisting__h3">{t("listing.addons.title")}</h3>
                 <div className="addons__list">
                     {addons.map((item) => (
                         <div className="addons__item" key={item.addon.id}>

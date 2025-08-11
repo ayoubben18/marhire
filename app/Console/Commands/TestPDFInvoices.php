@@ -74,8 +74,9 @@ class TestPDFInvoices extends Command
             // Prepare invoice data using the EmailService method
             $invoiceData = $this->prepareInvoiceData($booking);
             
-            // Generate PDF
-            $pdfPath = $this->pdfService->generateInvoice($invoiceData, $booking->category_id);
+            // Generate PDF with booking language
+            $locale = $booking->booking_language ?? 'en';
+            $pdfPath = $this->pdfService->generateInvoice($invoiceData, $booking->category_id, $locale);
             
             $this->info("✓ PDF generated successfully: {$pdfPath}");
             

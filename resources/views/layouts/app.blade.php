@@ -22,9 +22,83 @@ request()->is('article/*')
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-language" content="{{ app()->getLocale() }}">
+    
+    {{-- SEO Meta Tags --}}
     @yield('meta')
+    
+    {{-- CSRF Token --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    {{-- Title --}}
     <title>@yield('title')</title>
+    
+    {{-- Canonical URL --}}
+    @if(!isset($noCanonical))
+    <link rel="canonical" href="{{ url()->current() }}" />
+    @endif
+    
+    {{-- Hreflang Tags --}}
+    @php
+        $seoService = app(\App\Services\SEOService::class);
+        $hreflangService = app(\App\Services\HreflangService::class);
+        $currentUrl = url()->current();
+        $currentLocale = app()->getLocale();
+        $hreflangTags = $hreflangService->generateHreflangTags($currentUrl, $currentLocale);
+    @endphp
+    {!! $hreflangTags !!}
+    
+    {{-- OpenGraph Locale Tags --}}
+    @php
+        $localeMeta = $hreflangService->getLocaleMeta($currentLocale);
+    @endphp
+    <meta property="og:locale" content="{{ $localeMeta['og_locale'] }}" />
+    @foreach($localeMeta['alternate_locales'] as $altLocale)
+    <meta property="og:locale:alternate" content="{{ $altLocale }}" />
+    @endforeach
+    
+    {{-- Default OpenGraph Tags --}}
+    @hasSection('og_title')
+        <meta property="og:title" content="@yield('og_title')" />
+    @else
+        <meta property="og:title" content="@yield('title')" />
+    @endif
+    
+    @hasSection('og_description')
+        <meta property="og:description" content="@yield('og_description')" />
+    @elseif(View::hasSection('description'))
+        <meta property="og:description" content="@yield('description')" />
+    @endif
+    
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:type" content="@yield('og_type', 'website')" />
+    <meta property="og:site_name" content="{{ config('app.name') }}" />
+    
+    @hasSection('og_image')
+        <meta property="og:image" content="@yield('og_image')" />
+    @endif
+    
+    {{-- Twitter Card Tags --}}
+    <meta name="twitter:card" content="@yield('twitter_card', 'summary_large_image')" />
+    @hasSection('twitter_title')
+        <meta name="twitter:title" content="@yield('twitter_title')" />
+    @else
+        <meta name="twitter:title" content="@yield('title')" />
+    @endif
+    
+    @hasSection('twitter_description')
+        <meta name="twitter:description" content="@yield('twitter_description')" />
+    @elseif(View::hasSection('description'))
+        <meta name="twitter:description" content="@yield('description')" />
+    @endif
+    
+    @hasSection('twitter_image')
+        <meta name="twitter:image" content="@yield('twitter_image')" />
+    @elseif(View::hasSection('og_image'))
+        <meta name="twitter:image" content="@yield('og_image')" />
+    @endif
+    
+    {{-- Favicon --}}
     <link rel="icon" href="{{ asset('images/favicon.png') }}" />
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css" />
@@ -153,18 +227,6 @@ request()->is('article/*')
     </style>
 </head>
 <body class="site {{ $isNotSticky ? '' : 'sticky' }}">
-    <div id="google_translate_element" style="display:none"></div>
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'en'
-                , includedLanguages: 'en,fr,es'
-                , autoDisplay: false
-            }, 'google_translate_element');
-        }
-
-    </script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <!-- DESKTOP HEADER (unchanged, your design) -->
     <div class="nav-container d-none d-md-flex {{ $isNotSticky ? '' : 'sticky' }}">
         <div class="head-left">
@@ -175,7 +237,7 @@ request()->is('article/*')
         <div class="head-center">
             <div class="nav-searchbar">
                 <div class="nav-searchbar__content">
-                    <input type="text" placeholder="Listing, City, etc" id="nav_searchbar__txt" />
+                    <input type="text" placeholder="{{ __('navigation.searchPlaceholder') }}" id="nav_searchbar__txt" />
                 </div>
                 <div class="nav-searchbar__btn">
                     <button id="nav_searchbar__btn"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -186,7 +248,7 @@ request()->is('article/*')
             <div class="dropdown head-navs-item">
                 <a class="dropdown-toggle d-flex align-items-center" href="#" id="langDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img class="flag-img" src="{{ asset(app()->getLocale() == 'fr' ? 'images/fr.png' : (app()->getLocale() == 'es' ? 'images/es.png' : 'images/en.png')) }}" alt="{{ strtoupper(app()->getLocale()) }}" style="width:20px;">
-                    <span class="ml-2 text-uppercase" class="lang-name">EN</span>
+                    <span class="ml-2 text-uppercase lang-name">EN</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="langDropdown">
                     <a class="dropdown-item d-flex align-items-center" href="#" onclick="setLanguage('en'); return false;">
@@ -202,17 +264,17 @@ request()->is('article/*')
             </div>
             <div class="dropdown head-navs-item">
                 <a class="dropdown-toggle d-flex align-items-center" href="#" id="catDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Travel Shop
+                    {{ __('navigation.travelShop') }}
                 </a>
                 <div class="dropdown-menu dropdown-menu-right catDropdown" aria-labelledby="catDropdown">
-                    <a href="/category/car-rental" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-car"></i></span> Car Rentals</a>
-                    <a href="/category/private-driver" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-user-tie"></i></span> Private Drivers</a>
-                    <a href="/category/boats" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-ship"></i></span> Boat Rentals</a>
-                    <a href="/category/things-to-do" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-compass"></i></span> Things to Do</a>
+                    <a href="/category/car-rental" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-car"></i></span> {{ __('navigation.carRentals') }}</a>
+                    <a href="/category/private-driver" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-user-tie"></i></span> {{ __('navigation.privateDrivers') }}</a>
+                    <a href="/category/boats" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-ship"></i></span> {{ __('navigation.boatRentals') }}</a>
+                    <a href="/category/things-to-do" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-compass"></i></span> {{ __('navigation.thingsToDo') }}</a>
                 </div>
             </div>
-            <a href="/support" class="head-navs-item">Support / Help Center <span class="head-navs-icon"><i class="fa-solid fa-headset"></i></span></a>
-            <a href="/list-your-property" class="head-navs-item">List Your Property</a>
+            <a href="/support" class="head-navs-item">{{ __('navigation.supportHelpCenter') }} <span class="head-navs-icon"><i class="fa-solid fa-headset"></i></span></a>
+            <a href="/list-your-property" class="head-navs-item">{{ __('navigation.listProperty') }}</a>
         </div>
     </div>
 
@@ -225,7 +287,7 @@ request()->is('article/*')
             <!-- Search bar -->
             <form class="trip-searchbox" action="/search" method="get">
                 <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Listing, City, etc" style="
+                    <input type="text" name="q" class="form-control" placeholder="{{ __('navigation.searchPlaceholder') }}" style="
     padding: 10px;
     max-height: unset;
     height: 45px;
@@ -236,17 +298,17 @@ request()->is('article/*')
                 </div>
             </form>
             <!-- Menu links -->
-            <a href="/category/car-rental" class="trip-link"><i class="fa fa-car"></i>Car Rentals</a>
-            <a href="/category/private-driver" class="trip-link"><i class="fa fa-user-tie"></i>Private Drivers</a>
-            <a href="/category/boats" class="trip-link"><i class="fa fa-ship"></i>Boat Rentals</a>
-            <a href="/category/things-to-do" class="trip-link"><i class="fa fa-compass"></i>Things to Do</a>
-            <a href="/support" class="trip-link"><i class="fa fa-headset"></i>Support / Help Center</a>
-            <a href="/list-your-property" class="trip-link btn btn-main mt-1 mb-2" style="color:#fff;">List Your Property</a>
+            <a href="/category/car-rental" class="trip-link"><i class="fa fa-car"></i>{{ __('navigation.carRentals') }}</a>
+            <a href="/category/private-driver" class="trip-link"><i class="fa fa-user-tie"></i>{{ __('navigation.privateDrivers') }}</a>
+            <a href="/category/boats" class="trip-link"><i class="fa fa-ship"></i>{{ __('navigation.boatRentals') }}</a>
+            <a href="/category/things-to-do" class="trip-link"><i class="fa fa-compass"></i>{{ __('navigation.thingsToDo') }}</a>
+            <a href="/support" class="trip-link"><i class="fa fa-headset"></i>{{ __('navigation.supportHelpCenter') }}</a>
+            <a href="/list-your-property" class="trip-link btn btn-main mt-1 mb-2" style="color:#fff;">{{ __('navigation.listProperty') }}</a>
             <!-- Language Switcher -->
             <div class="dropdown">
                 <button class="d-flex align-items-center dropdown-toggle" type="button" id="langMobileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <img class="flag-img" src="{{ asset(app()->getLocale() == 'fr' ? 'images/fr.png' : (app()->getLocale() == 'es' ? 'images/es.png' : 'images/en.png')) }}" alt="{{ strtoupper(app()->getLocale()) }}" style="width:20px;">
-                    <span class="ml-2 text-uppercase" class="lang-name">EN</span>
+                    <span class="ml-2 text-uppercase lang-name">EN</span>
                 </button>
                 <div class="dropdown-menu w-100" aria-labelledby="langMobileDropdown">
                     <a class="dropdown-item d-flex align-items-center" href="#" onclick="setLanguage('en'); return false;">
@@ -300,36 +362,78 @@ request()->is('article/*')
         let flagImg = '/images/en.png';
 
         function setLanguage(lang) {
-            // Wait for widget to load
-            var combo = document.querySelector('select.goog-te-combo');
-
-            if (!combo) {
-                setTimeout(function() {
-                    setLanguage(lang);
-                }, 500);
+            // Validate language
+            const supportedLanguages = ['en', 'fr', 'es'];
+            if (!supportedLanguages.includes(lang)) {
+                console.warn('Unsupported language:', lang);
                 return;
             }
-            combo.value = lang;
 
+            // Update UI immediately for feedback
             if (lang === 'fr') {
                 flagImg = '/images/fr.png';
             } else if (lang === 'es') {
                 flagImg = '/images/es.png';
+            } else {
+                flagImg = '/images/en.png';
             }
+            $('.flag-img').attr('src', flagImg);
+            $('.lang-name').text(lang.toUpperCase());
 
-            $('.flag-img').attr('src', flagImg)
-            localStorage.setItem('lang', lang);
-            combo.dispatchEvent(new Event('change'));
+            // Save preference
+            localStorage.setItem('i18nextLng', lang);
+            
+            // Set cookie for Laravel backend
+            const expires = new Date();
+            expires.setTime(expires.getTime() + 365 * 24 * 60 * 60 * 1000);
+            document.cookie = `i18nextLng=${lang};expires=${expires.toUTCString()};path=/`;
+
+            // Update URL for proper routing
+            var currentPath = window.location.pathname;
+            var hasLocale = /^\/(en|fr|es)(\/|$)/.test(currentPath);
+            var newPath = currentPath;
+            
+            if (hasLocale) {
+                // Replace existing locale
+                newPath = currentPath.replace(/^\/(en|fr|es)/, '/' + lang);
+            } else {
+                // Add locale prefix
+                newPath = '/' + lang + currentPath;
+            }
+            
+            // Reload the page to get new translations from server
+            // This is necessary for Laravel blade templates to update
+            window.location.href = newPath + window.location.search + window.location.hash;
         }
 
-        let lang = localStorage.getItem('lang') || 'en';
-
-        if (lang === 'fr') {
-            flagImg = '/images/fr.png';
-        } else if (lang === 'es') {
-            flagImg = '/images/es.png';
+        // Get current language from URL or localStorage
+        function getCurrentLanguage() {
+            // First check URL for locale
+            var currentPath = window.location.pathname;
+            var urlMatch = currentPath.match(/^\/(en|fr|es)(\/|$)/);
+            if (urlMatch) {
+                return urlMatch[1];
+            }
+            // Fall back to localStorage
+            return localStorage.getItem('i18nextLng') || 'en';
         }
-        $('.flag-img').attr('src', flagImg);
+        
+        // Initialize language display on page load
+        $(document).ready(function() {
+            let lang = getCurrentLanguage();
+            
+            // Update flag and text based on current language
+            if (lang === 'fr') { 
+                flagImg = '/images/fr.png'; 
+            } else if (lang === 'es') { 
+                flagImg = '/images/es.png'; 
+            } else { 
+                flagImg = '/images/en.png'; 
+            }
+            
+            $('.flag-img').attr('src', flagImg);
+            $('.lang-name').text(lang.toUpperCase());
+        });
 
     </script>
 </body>

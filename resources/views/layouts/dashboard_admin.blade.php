@@ -149,7 +149,7 @@
                                             <a href="{{ route('listings.list') }}" class="nk-menu-link"><span class="nk-menu-text">List</span></a>
                                         </li>
                                         <li class="nk-menu-item">
-                                            <a href="{{ route('listings.new') }}" class="nk-menu-link"><span class="nk-menu-text">New Listing</span></a>
+                                            <a href="{{ route('listings.add') }}" class="nk-menu-link"><span class="nk-menu-text">New Listing</span></a>
                                         </li>
                                     </ul>
                                 </li>
@@ -164,7 +164,7 @@
                                             <a href="{{ route('agencies.list') }}" class="nk-menu-link"><span class="nk-menu-text">List</span></a>
                                         </li>
                                         <li class="nk-menu-item">
-                                            <a href="{{ route('agencies.new') }}" class="nk-menu-link"><span class="nk-menu-text">New agency</span></a>
+                                            <a href="{{ route('agencies.add') }}" class="nk-menu-link"><span class="nk-menu-text">New agency</span></a>
                                         </li>
                                     </ul>
                                 </li>
@@ -196,10 +196,10 @@
                                     </a>
                                     <ul class="nk-menu-sub">
                                         <li class="nk-menu-item">
-                                            <a href="{{ route('listingaddons.list') }}" class="nk-menu-link"><span class="nk-menu-text">List</span></a>
+                                            <a href="{{ route('listing_addons.list') }}" class="nk-menu-link"><span class="nk-menu-text">List</span></a>
                                         </li>
                                         <li class="nk-menu-item">
-                                            <a href="{{ route('listingaddons.new') }}" class="nk-menu-link"><span class="nk-menu-text">New addon</span></a>
+                                            <a href="{{ route('listing_addons.add') }}" class="nk-menu-link"><span class="nk-menu-text">New addon</span></a>
                                         </li>
                                     </ul>
                                 </li>
@@ -245,7 +245,7 @@
                                     </a>
                                     <ul class="nk-menu-sub">
                                         <li class="nk-menu-item">
-                                            <a href="{{ route('utilisateur.list_utilisateurs') }}" class="nk-menu-link"><span class="nk-menu-text">Users list</span></a>
+                                            <a href="{{ route('list_utilisateurs') }}" class="nk-menu-link"><span class="nk-menu-text">Users list</span></a>
                                         </li>
                                     </ul>
                                 </li>
@@ -260,7 +260,7 @@
                                             <a href="{{ route('admin.email-templates.index') }}" class="nk-menu-link"><span class="nk-menu-text">Email Templates</span></a>
                                         </li>
                                         <li class="nk-menu-item">
-                                            <a href="{{ route('admin.email-settings') }}" class="nk-menu-link"><span class="nk-menu-text">Email Settings</span></a>
+                                            <a href="{{ route('admin.email-settings.index') }}" class="nk-menu-link"><span class="nk-menu-text">Email Settings</span></a>
                                         </li>
                                         <li class="nk-menu-item">
                                             <a href="{{ route('admin.email-history') }}" class="nk-menu-link"><span class="nk-menu-text">Email History</span></a>

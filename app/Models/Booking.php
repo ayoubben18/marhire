@@ -53,7 +53,8 @@ class Booking extends Model
         'created_by',
         'terms_accepted',
         'full_name',
-        'additional_notes'
+        'additional_notes',
+        'booking_language'
     ];
 
     public function addons()

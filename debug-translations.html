@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Spanish Translations</title>
+    <script src="https://unpkg.com/i18next@23.7.6/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend@2.4.2/lib/index.js"></script>
+</head>
+<body>
+    <h1>Debug Spanish Translations</h1>
+    <div id="status">Loading...</div>
+    <div id="results"></div>
+    
+    <script>
+        console.log('=== Starting Spanish Translation Debug ===');
+        
+        // Initialize i18next manually to test
+        i18next
+            .use(i18nextHttpBackend.default)
+            .init({
+                lng: 'es',
+                fallbackLng: 'en',
+                debug: true,
+                backend: {
+                    loadPath: 'http://localhost:8000/locales/{{lng}}/{{ns}}.json',
+                }
+            })
+            .then((t) => {
+                console.log('i18next initialized successfully');
+                document.getElementById('status').innerText = 'i18next initialized successfully';
+                
+                // Test key translations
+                const testKeys = [
+                    'home.hero.title',
+                    'home.tabs.cars',
+                    'home.tabs.boats',
+                    'home.tabs.drivers',
+                    'home.tabs.activities',
+                    'home.features.trustedPartners',
+                    'home.features.noHiddenFees',
+                    'home.features.instantBooking',
+                    'home.features.noDeposit'
+                ];
+                
+                const results = document.getElementById('results');
+                results.innerHTML = '<h2>Translation Results:</h2>';
+                
+                testKeys.forEach(key => {
+                    const translation = t(key);
+                    const div = document.createElement('div');
+                    div.innerHTML = `<strong>${key}:</strong> "${translation}"`;
+                    results.appendChild(div);
+                    console.log(`${key}: "${translation}"`);
+                });
+                
+                // Check if we got fallback values (English)
+                const heroTitle = t('home.hero.title');
+                if (heroTitle.includes('Verified Local Experts')) {
+                    console.error('❌ Getting English translations instead of Spanish!');
+                    results.innerHTML += '<div style="color: red; font-weight: bold;">❌ Getting English translations instead of Spanish!</div>';
+                } else if (heroTitle.includes('Expertos Locales Verificados')) {
+                    console.log('✅ Spanish translations working correctly!');
+                    results.innerHTML += '<div style="color: green; font-weight: bold;">✅ Spanish translations working correctly!</div>';
+                } else {
+                    console.warn('⚠️ Unexpected translation result');
+                    results.innerHTML += '<div style="color: orange; font-weight: bold;">⚠️ Unexpected translation result</div>';
+                }
+            })
+            .catch((error) => {
+                console.error('Failed to initialize i18next:', error);
+                document.getElementById('status').innerText = 'Failed to initialize i18next: ' + error.message;
+            });
+    </script>
+</body>
+</html>

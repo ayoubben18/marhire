@@ -8,36 +8,40 @@ import ThingsToDoForm from "./ThingsToDoForm";
 import PrivateDriverForm from "./PrivateDriverForm";
 import BoatForm from "./BoatForm";
 import SearchBoatForm from "./SearchBoatFrm";
+import { useTranslation } from "react-i18next";
 
-const tabs = [
-    { key: "cars", label: "Cars", icon: <FaCar /> },
-    { key: "boats", label: "Boats", icon: <IoMdBoat /> },
-    { key: "drivers", label: "Private Drivers", icon: <ImUserTie /> },
-    { key: "activity", label: "Things to Do", icon: <MdTour /> },
-];
+function getTabs(t) {
+    return [
+        { key: "cars", label: t("home.tabs.cars"), icon: <FaCar /> },
+        { key: "boats", label: t("home.tabs.boats"), icon: <IoMdBoat /> },
+        { key: "drivers", label: t("home.tabs.drivers"), icon: <ImUserTie /> },
+        { key: "activity", label: t("home.tabs.activities"), icon: <MdTour /> },
+    ];
+}
 
 const HeroSection = ({ withBar, text, isFull, tab }) => {
-    const [activeTab, setActiveTab] = useState(tab ? tab :"cars");
+    const { t, i18n } = useTranslation();
+    
+    const [activeTab, setActiveTab] = useState(tab ? tab : "cars");
     const features = [
         {
-            name: "Trusted Local Partners",
+            name: t("home.features.trustedPartners"),
             icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
         },
         {
-            name: "No Hidden Fees",
+            name: t("home.features.noHiddenFees"),
             icon: "https://marhire.bytech.ma/images/icons/icon1.svg",
         },
         {
-            name: "Instant Booking",
+            name: t("home.features.instantBooking"),
             icon: "https://marhire.bytech.ma/images/icons/icon3.webp",
         },
         {
-            name: "No Deposit",
+            name: t("home.features.noDeposit"),
             icon: "https://marhire.bytech.ma/images/icons/icon4.svg",
         },
     ];
 
-    
     return (
         <div className={`hero-section ${isFull === true ? "is-full" : ""}`}>
             <div className="hero-section--banner banner1">
@@ -45,9 +49,7 @@ const HeroSection = ({ withBar, text, isFull, tab }) => {
                 <div className="hero-section--content">
                     <div className="slogan">
                         <h1 className="slogan-title">
-                            {text
-                                ? text
-                                : "Explore Morocco with Verified Local Experts"}
+                            {text ? text : t("home.hero.title")}
                         </h1>
                         {withBar && (
                             <div className="features-icons">
@@ -64,7 +66,7 @@ const HeroSection = ({ withBar, text, isFull, tab }) => {
                         {withBar && (
                             <div className="searchbox__tabs">
                                 <div className="searchbox__bar">
-                                    {tabs.map((tab) => (
+                                    {getTabs(t).map((tab) => (
                                         <button
                                             key={tab.key}
                                             className={`seachbox__item ${

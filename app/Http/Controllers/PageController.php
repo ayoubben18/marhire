@@ -5,14 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Page;
 use App\Services\SEOService;
 use Illuminate\Http\Request;
-use Spatie\Sitemap\Sitemap;
-use Spatie\Sitemap\Tags\Url;
-use Auth;
-use App\Models\Agency;
-use App\Models\City;
-use App\Models\Category;
-use App\Models\Listing;
-use App\Models\Article;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PageController extends Controller
 {
@@ -88,104 +82,45 @@ class PageController extends Controller
 
     public function update_sitemap(Request $request)
     {
-        $sitemap = Sitemap::create();
-        //static pages
-        $sitemap->add(Url::create('/')->setPriority(1));
-        $sitemap->add(Url::create('/about-us'));
-        $sitemap->add(Url::create('/how-we-work'));
-        $sitemap->add(Url::create('/list-your-property'));
-        $sitemap->add(Url::create('/faq'));
-        $sitemap->add(Url::create('/support'));
-        $sitemap->add(Url::create('/blog'));
-        $sitemap->add(Url::create('/terms-conditions'));
-        $sitemap->add(Url::create('/privacy-policy'));
-        $sitemap->add(Url::create('/cookie-policy'));
-        $sitemap->add(Url::create('/cancellation-policy'));
-        $sitemap->add(Url::create('/insurance-conditions'));
-        $sitemap->add(Url::create('/category/car-rental'));
-        $sitemap->add(Url::create('/category/private-driver'));
-        $sitemap->add(Url::create('/category/boats'));
-        $sitemap->add(Url::create('/category/boats'));
-        $sitemap->add(Url::create('category/things-to-do'));
-
-        //cities
-        $cities = City::all();
-
-        foreach ($cities as $city) {
-            $url = Url::create('/city/' . strtolower($city->city_name))
-                ->setPriority(0.8);
-
-            if ($city->updated_at) {
-                $url->setLastModificationDate($city->updated_at);
-            }
-
-            $sitemap->add($url);
-        }
-
-        //categories
-        $categories = ['car-rental', 'private-driver', 'boats', 'things-to-do'];
-
-        foreach ($categories as $category) {
-            $url = Url::create('/category/' . $category)
-                ->setPriority(0.8);
-
-            $sitemap->add($url);
-        }
-
-        foreach ($categories as $category) {
-            foreach ($cities as $city) 
-            {
-                $url = Url::create('/category/' . $category . '/city/' . strtolower($city->city_name))
-                    ->setPriority(0.8);
-
-                $sitemap->add($url);
-            }
-        }
-
-        //articles
-        $articles = Article::all();
-
-        foreach ($articles as $article) {
-            $url = Url::create('/article/' . strtolower($article->slug))
-                ->setPriority(0.8);
-
-            if ($article->updated_at) {
-                $url->setLastModificationDate($article->updated_at);
-            }
-
-            $sitemap->add($url);
-        }
-
-        //listings
-        $listings = Article::all();
-
-        foreach ($listings as $listing) {
-            $url = Url::create('/details/' . strtolower($listing->slug))
-                ->setPriority(0.8);
-
-            if ($listing->updated_at) {
-                $url->setLastModificationDate($listing->updated_at);
-            }
-
-            $sitemap->add($url);
+        // Authentication check - only admins can generate sitemaps
+        if (!Auth::check() || !Auth::user()->isAdmin()) {
+            abort(403, 'Unauthorized access');
         }
         
-        //agencies
-        $agencies = Agency::where('status', 'Active')->get();
-
-        foreach ($agencies as $agency) {
-            $url = Url::create('/agency/' . strtolower($agency->slug))
-                ->setPriority(0.8);
-
-            if ($agency->updated_at) {
-                $url->setLastModificationDate($agency->updated_at);
+        // Check if we should queue the job or run synchronously
+        $queue = $request->get('queue', true);
+        $notifyEmail = $request->get('notify_email', Auth::user()->email);
+        
+        try {
+            if ($queue) {
+                // Dispatch to queue for background processing
+                \App\Jobs\GenerateSitemapsJob::dispatch($notifyEmail);
+                
+                return response()->json([
+                    'status' => 'queued',
+                    'message' => 'Sitemap generation has been queued. You will receive an email notification when complete.'
+                ]);
+            } else {
+                // Run synchronously (for small sites or immediate generation)
+                $service = new \App\Services\SitemapGeneratorService();
+                $results = $service->generateAllSitemaps();
+                
+                return response()->json([
+                    'status' => 'completed',
+                    'message' => 'Sitemaps generated successfully',
+                    'results' => $results
+                ]);
             }
-
-            $sitemap->add($url);
+        } catch (\Exception $e) {
+            Log::error('Sitemap generation request failed', [
+                'error' => $e->getMessage(),
+                'user' => Auth::user()->id
+            ]);
+            
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to generate sitemaps: ' . $e->getMessage()
+            ], 500);
         }
-
-        $sitemap->writeToFile(public_path('sitemap.xml'));
-
-        return response()->json(['status' => 'sitemap generated']);
     }
 }

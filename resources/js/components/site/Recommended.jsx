@@ -8,6 +8,26 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import axios from "axios";
 import ListingIcons from "./ListingIcons";
+import { useTranslation } from "react-i18next";
+import { getLocalizedUrl } from "../../utils/localeManager";
+import SmartImage from "../SmartImage";
+
+// Helper function to get translated field with fallback
+const getTranslatedField = (listing, field, locale) => {
+    // Check if translated_fields exists and has the field
+    if (listing.translated_fields && listing.translated_fields[field]) {
+        // Try to get the requested locale
+        if (listing.translated_fields[field][locale]) {
+            return listing.translated_fields[field][locale];
+        }
+        // Fallback to English
+        if (listing.translated_fields[field]['en']) {
+            return listing.translated_fields[field]['en'];
+        }
+    }
+    // Final fallback to direct field
+    return listing[field] || '';
+};
 
 const Recommended = ({
     type,
@@ -19,37 +39,64 @@ const Recommended = ({
     disableHeading,
     agency_id,
 }) => {
+    const { t, i18n } = useTranslation();
+    // Get current locale from URL path or localStorage as fallback
+    const pathMatch = window.location.pathname.match(/^\/([a-z]{2})(?:\/|$)/);
+    const currentLocale = pathMatch ? pathMatch[1] : (localStorage.getItem('i18nextLng') || 'en');
     const [activeCity, setActiveCity] = useState(city || "Agadir");
     const [activeTab, setActiveTab] = useState(tabs ? tabs[0].name : null);
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(false);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
+
+    // Get proper image URL with leading slash
+    const getImageUrl = (filePath) => {
+        if (!filePath) return null;
+        if (filePath.startsWith('http') || filePath.startsWith('/')) {
+            return filePath;
+        }
+        return `/${filePath}`;
+    };
+
+    // Get fallback image URLs
+    const getFallbackImageUrl = (filePath) => {
+        if (!filePath) return null;
+        
+        const imageUrl = getImageUrl(filePath);
+        
+        if (imageUrl.endsWith('.webp')) {
+            const basePath = imageUrl.replace('.webp', '');
+            return [`${basePath}.jpg`, `${basePath}.jpeg`, `${basePath}.png`];
+        }
+        
+        return null;
+    };
     const cities = ["Agadir", "Marrakech", "Casablanca", "Tangier", "Fes"];
     const config = {
         cars: {
-            title: "Top Car Rental Deals",
-            description: "No Deposit | Unlimited Kilometers | Airport Pickup",
-            ctaText: "Explore All Cars →",
-            ctaLink: "/car-search",
+            title: t("home.recommended.cars.title"),
+            description: t("home.recommended.cars.description"),
+            ctaText: t("home.recommended.cars.cta"),
+            ctaLink: getLocalizedUrl("/car-search"),
         },
         drivers: {
-            title: "Private Drivers You Can Rely On",
-            description: "Multilingual | Airport Transfers | Business Trips",
-            ctaText: "Book a Private Driver →",
-            ctaLink: "/private-search",
+            title: t("home.recommended.drivers.title"),
+            description: t("home.recommended.drivers.description"),
+            ctaText: t("home.recommended.drivers.cta"),
+            ctaLink: getLocalizedUrl("/private-search"),
         },
         boats: {
-            title: "Boat Rentals & Private Cruises",
-            description: "With Captain | Sunset Trips | Group or Private",
-            ctaText: "Browse Boats & Cruises →",
-            ctaLink: "/boat-search",
+            title: t("home.recommended.boats.title"),
+            description: t("home.recommended.boats.description"),
+            ctaText: t("home.recommended.boats.cta"),
+            ctaLink: getLocalizedUrl("/boat-search"),
         },
         activities: {
-            title: "Top Things to Do in Morocco",
-            description: "Local Tours | Family Friendly | Instant Booking",
-            ctaText: "Discover Activities →",
-            ctaLink: "/thingstodo-search",
+            title: t("home.recommended.activities.title"),
+            description: t("home.recommended.activities.description"),
+            ctaText: t("home.recommended.activities.cta"),
+            ctaLink: getLocalizedUrl("/thingstodo-search"),
         },
     };
 
@@ -139,26 +186,31 @@ const Recommended = ({
 
     const generatePrice = (listing) => {
         if (type === "cars") {
-            return `From ${listing.price_per_day}€ / day`;
+            return `${t("common.from")} ${listing.price_per_day}€ / ${t(
+                "units.day"
+            )}`;
         } else if (type === "drivers") {
             const driverPrice = listing.pricings[0].airport_one || 0;
-            return `From ${driverPrice}€ / day`;
+            return `${t("common.from")} ${driverPrice}€ / ${t("units.day")}`;
         } else if (type === "boats") {
-            return `From ${listing.price_per_hour}€ / hour`;
+            return `${t("common.from")} ${listing.price_per_hour}€ / ${t(
+                "units.hour"
+            )}`;
         } else {
             const price = listing.act_pricings[0].price || 0;
-            return `From ${price}€ / person`;
+            return `${t("common.from")} ${price}€ / ${t("units.person")}`;
         }
     };
 
     const getWtspUrl = (listing) => {
         const url = `https://marhire.bytech.ma/details/${listing.slug}`;
-        const message = encodeURIComponent(
-            `Hello,\nI am interested in booking this rental:\n\nTitle:${listing.title} \n\nURL: ${url}\n\nCould you please provide more details about availability, pricing, and the booking process?\n\nThank you!`
-        );
-        // For WhatsApp link:
+        const title = getTranslatedField(listing, 'title', currentLocale);
+        const text = t("messages.whatsappInterest", {
+            title: title,
+            url,
+        });
+        const message = encodeURIComponent(text);
         const whatsappLink = `https://wa.me/+212660745055?text=${message}`;
-
         return whatsappLink;
     };
 
@@ -216,42 +268,49 @@ const Recommended = ({
                                       <span className="annonce-price-badge">
                                           {generatePrice(listing)}
                                       </span>
-                                      <a href={`/details/${listing.slug}`}>
-                                          <img
-                                              src={
-                                                  listing.galleries &&
-                                                  listing.galleries.length
-                                                      ? "/" +
-                                                        listing.galleries[0]
-                                                            .file_path
-                                                      : ""
-                                              }
-                                              alt={listing.title}
-                                              className="recommendation-image"
-                                              onError={(e) => {
-                                                  e.currentTarget.src =
-                                                      "/images/default-marhire.png";
-                                              }}
-                                          />
+                                      <a href={getLocalizedUrl(`details/${listing.slug}`)}>
+                                          {listing.galleries && listing.galleries.length > 0 ? (
+                                              <SmartImage
+                                                  src={getImageUrl(listing.galleries[0].file_path)}
+                                                  fallbackSrcs={[
+                                                      ...getFallbackImageUrl(listing.galleries[0].file_path) || [],
+                                                      '/images/default-marhire.png'
+                                                  ]}
+                                                  alt={getTranslatedField(listing, 'title', currentLocale)}
+                                                  className="recommendation-image"
+                                              />
+                                          ) : (
+                                              <img
+                                                  src="/images/default-marhire.png"
+                                                  alt={getTranslatedField(listing, 'title', currentLocale)}
+                                                  className="recommendation-image"
+                                              />
+                                          )}
                                       </a>
                                   </div>
                                   <div className="recommendation-content">
                                       <div className="recommendation-header">
                                           <h3 className="recommendation-title">
-                                              {listing.title}
+                                              {getTranslatedField(listing, 'title', currentLocale)}
                                           </h3>
                                           <p className="recommendation-location">
-                                              📍 {listing.city ? listing.city.city_name : 'Morocco'}
+                                              📍{" "}
+                                              {listing.city
+                                                  ? listing.city.city_name
+                                                  : t("common.morocco")}
                                           </p>
                                       </div>
                                       <ListingIcons type={type} l={listing} />
                                   </div>
                                   <div className="recommendation-footer">
-                                      <a href={`/details/${listing.slug}`} className="recommendation-button">
+                                      <a
+                                          href={getLocalizedUrl(`details/${listing.slug}`)}
+                                          className="recommendation-button"
+                                      >
                                           <span>
                                               <FaCalendarAlt />
                                           </span>{" "}
-                                          Book Now
+                                          {t("common.bookNow")}
                                       </a>
                                       <a
                                           href={getWtspUrl(listing)}
@@ -287,7 +346,9 @@ const Recommended = ({
             </div>
             {hasMore && !loadingMore && (
                 <div className="load-more__sect">
-                    <button className="load-more" onClick={loadMore}>Load More</button>
+                    <button className="load-more" onClick={loadMore}>
+                        {t("common.loadMore")}
+                    </button>
                 </div>
             )}
         </section>

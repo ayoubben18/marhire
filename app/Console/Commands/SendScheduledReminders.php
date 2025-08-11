@@ -29,18 +29,25 @@ class SendScheduledReminders extends Command
             
             // Check if reminders are enabled for this category
             if (EmailSetting::isEmailEnabled($reminder->booking->listing->category, 'booking_reminder')) {
-                // Send to customer
+                // Get customer's preferred language
+                $customerLanguage = getCustomerLanguage($reminder->booking->email);
+                
+                // Send to customer in their preferred language
                 $emailService->send(
                     $reminder->booking->email,
                     'booking_reminder',
-                    $reminder->booking
+                    $reminder->booking,
+                    null,
+                    $customerLanguage
                 );
                 
-                // Send to admin
+                // Send to admin (always in English)
                 $emailService->send(
                     EmailSetting::getAdminEmail(),
                     'booking_reminder',
-                    $reminder->booking
+                    $reminder->booking,
+                    null,
+                    'en'
                 );
             }
             

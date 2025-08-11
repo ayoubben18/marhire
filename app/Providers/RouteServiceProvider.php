@@ -37,11 +37,20 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->configureRateLimiting();
 
+        // Set up locale pattern constraint from configuration
+        $localePattern = implode('|', config('app.supported_locales', ['en']));
+        Route::pattern('locale', $localePattern);
+
         $this->routes(function () {
             Route::prefix('api')
                 ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/api.php'));
+
+            // Admin routes without locale prefix
+            Route::middleware('web')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/admin.php'));
 
             Route::middleware('web')
                 ->namespace($this->namespace)

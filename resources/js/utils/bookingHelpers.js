@@ -169,9 +169,12 @@ export const calculatePrice = (categoryId, basePrice, params = {}) => {
                         hours = minutes / 60;
                     } else if (boatDuration.includes('h')) {
                         hours = parseFloat(boatDuration.replace('h', ''));
+                    } else {
+                        // Handle plain numbers like "3" or "5.5"
+                        hours = parseFloat(boatDuration);
                     }
-                } else {
-                    hours = parseFloat(boatDuration);
+                } else if (typeof boatDuration === 'number') {
+                    hours = boatDuration;
                 }
             }
             
@@ -181,11 +184,11 @@ export const calculatePrice = (categoryId, basePrice, params = {}) => {
                 // 30min to 1.5 hours: price_per_hour * hours
                 price = (listing.price_per_hour || basePrice) * hours;
             } else if (hours >= 2 && hours <= 4) {
-                // 2 to 4 hours: price_per_half_day * (hours/4)
-                price = (listing.price_per_half_day || listing.price_per_hour * 4) * (hours / 4);
+                // 2 to 4 hours: use flat half-day rate
+                price = listing.price_per_half_day || listing.price_per_hour * 4;
             } else if (hours >= 4.5 && hours <= 8) {
-                // 4.5 to 8 hours: price_per_day * (hours/8)
-                price = (listing.price_per_day || listing.price_per_hour * 8) * (hours / 8);
+                // 4.5 to 8 hours: use flat full-day rate
+                price = listing.price_per_day || listing.price_per_hour * 8;
             } else {
                 // Invalid duration - use hourly rate as fallback
                 price = (listing.price_per_hour || basePrice) * hours;
@@ -267,15 +270,15 @@ export const calculatePriceWithDetails = (categoryId, basePrice, params = {}) =>
                 
                 if (days < 7) {
                     details.rateType = 'daily';
-                    details.rateDescription = `Daily rate: $${listing?.price_per_day || basePrice}/day`;
+                    details.rateDescription = `Daily rate: €${listing?.price_per_day || basePrice}/day`;
                 } else if (days < 30) {
                     details.rateType = 'weekly';
                     const weeklyRate = listing?.price_per_week ? (listing.price_per_week / 7).toFixed(2) : basePrice;
-                    details.rateDescription = `Weekly rate: $${weeklyRate}/day (from $${listing?.price_per_week || basePrice * 7}/week)`;
+                    details.rateDescription = `Weekly rate: €${weeklyRate}/day (from €${listing?.price_per_week || basePrice * 7}/week)`;
                 } else {
                     details.rateType = 'monthly';
                     const monthlyRate = listing?.price_per_month ? (listing.price_per_month / 30).toFixed(2) : basePrice;
-                    details.rateDescription = `Monthly rate: $${monthlyRate}/day (from $${listing?.price_per_month || basePrice * 30}/month)`;
+                    details.rateDescription = `Monthly rate: €${monthlyRate}/day (from €${listing?.price_per_month || basePrice * 30}/month)`;
                 }
             }
             break;
@@ -289,7 +292,12 @@ export const calculatePriceWithDetails = (categoryId, basePrice, params = {}) =>
                         hours = minutes / 60;
                     } else if (boatDuration.includes('h')) {
                         hours = parseFloat(boatDuration.replace('h', ''));
+                    } else {
+                        // Handle plain numbers like "3" or "5.5"
+                        hours = parseFloat(boatDuration);
                     }
+                } else if (typeof boatDuration === 'number') {
+                    hours = boatDuration;
                 }
                 
                 details.priceBreakdown = {
@@ -300,13 +308,13 @@ export const calculatePriceWithDetails = (categoryId, basePrice, params = {}) =>
                 
                 if (hours >= 0.5 && hours <= 1.5) {
                     details.rateType = 'hourly';
-                    details.rateDescription = `Hourly rate: $${listing.price_per_hour || basePrice}/hour`;
+                    details.rateDescription = `Hourly rate: €${listing.price_per_hour || basePrice}/hour`;
                 } else if (hours >= 2 && hours <= 4) {
                     details.rateType = 'halfDay';
-                    details.rateDescription = `Half-day rate: $${listing.price_per_half_day || listing.price_per_hour * 4} for 4 hours`;
+                    details.rateDescription = `Half-day rate: €${listing.price_per_half_day || listing.price_per_hour * 4} for 4 hours`;
                 } else if (hours >= 4.5 && hours <= 8) {
                     details.rateType = 'fullDay';
-                    details.rateDescription = `Full-day rate: $${listing.price_per_day || listing.price_per_hour * 8} for 8 hours`;
+                    details.rateDescription = `Full-day rate: €${listing.price_per_day || listing.price_per_hour * 8} for 8 hours`;
                 }
             }
             break;

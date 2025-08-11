@@ -81,6 +81,17 @@ return [
     */
 
     'locale' => 'en',
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Supported Locales
+    |--------------------------------------------------------------------------
+    |
+    | List of locales supported by the application for i18n and email templates.
+    |
+    */
+    
+    'supported_locales' => ['en', 'fr', 'es'],
 
     /*
     |--------------------------------------------------------------------------
@@ -94,6 +105,32 @@ return [
     */
 
     'fallback_locale' => 'en',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Supported Locales
+    |--------------------------------------------------------------------------
+    |
+    | List of locales that the application supports.
+    |
+    */
+
+    'supported_locales' => ['en', 'fr', 'es'],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Locale Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configuration array with language names for each supported locale.
+    |
+    */
+
+    'locales' => [
+        'en' => 'English',
+        'fr' => 'Français',
+        'es' => 'Español',
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -179,6 +216,7 @@ return [
         Milon\Barcode\BarcodeServiceProvider::class,
         App\Providers\ThemeServiceProvider::class,
         App\Providers\SessionServiceProvider::class,
+        App\Providers\SeoBladeServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
 

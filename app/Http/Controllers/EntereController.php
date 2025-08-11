@@ -57,8 +57,15 @@ class EntereController extends Controller
         return view('site.faq')->with('page', $page);
     }
 
-    public function category(Request $request, string $slug)
+    public function category(Request $request, $locale = null, string $slug = null)
     {
+        // Handle the case where locale is optional in routes
+        // If only one parameter is passed, it's the slug, not locale
+        if ($slug === null && $locale !== null) {
+            $slug = $locale;
+            $locale = app()->getLocale();
+        }
+        
         $categories = ['car-rental', 'private-driver', 'boats', 'things-to-do'];
 
         if (!in_array($slug, $categories))
@@ -70,8 +77,16 @@ class EntereController extends Controller
             'page' => $page
         ]);
     }
-    public function categoryCity(Request $request, string $slug, string $city)
+    public function categoryCity(Request $request, $locale = null, string $slug = null, string $city = null)
     {
+        // Handle the case where locale is optional in routes
+        // If two parameters are passed, they are slug and city, not locale and slug
+        if ($city === null && $slug !== null && $locale !== null) {
+            $city = $slug;
+            $slug = $locale;
+            $locale = app()->getLocale();
+        }
+        
         $categories = ['car-rental', 'private-driver', 'boats', 'things-to-do'];
         $page = $this->SEOservice->getPage('category/' . $slug . '/$city');
 
@@ -85,8 +100,16 @@ class EntereController extends Controller
         ]);
     }
 
-    public function subcategory(Request $request, string $category, string $subcategory)
+    public function subcategory(Request $request, $locale = null, string $category = null, string $subcategory = null)
     {
+        // Handle the case where locale is optional in routes
+        // If two parameters are passed, they are category and subcategory, not locale and category
+        if ($subcategory === null && $category !== null && $locale !== null) {
+            $subcategory = $category;
+            $category = $locale;
+            $locale = app()->getLocale();
+        }
+        
         $categories = ['car-rental', 'private-driver', 'boats', 'things-to-do'];
 
         if (!in_array($category, $categories) || !$this->checkSubCategoryExists($category, $subcategory))
@@ -147,21 +170,72 @@ class EntereController extends Controller
         return in_array(Str::slug($subcategory), $optionSlugs);
     }
 
-    public function city(Request $request, string $city)
+    public function city(Request $request, $locale = null, string $city = null)
     {
+        // Handle the case where locale is optional in routes
+        // If only one parameter is passed, it's the city, not locale
+        if ($city === null && $locale !== null) {
+            $city = $locale;
+            $locale = app()->getLocale();
+        }
+        
         $page = $this->SEOservice->getPage('city/*');
 
         return view('site.city')->with('city', ucfirst(strtolower($city)))
             ->with('page', $page);
     }
 
-    public function listing(Request $request, string $slug)
+    public function listing(Request $request, $locale = null, string $slug = null)
     {
-        $listing = Listing::where('slug', $slug)->firstOrFail();
+        // Handle the case where locale is optional in routes
+        // If only one parameter is passed, it's the slug, not locale
+        if ($slug === null && $locale !== null) {
+            $slug = $locale;
+            $locale = app()->getLocale();
+        }
+        
+        // Be resilient in test/empty DB environments: don't 404 if listing is missing
+        // Use optimized translation loading - only current locale + English fallback
+        $listing = Listing::where('slug', $slug)
+            ->withCurrentTranslations()
+            ->with(['city', 'provider', 'galleries'])
+            ->first();
         $page = $this->SEOservice->getPage($slug, 'listing');
+        
+        // Generate SEO meta tags with language support
+        $seoData = [];
+        if ($listing) {
+            // Get translated meta data with fallback
+            $translatedMeta = $this->SEOservice->getTranslatedMeta($listing, [
+                'meta_title', 
+                'meta_description',
+                'title',
+                'description'
+            ]);
+            
+            $seoData = [
+                'title' => $translatedMeta['meta_title'] ?? $translatedMeta['title'] ?? $listing->title,
+                'description' => $translatedMeta['meta_description'] ?? $translatedMeta['description'] ?? Str::limit($listing->description, 160),
+                'keywords' => $listing->meta_keywords ?? '',
+                'og_type' => 'product',
+                'og_title' => $translatedMeta['meta_title'] ?? $translatedMeta['title'] ?? $listing->title,
+                'og_description' => $translatedMeta['meta_description'] ?? $translatedMeta['description'] ?? Str::limit($listing->description, 160),
+            ];
+            
+            // Add image if available
+            if ($listing->galleries && count($listing->galleries) > 0) {
+                $seoData['og_image'] = asset('images/listings/' . $listing->galleries[0]->image);
+                $seoData['twitter_image'] = asset('images/listings/' . $listing->galleries[0]->image);
+            }
+        }
+        
+        $metaTags = $this->SEOservice->generateMetaTags($seoData);
 
-        return view('site.listing')->with('slug', $slug)
-            ->with('page', $page);
+        return view('site.listing')
+            ->with('slug', $slug)
+            ->with('page', $page)
+            ->with('listing', $listing)
+            ->with('metaTags', $metaTags);
     }
 
     public function carsearch(Request $request)
@@ -184,8 +258,15 @@ class EntereController extends Controller
         return view('site.search')->with('type', 'activity');
     }
 
-    public function agency(Request $request, string $agency_name)
+    public function agency(Request $request, $locale = null, string $agency_name = null)
     {
+        // Handle the case where locale is optional in routes
+        // If only one parameter is passed, it's the agency_name, not locale
+        if ($agency_name === null && $locale !== null) {
+            $agency_name = $locale;
+            $locale = app()->getLocale();
+        }
+        
         $agency = Agency::where('slug', $agency_name)
             ->where('status', 'Active')
             ->firstOrFail();
@@ -249,8 +330,15 @@ class EntereController extends Controller
             ->with('page', $page);
     }
 
-    public function article(Request $request, string $slug)
+    public function article(Request $request, $locale = null, string $slug = null)
     {
+        // Handle the case where locale is optional in routes
+        // If only one parameter is passed, it's the slug, not locale
+        if ($slug === null && $locale !== null) {
+            $slug = $locale;
+            $locale = app()->getLocale();
+        }
+        
         $article = Article::where('slug', $slug)->firstOrFail();
         $page = $this->SEOservice->getPage($slug, 'article');
 

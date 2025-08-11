@@ -30,6 +30,7 @@ import { FaCalendarAlt, FaCar } from "react-icons/fa";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { GoPeople } from "react-icons/go";
 import { RiChat1Line } from "react-icons/ri";
+import { useTranslation } from "react-i18next";
 
 const getStandarType = (type) => {
     const map = {
@@ -46,6 +47,7 @@ const getStandarType = (type) => {
 };
 
 const ListingIcons = ({ type, l, classes = "", withoutLocation = false }) => {
+    const { t } = useTranslation();
     const config = {
         cars: [
             {
@@ -56,7 +58,7 @@ const ListingIcons = ({ type, l, classes = "", withoutLocation = false }) => {
             {
                 icon: <GiCarDoor />,
                 label: "Seats",
-                value: l.seats + " Seats",
+                value: l.seats + " " + t('listing.specs.seats'),
             },
             {
                 icon: <FaInfinity />,
@@ -68,8 +70,8 @@ const ListingIcons = ({ type, l, classes = "", withoutLocation = false }) => {
                 label: "Deposit",
                 value:
                     l.deposit_required === "Yes"
-                        ? "Deposit Required"
-                        : "No Deposit",
+                        ? t('listing.specs.depositRequired')
+                        : t('listing.specs.noDeposit'),
             },
             {
                 icon: <BsFillFuelPumpDieselFill />,
@@ -79,7 +81,7 @@ const ListingIcons = ({ type, l, classes = "", withoutLocation = false }) => {
             {
                 icon: <PiSnowflakeFill />,
                 label: "A/C",
-                value: l.ac === "Yes" ? "A/C" : "No A/C",
+                value: l.ac === "Yes" ? t('listing.specs.ac') : t('listing.specs.noAc'),
             },
         ],
         drivers: [
@@ -91,7 +93,7 @@ const ListingIcons = ({ type, l, classes = "", withoutLocation = false }) => {
             {
                 icon: <FaCalendarAlt />,
                 label: "Duration",
-                value: "8h Full Day",
+                value: t('listing.specs.fullDay'),
             },
             {
                 icon: <FaCar />,
@@ -101,7 +103,7 @@ const ListingIcons = ({ type, l, classes = "", withoutLocation = false }) => {
             {
                 icon: <RiChat1Line />,
                 label: "Languages",
-                value: "Multilingual Driver",
+                value: t('listing.specs.multilingual'),
             },
             {
                 icon: <GoPeople />,
@@ -113,8 +115,8 @@ const ListingIcons = ({ type, l, classes = "", withoutLocation = false }) => {
                 label: "Deposit",
                 value:
                     l.deposit_required === "Yes"
-                        ? "Deposit Required"
-                        : "No Deposit",
+                        ? t('listing.specs.depositRequired')
+                        : t('listing.specs.noDeposit'),
             },
         ],
         boats: [
@@ -127,7 +129,7 @@ const ListingIcons = ({ type, l, classes = "", withoutLocation = false }) => {
             {
                 icon: <FaUserTie />,
                 label: "Captain",
-                value: l.with_captain === "Yes" ? "With Captain" : "No Captain",
+                value: l.with_captain === "Yes" ? t('listing.specs.included') : t('listing.specs.notIncluded'),
             },
             {
                 icon: <FaUsers />,
@@ -138,7 +140,7 @@ const ListingIcons = ({ type, l, classes = "", withoutLocation = false }) => {
             {
                 icon: <FaGasPump />,
                 label: "Fuel",
-                value: "Fuel Included",
+                value: t('listing.specs.fuelIncluded'),
             },
         ],
         activities: [

@@ -13,6 +13,8 @@ class EmailTemplateController extends Controller
     {
         $templates = EmailTemplate::whereNull('category')
             ->orWhere('category', '')
+            ->orderBy('event_type')
+            ->orderBy('locale')
             ->get();
         return view('admin.email-templates.index', compact('templates'));
     }
@@ -97,5 +99,42 @@ class EmailTemplateController extends Controller
         ];
         
         return str_replace(array_keys($replacements), array_values($replacements), $text);
+    }
+    
+    public function previewMultilingual(Request $request)
+    {
+        $eventType = $request->get('event_type', 'booking_received');
+        $category = $request->get('category', null);
+        
+        // Get templates for all languages
+        $templates = EmailTemplate::where('event_type', $eventType)
+            ->where(function($q) use ($category) {
+                if ($category) {
+                    $q->where('category', $category);
+                } else {
+                    $q->whereNull('category')->orWhere('category', '');
+                }
+            })
+            ->orderBy('locale')
+            ->get();
+        
+        // Create dummy booking for preview
+        $dummyBooking = $this->createDummyBooking();
+        
+        // Prepare previews for each language
+        $previews = [];
+        foreach ($templates as $template) {
+            $previews[$template->locale] = [
+                'subject' => $this->replaceVariables($template->subject, $dummyBooking),
+                'body' => $this->replaceVariables($template->body_html, $dummyBooking),
+                'locale' => $template->locale,
+                'template_id' => $template->id
+            ];
+        }
+        
+        // Get all event types for dropdown
+        $eventTypes = EmailTemplate::distinct()->pluck('event_type');
+        
+        return view('admin.email-templates.preview-multilingual', compact('previews', 'eventTypes', 'eventType'));
     }
 }

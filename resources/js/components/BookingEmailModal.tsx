@@ -29,6 +29,7 @@ interface Booking {
     id: number;
     status: string;
     invoice_no?: string;
+    booking_language?: string;
 }
 
 interface BookingEmailModalProps {
@@ -352,6 +353,11 @@ const BookingEmailModal: React.FC<BookingEmailModalProps> = React.memo(({ bookin
                                                 <strong>{formatDateTime(log.created_at)}</strong>
                                                 {' - '}
                                                 {log.recipient_email}
+                                                {booking?.booking_language && (
+                                                    <span className="badge badge-light ml-2" style={{ fontSize: '10px' }}>
+                                                        {booking.booking_language.toUpperCase()}
+                                                    </span>
+                                                )}
                                             </small>
                                             <div>
                                                 {getStatusBadge(log.status)}
@@ -420,6 +426,12 @@ const BookingEmailModal: React.FC<BookingEmailModalProps> = React.memo(({ bookin
                                     {booking.invoice_no && (
                                         <span className="badge badge-info ml-2">
                                             {booking.invoice_no}
+                                        </span>
+                                    )}
+                                    {booking.booking_language && (
+                                        <span className="badge badge-secondary ml-2">
+                                            <em className="icon ni ni-globe mr-1"></em>
+                                            {booking.booking_language.toUpperCase()}
                                         </span>
                                     )}
                                 </>

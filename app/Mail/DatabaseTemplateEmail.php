@@ -13,17 +13,24 @@ class DatabaseTemplateEmail extends Mailable
     public $subject;
     public $htmlBody;
     public $pdfPath;
+    public $locale;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($subject, $htmlBody, $pdfPath = null)
+    public function __construct($subject, $htmlBody, $pdfPath = null, $locale = 'en')
     {
         $this->subject = $subject;
         $this->htmlBody = $htmlBody;
         $this->pdfPath = $pdfPath;
+        
+        // Validate and set locale
+        $supportedLocales = config('app.supported_locales', ['en']);
+        // Ensure $supportedLocales is an array even if config returns null
+        $supportedLocales = is_array($supportedLocales) ? $supportedLocales : ['en'];
+        $this->locale = in_array($locale, $supportedLocales) ? $locale : config('app.fallback_locale', 'en');
     }
 
     /**

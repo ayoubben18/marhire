@@ -17,10 +17,52 @@ import { FaWhatsapp } from "react-icons/fa";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import getWtspUrl from "../utils/WhatsappMsg";
 import ListingIcons from "./ListingIcons";
+import { useTranslation } from "react-i18next";
+import { getLocalizedUrl } from "../../utils/localeManager";
+import SmartImage from "../SmartImage";
+
+// Helper function to get translated field with fallback
+const getTranslatedField = (listing, field, locale) => {
+    if (listing.translated_fields && listing.translated_fields[field]) {
+        if (listing.translated_fields[field][locale]) {
+            return listing.translated_fields[field][locale];
+        }
+        if (listing.translated_fields[field]['en']) {
+            return listing.translated_fields[field]['en'];
+        }
+    }
+    return listing[field] || '';
+};
 
 const SearchItem = ({ item, type }) => {
+    const { t, i18n } = useTranslation();
+    const currentLocale = i18n.language;
     const [price, setPrice] = useState("");
     const [unit, setUnit] = useState("");
+    const [imageError, setImageError] = useState(false);
+
+    // Get proper image URL with leading slash
+    const getImageUrl = (filePath) => {
+        if (!filePath) return null;
+        if (filePath.startsWith('http') || filePath.startsWith('/')) {
+            return filePath;
+        }
+        return `/${filePath}`;
+    };
+
+    // Get fallback image URLs
+    const getFallbackImageUrl = (filePath) => {
+        if (!filePath) return null;
+        
+        const imageUrl = getImageUrl(filePath);
+        
+        if (imageUrl.endsWith('.webp')) {
+            const basePath = imageUrl.replace('.webp', '');
+            return [`${basePath}.jpg`, `${basePath}.jpeg`, `${basePath}.png`];
+        }
+        
+        return null;
+    };
 
     const generatePrice = () => {
         let listingPrice = "";
@@ -28,17 +70,17 @@ const SearchItem = ({ item, type }) => {
         console.log(item);
         if (type === "car") {
             listingPrice = item.price_per_day;
-            listingLbl = "Per day";
+            listingLbl = t("units.perDay");
         } else if (type === "private") {
             const driverPrice = item.pricings[0].airport_one || 0;
             listingPrice = item.price_per_hour;
-            listingLbl = "Per day";
+            listingLbl = t("units.perDay");
         } else if (type === "boat") {
             listingPrice = item.price_per_hour;
-            listingLbl = "Per hour";
+            listingLbl = t("units.perHour");
         } else {
             listingPrice = item.act_pricings[0]?.price || 0;
-            listingLbl = "Per person";
+            listingLbl = t("units.perPerson");
         }
 
         setPrice(listingPrice);
@@ -52,24 +94,31 @@ const SearchItem = ({ item, type }) => {
     return (
         <div className="search-item">
             <div className="search-item__img">
-                <a href={`/details/${item.slug}`}>
-                    <img
-                        src={
-                            item.galleries && item.galleries.length
-                                ? "/" + item.galleries[0].file_path
-                                : ""
-                        }
-                        alt={item.title}
-                        onError={(e) => {
-                            e.currentTarget.src = "/images/default-marhire.png";
-                        }}
-                    />
+                <a href={getLocalizedUrl(`details/${item.slug}`)}>
+                    {item.galleries && item.galleries.length > 0 && !imageError ? (
+                        <SmartImage
+                            src={getImageUrl(item.galleries[0].file_path)}
+                            fallbackSrcs={[
+                                ...getFallbackImageUrl(item.galleries[0].file_path) || [],
+                                '/images/default-marhire.png'
+                            ]}
+                            alt={getTranslatedField(item, 'title', currentLocale)}
+                            onError={() => setImageError(true)}
+                        />
+                    ) : (
+                        <img
+                            src="/images/default-marhire.png"
+                            alt={getTranslatedField(item, 'title', currentLocale)}
+                        />
+                    )}
                 </a>
             </div>
             <div className="search-item__content">
-                <h2 className="search-item__title">{item.title}</h2>
+                <h2 className="search-item__title">{getTranslatedField(item, 'title', currentLocale)}</h2>
                 <p className="search-item__subtitle">
-                    {item.city ? item.city.city_name : 'Morocco'} • Find all similar
+                    {item.city ? item.city.city_name : t("common.morocco")}
+                    {" • "}
+                    {t("common.findSimilar")}
                 </p>
                 <div className="search-item__price">
                     <div className="price">{price} €</div>
@@ -85,10 +134,10 @@ const SearchItem = ({ item, type }) => {
                     />
                     <div className="search__item__cta">
                         <a
-                            href={`/details/${item.slug}`}
+                            href={getLocalizedUrl(`details/${item.slug}`)}
                             className="cta-book-now"
                         >
-                            <FaRegCalendarAlt size={22} /> Book Now
+                            <FaRegCalendarAlt size={22} /> {t("common.bookNow")}
                         </a>
                         <a
                             href={getWtspUrl(item)}

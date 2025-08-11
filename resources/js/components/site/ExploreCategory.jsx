@@ -1,19 +1,21 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 
 const ExploreCategory = ({ title, subtitle, items }) => {
+    const { t } = useTranslation();
 
     return (
         <section id="explore-popular">
             <div className="section-head">
                 <h2 className="section-title">
-                    {title ? title : "Explore Popular Destinations in Morocco"}
+                    {title ? title : t("home.popular.title")}
                 </h2>
                 <h3 className="section-subtitle">
-                    {subtitle ? subtitle : "Explore Morocco by City & Service"}
+                    {subtitle ? subtitle : t("home.popular.subtitle")}
                 </h3>
             </div>
 
@@ -52,9 +54,8 @@ const ExploreCategory = ({ title, subtitle, items }) => {
                             <div className="city-info">
                                 <h3 className="city-name">{city.name}</h3>
                                 <p className="city-properties">
-                                    {city.listings.toLocaleString()}
-                                    {"+ "}
-                                    Listings
+                                    {city.listings.toLocaleString()}+{" "}
+                                    {t("home.popular.listings")}
                                 </p>
                             </div>
                         </div>

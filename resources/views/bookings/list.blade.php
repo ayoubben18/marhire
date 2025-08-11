@@ -34,6 +34,86 @@
         display: inline-block;
         vertical-align: middle;
     }
+    
+    /* Responsive fixes for status change modal on mobile */
+    @media (max-width: 768px) {
+        #editModal .modal-dialog {
+            margin: 10px;
+            max-width: calc(100% - 20px);
+        }
+        
+        #editModal .modal-content {
+            max-height: calc(100vh - 20px);
+            overflow-y: auto;
+        }
+        
+        #editModal .modal-body {
+            padding: 15px;
+            /* Ensure content is scrollable if needed */
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+        
+        #editModal .modal-header {
+            padding: 12px 15px;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        /* Make the close button more accessible on mobile */
+        #editModal .close {
+            padding: 10px;
+            margin: -10px -10px -10px auto;
+        }
+        
+        /* Ensure form elements stack properly */
+        #editModal .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        /* Make the save button more prominent and accessible */
+        #editModal #sendStatusBtn {
+            padding: 12px;
+            font-size: 16px;
+            position: sticky;
+            bottom: 0;
+            background: #007bff;
+            color: white;
+            z-index: 10;
+            margin-top: 15px;
+        }
+        
+        /* Ensure the ID field is clearly visible */
+        #editModal #id_u {
+            font-weight: bold;
+            background-color: #f8f9fa;
+        }
+        
+        /* Improve select2 dropdown on mobile */
+        #editModal .select2-container {
+            width: 100% !important;
+        }
+        
+        #editModal .select2-selection {
+            min-height: 42px;
+            padding: 5px;
+        }
+    }
+    
+    /* Extra small devices (phones, less than 576px) */
+    @media (max-width: 575.98px) {
+        #editModal .modal-dialog {
+            margin: 5px;
+            max-width: calc(100% - 10px);
+        }
+        
+        #editModal .modal-body {
+            max-height: calc(100vh - 180px);
+        }
+    }
 </style>
 @endpush
 
@@ -101,7 +181,7 @@
                             <td>{{ $booking->created_at }}</td>
                             <td>{{ $booking->createdBy ? $booking->createdBy->prenom . ' ' . $booking->createdBy->nom : '' }}</td>
                             <td>
-                                <a href="javascript:void(0)" class="change-status" data-toggle="modal" data-target="#editModal" data-id="{{ $booking->id }}" data-status="{{ $booking->status }}">
+                                <a href="javascript:void(0)" class="change-status" data-id="{{ $booking->id }}" data-status="{{ $booking->status }}">
                                     <i class="icon ni ni-clipboad-check action-link"></i>
                                 </a>
                                 <a href="{{ route('bookings.edit', $booking->id) }}">
@@ -126,14 +206,14 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="editModal">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <a href="#" class="close" data-dismiss="modal" aria-label="Close">
                 <em class="icon ni ni-cross"></em>
             </a>
             <div class="modal-header">
-                <h5 class="modal-title">Booking Status</h5>
+                <h5 class="modal-title" id="editModalLabel">Booking Status</h5>
             </div>
             <form id="update_form" method="post" >
             @csrf
@@ -234,14 +314,55 @@
             $('#delete_id').val(id);
         });
 
-        $('.change-status').click(function(){
+        // Handle change-status button clicks - use 'on' for better event delegation
+        // This ensures it works on mobile devices and with dynamically loaded content
+        $(document).on('click touchstart', '.change-status', function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            
             let id = $(this).data('id');
             let status = $(this).data('status');
+            
+            // Debug logging for mobile
+            console.log('Status button clicked - ID:', id, 'Status:', status);
 
+            // Set values before modal shows
             $('#update_id').val(id);
             $('#id_u').val(id);
             $('#status_u').val(status);
-            $('#status_u').trigger('change');
+            
+            // Manually trigger modal if not already opening
+            if (!$('#editModal').hasClass('show')) {
+                $('#editModal').modal('show');
+            }
+            
+            // Trigger change after a small delay to ensure select2 is ready
+            setTimeout(function() {
+                $('#status_u').trigger('change');
+            }, 100);
+        });
+        
+        // Additional handler for when modal is shown to ensure values are set
+        $('#editModal').on('shown.bs.modal', function (e) {
+            // Get the button that triggered the modal
+            let button = $(e.relatedTarget);
+            if (button.length === 0) {
+                // If no related target, try to get from the last clicked element
+                button = $('.change-status:focus, .change-status:active').first();
+            }
+            
+            if (button.length > 0) {
+                let id = button.data('id');
+                let status = button.data('status');
+                
+                if (id) {
+                    $('#update_id').val(id);
+                    $('#id_u').val(id);
+                    $('#status_u').val(status);
+                    $('#status_u').trigger('change');
+                    console.log('Modal shown - ID set to:', id);
+                }
+            }
         });
 
         $('#delete_option').click(function(){
@@ -273,8 +394,21 @@
 
         $('#update_form').submit(function(event){
             event.preventDefault();
+            
+            // Validate that ID is present
+            var bookingId = $('#update_id').val();
+            if (!bookingId) {
+                console.error('No booking ID found!');
+                swal({
+                    title: "Error!",
+                    text: "Booking ID is missing. Please close and try again.",
+                    icon: "error",
+                });
+                return false;
+            }
 
             var formData = new FormData(this);
+            console.log('Submitting status change for booking ID:', bookingId);
 
             $.ajax({
                 type: 'post',
@@ -283,6 +417,7 @@
                 processData: false,
                 contentType: false,
                 success: function(data){
+                    console.log('Response:', data);
                     if(data == 'success')
                     {
                         //hide modal
@@ -297,7 +432,22 @@
                         }).then((value) => {
                             location.reload();
                         });
+                    } else {
+                        swal({
+                            title: "Error!",
+                            text: "Failed to update status. Please try again.",
+                            icon: "error",
+                        });
                     }
+                },
+                error: function(xhr, status, error){
+                    console.error('AJAX Error:', error);
+                    console.error('Response:', xhr.responseText);
+                    swal({
+                        title: "Error!",
+                        text: "An error occurred while updating status. Please try again.",
+                        icon: "error",
+                    });
                 }
             })
         });

@@ -78,6 +78,17 @@ class BookingController extends Controller
 
         $listing = Listing::find($request->listing_id);
 
+        // Get language from session or request, default to app locale
+        $locale = session('locale', config('app.locale'));
+        if ($request->has('booking_language')) {
+            $locale = $request->booking_language;
+        }
+        // Validate locale
+        $supportedLocales = config('app.supported_locales', ['en']);
+        if (!in_array($locale, $supportedLocales)) {
+            $locale = config('app.fallback_locale', 'en');
+        }
+
         $bookingFields = [
             'category_id' => $request->category_id,
             'listing_id' => $request->listing_id,
@@ -92,6 +103,7 @@ class BookingController extends Controller
             'total_addons' => $request->total_addons ?? 0,
             'total_price' => $request->total_price ?? 0,
             'booking_source' => 'Admin Entry',
+            'booking_language' => $locale,
             'discount_or_extra' => $request->discount_or_extra ?? 0,
             'created_by' => Auth::id()
         ];
@@ -154,8 +166,13 @@ class BookingController extends Controller
         $booking->load('listing.category');
         
         if (EmailSetting::isEmailEnabled($booking->listing->category, 'booking_received')) {
-            $emailService->send($booking->email, 'booking_received', $booking);
-            $emailService->send(EmailSetting::getAdminEmail(), 'booking_received', $booking);
+            // Get customer's preferred language for returning customers
+            $customerLanguage = getCustomerLanguage($booking->email);
+            
+            // Send to customer in their preferred language
+            $emailService->send($booking->email, 'booking_received', $booking, null, $customerLanguage);
+            // Send to admin (always in English)
+            $emailService->send(EmailSetting::getAdminEmail(), 'booking_received', $booking, null, 'en');
         }
 
         return back()->with('inserted', true);
@@ -529,6 +546,15 @@ class BookingController extends Controller
             $firstName = $nameParts[0] ?? '';
             $lastName = $nameParts[1] ?? '';
 
+            // Get language from request or session, default to app locale
+            $locale = $request->booking_language ?? $request->locale ?? session('locale', config('app.locale'));
+            
+            // Validate locale
+            $supportedLocales = config('app.supported_locales', ['en']);
+            if (!in_array($locale, $supportedLocales)) {
+                $locale = config('app.fallback_locale', 'en');
+            }
+
             // Prepare base booking fields with validated pricing
             $bookingFields = [
                 'category_id' => $request->category_id,
@@ -545,6 +571,7 @@ class BookingController extends Controller
                 'booking_price' => $pricingData['booking_price'],
                 'total_addons' => $pricingData['total_addons'],
                 'total_price' => $pricingData['total_price'],
+                'booking_language' => $locale,
                 'status' => 'Pending',
                 'booking_source' => 'Client Booking',
                 'discount_or_extra' => $request->discount_or_extra ?? 0,
@@ -580,10 +607,13 @@ class BookingController extends Controller
             
             // Send booking_received email to customer and admin
             if (EmailSetting::isEmailEnabled($booking->listing->category, 'booking_received')) {
-                // Send to customer
-                $emailService->send($booking->email, 'booking_received', $booking);
-                // Send to admin
-                $emailService->send(EmailSetting::getAdminEmail(), 'booking_received', $booking);
+                // Get customer's preferred language for returning customers
+                $customerLanguage = getCustomerLanguage($booking->email);
+                
+                // Send to customer in their preferred language
+                $emailService->send($booking->email, 'booking_received', $booking, null, $customerLanguage);
+                // Send to admin (always in English)
+                $emailService->send(EmailSetting::getAdminEmail(), 'booking_received', $booking, null, 'en');
                 
                 Log::info('Booking emails sent', [
                     'booking_id' => $booking->id,

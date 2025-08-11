@@ -1,21 +1,23 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import ListingIcons from "./ListingIcons";
 
 const TYPES = {
-    2: "cars",
+    1: "cars",
+    2: "drivers",
     3: "boats",
-    4: "drivers",
-    5: "activities",
+    4: "activities",
 };
 
 const SingleListingSpecs = ({ loading, item, category = 2 }) => {
+    const { t } = useTranslation();
     const type = TYPES[category] || "cars";
 
     return (
         !loading &&
         item && (
             <div className="singlelisting-card">
-                <h3 className="singlelisting__h3">Specs & Features</h3>
+                <h3 className="singlelisting__h3">{t("listing.specs.title")}</h3>
                 {
                     <ListingIcons
                         type={type}

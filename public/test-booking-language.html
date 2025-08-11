@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Booking Language</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .language-test {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .language-test h3 {
+            margin-top: 0;
+            color: #666;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+            display: none;
+        }
+        .result.show {
+            display: block;
+        }
+        .error {
+            border-left-color: #f44336;
+            background-color: #ffebee;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🌍 Booking Language Test</h1>
+        
+        <div class="language-test">
+            <h3>Test Language Selection</h3>
+            <p>Click a button to simulate a booking with the selected language:</p>
+            
+            <button onclick="testBooking('en')">🇬🇧 Test English Booking</button>
+            <button onclick="testBooking('fr')">🇫🇷 Test French Booking</button>
+            <button onclick="testBooking('es')">🇪🇸 Test Spanish Booking</button>
+            
+            <div id="result" class="result"></div>
+        </div>
+        
+        <div class="language-test">
+            <h3>Current Setup</h3>
+            <p><strong>localStorage Language:</strong> <span id="localStorage-lang">Checking...</span></p>
+            <p><strong>URL Locale:</strong> <span id="url-locale">Checking...</span></p>
+            <p><strong>Browser Language:</strong> <span id="browser-lang">Checking...</span></p>
+        </div>
+    </div>
+    
+    <script>
+        // Check current settings
+        document.getElementById('localStorage-lang').textContent = localStorage.getItem('i18nextLng') || 'Not set';
+        
+        const urlMatch = window.location.pathname.match(/^\/(en|fr|es)(\/|$)/);
+        document.getElementById('url-locale').textContent = urlMatch ? urlMatch[1] : 'None';
+        
+        document.getElementById('browser-lang').textContent = navigator.language || 'Unknown';
+        
+        function testBooking(language) {
+            const resultDiv = document.getElementById('result');
+            
+            // Simulate setting the language in localStorage (as the app would)
+            localStorage.setItem('i18nextLng', language);
+            
+            // Create test booking data
+            const bookingData = {
+                listing_id: 1,
+                name: 'Test User',
+                email: 'test@example.com',
+                phone: '+1234567890',
+                check_in: '2025-08-10',
+                check_out: '2025-08-15',
+                booking_language: language,
+                pickup_location: 'Test Location',
+                dropoff_location: 'Test Location',
+                total_amount: 500
+            };
+            
+            resultDiv.innerHTML = `
+                <strong>Testing ${language.toUpperCase()} Booking...</strong><br>
+                <pre>${JSON.stringify(bookingData, null, 2)}</pre>
+                <br>
+                <em>Note: In a real booking, this would be sent to /booking/store with the selected language.</em>
+                <br><br>
+                <strong>Expected Result:</strong> Email should be sent in ${language === 'en' ? 'English' : language === 'fr' ? 'French' : 'Spanish'}
+            `;
+            resultDiv.classList.remove('error');
+            resultDiv.classList.add('show');
+            
+            // Also update the display
+            document.getElementById('localStorage-lang').textContent = language;
+        }
+    </script>
+</body>
+</html>

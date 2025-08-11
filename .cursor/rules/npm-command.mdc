@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+---
+
+always use npm run dev instead of npm run prod when we're in dev mode please

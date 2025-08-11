@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Calendar, MapPin, Clock, ChevronDown, Search, Users, Car, Anchor, Activity, Info } from "lucide-react";
 import axios from "axios";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, CircularProgress, Typography, Alert, Stepper, Step, StepLabel, Box, FormControlLabel, Checkbox, Chip, Tooltip } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../../contexts/LanguageContext";
 import BookingDetailsStep from "./BookingDetailsStep";
 import ClientInfoStep from "./ClientInfoStep";
 import { 
@@ -19,6 +21,8 @@ import {
 import { mapSearchParams, isDateValid, getMinValidDate } from "../../utils/searchParamsMapping";
 
 const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) => {
+    const { t } = useTranslation();
+    const { currentLanguage } = useLanguage();
     // Convert categoryId to number to ensure proper comparison
     const numericCategoryId = parseInt(categoryId) || 0;
     
@@ -64,7 +68,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
     const [selectedAddons, setSelectedAddons] = useState([]);
     
     // Private Driver (Category 3)
-    const [carType, setCarType] = useState("Standard");
+    const [carType, setCarType] = useState("standard");
     const [airportOrIntercity, setAirportOrIntercity] = useState("intercity");
     const [cityAId, setCityAId] = useState("");
     const [cityBId, setCityBId] = useState("");
@@ -206,12 +210,12 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
 
 
     const getDateRangeText = () => {
-        if (!startDate && !endDate) return "Select dates";
+        if (!startDate && !endDate) return t("booking.selectDates");
         if (startDate && !endDate)
-            return `${formatDate(startDate)} - Select end date`;
+            return `${formatDate(startDate)} - ${t("booking.selectEndDate")}`;
         if (startDate && endDate)
             return `${formatDate(startDate)} - ${formatDate(endDate)}`;
-        return "Select dates";
+        return t("booking.selectDates");
     };
 
     const handleDateClick = () => {
@@ -277,7 +281,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         setDropoffTime("");
         setFlightNumber("");
         setSelectedAddons([]);
-        setCarType("Standard");
+        setCarType("standard");
         setAirportOrIntercity("intercity");
         setCityAId("");
         setCityBId("");
@@ -396,14 +400,14 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         // Basic validation
         if (!listingId) {
             setErrors({
-                general: 'Invalid listing. Please refresh the page and try again.'
+                general: t('booking.errors.invalidListing')
             });
             return;
         }
         
         if (!isFormValid()) {
             setErrors({
-                general: 'Please fill in all required fields'
+                general: t('booking.errors.requiredFields')
             });
             return;
         }
@@ -413,6 +417,10 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         
         try {
             // Prepare form data based on category
+            // Get current locale from LanguageContext
+            const currentLocale = currentLanguage || 'en';
+            console.log('Current language from LanguageContext:', currentLocale);
+            
             const formData = {
                 listing_id: listingId,
                 category_id: numericCategoryId,
@@ -423,7 +431,9 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                 dateOfBirth: dateOfBirth,
                 additionalNotes: additionalNotes,
                 termsAccepted: termsAccepted,
-                booking_source: 'Client Booking'
+                booking_source: 'Client Booking',
+                booking_language: currentLocale,
+                locale: currentLocale
             };
             
             // Add category-specific fields
@@ -527,7 +537,17 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
             }
             
             // Calculate price locally with advanced pricing logic
-            const calculatedPrice = calculatePrice(numericCategoryId, listing?.price || listing?.price_per_day || listing?.price_per_person || 100, { 
+            // Use appropriate base price based on category
+            let basePrice = 100;
+            if (numericCategoryId === 4) { // Boat Rental
+                basePrice = listing?.price_per_hour || 100;
+            } else if (numericCategoryId === 2) { // Car Rental
+                basePrice = listing?.price_per_day || listing?.price || 100;
+            } else {
+                basePrice = listing?.price || listing?.price_per_day || listing?.price_per_person || 100;
+            }
+            
+            const calculatedPrice = calculatePrice(numericCategoryId, basePrice, { 
                 startDate, 
                 endDate, 
                 duration, 
@@ -576,7 +596,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
             } else {
                 // Handle other errors
                 setErrors({
-                    general: error.response?.data?.message || 'An error occurred while processing your booking. Please try again.'
+                    general: error.response?.data?.message || t('booking.errors.processingError')
                 });
             }
         } finally {
@@ -813,7 +833,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         
         } catch (error) {
             console.error('Error processing search params:', error);
-            setErrors({ general: 'Unable to load search parameters. Please enter details manually.' });
+            setErrors({ general: t('booking.errors.loadingError') });
         }
     }, [numericCategoryId, searchParams]);
 
@@ -831,17 +851,27 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
     // Get category name
     const getCategoryName = () => {
         switch(numericCategoryId) {
-            case 2: return "Car Rental";
-            case 3: return "Private Driver";
-            case 4: return "Boat Rental";
-            case 5: return "Activity";
+            case 2: return t("categories.carRental");
+            case 3: return t("categories.privateDriver");
+            case 4: return t("categories.boatRental");
+            case 5: return t("categories.activity");
             default: return "Booking";
         }
     };
 
     // Memoize price calculations to prevent infinite loops
     const priceDetails = useMemo(() => {
-        return calculatePriceWithDetails(numericCategoryId, listing?.price || listing?.price_per_day || listing?.price_per_person || 100, { 
+        // Use appropriate base price based on category
+        let basePrice = 100;
+        if (numericCategoryId === 4) { // Boat Rental
+            basePrice = listing?.price_per_hour || 100;
+        } else if (numericCategoryId === 2) { // Car Rental
+            basePrice = listing?.price_per_day || listing?.price || 100;
+        } else {
+            basePrice = listing?.price || listing?.price_per_day || listing?.price_per_person || 100;
+        }
+        
+        return calculatePriceWithDetails(numericCategoryId, basePrice, { 
             startDate, 
             endDate, 
             duration, 
@@ -865,17 +895,17 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                 {/* Category Header */}
                 <div className="mb-4 flex items-center">
                     {getCategoryIcon()}
-                    <h2 className="text-xl font-semibold">{getCategoryName()} Booking</h2>
+                    <h2 className="text-xl font-semibold">{getCategoryName()}</h2>
                 </div>
                 
                 {/* Stepper */}
                 <Box sx={{ width: '100%', mb: 4 }}>
                     <Stepper activeStep={currentStep} alternativeLabel>
                         <Step>
-                            <StepLabel>Booking Details</StepLabel>
+                            <StepLabel>{t("booking.bookingDetails")}</StepLabel>
                         </Step>
                         <Step>
-                            <StepLabel>Your Information</StepLabel>
+                            <StepLabel>{t("booking.yourInformation")}</StepLabel>
                         </Step>
                     </Stepper>
                 </Box>
@@ -890,7 +920,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                 {/* Validation errors display */}
                 {Object.keys(errors).length > 0 && !errors.general && (
                     <Alert severity="error" className="mb-4">
-                        <div className="font-semibold mb-2">Please fix the following errors:</div>
+                        <div className="font-semibold mb-2">{t('booking.errors.fixErrors')}:</div>
                         <ul className="list-disc list-inside space-y-1">
                             {errors.age && errors.age.map((error, idx) => (
                                 <li key={`age-${idx}`}>Age: {error}</li>
@@ -1050,7 +1080,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     <div className="space-y-3">
                         {/* Base Price */}
                         <div className="flex justify-between items-center">
-                            <span className="text-gray-600">Base Price:</span>
+                            <span className="text-gray-600">{t('listing.pricing.basePrice')}:</span>
                             <span className="font-semibold">€{priceDetails.basePrice || (priceDetails.price - priceDetails.addonsTotal) || priceDetails.price}</span>
                         </div>
                         
@@ -1077,7 +1107,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                         <div className="border-t pt-3">
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-lg font-bold">Total Price:</span>
+                                    <span className="text-lg font-bold">{t('listing.pricing.total')}:</span>
                                     {priceDetails.priceBreakdown && (
                                         <Tooltip 
                                             title={
@@ -1145,7 +1175,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                             disabled={!isStep1Valid()}
                             className="ml-auto px-6"
                         >
-                            Next
+                            {t('common.next')}
                         </Button>
                     ) : (
                         <button
@@ -1156,10 +1186,10 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                             {isSubmitting ? (
                                 <>
                                     <CircularProgress size={20} color="inherit" />
-                                    <span>Processing...</span>
+                                    <span>{t("common.loading")}</span>
                                 </>
                             ) : (
-                                'Book Now'
+                                t("common.bookNow")
                             )}
                         </button>
                     )}
@@ -1176,26 +1206,26 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                             </div>
                         </div>
                         <Typography variant="h5" className="font-bold text-gray-800">
-                            Thank you!
+                            {t("booking.thankYou")}
                         </Typography>
                     </DialogTitle>
                     <DialogContent className="text-center">
                         <Typography variant="h6" className="text-gray-700 mb-3">
-                            Your booking has been successfully submitted.
+                            {t("booking.successMessage")}
                         </Typography>
                         <div className="bg-gray-50 rounded-lg p-4 mb-4">
                             <Typography variant="body2" className="text-gray-600 mb-2">
-                                Confirmation Number:
+                                {t("booking.confirmationNumber")}:
                             </Typography>
                             <Typography variant="h5" className="font-bold text-blue-600">
                                 {confirmationNumber}
                             </Typography>
                         </div>
                         <Typography variant="body1" className="text-gray-600 mb-2">
-                            We've received your request and our team is reviewing the details.
+                            {t("booking.receivedMessage")}
                         </Typography>
                         <Typography variant="body1" className="text-gray-600">
-                            You'll receive a confirmation shortly by email or WhatsApp.
+                            {t("booking.confirmationSoon")}
                         </Typography>
                     </DialogContent>
                     <DialogActions className="justify-center pb-4">
@@ -1206,7 +1236,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                             size="large"
                             className="px-8"
                         >
-                            Close
+                            {t("common.close")}
                         </Button>
                     </DialogActions>
                 </Dialog>

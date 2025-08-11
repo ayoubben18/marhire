@@ -12,6 +12,9 @@
             </div>
         </div>
         <div>
+            <a href="{{ route('listings.translationTest', ['locale' => app()->getLocale()]) }}" class="btn btn-outline-primary mr-2">
+                <i class="icon ni ni-globe"></i> Translation Manager
+            </a>
             <a href="{{ route('listings.new') }}" class="btn-signup">Add</a>
         </div>
     </div>
@@ -28,7 +31,6 @@
                             <th class="sorting">Category</th>
                             <th class="sorting">City</th>
                             <th class="sorting">Provider</th>
-                            <th class="sorting">Dealer Note</th>
                             <th class="sorting">Created At</th>
                             <th class="sorting">Actions</th>
                         </tr>
@@ -41,11 +43,12 @@
                             <td>{{ $listing->category ? $listing->category->category : '' }}</td>
                             <td>{{ $listing->city ? $listing->city->city_name : '' }}</td>
                             <td>{{ $listing->provider ? $listing->provider->agency_name : '' }}</td>
-                            <td>{{ $listing->dealer_note }}</td>
                             <td>{{ $listing->created_at }}</td>
                             <td>
-                                
-                                <a href="javascript:void(0)" data-toggle="modal" data-target="#deleteModal" class="delete" data-id="{{ $listing->id }}">
+                                <a href="{{ route('listings.edit', ['locale' => app()->getLocale(), 'id' => $listing->id]) }}" class="mr-2" title="Edit">
+                                    <i class="icon ni ni-edit action-link"></i>
+                                </a>
+                                <a href="javascript:void(0)" data-toggle="modal" data-target="#deleteModal" class="delete" data-id="{{ $listing->id }}" title="Delete">
                                     <i class="icon ni ni-trash action-link"></i>
                                 </a>
                             </td>
@@ -106,16 +109,29 @@
                 type: 'post',
                 data: {id: id},
                 success: function(data){
-                    if(data == 'success')
+                    if(data.status === 'success')
                     {
                         swal({
                             title: "Deleted!",
-                            text: "Listing has been deleted.",
+                            text: data.message || "Listing has been deleted.",
                             icon: "success",
                         }).then((value) => {
                             location.reload();
                         });
+                    } else {
+                        swal({
+                            title: "Error!",
+                            text: data.message || "Failed to delete listing.",
+                            icon: "error",
+                        });
                     }
+                },
+                error: function(xhr, status, error) {
+                    swal({
+                        title: "Error!",
+                        text: xhr.responseJSON?.message || "An error occurred while deleting the listing.",
+                        icon: "error",
+                    });
                 }
             });
         });

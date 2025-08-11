@@ -1,43 +1,53 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
+import { getLocalizedUrl } from "../../utils/localeManager";
 
 const ExplorePopular = ({ title, subtitle }) => {
+    const { t } = useTranslation();
     const cities = [
         {
-            name: "Agadir",
+            name: t("cities.agadir"),
+            slug: "Agadir",
             listings: 40,
             image: "https://marhire.bytech.ma/images/agadir.webp",
         },
         {
-            name: "Marrakech",
+            name: t("cities.marrakech"),
+            slug: "Marrakech",
             listings: 40,
             image: "https://marhire.bytech.ma/images/marrakech.webp",
         },
         {
-            name: "Casablanca",
+            name: t("cities.casablanca"),
+            slug: "Casablanca",
             listings: 40,
             image: "https://marhire.bytech.ma/images/casablanca2.webp",
         },
         {
-            name: "Fez",
+            name: t("cities.fes"),
+            slug: "Fes",
             listings: 40,
             image: "https://marhire.bytech.ma/images/fez.webp",
         },
         {
-            name: "Tangier",
+            name: t("cities.tangier"),
+            slug: "Tangier",
             listings: 40,
             image: "https://marhire.bytech.ma/images/tangier.webp",
         },
         {
-            name: "Essaouira",
+            name: t("cities.essaouira"),
+            slug: "Essaouira",
             listings: 40,
             image: "https://marhire.bytech.ma/images/essaouira.webp",
         },
         {
-            name: "Rabat",
+            name: t("cities.rabat"),
+            slug: "Rabat",
             listings: 40,
             image: "https://marhire.bytech.ma/images/rabat.webp",
         },
@@ -47,10 +57,10 @@ const ExplorePopular = ({ title, subtitle }) => {
         <section id="explore-popular">
             <div className="section-head">
                 <h2 className="section-title">
-                    {title ? title : "Explore Popular Destinations in Morocco"}
+                    {title ? title : t("home.popular.title")}
                 </h2>
                 <h3 className="section-subtitle">
-                    {subtitle ? subtitle : "Explore Morocco by City & Service"}
+                    {subtitle ? subtitle : t("home.popular.subtitle")}
                 </h3>
             </div>
 
@@ -89,12 +99,14 @@ const ExplorePopular = ({ title, subtitle }) => {
                             <div className="city-info">
                                 <h3 className="city-name">{city.name}</h3>
                                 <p className="city-properties">
-                                    {city.listings.toLocaleString()}
-                                    {"+ "}
-                                    Listings
+                                    {city.listings.toLocaleString()}+{" "}
+                                    {t("home.popular.listings")}
                                 </p>
-                                <a href={`/city/${city.name}`} className="explore-button">
-                                    Explore →
+                                <a
+                                    href={getLocalizedUrl(`city/${city.slug}`)}
+                                    className="explore-button"
+                                >
+                                    {t("home.popular.explore")} →
                                 </a>
                             </div>
                         </div>
