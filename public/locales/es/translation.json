@@ -37,7 +37,8 @@
         "findSimilar": "Encontrar todo similar",
         "morocco": "Marruecos",
         "sending": "Enviando...",
-        "sendMessage": "Enviar Mensaje"
+        "sendMessage": "Enviar Mensaje",
+        "home": "Inicio"
     },
     "messages": {
         "whatsappInterest": "Hola, estoy interesado en reservar este alquiler.\n\nTítulo: {{title}}\n\nURL: {{url}}\n\n¿Podría proporcionar más detalles sobre disponibilidad, precios y el proceso de reserva?\n\n¡Gracias!"
@@ -71,7 +72,8 @@
         "carRentals": "Alquiler de Coches",
         "privateDrivers": "Conductores Privados",
         "boatRentals": "Alquiler de Barcos",
-        "thingsToDo": "Actividades"
+        "thingsToDo": "Actividades",
+        "browse": "Navegar"
     },
     "footer": {
         "company": "Empresa",
@@ -278,32 +280,54 @@
         },
         "specs": {
             "title": "Especificaciones",
+            "car_type": "Tipo de Coche",
+            "car_brand": "Marca",
+            "year": "Año",
+            "fuel_type": "Tipo de Combustible",
+            "transmission": "Transmisión",
+            "seats": "Asientos",
+            "doors": "Puertas",
+            "air_conditioning": "Aire Acondicionado",
+            "mileage_policy": "Política de Kilometraje",
+            "fuel_policy": "Política de Combustible",
+            "driver_age": "Edad del Conductor Requerida",
+            "deposit": "Depósito",
+            "deposit_required": "Depósito Requerido",
+            "no_deposit": "Sin Depósito",
+            "vehicle_type": "Tipo de Vehículo",
+            "vehicle_model": "Modelo de Vehículo",
+            "max_passengers": "Máx Pasajeros",
+            "max_luggage": "Máx Equipaje",
+            "languages": "Idiomas Hablados",
+            "boat_type": "Tipo de Barco",
+            "captain": "Capitán",
+            "captain_included": "Capitán Incluido",
+            "captain_not_included": "Sin Capitán",
+            "capacity": "Capacidad",
+            "departure_location": "Lugar de Salida",
+            "activity_type": "Tipo de Actividad",
+            "pickup_included": "Recogida",
+            "pickup_yes": "Recogida Incluida",
+            "pickup_no": "Sin Recogida",
+            "tour_type": "Tipo de Tour",
+            "group_size": "Tamaño del Grupo",
+            "difficulty": "Nivel de Dificultad",
+            "people": "personas",
             "carSpecs": "Especificaciones del Coche",
             "boatSpecs": "Especificaciones del Barco",
             "driverSpecs": "Información del Conductor",
             "activitySpecs": "Detalles de la Actividad",
             "model": "Modelo",
-            "year": "Año",
-            "transmission": "Transmisión",
-            "fuel": "Tipo de Combustible",
-            "seats": "Asientos",
-            "doors": "Puertas",
             "mileage": "Política de Kilometraje",
-            "deposit": "Depósito",
             "airConditioning": "Aire Acondicionado",
-            "captain": "Capitán",
-            "capacity": "Capacidad",
             "type": "Tipo",
-            "languages": "Idiomas Hablados",
             "vehicleType": "Tipo de Vehículo",
             "maxPassengers": "Máx Pasajeros",
             "maxLuggage": "Máx Equipaje",
             "duration": "Duración",
             "groupSize": "Tamaño del Grupo",
-            "difficulty": "Nivel de Dificultad",
             "included": "Con Capitán",
             "notIncluded": "Sin Capitán",
-            "people": "personas",
             "bags": "maletas",
             "location": "Ubicación",
             "manual": "Manual",
@@ -325,6 +349,32 @@
         "included": {
             "title": "Qué está Incluido",
             "notIncluded": "No Incluido"
+        },
+        "trustNotes": {
+            "title": "Por qué elegirnos",
+            "cancellation": "Cancelación gratuita",
+            "cancellationText": "Cancelación gratuita hasta 48 horas antes de su experiencia (hora local)",
+            "guarantee": "Garantía del mejor precio",
+            "guaranteeText": "¿Encuentra un mejor precio en otro sitio? Lo igualamos, garantizando siempre el mejor trato",
+            "expertise": "Experiencia local",
+            "expertiseText": "Viaje con confianza, guiado por expertos locales que conocen los mejores lugares"
+        },
+        "meetingPoint": {
+            "title": "Punto de encuentro",
+            "address": "Dirección de encuentro"
+        },
+        "bookingTerms": {
+            "title": "Términos de reserva"
+        },
+        "specialNotes": {
+            "title": "Notas especiales"
+        },
+        "dealerNote": {
+            "title": "De nuestro socio"
+        },
+        "description": {
+            "title": "Descripción completa",
+            "shortDescription": "Resumen"
         },
         "addons": {
             "title": "Opciones Adicionales",

@@ -16,9 +16,13 @@ const getTranslatedField = (item, field, locale) => {
     return item?.[field] || '';
 };
 
-const ListingGalleryViator = ({ images = [], title }) => {
+const ListingGalleryViator = ({ loading, listing }) => {
     const { t, i18n } = useTranslation();
     const currentLocale = i18n.language;
+    
+    // Extract images from listing.galleries and title from listing
+    const images = listing?.galleries || [];
+    const title = listing?.title || '';
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [mainImageIndex, setMainImageIndex] = useState(0);
@@ -101,25 +105,54 @@ const ListingGalleryViator = ({ images = [], title }) => {
             
             switch (event.key) {
                 case 'ArrowLeft':
+                    event.preventDefault();
                     prevImage();
                     break;
                 case 'ArrowRight':
+                    event.preventDefault();
                     nextImage();
                     break;
                 case 'Escape':
+                    event.preventDefault();
                     closeModal();
                     break;
             }
         };
 
-        document.addEventListener('keydown', handleKeyDown);
-        return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [isModalOpen]);
+        if (isModalOpen) {
+            document.addEventListener('keydown', handleKeyDown);
+        }
+        
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+            // Ensure body overflow is reset on unmount
+            document.body.style.overflow = 'unset';
+        };
+    }, [isModalOpen, images.length]);
+
+    // Loading state
+    if (loading) {
+        return (
+            <div className="mb-6">
+                <div className="w-full mb-4">
+                    <div className="bg-gray-200 rounded-lg aspect-[4/3] animate-pulse"></div>
+                </div>
+                <div className="flex gap-2 pb-2">
+                    {[1, 2, 3, 4, 5].map(i => (
+                        <div key={i} className="bg-gray-200 rounded-lg aspect-[4/3] w-16 h-12 md:w-20 md:h-15 animate-pulse"></div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
     if (!images || images.length === 0) {
         return (
-            <div className="bg-gray-200 rounded-lg h-96 flex items-center justify-center mb-6">
-                <p className="text-gray-500">{t('common.no_images_available', 'No images available')}</p>
+            <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center mb-6">
+                <div className="text-center">
+                    <div className="text-4xl mb-2">🖼️</div>
+                    <p className="text-gray-500">{t('common.no_images_available', 'No images available')}</p>
+                </div>
             </div>
         );
     }
@@ -209,7 +242,7 @@ const ListingGalleryViator = ({ images = [], title }) => {
                                 return (
                                     <div 
                                         key={image.id || index}
-                                        className={`relative group cursor-pointer overflow-hidden rounded-lg aspect-[4/3] border-2 transition-all duration-200 flex-shrink-0 w-16 h-12 md:w-20 md:h-15 ${
+                                        className={`relative group cursor-pointer overflow-hidden rounded-lg aspect-[4/3] border-2 transition-all duration-200 flex-shrink-0 w-20 h-15 md:w-24 md:h-18 ${
                                             isActive ? 'border-blue-500 ring-2 ring-blue-200' : 'border-transparent hover:border-gray-300'
                                         }`}
                                         onClick={() => setMainImageIndex(index)}

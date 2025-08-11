@@ -15,21 +15,20 @@ const getTranslatedField = (item, field, locale) => {
     return item?.[field] || '';
 };
 
-const ListingBreadcrumbs = ({ listing, categoryId, city }) => {
-    const { t, i18n } = useTranslation();
-    const currentLocale = i18n.language;
+const ListingBreadcrumbs = ({ loading, listing, currentLocale, getTranslatedField, t }) => {
+    // Use props passed from parent component
 
-    // Category mapping
+    // Category mapping - Fixed correct category IDs
     const categoryNames = {
-        2: 'Car Rental',
-        3: 'Private Driver',
-        4: 'Boat Rental',
-        5: 'Activities'
+        1: 'Car Rental',
+        2: 'Private Driver',
+        3: 'Boat Rental',
+        4: 'Activities'
     };
 
-    const categoryName = categoryNames[categoryId] || t('common.category');
-    const listingTitle = getTranslatedField(listing, 'title', currentLocale);
-    const cityName = city?.city_name || '';
+    const categoryName = categoryNames[listing?.category_id] || t('common.category', 'Category');
+    const listingTitle = listing ? getTranslatedField(listing, 'title', currentLocale) : '';
+    const cityName = listing?.city?.city_name || listing?.city?.name || '';
 
     // Breadcrumb items
     const breadcrumbItems = [
@@ -40,12 +39,12 @@ const ListingBreadcrumbs = ({ listing, categoryId, city }) => {
         },
         {
             label: categoryName,
-            href: `/category/${categoryId}`,
+            href: `/category/${listing?.category_id}`,
             active: false
         },
         {
             label: cityName,
-            href: `/city/${city?.id}`,
+            href: `/city/${listing?.city?.id}`,
             active: false
         },
         {
@@ -55,12 +54,22 @@ const ListingBreadcrumbs = ({ listing, categoryId, city }) => {
         }
     ];
 
+    // Don't render if loading or no listing data
+    if (loading || !listing) {
+        return (
+            <div className="mb-4 h-6 bg-gray-200 rounded animate-pulse"></div>
+        );
+    }
+
+    // Filter out empty breadcrumb items
+    const validBreadcrumbItems = breadcrumbItems.filter(item => item.label && item.label.trim() !== '');
+
     return (
         <nav className="mb-4" aria-label="Breadcrumb">
             <ol className="flex flex-wrap items-center text-sm text-gray-600">
                 {/* Desktop: Show all breadcrumbs */}
                 <div className="hidden md:flex items-center">
-                    {breadcrumbItems.map((item, index) => (
+                    {validBreadcrumbItems.map((item, index) => (
                         <li key={index} className="flex items-center">
                             {index > 0 && (
                                 <FaChevronRight 
@@ -86,7 +95,7 @@ const ListingBreadcrumbs = ({ listing, categoryId, city }) => {
 
                 {/* Mobile: Show only last 2 items */}
                 <div className="flex md:hidden items-center">
-                    {breadcrumbItems.slice(-2).map((item, index, arr) => (
+                    {validBreadcrumbItems.slice(-2).map((item, index, arr) => (
                         <li key={index} className="flex items-center">
                             {index > 0 && (
                                 <FaChevronRight 

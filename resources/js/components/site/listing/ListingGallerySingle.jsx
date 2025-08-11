@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaExpand, FaTimes } from 'react-icons/fa';
 import SmartImage from '../../SmartImage';
 
-const ListingGallerySingle = ({ images = [], title }) => {
+const ListingGallerySingle = ({ loading, listing }) => {
     const { t } = useTranslation();
+    
+    // Extract images from listing.galleries and title from listing
+    const images = listing?.galleries || [];
+    const title = listing?.title || '';
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [imageError, setImageError] = useState(false);
 
@@ -48,10 +52,44 @@ const ListingGallerySingle = ({ images = [], title }) => {
         document.body.style.overflow = 'unset';
     };
 
+    // Keyboard navigation for modal
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (!isModalOpen) return;
+            
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                closeModal();
+            }
+        };
+
+        if (isModalOpen) {
+            document.addEventListener('keydown', handleKeyDown);
+        }
+        
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+            // Ensure body overflow is reset on unmount
+            document.body.style.overflow = 'unset';
+        };
+    }, [isModalOpen]);
+
+    // Loading state
+    if (loading) {
+        return (
+            <div className="mb-6">
+                <div className="bg-gray-200 rounded-lg aspect-[4/3] animate-pulse"></div>
+            </div>
+        );
+    }
+
     if (!images || images.length === 0) {
         return (
             <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center mb-6">
-                <p className="text-gray-500">{t('common.no_image_available', 'No image available')}</p>
+                <div className="text-center">
+                    <div className="text-4xl mb-2">🚗</div>
+                    <p className="text-gray-500">{t('common.no_image_available', 'No image available')}</p>
+                </div>
             </div>
         );
     }

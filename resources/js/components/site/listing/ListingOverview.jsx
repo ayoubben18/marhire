@@ -15,7 +15,7 @@ const getTranslatedField = (item, field, locale) => {
     return item?.[field] || '';
 };
 
-const ListingOverview = ({ listing, loading }) => {
+const ListingOverview = ({ loading, listing }) => {
     const { t, i18n } = useTranslation();
     const currentLocale = i18n.language;
     const [isExpanded, setIsExpanded] = useState(false);
@@ -33,11 +33,15 @@ const ListingOverview = ({ listing, loading }) => {
         );
     }
 
-    if (!listing) return null;
+    if (!listing) {
+        return null;
+    }
 
     const shortDescription = getTranslatedField(listing, 'short_description', currentLocale);
     
-    if (!shortDescription) return null;
+    if (!shortDescription) {
+        return null;
+    }
 
     // Check if content is long enough to warrant read more functionality
     const isLongContent = shortDescription.length > 250;
@@ -46,8 +50,8 @@ const ListingOverview = ({ listing, loading }) => {
         : shortDescription;
 
     return (
-        <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+        <div className="mb-8 bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-2xl font-semibold mb-6 text-gray-900">
                 {t('listing.overview.title', 'Overview')}
             </h2>
             

@@ -9,7 +9,7 @@ class ApiLocaleMiddleware
 {
     /**
      * Handle an incoming request for API routes.
-     * Sets the application locale based on request headers.
+     * Sets the application locale based on query parameter or request headers.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
@@ -17,8 +17,8 @@ class ApiLocaleMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        // Get locale from headers (X-Locale takes precedence over Accept-Language)
-        $locale = $request->header('X-Locale') ?: $request->header('Accept-Language');
+        // Get locale from query parameter first, then headers (X-Locale takes precedence over Accept-Language)
+        $locale = $request->query('locale') ?: $request->header('X-Locale') ?: $request->header('Accept-Language');
         
         if ($locale) {
             $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);

@@ -108,7 +108,10 @@ const RelatedProducts = ({ category = 2, loading }) => {
         try {
             const fetchListings = async () => {
                 const response = await axios.get("/api/related_products", {
-                    params: { category_id: category },
+                    params: { 
+                        category_id: category,
+                        locale: currentLocale,
+                    },
                 });
 
                 setListings(response.data.listings);

@@ -1388,11 +1388,22 @@ class ListingController extends Controller
                 'addons.addon',
                 'serviceTypeObj',
                 'activityTypeObj',
+                'carTypeObj',
+                'carModelObj',
+                'boatTypeObj',
+                'vehicleTypeObj',
+                'vehicleModelObj',
                 'pricings',
                 'actPricings',
                 'customBookingOptions'
             ])
             ->firstOrFail();
+
+        // Load multiple car types if available
+        if ($listing->category_id == 2 && !empty($listing->car_types)) {
+            $carTypeIds = $listing->car_types;
+            $listing->car_type_objs = \App\Models\SubCategoryOption::whereIn('id', $carTypeIds)->get();
+        }
 
         // Add translated data to the response (optimized for current locale only)
         $listing->translated_fields = $listing->getCurrentTranslatedData();

@@ -37,7 +37,8 @@
         "findSimilar": "Find all similar",
         "morocco": "Morocco",
         "sending": "Sending...",
-        "sendMessage": "Send Message"
+        "sendMessage": "Send Message",
+        "home": "Home"
     },
     "messages": {
         "whatsappInterest": "Hello, I am interested in booking this rental.\n\nTitle: {{title}}\n\nURL: {{url}}\n\nCould you please provide more details about availability, pricing, and the booking process?\n\nThank you!"
@@ -71,7 +72,8 @@
         "carRentals": "Car Rentals",
         "privateDrivers": "Private Drivers",
         "boatRentals": "Boat Rentals",
-        "thingsToDo": "Things to Do"
+        "thingsToDo": "Things to Do",
+        "browse": "Browse"
     },
     "footer": {
         "company": "Company",
@@ -277,37 +279,89 @@
             "title": "Free Cancellation",
             "description": "Lock in this price today, cancel free of charge up to 6 hours before pick-up to get 100% refund."
         },
+        "overview": {
+            "title": "Overview"
+        },
+        "bookingTerms": {
+            "title": "Booking Terms",
+            "subtitle": "Before booking, please review:",
+            "termsConditions": "Terms & Conditions",
+            "termsDescription": "Complete booking terms and rental agreement",
+            "cancellationPolicy": "Cancellation Policy",
+            "cancellationDescription": "Flexible cancellation up to 48 hours before",
+            "insuranceConditions": "Insurance Conditions",
+            "insuranceDescription": "Comprehensive coverage and protection details"
+        },
+        "specialNotes": {
+            "title": "Special Notes and Requirements"
+        },
+        "whatsIncluded": {
+            "title": "What's Included",
+            "included": "Included",
+            "notIncluded": "Not Included"
+        },
+        "meetingPoint": {
+            "title": "Meeting and Pickup",
+            "address": "Meeting Point Address"
+        },
+        "dealerNote": {
+            "title": "Dealer Note"
+        },
+        "description": {
+            "title": "Everything You Need to Know"
+        },
         "specs": {
             "title": "Specifications",
+            "car_type": "Car Type",
+            "car_brand": "Brand",
+            "year": "Year",
+            "fuel_type": "Fuel Type",
+            "transmission": "Transmission",
+            "seats": "Seats",
+            "doors": "Doors",
+            "air_conditioning": "A/C",
+            "mileage_policy": "Mileage Policy",
+            "fuel_policy": "Fuel Policy",
+            "driver_age": "Driver Age Requirement",
+            "deposit": "Deposit",
+            "deposit_required": "Deposit Required",
+            "no_deposit": "No Deposit",
+            "vehicle_type": "Vehicle Type",
+            "vehicle_model": "Vehicle Model",
+            "max_passengers": "Max Passengers",
+            "max_luggage": "Max Luggage",
+            "languages": "Languages",
+            "boat_type": "Boat Type",
+            "captain": "Captain",
+            "captain_included": "Captain Included",
+            "captain_not_included": "No Captain",
+            "capacity": "Capacity",
+            "departure_location": "Departure Location",
+            "activity_type": "Activity Type",
+            "pickup_included": "Pickup",
+            "pickup_yes": "Pickup Included",
+            "pickup_no": "No Pickup",
+            "tour_type": "Tour Type",
+            "group_size": "Group Size",
+            "difficulty": "Difficulty Level",
+            "people": "people",
             "carSpecs": "Car Specifications",
             "boatSpecs": "Boat Specifications",
             "driverSpecs": "Driver Information",
             "activitySpecs": "Activity Details",
             "model": "Model",
-            "year": "Year",
-            "transmission": "Transmission",
-            "fuel": "Fuel Type",
-            "seats": "Seats",
-            "doors": "Doors",
             "mileage": "Mileage Policy",
-            "deposit": "Deposit",
             "airConditioning": "Air Conditioning",
-            "captain": "Captain",
-            "capacity": "Capacity",
             "type": "Type",
-            "languages": "Languages Spoken",
             "vehicleType": "Vehicle Type",
             "maxPassengers": "Max Passengers",
             "maxLuggage": "Max Luggage",
             "duration": "Duration",
             "groupSize": "Group Size",
-            "difficulty": "Difficulty Level",
             "included": "With Captain",
             "notIncluded": "Without Captain",
-            "people": "people",
             "bags": "bags",
             "location": "Location",
-            "seats": "Seats",
             "manual": "Manual",
             "automatic": "Automatic",
             "ac": "A/C",
@@ -327,6 +381,32 @@
         "included": {
             "title": "What's Included",
             "notIncluded": "Not Included"
+        },
+        "trustNotes": {
+            "title": "Why Book With Us",
+            "cancellation": "Free Cancellation",
+            "cancellationText": "Free cancellation up to 48 hours before your experience begins (local time)",
+            "guarantee": "Best Price Guarantee",
+            "guaranteeText": "Find a better price elsewhere? We'll match it, ensuring you always get the best deal",
+            "expertise": "Local Expertise",
+            "expertiseText": "Travel with confidence, guided by local experts who know the best spots"
+        },
+        "meetingPoint": {
+            "title": "Meeting Point",
+            "address": "Meeting Address"
+        },
+        "bookingTerms": {
+            "title": "Booking Terms"
+        },
+        "specialNotes": {
+            "title": "Special Notes"
+        },
+        "dealerNote": {
+            "title": "From Our Partner"
+        },
+        "description": {
+            "title": "Full Description",
+            "shortDescription": "Overview"
         },
         "addons": {
             "title": "Optional Add-ons",

@@ -71,6 +71,10 @@ const renderSkeletonItems = (count = 4) => (
 );
 
 const Search = ({ type }) => {
+    // Get current locale from URL path or localStorage as fallback
+    const pathMatch = window.location.pathname.match(/^\/([a-z]{2})(?:\/|$)/);
+    const currentLocale = pathMatch ? pathMatch[1] : (localStorage.getItem('i18nextLng') || 'en');
+    
     const searchComps = {
         car: { searchComp: <CarRentalForm /> },
         private: { searchComp: <PrivateDriverForm /> },
@@ -118,6 +122,7 @@ const Search = ({ type }) => {
                     type,
                     page: currentPage,
                     sortBy,
+                    locale: currentLocale,
                     ...params,
                     ...filters,
                 },
@@ -143,6 +148,7 @@ const Search = ({ type }) => {
                     type,
                     page: currentPage + 1,
                     sortBy,
+                    locale: currentLocale,
                     ...params,
                     ...filters,
                 },

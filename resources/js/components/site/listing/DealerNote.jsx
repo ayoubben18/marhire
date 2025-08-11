@@ -1,6 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaQuoteLeft } from 'react-icons/fa';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import { FaUserTie } from 'react-icons/fa';
 
 // Helper function to get translated field
 const getTranslatedField = (item, field, locale) => {
@@ -15,24 +17,15 @@ const getTranslatedField = (item, field, locale) => {
     return item?.[field] || '';
 };
 
-const DealerNote = ({ listing, agency, loading }) => {
+const DealerNote = ({ loading, listing }) => {
     const { t, i18n } = useTranslation();
     const currentLocale = i18n.language;
-
+    
     if (loading) {
         return (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6 animate-pulse">
-                <div className="flex items-start">
-                    <div className="w-8 h-8 bg-blue-200 rounded mr-4 mt-1"></div>
-                    <div className="flex-1">
-                        <div className="h-5 bg-blue-200 rounded w-32 mb-3"></div>
-                        <div className="space-y-2">
-                            <div className="h-4 bg-blue-200 rounded"></div>
-                            <div className="h-4 bg-blue-200 rounded w-3/4"></div>
-                        </div>
-                        <div className="h-4 bg-blue-200 rounded w-24 mt-3"></div>
-                    </div>
-                </div>
+            <div className="mb-6 bg-white rounded-lg shadow-sm p-4">
+                <Skeleton height={30} width={150} className="mb-3" />
+                <Skeleton count={2} height={20} className="mb-2" />
             </div>
         );
     }
@@ -43,46 +36,18 @@ const DealerNote = ({ listing, agency, loading }) => {
     
     if (!dealerNote) return null;
 
-    const agencyName = agency?.name || t('common.agency', 'Agency');
-
     return (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-            <div className="flex items-start">
-                <div className="flex-shrink-0 mr-4 mt-1">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center border border-blue-300">
-                        <FaQuoteLeft className="text-blue-600 text-sm" />
-                    </div>
+        <div className="mb-6 bg-white rounded-lg shadow-sm p-4">
+            <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+                    <FaUserTie className="text-primary-600" size={18} />
                 </div>
-                <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-blue-900 mb-3">
-                        {t('listing.dealerNote.title', 'Note from Provider')}
-                    </h3>
-                    <div className="prose prose-blue max-w-none">
-                        <div
-                            className="text-blue-800 leading-relaxed italic mb-4"
-                            dangerouslySetInnerHTML={{
-                                __html: dealerNote
-                            }}
-                        />
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-blue-700">
-                            — {agencyName}
-                        </span>
-                        {agency?.logo && (
-                            <div className="w-8 h-8 bg-white rounded border border-blue-200 overflow-hidden flex items-center justify-center">
-                                <img 
-                                    src={agency.logo.startsWith('/') ? agency.logo : `/${agency.logo}`}
-                                    alt={agencyName}
-                                    className="w-full h-full object-contain p-1"
-                                    onError={(e) => {
-                                        e.target.style.display = 'none';
-                                    }}
-                                />
-                            </div>
-                        )}
-                    </div>
-                </div>
+                <h2 className="text-2xl font-semibold text-gray-900">
+                    {t('listing.dealerNote.title', 'Dealer Note')}
+                </h2>
+            </div>
+            <div className="text-gray-700 leading-relaxed w-full">
+                {dealerNote}
             </div>
         </div>
     );

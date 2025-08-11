@@ -2459,3 +2459,137 @@ h2.agency__category {
 .scrollbar-track-gray-100::-webkit-scrollbar-track {
     background: #f3f4f6;
 }
+
+/* Listing Page Layout Improvements */
+.breadcrumb-nav {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.breadcrumb-link {
+    color: #6b7280;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb-link:hover {
+    color: #368d7c;
+}
+
+.breadcrumb-separator {
+    margin: 0 8px;
+    color: #9ca3af;
+}
+
+.breadcrumb-current {
+    color: #374151;
+    font-weight: 500;
+}
+
+.title-section {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1.5rem;
+}
+
+.listing-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+}
+
+.location-provider {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.location-info,
+.provider-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.trust-note-item {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.trust-note-item:hover {
+    border-color: #368d7c;
+    box-shadow: 0 2px 4px rgba(54, 141, 124, 0.1);
+}
+
+.trust-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+    height: 64px;
+    background: white;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.meeting-point-content {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* Enhanced responsive design */
+@media (max-width: 768px) {
+    .listing-title {
+        font-size: 1.5rem;
+    }
+    
+    .location-provider {
+        gap: 1rem;
+    }
+    
+    .trust-note-item {
+        padding: 1rem 0.75rem;
+    }
+    
+    .trust-icon {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+/* Primary color utilities matching app theme */
+.text-primary-600 {
+    color: #368d7c;
+}
+
+.border-primary-600 {
+    border-color: #368d7c;
+}
+
+.bg-primary-50 {
+    background-color: rgba(54, 141, 124, 0.05);
+}
+
+.bg-primary-100 {
+    background-color: rgba(54, 141, 124, 0.1);
+}
+
+.text-primary-500 {
+    color: #3fa090;
+}
+
+.hover\:bg-primary-50:hover {
+    background-color: rgba(54, 141, 124, 0.05);
+}

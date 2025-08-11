@@ -1,35 +1,49 @@
 import { useEffect, useState } from "react";
-import SingleListingInfoCard from "../components/site/SingleListingInfoCard";
 import Footer from "../components/site/Footer";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import { IoMdPerson } from "react-icons/io";
-import { GiCarDoor } from "react-icons/gi";
-import {
-    Users,
-    Car,
-    Tag,
-    Snowflake,
-    Calendar,
-    Settings2,
-    Gauge,
-    Fuel,
-    Info,
-    UserRound,
-} from "lucide-react";
-import SingleListingPricing from "../components/site/SingleListingPricing";
-import SingleListingShortDescription from "../components/site/SingleListingShortDescription";
-import SingleListingSpecs from "../components/site/SingleListingSpecs";
-import SingleListingIncluded from "../components/site/SingleListingIncluded";
-import RelatedProducts from "../components/site/RelatedProducts";
-import SingleListingBottom from "../components/site/SingleListingBottom";
-import SingleListingAddons from "../components/site/SingleListingAddons";
-import SingleListingPolicies from "../components/site/SingleListingPolicies";
-import BookingFrm from "../components/site/BookingFrm";
-import SingleListingGallery from "../components/site/SingleListingGallery";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
+
+// Core components
+import BookingFrm from "../components/site/BookingFrm";
+import SingleListingBottom from "../components/site/SingleListingBottom";
+
+// Import listing components that we're currently using
+import ListingBreadcrumbs from "../components/site/listing/ListingBreadcrumbs";
+import ListingHeader from "../components/site/listing/ListingHeader";
+import ListingGallerySingle from "../components/site/listing/ListingGallerySingle";
+import ListingGalleryViator from "../components/site/listing/ListingGalleryViator";
+
+// Components to be added one by one
+import ListingSpecifications from "../components/site/listing/ListingSpecifications";
+import ListingTrustNotes from "../components/site/listing/ListingTrustNotes";
+import ListingOverview from "../components/site/listing/ListingOverview";
+import BookingTerms from "../components/site/listing/BookingTerms";
+import SpecialNotes from "../components/site/listing/SpecialNotes";
+import WhatsIncluded from "../components/site/listing/WhatsIncluded";
+import MeetingPoint from "../components/site/listing/MeetingPoint";
+import DealerNote from "../components/site/listing/DealerNote";
+import ListingDescription from "../components/site/listing/ListingDescription";
+// import TrustBadges from "../components/site/listing/TrustBadges";
+// import ListingPolicies from "../components/site/listing/ListingPolicies";
+// import SingleListingAddons from "../components/site/SingleListingAddons";
+// import RelatedProducts from "../components/site/RelatedProducts";
+
+// Helper function to get translated field
+const getTranslatedField = (listing, field, locale) => {
+    if (listing?.translated_fields && listing.translated_fields[field]) {
+        if (listing.translated_fields[field][locale]) {
+            return listing.translated_fields[field][locale];
+        }
+        if (listing.translated_fields[field]['en']) {
+            return listing.translated_fields[field]['en'];
+        }
+    }
+    return listing?.[field] || '';
+};
 
 const Listing = ({ slug }) => {
+    const { t, i18n } = useTranslation();
+    const currentLocale = i18n.language;
     const [loading, setLoading] = useState(true);
     const [listing, setListing] = useState(null);
     const [searchParams, setSearchParams] = useState(null);
@@ -37,9 +51,16 @@ const Listing = ({ slug }) => {
     const fetchListing = async () => {
         try {
             const response = await axios.get("/api/get_listing", {
-                params: { slug },
+                params: { 
+                    slug,
+                    locale: currentLocale 
+                },
             });
 
+            console.log('Listing data received:', response.data.listing);
+            console.log('All listing fields:', Object.keys(response.data.listing));
+            console.log('Car Type Obj:', response.data.listing.car_type_obj);
+            console.log('Car Model Obj:', response.data.listing.car_model_obj);
             setListing(response.data.listing);
             setLoading(false);
         } catch (err) {
@@ -80,82 +101,102 @@ const Listing = ({ slug }) => {
         setTimeout(() => {
             fetchListing();
         }, 1200);
-    }, []);
+    }, [currentLocale]);
+
 
     return (
         <>
-            <div className="bt-page listing-details">
+            <div className="bt-page listing-details" style={{ paddingTop: '80px' }}>
                 <div className="listing-container">
-                    <div className="listing-container__left">
-                        {listing?.category_id !== 2 ? (
-                            <SingleListingGallery
-                                listing={listing}
+                    <div className="listing-container__left w-full">
+                        {/* 1. Breadcrumbs */}
+                        <ListingBreadcrumbs 
+                            loading={loading}
+                            listing={listing}
+                            currentLocale={currentLocale}
+                            getTranslatedField={getTranslatedField}
+                            t={t}
+                        />
+                        
+                        {/* 2. Title (H1) + Location + Provider */}
+                        <ListingHeader 
+                            loading={loading}
+                            listing={listing}
+                            currentLocale={currentLocale}
+                            getTranslatedField={getTranslatedField}
+                        />
+                        
+                        {/* 3. Gallery - Use correct gallery based on category */}
+                        {/* Note: Category IDs in database: Car=2, Driver=3, Boat=4, Activities=5 */}
+                        {listing?.category_id === 2 ? (
+                            <ListingGallerySingle
                                 loading={loading}
+                                listing={listing}
                             />
                         ) : (
-                            <SingleListingInfoCard
+                            <ListingGalleryViator
                                 loading={loading}
                                 listing={listing}
                             />
                         )}
 
-                        <div className="singlelisting-cancelation">
-                            {loading ? (
-                                <>
-                                    <Skeleton height={12} width={120} />
-                                    <Skeleton height={12} width={100} />
-                                </>
-                            ) : (
-                                <>
-                                    <div className="free-cancelation__img">
-                                        <img src="https://marhire.bytech.ma/images/icons/icon1.svg" />
-                                    </div>
-                                    <div>
-                                        <h3 className="singlelisting__h3">
-                                            Free Cancellation
-                                        </h3>
-                                        <p className="singlelisting__p">
-                                            Lock in this price today, cancel
-                                            free of charge up to 6 hours before
-                                            pick-up to get 100% refund.
-                                        </p>
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                        <SingleListingShortDescription
+                        {/* 4. Specifications with Icons */}
+                        <ListingSpecifications
+                            loading={loading}
                             listing={listing}
-                            loading={loading}
-                        />
-                        <SingleListingSpecs
-                            loading={loading}
-                            item={listing}
-                            category={listing?.category_id}
                         />
 
-                        <SingleListingIncluded
-                            includeds={listing?.included || []}
-                            notIncludeds={listing?.not_included || []}
+                        {/* 5. Trust Notes / Why Book With Us */}
+                        <ListingTrustNotes
+                            loading={loading}
+                            listing={listing}
+                        />
+
+                        {/* 6. Overview */}
+                        <ListingOverview
+                            loading={loading}
+                            listing={listing}
+                        />
+
+                        {/* 7. Booking Terms */}
+                        <BookingTerms
                             loading={loading}
                         />
-                        {listing?.addons && (
-                            <SingleListingAddons
-                                addons={listing?.addons || []}
-                                loading={loading}
-                            />
-                        )}
-                        <SingleListingPolicies
+
+                        {/* 8. Special Notes and Requirements */}
+                        <SpecialNotes
                             loading={loading}
-                            depositRequired={listing?.deposit_required}
+                            listing={listing}
                         />
-                        {listing && (
-                            <RelatedProducts
-                                loading={loading}
-                                category={listing?.category_id}
-                            />
-                        )}
+
+                        {/* 9. What's Included */}
+                        <WhatsIncluded
+                            loading={loading}
+                            listing={listing}
+                        />
+
+                        {/* 10. Meeting and Pickup (For Things to Do only) */}
+                        <MeetingPoint
+                            loading={loading}
+                            listing={listing}
+                        />
+
+                        {/* 11. Dealer Note */}
+                        <DealerNote
+                            loading={loading}
+                            listing={listing}
+                        />
+
+                        {/* 12. Everything You Need to Know */}
+                        <ListingDescription
+                            loading={loading}
+                            listing={listing}
+                        />
+
+                        {/* Components will be added here one by one */}
                     </div>
                     <div className="listing-container__right">
+                        {/* 16. Sticky Booking Form */}
                         <BookingFrm 
                             loading={loading} 
                             listingId={listing?.id}
@@ -163,7 +204,6 @@ const Listing = ({ slug }) => {
                             listing={listing}
                             searchParams={searchParams}
                         />
-                        {/* Price summary card removed - now shown in booking form */}
                     </div>
                 </div>
             </div>

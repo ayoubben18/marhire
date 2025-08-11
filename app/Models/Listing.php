@@ -278,6 +278,37 @@ class Listing extends Model
         return $this->belongsTo(SubCategoryOption::class, 'activity_type');
     }
 
+    public function carTypeObj()
+    {
+        return $this->belongsTo(SubCategoryOption::class, 'car_type');
+    }
+
+    public function carTypeObjs()
+    {
+        // Get multiple car types from the JSON array field
+        return SubCategoryOption::whereIn('id', $this->car_types ?? [])->get();
+    }
+
+    public function carModelObj()
+    {
+        return $this->belongsTo(SubCategoryOption::class, 'car_model');
+    }
+
+    public function boatTypeObj()
+    {
+        return $this->belongsTo(SubCategoryOption::class, 'boat_type');
+    }
+
+    public function vehicleTypeObj()
+    {
+        return $this->belongsTo(SubCategoryOption::class, 'vehicule_type');
+    }
+
+    public function vehicleModelObj()
+    {
+        return $this->belongsTo(SubCategoryOption::class, 'vehicule_model');
+    }
+
     public function customBookingOptions()
     {
         return $this->hasMany(CustomBookingOption::class, 'listing_id');

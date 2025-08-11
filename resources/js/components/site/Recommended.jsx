@@ -113,6 +113,7 @@ const Recommended = ({
                     city: tabs && !city ? "" : activeCity,
                     tab: activeTab,
                     agency_id: agency_id,
+                    locale: currentLocale,
                 },
             });
             setActiveListings(response.data.listings);
@@ -134,6 +135,7 @@ const Recommended = ({
                     category: type,
                     agency_id: agency_id,
                     page: currentPage + 1,
+                    locale: currentLocale,
                 },
             });
             setActiveListings((prev) => [...prev, ...response.data.listings]);

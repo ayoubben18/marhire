@@ -53,10 +53,10 @@ please always use your agents to minimize the total context window, identify the
 
 -   The admin routes should not have any internationalization it's just english
 
-
 # Claude Code Instructions
 
 ## AB Method
+
 The AB Method is installed in this project. Use the following command to get started:
 
 ```
@@ -66,15 +66,21 @@ The AB Method is installed in this project. Use the following command to get sta
 This will show you all available workflows for incremental task management.
 
 ### Key Workflows:
-- `analyze-project` - Analyze project architecture
-- `create-task` - Create a new development task
-- `create-mission` - Create a mission for current task
-- `resume-task` - Resume an existing task
-- `resume-mission` - Resume an in-progress mission
+
+-   `analyze-project` - Analyze project architecture
+-   `create-task` - Create a new development task
+-   `create-mission` - Create a mission for current task
+-   `resume-task` - Resume an existing task
+-   `resume-mission` - Resume an in-progress mission
 
 ### Important Files:
-- `.ab-method/structure/index.yaml` - Configuration for paths and structure
-- `docs/architecture/` - Generated architecture documentation
-- `tasks/` - Task and mission tracking
+
+-   `.ab-method/structure/index.yaml` - Configuration for paths and structure
+-   `docs/architecture/` - Generated architecture documentation
+-   `tasks/` - Task and mission tracking
 
 Remember: Always check `.ab-method/structure/index.yaml` first to see where files should be created or read from.
+
+NEVER FUCKING RESTORE THE FILE STATUS USING GIT JUST REMOVE WHAT YOU WANT TO REMOVE AND NEVER DO THAT UNLESS I TELL YOU TO BECAUSE THERE MIGHT BE SOME IMPORTANT CHANGES AND YOU WILL DELETE THEM YOU FUCKING IDIOT
+
+- remember that the category id for car is 2, 3 for private driver, 4 boat rental, 5 things to do
