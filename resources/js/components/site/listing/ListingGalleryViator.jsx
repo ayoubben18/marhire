@@ -60,7 +60,9 @@ const ListingGalleryViator = ({ loading, listing }) => {
 
     // Open modal
     const openModal = (index) => {
-        setCurrentImageIndex(index);
+        // Ensure index is valid and defaults to 0 if undefined
+        const validIndex = index !== undefined ? index : 0;
+        setCurrentImageIndex(validIndex);
         setIsModalOpen(true);
         document.body.style.overflow = 'hidden';
     };
@@ -157,7 +159,7 @@ const ListingGalleryViator = ({ loading, listing }) => {
         );
     }
 
-    const mainImage = images[mainImageIndex];
+    const mainImage = images[mainImageIndex] || images[0];
     const visibleThumbnails = showAllThumbnails ? images : images.slice(0, 5);
     const hasMoreImages = images.length > 5;
 
@@ -168,15 +170,19 @@ const ListingGalleryViator = ({ loading, listing }) => {
                 <div className="w-full mb-4">
                     <div 
                         className="relative group cursor-pointer overflow-hidden rounded-lg aspect-[4/3] w-full"
-                        onClick={() => openModal(mainImageIndex)}
+                        onClick={() => {
+                            console.log('Main image clicked, opening modal with index:', mainImageIndex);
+                            console.log('Images array:', images);
+                            openModal(mainImageIndex);
+                        }}
                     >
                         {!imageErrors[mainImageIndex] ? (
                             <SmartImage 
-                                src={getImageUrl(mainImage.file_path)}
-                                fallbackSrcs={getFallbackImageUrl(mainImage.file_path)}
+                                src={getImageUrl(mainImage?.file_path || mainImage)}
+                                fallbackSrcs={getFallbackImageUrl(mainImage?.file_path || mainImage)}
                                 alt={`${title} - Main Image ${mainImageIndex + 1}`}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                onError={() => handleImageError(mainImage.file_path, mainImageIndex)}
+                                onError={() => handleImageError(mainImage?.file_path || mainImage, mainImageIndex)}
                             />
                         ) : (
                             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -215,11 +221,11 @@ const ListingGalleryViator = ({ loading, listing }) => {
                         
                         {/* Expand overlay */}
                         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center pointer-events-none">
-                            <div className="transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <div className="transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center gap-2">
                                 <FaExpand className="text-white" size={24} />
-                                <p className="text-white text-sm mt-2 font-medium">
+                                <span className="text-white text-sm font-medium">
                                     {t('common.click_to_enlarge', 'Click to enlarge')}
-                                </p>
+                                </span>
                             </div>
                         </div>
                         
@@ -249,11 +255,11 @@ const ListingGalleryViator = ({ loading, listing }) => {
                                     >
                                         {!hasError ? (
                                             <SmartImage 
-                                                src={getImageUrl(image.file_path)}
-                                                fallbackSrcs={getFallbackImageUrl(image.file_path)}
+                                                src={getImageUrl(image?.file_path || image)}
+                                                fallbackSrcs={getFallbackImageUrl(image?.file_path || image)}
                                                 alt={`${title} - Thumbnail ${index + 1}`}
                                                 className="w-full h-full object-cover"
-                                                onError={() => handleImageError(image.file_path, index)}
+                                                onError={() => handleImageError(image?.file_path || image, index)}
                                             />
                                         ) : (
                                             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -319,12 +325,14 @@ const ListingGalleryViator = ({ loading, listing }) => {
 
                         {/* Current image */}
                         <div className="max-h-screen max-w-full">
-                            <SmartImage 
-                                src={getImageUrl(images[currentImageIndex]?.file_path)}
-                                fallbackSrcs={getFallbackImageUrl(images[currentImageIndex]?.file_path)}
-                                alt={`${title} - Image ${currentImageIndex + 1}`}
-                                className="max-w-full max-h-full object-contain"
-                            />
+                            {images[currentImageIndex] && (
+                                <SmartImage 
+                                    src={getImageUrl(images[currentImageIndex].file_path || images[currentImageIndex])}
+                                    fallbackSrcs={getFallbackImageUrl(images[currentImageIndex].file_path || images[currentImageIndex])}
+                                    alt={`${title} - Image ${currentImageIndex + 1}`}
+                                    className="max-w-full max-h-full object-contain"
+                                />
+                            )}
                         </div>
 
                         {/* Image counter */}

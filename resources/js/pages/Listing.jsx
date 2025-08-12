@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import Footer from "../components/site/Footer";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
@@ -33,11 +33,28 @@ const getTranslatedField = (listing, field, locale) => {
         if (listing.translated_fields[field][locale]) {
             return listing.translated_fields[field][locale];
         }
-        if (listing.translated_fields[field]['en']) {
-            return listing.translated_fields[field]['en'];
+        if (listing.translated_fields[field]["en"]) {
+            return listing.translated_fields[field]["en"];
         }
     }
-    return listing?.[field] || '';
+    return listing?.[field] || "";
+};
+
+// Helper to check if a component would render content
+const hasContent = (listing, field) => {
+    if (!listing) return false;
+
+    // Check for translated fields
+    if (listing?.translated_fields && listing.translated_fields[field]) {
+        const translatedField = listing.translated_fields[field];
+        // Check if any language has content
+        return Object.values(translatedField).some(
+            (value) => value && value.trim() !== ""
+        );
+    }
+
+    // Check regular field
+    return listing[field] && listing[field].trim() !== "";
 };
 
 const Listing = ({ slug }) => {
@@ -51,16 +68,19 @@ const Listing = ({ slug }) => {
     const fetchListing = async () => {
         try {
             const response = await axios.get("/api/get_listing", {
-                params: { 
+                params: {
                     slug,
-                    locale: currentLocale 
+                    locale: currentLocale,
                 },
             });
 
-            console.log('Listing data received:', response.data.listing);
-            console.log('All listing fields:', Object.keys(response.data.listing));
-            console.log('Car Type Obj:', response.data.listing.car_type_obj);
-            console.log('Car Model Obj:', response.data.listing.car_model_obj);
+            console.log("Listing data received:", response.data.listing);
+            console.log(
+                "All listing fields:",
+                Object.keys(response.data.listing)
+            );
+            console.log("Car Type Obj:", response.data.listing.car_type_obj);
+            console.log("Car Model Obj:", response.data.listing.car_model_obj);
             setListing(response.data.listing);
             setLoading(false);
         } catch (err) {
@@ -70,24 +90,24 @@ const Listing = ({ slug }) => {
 
     useEffect(() => {
         // Read search parameters from session storage or URL
-        const storedParams = sessionStorage.getItem('searchParams');
+        const storedParams = sessionStorage.getItem("searchParams");
         if (storedParams) {
             try {
                 const params = JSON.parse(storedParams);
                 // Validate params structure
-                if (params && typeof params === 'object') {
+                if (params && typeof params === "object") {
                     setSearchParams(params);
                 } else {
-                    console.error('Invalid search params structure');
-                    sessionStorage.removeItem('searchParams');
+                    console.error("Invalid search params structure");
+                    sessionStorage.removeItem("searchParams");
                 }
             } catch (e) {
-                console.error('Error parsing search params:', e);
+                console.error("Error parsing search params:", e);
                 // Remove corrupted data
-                sessionStorage.removeItem('searchParams');
+                sessionStorage.removeItem("searchParams");
             }
         }
-        
+
         // Also check URL parameters as fallback
         const urlParams = new URLSearchParams(window.location.search);
         if (!searchParams && urlParams.toString()) {
@@ -97,7 +117,7 @@ const Listing = ({ slug }) => {
             }
             setSearchParams(params);
         }
-        
+
         setTimeout(() => {
             fetchListing();
         }, 1200);
@@ -112,34 +132,34 @@ const Listing = ({ slug }) => {
 
         // Check on mount and resize
         checkStickyEligibility();
-        window.addEventListener('resize', checkStickyEligibility);
+        window.addEventListener("resize", checkStickyEligibility);
 
-        return () => window.removeEventListener('resize', checkStickyEligibility);
+        return () =>
+            window.removeEventListener("resize", checkStickyEligibility);
     }, []);
-
 
     return (
         <>
-            <div className="bt-page listing-details" style={{ paddingTop: '80px' }}>
+            <div className="bt-page listing-details">
                 <div className="listing-container">
                     <div className="listing-container__left w-full">
                         {/* 1. Breadcrumbs */}
-                        <ListingBreadcrumbs 
+                        <ListingBreadcrumbs
                             loading={loading}
                             listing={listing}
                             currentLocale={currentLocale}
                             getTranslatedField={getTranslatedField}
                             t={t}
                         />
-                        
+
                         {/* 2. Title (H1) + Location + Provider */}
-                        <ListingHeader 
+                        <ListingHeader
                             loading={loading}
                             listing={listing}
                             currentLocale={currentLocale}
                             getTranslatedField={getTranslatedField}
                         />
-                        
+
                         {/* 3. Gallery - Use correct gallery based on category */}
                         {/* Note: Category IDs in database: Car=2, Driver=3, Boat=4, Activities=5 */}
                         {listing?.category_id === 2 ? (
@@ -153,59 +173,73 @@ const Listing = ({ slug }) => {
                                 listing={listing}
                             />
                         )}
+                        <div className="listing-section-separator"></div>
 
                         {/* 4. Specifications with Icons */}
                         <ListingSpecifications
                             loading={loading}
                             listing={listing}
                         />
+                        <div className="listing-section-separator"></div>
 
                         {/* 5. Trust Notes / Why Book With Us */}
                         <ListingTrustNotes
                             loading={loading}
                             listing={listing}
                         />
+                        <div className="listing-section-separator"></div>
 
                         {/* 6. Overview */}
-                        <ListingOverview
-                            loading={loading}
-                            listing={listing}
-                        />
+                        <ListingOverview loading={loading} listing={listing} />
+                        {!loading &&
+                            hasContent(listing, "short_description") && (
+                                <div className="listing-section-separator"></div>
+                            )}
 
                         {/* 7. Booking Terms */}
-                        <BookingTerms
-                            loading={loading}
-                        />
+                        <BookingTerms loading={loading} />
+                        <div className="listing-section-separator"></div>
 
                         {/* 8. Special Notes and Requirements */}
-                        <SpecialNotes
-                            loading={loading}
-                            listing={listing}
-                        />
+                        <SpecialNotes loading={loading} listing={listing} />
+                        {!loading && hasContent(listing, "special_notes") && (
+                            <div className="listing-section-separator"></div>
+                        )}
 
                         {/* 9. What's Included */}
-                        <WhatsIncluded
-                            loading={loading}
-                            listing={listing}
-                        />
+                        <WhatsIncluded loading={loading} listing={listing} />
+                        {!loading &&
+                            (listing?.included?.length > 0 ||
+                                listing?.not_included?.length > 0 ||
+                                listing?.notIncluded?.length > 0) && (
+                                <div className="listing-section-separator"></div>
+                            )}
 
                         {/* 10. Meeting and Pickup (For Things to Do only) */}
-                        <MeetingPoint
-                            loading={loading}
-                            listing={listing}
-                        />
+                        {listing?.category_id === 5 && (
+                            <MeetingPoint loading={loading} listing={listing} />
+                        )}
+                        {!loading &&
+                            listing?.category_id === 5 &&
+                            (listing?.meeting_point ||
+                                listing?.pickup_info) && (
+                                <div className="listing-section-separator"></div>
+                            )}
 
                         {/* 11. Dealer Note */}
-                        <DealerNote
-                            loading={loading}
-                            listing={listing}
-                        />
+                        <DealerNote loading={loading} listing={listing} />
+                        {!loading && hasContent(listing, "dealer_note") && (
+                            <div className="listing-section-separator"></div>
+                        )}
 
                         {/* 12. Everything You Need to Know */}
                         <ListingDescription
                             loading={loading}
                             listing={listing}
                         />
+                        {!loading && hasContent(listing, "description") && (
+                            <div className="listing-section-separator"></div>
+                        )}
 
                         {/* 13. Related Products */}
                         <RelatedProducts
@@ -213,10 +247,14 @@ const Listing = ({ slug }) => {
                             loading={loading}
                         />
                     </div>
-                    <div className={`listing-container__right ${enableSticky ? 'sticky-enabled' : ''}`}>
+                    <div
+                        className={`listing-container__right ${
+                            enableSticky ? "sticky-enabled" : ""
+                        }`}
+                    >
                         {/* 16. Sticky Booking Form */}
-                        <BookingFrm 
-                            loading={loading} 
+                        <BookingFrm
+                            loading={loading}
                             listingId={listing?.id}
                             categoryId={listing?.category_id}
                             listing={listing}

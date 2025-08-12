@@ -46,9 +46,10 @@ const DealerNote = ({ loading, listing }) => {
                     {t('listing.dealerNote.title', 'Dealer Note')}
                 </h2>
             </div>
-            <div className="text-gray-700 leading-relaxed w-full">
-                {dealerNote}
-            </div>
+            <div 
+                className="text-gray-700 leading-relaxed w-full prose prose-gray max-w-none"
+                dangerouslySetInnerHTML={{ __html: dealerNote }}
+            />
         </div>
     );
 };

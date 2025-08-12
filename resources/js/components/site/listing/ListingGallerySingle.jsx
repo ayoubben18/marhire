@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { FaExpand, FaTimes } from 'react-icons/fa';
 import SmartImage from '../../SmartImage';
@@ -101,14 +102,16 @@ const ListingGallerySingle = ({ loading, listing }) => {
     return (
         <>
             <div className="mb-6">
-                <div className="relative group cursor-pointer overflow-hidden rounded-lg aspect-[4/3]">
+                <div 
+                    className="relative group cursor-pointer overflow-hidden rounded-lg aspect-[4/3]"
+                    onClick={openModal}
+                >
                     {!imageError ? (
                         <SmartImage 
                             src={getImageUrl(imagePath)}
                             fallbackSrcs={getFallbackImageUrl(imagePath)}
                             alt={title || t('common.car_rental_image', 'Car Rental Image')}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            onClick={openModal}
                             onError={() => handleImageError(imagePath)}
                         />
                     ) : (
@@ -123,34 +126,54 @@ const ListingGallerySingle = ({ loading, listing }) => {
                     {/* Hover overlay */}
                     {!imageError && (
                         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                            <div className="transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <div className="transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center gap-2">
                                 <FaExpand className="text-white" size={24} />
-                                <p className="text-white text-sm mt-2 font-medium">
+                                <span className="text-white text-sm font-medium">
                                     {t('common.click_to_enlarge', 'Click to enlarge')}
-                                </p>
+                                </span>
                             </div>
                         </div>
                     )}
                 </div>
             </div>
 
-            {/* Modal */}
-            {isModalOpen && !imageError && (
+            {/* Modal using Portal */}
+            {isModalOpen && !imageError && ReactDOM.createPortal(
                 <div 
-                    className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+                    style={{ 
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        zIndex: 99999,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '1rem'
+                    }}
                     onClick={closeModal}
                 >
-                    <div className="relative max-w-4xl max-h-full" onClick={(e) => e.stopPropagation()}>
+                    <div 
+                        className="relative max-w-4xl max-h-full" 
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ maxWidth: '90vw', maxHeight: '90vh' }}
+                    >
                         {/* Close button */}
                         <button 
                             onClick={closeModal}
-                            className="absolute top-4 right-4 text-white hover:text-gray-300 z-10 bg-black bg-opacity-50 rounded-full p-2 transition-colors"
+                            className="absolute top-4 right-4 text-white hover:text-gray-300 rounded-full p-2 transition-colors"
+                            style={{ 
+                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                zIndex: 10
+                            }}
                         >
                             <FaTimes size={20} />
                         </button>
 
                         {/* Image */}
-                        <div className="max-h-screen max-w-full">
+                        <div style={{ maxHeight: '85vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             <SmartImage 
                                 src={getImageUrl(imagePath)}
                                 fallbackSrcs={getFallbackImageUrl(imagePath)}
@@ -161,12 +184,16 @@ const ListingGallerySingle = ({ loading, listing }) => {
 
                         {/* Title overlay */}
                         {title && (
-                            <div className="absolute bottom-4 left-4 right-4 bg-black bg-opacity-60 text-white p-3 rounded-lg">
+                            <div 
+                                className="absolute bottom-4 left-4 right-4 text-white p-3 rounded-lg"
+                                style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
+                            >
                                 <h3 className="font-semibold text-lg">{title}</h3>
                             </div>
                         )}
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </>
     );

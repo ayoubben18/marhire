@@ -40,9 +40,10 @@ const ListingDescription = ({ loading, listing }) => {
             <h2 className="text-2xl font-semibold mb-4 text-gray-900">
                 {t('listing.description.title', 'Everything You Need to Know')}
             </h2>
-            <div className="text-gray-700 leading-relaxed w-full">
-                {description}
-            </div>
+            <div 
+                className="text-gray-700 leading-relaxed w-full prose prose-gray max-w-none"
+                dangerouslySetInnerHTML={{ __html: description }}
+            />
         </div>
     );
 };

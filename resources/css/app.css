@@ -1318,6 +1318,34 @@ span.verified {
     min-width: 0; /* Prevent overflow */
 }
 
+
+/* Section separator bar - Viator style */
+.listing-section-separator {
+    width: 100%;
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 12px 0;
+    display: block;
+}
+
+/* Remove boxed styling from listing sections for Viator-like appearance */
+.listing-container__left > div:not(.listing-section-separator) {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important; /* Remove all padding */
+    margin-bottom: 0 !important; /* Remove default bottom margins */
+}
+
+/* Keep vertical padding for content spacing but reduce it */
+.listing-container__left > div:not(.listing-section-separator) > div {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
 /* Ensure images are responsive */
 .listing-container img {
     max-width: 100%;
@@ -1968,6 +1996,9 @@ h2.agency__category {
     .bt-page {
         margin: 0 10px !important;
         padding: 12px !important;
+    }
+    .bt-page.listing-details {
+        padding-top: 0 !important;
     }
     .ctm-tabs__content {
         grid-template-columns: repeat(1, 1fr);
@@ -2633,3 +2664,4 @@ h2.agency__category {
 .hover\:bg-primary-50:hover {
     background-color: rgba(54, 141, 124, 0.05);
 }
+

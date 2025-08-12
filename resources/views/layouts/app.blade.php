@@ -1,20 +1,40 @@
 @php
 $isNotSticky = (
 request()->is('/') ||
+request()->is('en') ||
+request()->is('fr') ||
+request()->is('es') ||
+request()->is('en/') ||
+request()->is('fr/') ||
+request()->is('es/') ||
 request()->is('city/*') ||
+request()->is('*/city/*') ||
 request()->is('details/*') ||
+request()->is('*/details/*') ||
 request()->is('car-search') ||
+request()->is('*/car-search') ||
 request()->is('private-search') ||
+request()->is('*/private-search') ||
 request()->is('boat-search') ||
+request()->is('*/boat-search') ||
 request()->is('thingstodo-search') ||
+request()->is('*/thingstodo-search') ||
 request()->is('agency/*') ||
+request()->is('*/agency/*') ||
 request()->is('blog') ||
+request()->is('*/blog') ||
 request()->is('terms-conditions') ||
+request()->is('*/terms-conditions') ||
 request()->is('privacy-policy') ||
+request()->is('*/privacy-policy') ||
 request()->is('cookie-policy') ||
+request()->is('*/cookie-policy') ||
 request()->is('cancellation-policy') ||
+request()->is('*/cancellation-policy') ||
 request()->is('insurance-conditions') ||
-request()->is('article/*')
+request()->is('*/insurance-conditions') ||
+request()->is('article/*') ||
+request()->is('*/article/*')
 );
 @endphp
 <!doctype html>
@@ -119,16 +139,16 @@ request()->is('article/*')
 
     </script>
     <style>
-        .sticky {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: #fafefc;
+        /* Mobile menu styles only - desktop navbar removed */
+        
+        /* Mobile styles */
+        .trip-mobile-header {
+            display: none;
         }
-
+        
         @media (max-width: 767.98px) {
             .trip-mobile-header {
-                display: flex;
+                display: flex !important;
                 justify-content: space-between;
                 align-items: center;
                 padding: 12px 16px;
@@ -136,6 +156,10 @@ request()->is('article/*')
                 border-bottom: 1px solid #f1f1f1;
                 z-index: 1100;
                 position: relative;
+                top: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
             }
 
             .trip-mobile-header .logo {
@@ -153,9 +177,9 @@ request()->is('article/*')
             .trip-mobile-menu {
                 display: none;
                 background: #fff;
-                position: fixed;
+                position: fixed; /* Fixed position for proper overlay */
                 left: 0;
-                top: 60px;
+                top: 56px; /* Position below the header */
                 width: 100vw;
                 box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
                 border-bottom-left-radius: 14px;
@@ -163,6 +187,8 @@ request()->is('article/*')
                 padding: 18px 18px 12px 18px;
                 z-index: 1200;
                 animation: fadeDown .32s;
+                max-height: calc(100vh - 56px);
+                overflow-y: auto;
             }
 
             .trip-mobile-menu.show {
@@ -223,58 +249,68 @@ request()->is('article/*')
                 }
             }
         }
+        
+        /* On desktop, hide mobile elements */
+        @media (min-width: 768px) {
+            .trip-mobile-header,
+            .trip-mobile-menu {
+                display: none !important;
+            }
+        }
 
     </style>
 </head>
 <body class="site {{ $isNotSticky ? '' : 'sticky' }}">
-    <!-- DESKTOP HEADER (unchanged, your design) -->
+    <!-- DESKTOP HEADER -->
     <div class="nav-container d-none d-md-flex {{ $isNotSticky ? '' : 'sticky' }}">
-        <div class="head-left">
-            <a class="navbar-brand" href="/">
-                <img src="{{ $isNotSticky ? asset(config('logo')): asset('images/logo-light.png') }}" alt="Logo">
-            </a>
-        </div>
-        <div class="head-center">
-            <div class="nav-searchbar">
-                <div class="nav-searchbar__content">
-                    <input type="text" placeholder="{{ __('navigation.searchPlaceholder') }}" id="nav_searchbar__txt" />
-                </div>
-                <div class="nav-searchbar__btn">
-                    <button id="nav_searchbar__btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-                </div>
-            </div>
-        </div>
-        <div class="head-navs d-flex align-items-center">
-            <div class="dropdown head-navs-item">
-                <a class="dropdown-toggle d-flex align-items-center" href="#" id="langDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="flag-img" src="{{ asset(app()->getLocale() == 'fr' ? 'images/fr.png' : (app()->getLocale() == 'es' ? 'images/es.png' : 'images/en.png')) }}" alt="{{ strtoupper(app()->getLocale()) }}" style="width:20px;">
-                    <span class="ml-2 text-uppercase lang-name">EN</span>
+        <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
+            <div class="head-left">
+                <a class="navbar-brand" href="/">
+                    <img src="{{ $isNotSticky ? asset(config('logo')): asset('images/logo-light.png') }}" alt="Logo">
                 </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="langDropdown">
-                    <a class="dropdown-item d-flex align-items-center" href="#" onclick="setLanguage('en'); return false;">
-                        <img src="{{ asset('images/en.png') }}" style="width:20px;"> <span class="ml-2">English</span>
-                    </a>
-                    <a class="dropdown-item d-flex align-items-center" href="#" onclick="setLanguage('fr'); return false;">
-                        <img src="{{ asset('images/fr.png') }}" style="width:20px;"> <span class="ml-2">Français</span>
-                    </a>
-                    <a class="dropdown-item d-flex align-items-center" href="#" onclick="setLanguage('es'); return false;">
-                        <img src="{{ asset('images/es.png') }}" style="width:20px;"> <span class="ml-2">Español</span>
-                    </a>
+            </div>
+            <div class="head-center">
+                <div class="nav-searchbar">
+                    <div class="nav-searchbar__content">
+                        <input type="text" placeholder="{{ __('navigation.searchPlaceholder') }}" id="nav_searchbar__txt" />
+                    </div>
+                    <div class="nav-searchbar__btn">
+                        <button id="nav_searchbar__btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
                 </div>
             </div>
-            <div class="dropdown head-navs-item">
-                <a class="dropdown-toggle d-flex align-items-center" href="#" id="catDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ __('navigation.travelShop') }}
-                </a>
-                <div class="dropdown-menu dropdown-menu-right catDropdown" aria-labelledby="catDropdown">
-                    <a href="/category/car-rental" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-car"></i></span> {{ __('navigation.carRentals') }}</a>
-                    <a href="/category/private-driver" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-user-tie"></i></span> {{ __('navigation.privateDrivers') }}</a>
-                    <a href="/category/boats" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-ship"></i></span> {{ __('navigation.boatRentals') }}</a>
-                    <a href="/category/things-to-do" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-compass"></i></span> {{ __('navigation.thingsToDo') }}</a>
+            <div class="head-navs d-flex align-items-center">
+                <div class="dropdown head-navs-item">
+                    <a class="dropdown-toggle d-flex align-items-center" href="#" id="langDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="flag-img" src="{{ asset(app()->getLocale() == 'fr' ? 'images/fr.png' : (app()->getLocale() == 'es' ? 'images/es.png' : 'images/en.png')) }}" alt="{{ strtoupper(app()->getLocale()) }}" style="width:20px;">
+                        <span class="ml-2 text-uppercase lang-name">{{ strtoupper(app()->getLocale()) }}</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="langDropdown">
+                        <a class="dropdown-item d-flex align-items-center" href="#" onclick="setLanguage('en'); return false;">
+                            <img src="{{ asset('images/en.png') }}" style="width:20px;"> <span class="ml-2">English</span>
+                        </a>
+                        <a class="dropdown-item d-flex align-items-center" href="#" onclick="setLanguage('fr'); return false;">
+                            <img src="{{ asset('images/fr.png') }}" style="width:20px;"> <span class="ml-2">Français</span>
+                        </a>
+                        <a class="dropdown-item d-flex align-items-center" href="#" onclick="setLanguage('es'); return false;">
+                            <img src="{{ asset('images/es.png') }}" style="width:20px;"> <span class="ml-2">Español</span>
+                        </a>
+                    </div>
                 </div>
+                <div class="dropdown head-navs-item">
+                    <a class="dropdown-toggle d-flex align-items-center" href="#" id="catDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ __('navigation.travelShop') }}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right catDropdown" aria-labelledby="catDropdown">
+                        <a href="/category/car-rental" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-car"></i></span> {{ __('navigation.carRentals') }}</a>
+                        <a href="/category/private-driver" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-user-tie"></i></span> {{ __('navigation.privateDrivers') }}</a>
+                        <a href="/category/boats" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-ship"></i></span> {{ __('navigation.boatRentals') }}</a>
+                        <a href="/category/things-to-do" class="dropdown-item d-flex align-items-center"><span class="icon"><i class="fa fa-compass"></i></span> {{ __('navigation.thingsToDo') }}</a>
+                    </div>
+                </div>
+                <a href="/support" class="head-navs-item">{{ __('navigation.supportHelpCenter') }} <span class="head-navs-icon"><i class="fa-solid fa-headset"></i></span></a>
+                <a href="/list-your-property" class="head-navs-item">{{ __('navigation.listProperty') }}</a>
             </div>
-            <a href="/support" class="head-navs-item">{{ __('navigation.supportHelpCenter') }} <span class="head-navs-icon"><i class="fa-solid fa-headset"></i></span></a>
-            <a href="/list-your-property" class="head-navs-item">{{ __('navigation.listProperty') }}</a>
         </div>
     </div>
 
@@ -359,6 +395,23 @@ request()->is('article/*')
             });
         });
 
+        // Initialize language display on page load
+        $(document).ready(function() {
+            let lang = getCurrentLanguage();
+            
+            // Update flag and text based on current language
+            if (lang === 'fr') { 
+                flagImg = '/images/fr.png'; 
+            } else if (lang === 'es') { 
+                flagImg = '/images/es.png'; 
+            } else { 
+                flagImg = '/images/en.png'; 
+            }
+            
+            $('.flag-img').attr('src', flagImg);
+            $('.lang-name').text(lang.toUpperCase());
+        });
+
         let flagImg = '/images/en.png';
 
         function setLanguage(lang) {
@@ -418,22 +471,6 @@ request()->is('article/*')
             return localStorage.getItem('i18nextLng') || 'en';
         }
         
-        // Initialize language display on page load
-        $(document).ready(function() {
-            let lang = getCurrentLanguage();
-            
-            // Update flag and text based on current language
-            if (lang === 'fr') { 
-                flagImg = '/images/fr.png'; 
-            } else if (lang === 'es') { 
-                flagImg = '/images/es.png'; 
-            } else { 
-                flagImg = '/images/en.png'; 
-            }
-            
-            $('.flag-img').attr('src', flagImg);
-            $('.lang-name').text(lang.toUpperCase());
-        });
 
     </script>
 </body>
