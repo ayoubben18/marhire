@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { FaExpand, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import SmartImage from '../../SmartImage';
@@ -293,14 +294,37 @@ const ListingGalleryViator = ({ loading, listing }) => {
                 </div>
             </div>
 
-            {/* Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
-                    <div className="relative max-w-5xl max-h-full">
+            {/* Modal using Portal */}
+            {isModalOpen && ReactDOM.createPortal(
+                <div 
+                    style={{ 
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        zIndex: 99999,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '1rem'
+                    }}
+                    onClick={closeModal}
+                >
+                    <div 
+                        className="relative max-w-5xl max-h-full" 
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ maxWidth: '90vw', maxHeight: '90vh' }}
+                    >
                         {/* Close button */}
                         <button 
                             onClick={closeModal}
-                            className="absolute top-4 right-4 text-white hover:text-gray-300 z-10 bg-black bg-opacity-50 rounded-full p-2 transition-colors"
+                            className="absolute top-4 right-4 text-white hover:text-gray-300 rounded-full p-2 transition-colors"
+                            style={{ 
+                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                zIndex: 10
+                            }}
                         >
                             <FaTimes size={24} />
                         </button>
@@ -310,13 +334,15 @@ const ListingGalleryViator = ({ loading, listing }) => {
                             <>
                                 <button 
                                     onClick={prevImage}
-                                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 z-10 bg-black bg-opacity-50 rounded-full p-3 transition-colors"
+                                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 rounded-full p-3 transition-colors"
+                                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 10 }}
                                 >
                                     <FaChevronLeft size={20} />
                                 </button>
                                 <button 
                                     onClick={nextImage}
-                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 z-10 bg-black bg-opacity-50 rounded-full p-3 transition-colors"
+                                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 rounded-full p-3 transition-colors"
+                                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 10 }}
                                 >
                                     <FaChevronRight size={20} />
                                 </button>
@@ -324,7 +350,7 @@ const ListingGalleryViator = ({ loading, listing }) => {
                         )}
 
                         {/* Current image */}
-                        <div className="max-h-screen max-w-full">
+                        <div style={{ maxHeight: '85vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             {images[currentImageIndex] && (
                                 <SmartImage 
                                     src={getImageUrl(images[currentImageIndex].file_path || images[currentImageIndex])}
@@ -336,11 +362,15 @@ const ListingGalleryViator = ({ loading, listing }) => {
                         </div>
 
                         {/* Image counter */}
-                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
+                        <div 
+                            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white px-3 py-1 rounded-full text-sm"
+                            style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+                        >
                             {currentImageIndex + 1} / {images.length}
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </>
     );
