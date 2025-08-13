@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Listing;
 use App\Models\ListingAddon;
+use App\Models\ListingAddonAffected;
 use App\Models\Booking;
 use App\Models\SubCategoryOption;
 use App\Models\City;
@@ -98,6 +99,7 @@ class BookingController extends Controller
             'email' => $request->email,
             'whatsapp' => $request->whatsapp,
             'country' => $request->country,
+            'flight_number' => $request->flight_number,  // Flight number for all categories
             'notes' => $request->notes,
             'booking_price' => $request->booking_price ?? 0,
             'total_addons' => $request->total_addons ?? 0,
@@ -112,7 +114,6 @@ class BookingController extends Controller
             case 2:
                 $bookingFields += [
                     'age' => $request->age,
-                    'flight_number' => $request->flight_number,
                     'pickup_date' => $request->pickup_date,
                     'dropoff_date' => $request->dropoff_date,
                     'pickup_time' => $request->pickup_time,
@@ -250,7 +251,15 @@ class BookingController extends Controller
         $categories = Category::orderBy('category')->get();
         $countries = Country::orderBy('country')->get();
         $cities = City::orderBy('city_name')->get();
-        $booking = Booking::where('id', $id)->with('addons')->first();
+        $booking = Booking::where('id', $id)
+            ->with(['addons.addon', 'listing.addons.addon'])
+            ->first();
+        
+        // Get the listing's available addons for the dropdowns
+        $listingAddons = [];
+        if ($booking && $booking->listing) {
+            $listingAddons = $booking->listing->addons;
+        }
         $vehiculeTypes = SubCategoryOption::leftJoin('sub_categories', 'sub_categories.id', '=', 'sub_category_options.subcategory_id')
             ->where('id_category', 3)
             ->where('subcategory', 'Vehicule Type')
@@ -269,7 +278,8 @@ class BookingController extends Controller
             'categories' => $categories,
             'vehiculeTypes' => $vehiculeTypes,
             'activityTypes' => $activityTypes,
-            'cities' => $cities
+            'cities' => $cities,
+            'listingAddons' => $listingAddons
         ]);
     }
 
@@ -576,6 +586,7 @@ class BookingController extends Controller
                 'whatsapp' => $request->whatsAppNumber,
                 'country' => $request->countryOfResidence,
                 'date_of_birth' => $request->dateOfBirth,
+                'flight_number' => $request->flightNumber ?? $request->flight_number ?? null,
                 'notes' => $request->additionalNotes ?? null,
                 'additional_notes' => $request->additionalNotes ?? null,
                 'booking_price' => $pricingData['booking_price'],

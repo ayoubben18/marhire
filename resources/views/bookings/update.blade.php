@@ -418,7 +418,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="flight_number">Flight Number</label>
                                         <div class="form-control-wrap">
-                                            <input type="text" class="form-control" name="flight_number" id="flight_number" placeholder="Flight Number (Optional)" value="{{ $booking->flight_number }}" />
+                                            <input type="text" class="form-control" name="flight_number" id="flight_number" placeholder="Flight Number (Optional)" value="{{ old('flight_number', $booking->flight_number) }}" />
                                         </div>
                                     </div>
                                 </div>
@@ -454,7 +454,29 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-
+                                            @if($booking->addons && count($booking->addons) > 0)
+                                                @foreach($booking->addons as $bookingAddon)
+                                                <tr>
+                                                    <td>
+                                                        <select name="addons[]" class="form-control addon" required>
+                                                            <option value="" disabled>--Choose Option--</option>
+                                                            @foreach($listingAddons as $listingAddon)
+                                                            <option value="{{ $listingAddon->addon_id }}" 
+                                                                data-price="{{ $listingAddon->addon->price }}" 
+                                                                {{ $bookingAddon->addon_id == $listingAddon->addon_id ? 'selected' : '' }}>
+                                                                {{ $listingAddon->addon->addon }} ({{ number_format($listingAddon->addon->price, 2) }}€)
+                                                            </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm remove-addon" style="color:#ff313b;">
+                                                            <i class="fa-solid fa-trash-can"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -591,10 +613,6 @@
 
         // Initialize form with existing booking data
         const booking = @json($booking);
-        const bookingAddons = @json($booking->addons);
-        
-        // Debug: Log the addon data structure
-        console.log('Booking Addons:', bookingAddons);
 
         function initializeForm() {
             // Set category and trigger change
@@ -613,9 +631,9 @@
 
             }, 200);
 
-            // After listings load, set the selected listing
+            // After listings load, set the selected listing WITHOUT triggering change to preserve addons
             setTimeout(() => {
-                $('#listing_id').val(booking.listing_id).trigger('change');
+                $('#listing_id').val(booking.listing_id);
 
                 // Set other fields based on category
                 setTimeout(() => {
@@ -657,54 +675,52 @@
                             break;
                     }
 
-                    // Don't load addons here, they will be loaded after the listing change triggers addon fetch
+                    // Calculate price after form initialization
+                    setTimeout(() => {
+                        calculatePrice();
+                    }, 500);
                 }, 500);
             }, 2000);
         }
 
-        // Load existing addons
-        function loadAddons() {
-            console.log('Loading addons, count:', bookingAddons ? bookingAddons.length : 0);
-            if (bookingAddons && bookingAddons.length > 0) {
-                // Clear any existing addon rows first
-                $('#addons-table > tbody').empty();
-                
-                bookingAddons.forEach((addon, index) => {
-                    console.log(`Adding addon ${index}:`, addon);
-                    // Add a new row
+        // Load existing addons when editing
+        function loadBookingAddons() {
+            if (booking.addons && booking.addons.length > 0) {
+                booking.addons.forEach(function(bookingAddon) {
+                    // Create the row with just the selected addon like listings do
+                    const addonInfo = bookingAddon.addon || {};
                     const newRow = `
                         <tr>
                             <td>
                                 <select name="addons[]" class="form-control addon" required>
-                                    ${addonsOptions}
+                                    <option value="" disabled>--Choose Option--</option>
+                                    <option value="${bookingAddon.addon_id}" data-price="${bookingAddon.price}" selected>
+                                        ${addonInfo.addon || 'Unknown'} (${parseFloat(bookingAddon.price).toFixed(2)}€)
+                                    </option>
                                 </select>
                             </td>
                             <td>
-                              <button type="button" class="btn btn-sm remove-addon" style="color:#ff313b;">
-                                  <i class="fa-solid fa-trash-can"></i>
-                              </button>
+                                <button type="button" class="btn btn-sm remove-addon" style="color:#ff313b;">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
                             </td>
                         </tr>
                     `;
                     $('#addons-table > tbody').append(newRow);
-                    
-                    // Set the value for this addon
-                    const $lastAddon = $('#addons-table > tbody > tr').last().find('select.addon');
-                    console.log('Setting addon value:', addon.addon_id);
-                    $lastAddon.val(addon.addon_id);
-                    
-                    // Verify it was set
-                    const setValue = $lastAddon.val();
-                    console.log('Value after setting:', setValue);
-                    if (!setValue) {
-                        console.error('Failed to set addon value:', addon.addon_id, 'Available options:', $lastAddon.find('option').length);
-                    }
                 });
                 
-                // Recalculate price after loading all addons
+                // Calculate price after loading addons
                 setTimeout(() => {
                     calculatePrice();
                 }, 100);
+                
+                // After loading addons, update the selects with full options when listing changes
+                if (booking.listing_id) {
+                    // Trigger listing change to load all addon options
+                    setTimeout(() => {
+                        $('#listing_id').trigger('change');
+                    }, 500);
+                }
             }
         }
 
@@ -712,9 +728,8 @@
         
         // Calculate initial price after form is loaded
         setTimeout(() => {
-            console.log('Calculating initial price...');
             calculatePrice();
-        }, 3500);
+        }, 3000);
 
         function setCategorySpecificFields(booking) {
             switch (parseInt(booking.category_id)) {
@@ -857,8 +872,9 @@
         });
 
         function calculatePrice() {
-            console.log('calculatePrice called');
             const category_id = parseInt($('#category_id').val());
+            if (!category_id) return;
+            
             const startDate = $('#pickup_date').val();
             const startTime = $('#pickup_time').val() || '00:00';
             const endDate = $('#dropoff_date').val();
@@ -881,13 +897,12 @@
             let totalPrice = 0;
             let addonsTotal = 0;
 
+            // Calculate addon totals
             $('select.addon').each(function() {
                 const selectedValue = $(this).val();
-                console.log('Addon select value:', selectedValue);
-                if (selectedValue) {
+                if (selectedValue && selectedValue !== '') {
                     let selectedOption = $(this).find(':selected');
                     let addonPrice = parseFloat(selectedOption.data('price')) || 0;
-                    console.log('Addon price:', addonPrice);
 
                     if (groupOrPrivate === 'Private' && category_id === 5) {
                         addonPrice *= numPeople;
@@ -896,7 +911,6 @@
                     addonsTotal += addonPrice;
                 }
             });
-            console.log('Total addons calculated:', addonsTotal);
 
             if (category_id === 2) {
                 if (startDate && endDate) {
@@ -1086,27 +1100,35 @@
                 , dataType: 'json'
                 , success: function(resp) {
                     let options = '<option value="" disabled selected>--Choose Option--</option>';
-                    console.log('Addon options from API:', resp.addons);
                     resp.addons.forEach(function(addon) {
-                        // The id here is from listing_addon_affecteds which matches booking_addons.addon_id
                         options += `<option value="${addon.id}" data-price="${addon.price}">${addon.addon} (${parseFloat(addon.price).toFixed(2)}€)</option>`;
                     });
 
                     addonsOptions = options;
-                    // Update existing addon selects with new options
+                    // Update existing addon selects with new options while preserving selected values
                     $('.addon').each(function() {
                         const currentValue = $(this).val();
+                        const currentText = $(this).find(':selected').text();
+                        
+                        // Update with full options
                         $(this).html(options);
+                        
+                        // Try to restore the selected value
                         if (currentValue) {
                             $(this).val(currentValue);
+                            
+                            // If value wasn't found in new options, add it back as selected
+                            if (!$(this).val()) {
+                                const price = $(this).find(':selected').data('price') || 0;
+                                $(this).append(`<option value="${currentValue}" data-price="${price}" selected>${currentText}</option>`);
+                                $(this).val(currentValue);
+                            }
                         }
                     });
                     
-                    // Load saved addons after options are fetched
+                    // Recalculate price after updating options
                     setTimeout(() => {
-                        if ($('.addon').length === 0 && bookingAddons && bookingAddons.length > 0) {
-                            loadAddons();
-                        }
+                        calculatePrice();
                     }, 100);
                 }
                 , error: function(err) {
