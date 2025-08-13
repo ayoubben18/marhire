@@ -196,7 +196,17 @@
         "hours": "Hours",
         "minutes": "Minutes",
         "pickupMustBeIn": "Pickup must be in {{city}}",
-        "dropoffFeeNotice": "A drop-off fee may apply for different pickup and dropoff locations."
+        "dropoffFeeNotice": "A drop-off fee may apply for different pickup and dropoff locations.",
+        "pickupAirportCity": "Pickup Airport City",
+        "dropoffHotelCity": "Dropoff Hotel City",
+        "pickupAirportNote": "Pickup location is fixed based on driver's city",
+        "enterHotelName": "Enter hotel name",
+        "pickupCity": "Pickup City",
+        "dropoffCity": "Dropoff City",
+        "intercityNotAvailable": "This driver does not support intercity services",
+        "selectDropoffCity": "Select Dropoff City",
+        "dropoffAddress": "Dropoff Address",
+        "enterAddress": "Enter hotel or address"
     },
     "filters": {
         "carType": "Car Type",
@@ -439,6 +449,8 @@
         "pricing": {
             "from": "From",
             "total": "Total Price",
+            "estimatedPrice": "Estimated Price",
+            "estimatedPriceNote": "This is an estimated price. The exact cost will be set in your confirmation after we receive all the details of your trip.",
             "breakdown": "Price Breakdown",
             "basePrice": "Base Price",
             "taxes": "Taxes & Fees",
@@ -622,5 +634,28 @@
     },
     "forms": {
         "searchCountry": "Search country..."
+    },
+    "homeSearch": {
+        "boatType": "Boat Type",
+        "destination": "Destination",
+        "whereAreYouGoing": "Where are you going?",
+        "enterDestination": "Enter destination",
+        "selectRentalDate": "Select rental date",
+        "selectActivityDate": "Select activity date",
+        "selectDate": "Select date",
+        "time": "Time",
+        "preferredTime": "Preferred Time",
+        "numberOfPeople": "Number of People",
+        "bookingRequirements": "Booking Requirements:",
+        "advanceBooking48h": "Minimum 48 hours advance booking",
+        "boatType_any": "Any type",
+        "boatType_yacht": "Yacht",
+        "boatType_speedboat": "Speedboat",
+        "boatType_sailboat": "Sailboat",
+        "boatType_custom": "Custom",
+        "sameAsPickup": "Same as pickup",
+        "date": "Date",
+        "pickupLocation": "Pick-up Location",
+        "dropoffLocation": "Dropoff Location"
     }
 }

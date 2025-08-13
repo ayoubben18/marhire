@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MapPin, Calendar, Search, ChevronDown, Anchor } from "lucide-react";
+import { MapPin, Calendar, Search, ChevronDown, Anchor, Users, Clock } from "lucide-react";
 
 const SearchBoatForm = () => {
     const [destination, setDestination] = useState("");
@@ -9,6 +9,8 @@ const SearchBoatForm = () => {
     const [showCalendar, setShowCalendar] = useState(false);
     const [showBoatTypes, setShowBoatTypes] = useState(false);
     const [isSelectingEndDate, setIsSelectingEndDate] = useState(false);
+    const [peopleCount, setPeopleCount] = useState(1);
+    const [showPeopleModal, setShowPeopleModal] = useState(false);
 
     const boatTypes = [
         { id: "any", name: "Any type" },
@@ -140,6 +142,9 @@ const SearchBoatForm = () => {
                 <div className="flex flex-col lg:flex-row gap-4 items-end">
                     {/* Boat Type Field */}
                     <div className="flex-1 relative dropdown-container">
+                        <label className="block text-sm font-medium text-gray-500 mb-2">
+                            Boat Type
+                        </label>
                         <div
                             onClick={handleBoatTypeClick}
                             className="w-full px-4 py-3 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 transition-all duration-200 bg-white flex items-center justify-between"
@@ -205,6 +210,9 @@ const SearchBoatForm = () => {
                     </div>
 
                     <div className="flex-1">
+                        <label className="block text-sm font-medium text-gray-500 mb-2">
+                            Destination
+                        </label>
                         <div className="relative">
                             <input
                                 type="text"
@@ -219,6 +227,9 @@ const SearchBoatForm = () => {
 
                     {/* Dates Field */}
                     <div className="flex-1 relative dropdown-container">
+                        <label className="block text-sm font-medium text-gray-500 mb-2">
+                            Select Dates
+                        </label>
                         <div
                             onClick={handleDateClick}
                             className="w-full px-4 py-3 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 transition-all duration-200 bg-white flex items-center justify-between"
@@ -352,6 +363,22 @@ const SearchBoatForm = () => {
                         )}
                     </div>
 
+                    {/* People Count Field */}
+                    <div className="flex-1 relative">
+                        <label className="block text-sm font-medium text-gray-500 mb-2">
+                            Number of People
+                        </label>
+                        <div
+                            onClick={() => setShowPeopleModal(true)}
+                            className="w-full px-4 py-3 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 transition-all duration-200 bg-white flex items-center justify-between"
+                        >
+                            <div className="flex items-center gap-2">
+                                <Users className="text-gray-400 w-5 h-5" />
+                                <span className="text-gray-900">{peopleCount} {peopleCount === 1 ? 'person' : 'people'}</span>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Search Button */}
                     <div className="lg:w-auto w-full">
                         <button
@@ -363,6 +390,40 @@ const SearchBoatForm = () => {
                         </button>
                     </div>
                 </div>
+                
+                {/* People Count Modal */}
+                {showPeopleModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30" onClick={() => setShowPeopleModal(false)}>
+                        <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-xs relative" onClick={(e) => e.stopPropagation()}>
+                            <h3 className="text-lg font-semibold mb-4 text-center">Number of People</h3>
+                            <div className="flex items-center justify-center space-x-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setPeopleCount((prev) => Math.max(1, prev - 1))}
+                                    className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-bold text-2xl"
+                                    disabled={peopleCount <= 1}
+                                >
+                                    -
+                                </button>
+                                <span className="text-2xl font-bold">{peopleCount}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => setPeopleCount((prev) => Math.min(50, prev + 1))}
+                                    className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-bold text-2xl"
+                                    disabled={peopleCount >= 50}
+                                >
+                                    +
+                                </button>
+                            </div>
+                            <button
+                                className="mt-6 w-full py-2 rounded-lg bg-green-600 text-white font-semibold transition"
+                                onClick={() => setShowPeopleModal(false)}
+                            >
+                                Done
+                            </button>
+                        </div>
+                    </div>
+                )}
         </div>
     );
 };

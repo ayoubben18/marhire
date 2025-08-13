@@ -88,7 +88,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
     const [purpose, setPurpose] = useState("Leisure");
     const [destination, setDestination] = useState("");
     const [boatPickupTime, setBoatPickupTime] = useState("");
-    const [boatDuration, setBoatDuration] = useState("1h");
+    const [boatDuration, setBoatDuration] = useState("");
     
     // Activity (Category 5)
     const [activityType, setActivityType] = useState("");
@@ -1251,7 +1251,9 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                         <div className="border-t pt-3">
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-lg font-bold">{t('listing.pricing.total')}:</span>
+                                    <span className="text-lg font-bold">
+                                        {categoryId === 3 ? t('listing.pricing.estimatedPrice', 'Estimated Price') : t('listing.pricing.total')}:
+                                    </span>
                                     {priceDetails.priceBreakdown && (
                                         <Tooltip 
                                             title={
@@ -1290,6 +1292,12 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                                     </span>
                                     <span>{priceDetails.rateDescription}</span>
                                 </div>
+                            )}
+                            {categoryId === 3 && (
+                                <p className="text-xs text-gray-500 mt-2">
+                                    {t('listing.pricing.estimatedPriceNote', 
+                                       'This is an estimated price. The exact cost will be set in your confirmation after we receive all the details of your trip.')}
+                                </p>
                             )}
                         </div>
                     </div>
@@ -1347,6 +1355,12 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                 </svg>
                             </div>
+                            {categoryId === 3 && (
+                                <p className="text-xs text-gray-500 mt-2">
+                                    {t('listing.pricing.estimatedPriceNote', 
+                                       'This is an estimated price. The exact cost will be set in your confirmation after we receive all the details of your trip.')}
+                                </p>
+                            )}
                         </div>
                         <Typography variant="h5" className="font-bold text-gray-800">
                             {t("booking.thankYou")}

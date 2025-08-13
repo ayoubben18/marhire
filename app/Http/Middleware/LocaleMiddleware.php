@@ -19,6 +19,9 @@ class LocaleMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        // Get the locale from route parameter if it exists
+        $routeLocale = $request->route('locale');
+        
         // Check if this is an admin route
         if ($this->isAdminRoute($request)) {
             // If admin route has locale prefix, redirect to non-locale version
@@ -46,13 +49,33 @@ class LocaleMiddleware
         $supportedLocales = config('app.supported_locales', ['en']);
         $locale = null;
 
-        // 1. Check for locale in URL prefix
-        $segment = $request->segment(1);
-        if ($segment && in_array($segment, $supportedLocales)) {
-            $locale = $segment;
+        // Debug logging
+        \Log::info('LocaleMiddleware Debug', [
+            'path' => $request->path(),
+            'routeLocale' => $routeLocale,
+            'segment1' => $request->segment(1),
+            'hasRoute' => $request->route() ? true : false,
+        ]);
+        
+        // 1. Check if we have locale from route parameter (from {locale?} in route definition)
+        if ($routeLocale && in_array($routeLocale, $supportedLocales)) {
+            $locale = $routeLocale;
+        }
+        
+        // 2. If route matched but locale parameter is empty (e.g., /boat-search matching {locale?}/boat-search)
+        // we need to redirect to add the locale
+        if ($request->route() && !$routeLocale && !$request->expectsJson() && !$this->isAssetRequest($request)) {
+            // Need to redirect to URL with locale prefix
+            $locale = null;
+        } else if (!$locale) {
+            // 3. Check for locale in URL prefix (for routes without {locale?} parameter)
+            $segment = $request->segment(1);
+            if ($segment && in_array($segment, $supportedLocales)) {
+                $locale = $segment;
+            }
         }
 
-        // 2. If no locale in URL and not an API/asset request, redirect to URL with locale
+        // 4. If no locale in URL and not an API/asset request, redirect to URL with locale
         if (!$locale && !$request->expectsJson() && !$this->isAssetRequest($request)) {
             // Check cookie for saved locale (from frontend localStorage via i18next)
             if ($request->cookie('i18nextLng')) {

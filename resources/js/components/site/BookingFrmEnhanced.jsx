@@ -146,7 +146,8 @@ const BookingFrmEnhanced = ({ loading, listingId, categoryId, listing }) => {
                     pickupAirport,
                     dropoffHotel,
                     numberOfPassengers,
-                    numberOfLuggage
+                    numberOfLuggage,
+                    addons: selectedAddons
                 };
                 
             case 4: // Boat rental
@@ -157,7 +158,8 @@ const BookingFrmEnhanced = ({ loading, listingId, categoryId, listing }) => {
                     purpose,
                     destination,
                     preferredDate: startDate,
-                    pickupTime: boatPickupTime
+                    pickupTime: boatPickupTime,
+                    addons: selectedAddons
                 };
                 
             case 5: // Activity
@@ -167,7 +169,8 @@ const BookingFrmEnhanced = ({ loading, listingId, categoryId, listing }) => {
                     numberOfPeople,
                     activityType: listing?.activity_type || activityType,
                     preferredDate: startDate,
-                    timePreference
+                    timePreference,
+                    addons: selectedAddons
                 };
                 
             default:
@@ -317,7 +320,8 @@ const BookingFrmEnhanced = ({ loading, listingId, categoryId, listing }) => {
                     number_of_people: numberOfPassengers,
                     car_type: listing?.vehicule_type || 'Standard',
                     airport_or_intercity: serviceTypes.join(','),
-                    notes: `Service: ${serviceTypes.join(', ')}, Road: ${roadTypes.join(', ')}, Luggage: ${numberOfLuggage}`
+                    notes: `Service: ${serviceTypes.join(', ')}, Road: ${roadTypes.join(', ')}, Luggage: ${numberOfLuggage}`,
+                    addons: selectedAddons
                 };
                 
             case 4: // Boat rental
@@ -327,7 +331,8 @@ const BookingFrmEnhanced = ({ loading, listingId, categoryId, listing }) => {
                     pickup_time: boatPickupTime,
                     duration: boatDuration,
                     number_of_people: numberOfPeople,
-                    propose: purpose
+                    propose: purpose,
+                    addons: selectedAddons
                 };
                 
             case 5: // Activity
@@ -338,7 +343,8 @@ const BookingFrmEnhanced = ({ loading, listingId, categoryId, listing }) => {
                     pricing_option_id: selectedDurationOption, // Legacy
                     number_of_people: numberOfPeople,
                     activity_type: listing?.activity_type || activityType,
-                    pickup_time: timePreference
+                    pickup_time: timePreference,
+                    addons: selectedAddons
                 };
                 
             default:

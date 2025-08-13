@@ -195,7 +195,17 @@
         "hours": "Heures",
         "minutes": "Minutes",
         "pickupMustBeIn": "La prise en charge doit être à {{city}}",
-        "dropoffFeeNotice": "Des frais de retour peuvent s'appliquer pour des lieux de prise en charge et de retour différents."
+        "dropoffFeeNotice": "Des frais de retour peuvent s'appliquer pour des lieux de prise en charge et de retour différents.",
+        "pickupAirportCity": "Ville de l'aéroport de départ",
+        "dropoffHotelCity": "Ville de l'hôtel d'arrivée",
+        "pickupAirportNote": "Le lieu de prise en charge est fixe selon la ville du chauffeur",
+        "enterHotelName": "Entrez le nom de l'hôtel",
+        "pickupCity": "Ville de départ",
+        "dropoffCity": "Ville d'arrivée",
+        "intercityNotAvailable": "Ce chauffeur ne propose pas de services interurbains",
+        "selectDropoffCity": "Sélectionner la ville d'arrivée",
+        "dropoffAddress": "Adresse d'arrivée",
+        "enterAddress": "Entrez l'hôtel ou l'adresse"
     },
     "filters": {
         "carType": "Type de Voiture",
@@ -407,6 +417,8 @@
         "pricing": {
             "from": "Dès",
             "total": "Prix Total",
+            "estimatedPrice": "Prix Estimé",
+            "estimatedPriceNote": "Ceci est un prix estimé. Le coût exact sera défini dans votre confirmation après réception de tous les détails de votre voyage.",
             "breakdown": "Détail des Prix",
             "basePrice": "Prix de Base",
             "taxes": "Taxes et Frais",
@@ -590,5 +602,28 @@
     },
     "forms": {
         "searchCountry": "Rechercher un pays..."
+    },
+    "homeSearch": {
+        "boatType": "Type de Bateau",
+        "destination": "Destination",
+        "whereAreYouGoing": "Où allez-vous ?",
+        "enterDestination": "Saisir la destination",
+        "selectRentalDate": "Sélectionner la date de location",
+        "selectActivityDate": "Sélectionner la date d'activité",
+        "selectDate": "Sélectionner la date",
+        "time": "Heure",
+        "preferredTime": "Heure Préférée",
+        "numberOfPeople": "Nombre de Personnes",
+        "bookingRequirements": "Exigences de Réservation :",
+        "advanceBooking48h": "Minimum 48 heures à l'avance",
+        "boatType_any": "Tout type",
+        "boatType_yacht": "Yacht",
+        "boatType_speedboat": "Hors-bord",
+        "boatType_sailboat": "Voilier",
+        "boatType_custom": "Personnalisé",
+        "sameAsPickup": "Identique à la prise en charge",
+        "date": "Date",
+        "pickupLocation": "Lieu de Prise en Charge",
+        "dropoffLocation": "Lieu de Retour"
     }
 }

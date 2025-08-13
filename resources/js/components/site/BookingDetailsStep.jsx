@@ -27,6 +27,7 @@ import TimeSelect from "./TimeSelect";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import RequiredAsterisk from "./RequiredAsterisk";
+import NumberInput from "../common/NumberInput";
 
 const BookingDetailsStep = ({
     categoryId,
@@ -102,21 +103,82 @@ const BookingDetailsStep = ({
 
     // Helper function to format duration display
     const formatDuration = (duration) => {
-        if (duration === "30min" || duration === "0.5h") return "30 min";
-        if (duration.includes("h")) {
-            const hours = parseFloat(duration.replace("h", ""));
-            if (hours === 1) return "1 hour";
+        // Convert to string and handle numeric values
+        const durationStr = String(duration).trim();
+        
+        // Handle numeric values (e.g., 0.5, 1, 1.5, 2, etc.)
+        const numericValue = parseFloat(durationStr);
+        if (!isNaN(numericValue)) {
+            // Handle 30 minutes
+            if (numericValue === 0.5) return "30 min";
+            
+            // Handle whole hours
+            if (numericValue % 1 === 0) {
+                if (numericValue === 1) return "1 hour";
+                return `${numericValue} hours`;
+            }
+            
+            // Handle half hours (e.g., 1.5, 2.5, etc.)
+            if (numericValue % 1 === 0.5) {
+                const wholeHours = Math.floor(numericValue);
+                if (wholeHours === 1) return "1.5 hours";
+                return `${wholeHours}.5 hours`;
+            }
+            
+            // Fallback for other decimal hours
+            return `${numericValue} hours`;
+        }
+        
+        // Handle "30min" or "0.5h" format (legacy support)
+        if (durationStr === "30min" || durationStr === "0.5h") return "30 min";
+        
+        // Handle hour-based formats (e.g., "1h", "2.5h")
+        if (durationStr.includes("h")) {
+            const hours = parseFloat(durationStr.replace("h", ""));
+            
+            // Handle whole hours
+            if (hours % 1 === 0) {
+                if (hours === 1) return "1 hour";
+                return `${hours} hours`;
+            }
+            
+            // Handle half hours
             if (hours % 1 === 0.5) {
                 const wholeHours = Math.floor(hours);
-                return `${wholeHours}h 30min`;
+                if (wholeHours === 0) return "30 min";
+                if (wholeHours === 1) return "1.5 hours";
+                return `${wholeHours}.5 hours`;
             }
-            return `${hours} hour${hours > 1 ? "s" : ""}`;
+            
+            return `${hours} hours`;
         }
-        return duration;
+        
+        // Fallback - return as is
+        return durationStr;
     };
 
+    // Auto-switch service type if intercity is not available
+    useEffect(() => {
+        if (categoryId === 3 && listing?.driver_pricings) {
+            const hasIntercityPricings = listing.driver_pricings.some(
+                pricing => pricing.service_type === 'intercity'
+            );
+            
+            // If intercity is selected but not available, switch to airport_transfer
+            if (serviceTypes.includes('intercity') && !hasIntercityPricings) {
+                setServiceTypes(['airport_transfer']);
+            }
+        }
+    }, [listing?.driver_pricings, categoryId]);
+    
     // Load cities on component mount
     useEffect(() => {
+        // Debug driver pricings data
+        if (categoryId === 3 && listing?.driver_pricings) {
+            console.log("Driver Pricings Data:", listing.driver_pricings);
+            console.log("Intercity pricings:", listing.driver_pricings.filter(p => p.service_type === 'intercity'));
+        }
+        
         // Fetch cities from API to ensure correct IDs
         const fetchCities = async () => {
             try {
@@ -195,17 +257,17 @@ const BookingDetailsStep = ({
         }
     }, [startDate, categoryId]);
 
-    // Load addons and set initial values for car rental
+    // Load addons for all categories
     useEffect(() => {
-        if (categoryId === 2 && listing?.addons?.length > 0) {
-            const carAddons = listing.addons
+        if (listing?.addons?.length > 0) {
+            const listingAddons = listing.addons
                 .map((addonItem) => ({
                     id: addonItem?.addon?.id,
                     name: addonItem?.addon?.addon || t("booking.unknownAddon"),
                     price: addonItem?.addon?.price || 0,
                 }))
                 .filter((addon) => addon.id); // Filter out any invalid addons
-            setAddons(carAddons);
+            setAddons(listingAddons);
         }
 
         // For car rentals, set pickup location to listing's city only if not already set
@@ -537,6 +599,16 @@ const BookingDetailsStep = ({
                 ) : (
                     // Other categories - Single date picker
                     <div className="flex-1 relative dropdown-container mb-3">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            {categoryId === 4 
+                                ? t("booking.rentalDate", "Rental Date")
+                                : categoryId === 5
+                                ? t("booking.activityDate", "Activity Date")
+                                : categoryId === 3
+                                ? t("booking.serviceDate", "Service Date")
+                                : t("booking.selectDate", "Select Date")}
+                            <RequiredAsterisk />
+                        </label>
                         <div
                             onClick={handleDateClick}
                             className="w-full px-3 py-3 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 transition-all duration-200 bg-white flex items-center justify-between"
@@ -573,11 +645,6 @@ const BookingDetailsStep = ({
                                     : t("booking.selectDate")}
                             </h3>
                             <div className="text-xs text-gray-500 mt-1">
-                                * Bookings must be at least{" "}
-                                {[3, 4, 5].includes(categoryId)
-                                    ? "48 hours (2 days)"
-                                    : "24 hours"}{" "}
-                                in advance
                                 {categoryId === 2 && (
                                     <div className="mt-1">
                                         * Minimum rental duration: 3 days
@@ -970,11 +1037,31 @@ const BookingDetailsStep = ({
                                 control={<Radio />}
                                 label="Airport Transfer"
                             />
-                            <FormControlLabel
-                                value="intercity"
-                                control={<Radio />}
-                                label="Intercity"
-                            />
+                            {(() => {
+                                const hasIntercityPricings = listing?.driver_pricings?.some(
+                                    pricing => pricing.service_type === 'intercity'
+                                );
+                                
+                                return (
+                                    <div>
+                                        <FormControlLabel
+                                            value="intercity"
+                                            control={<Radio />}
+                                            label="Intercity"
+                                            disabled={!hasIntercityPricings}
+                                        />
+                                        {!hasIntercityPricings && (
+                                            <Typography 
+                                                variant="caption" 
+                                                color="textSecondary" 
+                                                className="block ml-8 -mt-1"
+                                            >
+                                                {t("booking.intercityNotAvailable", "This driver does not support intercity services")}
+                                            </Typography>
+                                        )}
+                                    </div>
+                                );
+                            })()}
                         </RadioGroup>
                         {errors.service_type && (
                             <p className="text-red-500 text-sm mt-1">
@@ -1012,79 +1099,191 @@ const BookingDetailsStep = ({
 
                     {/* Dynamic fields based on service type */}
                     {serviceTypes.includes("airport_transfer") && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                            <TextField
-                                value={pickupAirport}
-                                onChange={(e) =>
-                                    setPickupAirport(e.target.value)
-                                }
-                                label="Pick-up Airport *"
-                                variant="outlined"
-                                fullWidth
-                                error={!!errors.pickup_airport}
-                                helperText={errors.pickup_airport?.[0]}
-                            />
-                            <TextField
-                                value={dropoffHotel}
-                                onChange={(e) =>
-                                    setDropoffHotel(e.target.value)
-                                }
-                                label="Drop-off Hotel *"
-                                variant="outlined"
-                                fullWidth
-                                error={!!errors.dropoff_hotel}
-                                helperText={errors.dropoff_hotel?.[0]}
-                            />
-                        </div>
+                        <>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        {t("booking.pickupAirportCity", "Pickup Airport City")} *
+                                    </label>
+                                    <TextField
+                                        value={`${cities.find(c => c.id === listing?.city_id)?.name || ""} - Airport`}
+                                        disabled
+                                        variant="outlined"
+                                        fullWidth
+                                        InputProps={{
+                                            style: { backgroundColor: '#f5f5f5' }
+                                        }}
+                                    />
+                                    <Typography variant="caption" color="textSecondary" className="block mt-1">
+                                        {t("booking.pickupAirportNote", "Pickup location is fixed based on driver's city")}
+                                    </Typography>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        {t("booking.dropoffCity", "Dropoff City")} *
+                                    </label>
+                                    <Select
+                                        value={dropoffCity}
+                                        onChange={(e) => setDropoffCity(e.target.value)}
+                                        displayEmpty
+                                        fullWidth
+                                        error={!!errors.dropoff_city}
+                                        variant="outlined"
+                                    >
+                                        <MenuItem value="" disabled>
+                                            {t("booking.selectDropoffCity", "Select Dropoff City")}
+                                        </MenuItem>
+                                        {(() => {
+                                            // Always include the driver's main city first
+                                            const cityOptions = [];
+                                            const mainCity = cities.find(c => c.id === listing?.city_id);
+                                            if (mainCity) {
+                                                cityOptions.push(
+                                                    <MenuItem key={mainCity.id} value={mainCity.id}>
+                                                        {mainCity.name}
+                                                    </MenuItem>
+                                                );
+                                            }
+                                            
+                                            // Then add intercity cities if available
+                                            const selectedRoadType = roadTypes.length > 0 ? roadTypes[0] : 'one_way';
+                                            const availableCities = listing?.driver_pricings?.filter(pricing => 
+                                                pricing.service_type === 'intercity' && 
+                                                pricing.road_type === selectedRoadType &&
+                                                pricing.city_b_id && 
+                                                pricing.city_b
+                                            ) || [];
+                                            
+                                            const cityPricingMap = new Map();
+                                            availableCities.forEach(pricing => {
+                                                // Don't add the main city again
+                                                if (pricing.city_b_id !== listing?.city_id) {
+                                                    cityPricingMap.set(pricing.city_b_id, pricing);
+                                                }
+                                            });
+                                            
+                                            Array.from(cityPricingMap.values()).forEach((pricing) => {
+                                                cityOptions.push(
+                                                    <MenuItem key={pricing.city_b_id} value={pricing.city_b_id}>
+                                                        {pricing.city_b?.city_name || pricing.city_b?.name} 
+                                                        {pricing.price && ` (+€${pricing.price})`}
+                                                    </MenuItem>
+                                                );
+                                            });
+                                            
+                                            return cityOptions;
+                                        })()}
+                                    </Select>
+                                    {errors.dropoff_city && (
+                                        <p className="text-red-500 text-sm mt-1">
+                                            {errors.dropoff_city[0]}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                            
+                            {/* Address input field - always visible */}
+                            <div className="mb-3">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    {t("booking.dropoffAddress", "Dropoff Address")} *
+                                </label>
+                                <TextField
+                                    value={dropoffHotel}
+                                    onChange={(e) => setDropoffHotel(e.target.value)}
+                                    placeholder={t("booking.enterAddress", "Enter hotel or address")}
+                                    variant="outlined"
+                                    fullWidth
+                                    error={!!errors.dropoff_hotel}
+                                    helperText={errors.dropoff_hotel?.[0]}
+                                />
+                            </div>
+                        </>
                     )}
 
                     {serviceTypes.includes("intercity") && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                            <Select
-                                value={listing?.city_id || ""}
-                                disabled
-                                displayEmpty
-                                fullWidth
-                                error={!!errors.pickup_city}
-                            >
-                                <MenuItem value="" disabled>
-                                    Select Pick-up City *
-                                </MenuItem>
-                                {cities.map((city) => (
-                                    <MenuItem key={city.id} value={city.id}>
-                                        {city.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                            {listing?.city_id && (
-                                <Typography
-                                    variant="caption"
-                                    color="textSecondary"
-                                    className="block -mt-2"
-                                >
-                                    Pickup must be in{" "}
-                                    {cities.find(
-                                        (c) => c.id === listing.city_id
-                                    )?.name || "the driver's city"}
-                                </Typography>
-                            )}
-                            <Select
-                                value={dropoffCity}
-                                onChange={(e) => setDropoffCity(e.target.value)}
-                                displayEmpty
-                                fullWidth
-                                error={!!errors.dropoff_city}
-                            >
-                                <MenuItem value="" disabled>
-                                    Select Drop-off City *
-                                </MenuItem>
-                                {cities.map((city) => (
-                                    <MenuItem key={city.id} value={city.id}>
-                                        {city.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </div>
+                        <>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        {t("booking.pickupCity", "Pickup City")} *
+                                    </label>
+                                    <TextField
+                                        value={cities.find(c => c.id === listing?.city_id)?.name || ""}
+                                        disabled
+                                        variant="outlined"
+                                        fullWidth
+                                        InputProps={{
+                                            style: { backgroundColor: '#f5f5f5' }
+                                        }}
+                                    />
+                                    {listing?.city_id && (
+                                        <Typography
+                                            variant="caption"
+                                            color="textSecondary"
+                                            className="block mt-1"
+                                        >
+                                            {t("booking.pickupMustBeIn", "Pickup must be in {{city}}", {
+                                                city: cities.find(c => c.id === listing.city_id)?.name || "the driver's city"
+                                            })}
+                                        </Typography>
+                                    )}
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        {t("booking.dropoffCity", "Dropoff City")} *
+                                    </label>
+                                    <Select
+                                        value={dropoffCity}
+                                        onChange={(e) => setDropoffCity(e.target.value)}
+                                        displayEmpty
+                                        fullWidth
+                                        error={!!errors.dropoff_city}
+                                        variant="outlined"
+                                    >
+                                        <MenuItem value="" disabled>
+                                            {t("booking.selectDropoffCity", "Select Drop-off City")}
+                                        </MenuItem>
+                                        {listing?.driver_pricings && listing.driver_pricings.length > 0 ? (
+                                            (() => {
+                                                // Filter by service type and road type, then group by city
+                                                const selectedRoadType = roadTypes.length > 0 ? roadTypes[0] : 'one_way';
+                                                const cityPricingMap = new Map();
+                                                
+                                                listing.driver_pricings
+                                                    .filter(pricing => 
+                                                        pricing.service_type === 'intercity' && 
+                                                        pricing.road_type === selectedRoadType &&
+                                                        pricing.city_b_id && 
+                                                        pricing.city_b
+                                                    )
+                                                    .forEach(pricing => {
+                                                        // Use Map to ensure unique cities
+                                                        cityPricingMap.set(pricing.city_b_id, pricing);
+                                                    });
+                                                
+                                                return Array.from(cityPricingMap.values()).map((pricing) => (
+                                                    <MenuItem key={pricing.city_b_id} value={pricing.city_b_id}>
+                                                        {pricing.city_b?.city_name || pricing.city_b?.name} 
+                                                        {pricing.price && ` (+€${pricing.price})`}
+                                                    </MenuItem>
+                                                ));
+                                            })()
+                                        ) : (
+                                            cities.map((city) => (
+                                                <MenuItem key={city.id} value={city.id}>
+                                                    {city.name}
+                                                </MenuItem>
+                                            ))
+                                        )}
+                                    </Select>
+                                    {errors.dropoff_city && (
+                                        <p className="text-red-500 text-sm mt-1">
+                                            {errors.dropoff_city[0]}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </>
                     )}
 
                     {/* Pick-up Date & Time */}
@@ -1093,88 +1292,90 @@ const BookingDetailsStep = ({
                             {t("booking.pickupTime", "Pick-up Time")}
                             <RequiredAsterisk />
                         </label>
-                        <select
+                        <TimeSelect
                             value={pickupTime}
-                            onChange={(e) => setPickupTime(e.target.value)}
-                            className={`w-full px-3 py-3 text-lg border ${
-                                errors.pickup_time
-                                    ? "border-red-500"
-                                    : "border-gray-300"
-                            } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
-                        >
-                            <option value="">
-                                {t("booking.selectTime", "Select Time")}
-                            </option>
-                            {Array.from({ length: 24 }, (_, i) => {
-                                // Check if this time is valid (48+ hours from now for private driver)
-                                let isDisabled = false;
-                                if (startDate) {
-                                    const selectedDateTime = new Date(
-                                        `${startDate} ${i
-                                            .toString()
-                                            .padStart(2, "0")}:00`
-                                    );
-                                    const minBookingDateTime =
-                                        getMinBookingDateTime();
-                                    isDisabled =
-                                        selectedDateTime < minBookingDateTime;
-                                }
-
-                                return (
-                                    <option
-                                        key={i}
-                                        value={`${i
-                                            .toString()
-                                            .padStart(2, "0")}:00`}
-                                        disabled={isDisabled}
-                                    >
-                                        {i.toString().padStart(2, "0")}:00
-                                        {isDisabled
-                                            ? " (Not available - less than 48h)"
-                                            : ""}
-                                    </option>
-                                );
-                            })}
-                        </select>
-                        {errors.pickup_time && (
-                            <p className="text-red-500 text-sm mt-1">
-                                {errors.pickup_time[0]}
-                            </p>
-                        )}
+                            onChange={setPickupTime}
+                            placeholder={t("booking.selectTime", "Select Time")}
+                            fromHour={0}
+                            toHour={23}
+                            stepMinutes={60}
+                            selectedDate={startDate}
+                            minHoursAdvance={48}
+                            hasError={!!errors.pickup_time}
+                            errorMessage={errors.pickup_time?.[0]}
+                        />
                     </div>
 
                     {/* Number of Passengers and Luggage */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
-                        <TextField
-                            type="number"
+                        <NumberInput
                             value={numberOfPassengers}
-                            onChange={(e) =>
-                                setNumberOfPassengers(
-                                    parseInt(e.target.value) || 1
-                                )
-                            }
-                            label="Number of Passengers *"
-                            variant="outlined"
-                            fullWidth
-                            inputProps={{ min: 1, max: 50 }}
-                            error={!!errors.number_of_passengers}
-                            helperText={errors.number_of_passengers?.[0]}
+                            onChange={(value) => setNumberOfPassengers(value)}
+                            label={t("booking.numberOfPassengers", "Number of Passengers")}
+                            required={true}
+                            min={1}
+                            max={50}
+                            error={errors.number_of_passengers?.[0]}
+                            helperText="Max allowed: 50"
                         />
-                        <TextField
-                            type="number"
+                        <NumberInput
                             value={numberOfLuggage}
-                            onChange={(e) =>
-                                setNumberOfLuggage(
-                                    parseInt(e.target.value) || 0
-                                )
-                            }
-                            label="Number of Luggage"
-                            variant="outlined"
-                            fullWidth
-                            inputProps={{ min: 0, max: 20 }}
-                            error={!!errors.number_of_luggage}
-                            helperText={errors.number_of_luggage?.[0]}
+                            onChange={(value) => setNumberOfLuggage(value)}
+                            label={t("booking.numberOfLuggage", "Number of Luggage")}
+                            required={false}
+                            min={0}
+                            max={20}
+                            error={errors.number_of_luggage?.[0]}
+                            helperText="Max allowed: 20"
                         />
+                    </div>
+
+                    {/* Add-ons for Private Driver */}
+                    <div className="mb-4">
+                        <FormLabel component="legend" className="mb-2">
+                            Add-ons
+                        </FormLabel>
+                        {addons.length > 0 ? (
+                            <FormGroup>
+                                {addons.map((addon) => (
+                                    <FormControlLabel
+                                        key={addon.id}
+                                        control={
+                                            <Checkbox
+                                                checked={selectedAddons.includes(
+                                                    addon.id
+                                                )}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setSelectedAddons([
+                                                            ...selectedAddons,
+                                                            addon.id,
+                                                        ]);
+                                                    } else {
+                                                        setSelectedAddons(
+                                                            selectedAddons.filter(
+                                                                (id) =>
+                                                                    id !==
+                                                                    addon.id
+                                                            )
+                                                        );
+                                                    }
+                                                }}
+                                            />
+                                        }
+                                        label={`${addon.name} - $${addon.price}`}
+                                    />
+                                ))}
+                            </FormGroup>
+                        ) : (
+                            <Typography
+                                variant="body2"
+                                color="textSecondary"
+                                className="italic"
+                            >
+                                {t("booking.noAddonsAvailable", "No add-ons available")}
+                            </Typography>
+                        )}
                     </div>
                 </>
             )}
@@ -1210,13 +1411,28 @@ const BookingDetailsStep = ({
                         )}
                     </div>
 
-                    {/* Duration Selection using Radio buttons in grid */}
+                    {/* Duration Selection using Dropdown */}
                     <div className="mb-4">
-                        <FormLabel component="legend" className="mb-2">
-                            Duration *
-                        </FormLabel>
-                        <div className="grid grid-cols-4 gap-2">
-                            {/* Use dynamic duration options from listing or fallback to defaults */}
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            {t("booking.duration", "Duration")} *
+                        </label>
+                        <Select
+                            value={boatDuration || ""}
+                            onChange={(e) => setBoatDuration(e.target.value)}
+                            displayEmpty
+                            fullWidth
+                            error={!!errors.duration}
+                            variant="outlined"
+                            renderValue={(selected) => {
+                                if (!selected) {
+                                    return <span style={{ color: '#9CA3AF' }}>{t("booking.selectDuration", "Select Duration")}</span>;
+                                }
+                                return formatDuration(selected);
+                            }}
+                        >
+                            <MenuItem value="" disabled>
+                                {t("booking.selectDuration", "Select Duration")}
+                            </MenuItem>
                             {(listing?.duration_options
                                 ? listing.duration_options
                                       .split(",")
@@ -1240,28 +1456,11 @@ const BookingDetailsStep = ({
                                       "8h",
                                   ]
                             ).map((duration) => (
-                                <label
-                                    key={duration}
-                                    className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-all ${
-                                        boatDuration === duration
-                                            ? "border-blue-500 bg-blue-50"
-                                            : "border-gray-200 hover:bg-gray-50"
-                                    }`}
-                                >
-                                    <Radio
-                                        size="small"
-                                        checked={boatDuration === duration}
-                                        onChange={(e) =>
-                                            setBoatDuration(duration)
-                                        }
-                                        value={duration}
-                                    />
-                                    <span className="text-sm">
-                                        {formatDuration(duration)}
-                                    </span>
-                                </label>
+                                <MenuItem key={duration} value={duration}>
+                                    {formatDuration(duration)}
+                                </MenuItem>
                             ))}
-                        </div>
+                        </Select>
                         {errors.duration && (
                             <p className="text-red-500 text-sm mt-1">
                                 {errors.duration[0]}
@@ -1270,39 +1469,63 @@ const BookingDetailsStep = ({
                     </div>
 
                     {/* Number of People */}
-                    <div className="mb-3">
-                        <TextField
-                            type="number"
-                            value={numberOfPeople}
-                            onChange={(e) => {
-                                const value = parseInt(e.target.value) || 1;
-                                const maxCapacity = listing?.capacity
-                                    ? parseInt(listing.capacity)
-                                    : 100;
-                                if (value <= maxCapacity) {
-                                    handleFieldChange(
-                                        "number_of_people",
-                                        value
-                                    );
-                                }
-                            }}
-                            label={t("booking.numberOfPeople") + " *"}
-                            variant="outlined"
-                            fullWidth
-                            inputProps={{
-                                min: 1,
-                                max: listing?.capacity
-                                    ? parseInt(listing.capacity)
-                                    : 100,
-                            }}
-                            error={!!errors.number_of_people}
-                            helperText={
-                                errors.number_of_people?.[0] ||
-                                (listing?.capacity
-                                    ? `Max capacity: ${listing.capacity}`
-                                    : "")
-                            }
-                        />
+                    <NumberInput
+                        value={numberOfPeople}
+                        onChange={(value) => handleFieldChange("number_of_people", value)}
+                        label={t("booking.numberOfPeople", "Number of People")}
+                        required={true}
+                        min={1}
+                        max={listing?.capacity ? parseInt(listing.capacity) : 100}
+                        error={errors.number_of_people?.[0]}
+                        helperText={listing?.capacity ? `Max capacity: ${listing.capacity}` : null}
+                    />
+
+                    {/* Add-ons for Boat Rental */}
+                    <div className="mb-4">
+                        <FormLabel component="legend" className="mb-2">
+                            Add-ons
+                        </FormLabel>
+                        {addons.length > 0 ? (
+                            <FormGroup>
+                                {addons.map((addon) => (
+                                    <FormControlLabel
+                                        key={addon.id}
+                                        control={
+                                            <Checkbox
+                                                checked={selectedAddons.includes(
+                                                    addon.id
+                                                )}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setSelectedAddons([
+                                                            ...selectedAddons,
+                                                            addon.id,
+                                                        ]);
+                                                    } else {
+                                                        setSelectedAddons(
+                                                            selectedAddons.filter(
+                                                                (id) =>
+                                                                    id !==
+                                                                    addon.id
+                                                            )
+                                                        );
+                                                    }
+                                                }}
+                                            />
+                                        }
+                                        label={`${addon.name} - $${addon.price}`}
+                                    />
+                                ))}
+                            </FormGroup>
+                        ) : (
+                            <Typography
+                                variant="body2"
+                                color="textSecondary"
+                                className="italic"
+                            >
+                                {t("booking.noAddonsAvailable", "No add-ons available")}
+                            </Typography>
+                        )}
                     </div>
                 </>
             )}
@@ -1500,59 +1723,65 @@ const BookingDetailsStep = ({
                     </div>
 
                     {/* Number of People */}
-                    <div className="mb-3">
-                        <TextField
-                            type="number"
-                            value={numberOfPeople}
-                            onChange={(e) => {
-                                const value = parseInt(e.target.value) || 1;
-                                // Handle group size limits for group activities
-                                if (listing?.private_or_group === "group") {
-                                    const minSize = listing.group_size_min
-                                        ? parseInt(listing.group_size_min)
-                                        : 1;
-                                    const maxSize = listing.group_size_max
-                                        ? parseInt(listing.group_size_max)
-                                        : 100;
-                                    if (value >= minSize && value <= maxSize) {
-                                        handleFieldChange(
-                                            "number_of_people",
-                                            value
-                                        );
-                                    }
-                                } else {
-                                    // For private activities, no limit
-                                    handleFieldChange(
-                                        "number_of_people",
-                                        value
-                                    );
-                                }
-                            }}
-                            label={t("booking.numberOfPeople") + " *"}
-                            variant="outlined"
-                            fullWidth
-                            inputProps={{
-                                min:
-                                    listing?.private_or_group === "group" &&
-                                    listing.group_size_min
-                                        ? parseInt(listing.group_size_min)
-                                        : 1,
-                                max:
-                                    listing?.private_or_group === "group" &&
-                                    listing.group_size_max
-                                        ? parseInt(listing.group_size_max)
-                                        : 100,
-                            }}
-                            error={!!errors.number_of_people}
-                            helperText={
-                                errors.number_of_people?.[0] ||
-                                (listing?.private_or_group === "group" &&
-                                listing.group_size_min &&
-                                listing.group_size_max
-                                    ? `Group size: ${listing.group_size_min} - ${listing.group_size_max} people`
-                                    : "")
-                            }
-                        />
+                    <NumberInput
+                        value={numberOfPeople}
+                        onChange={(value) => handleFieldChange("number_of_people", value)}
+                        label={t("booking.numberOfPeople", "Number of People")}
+                        required={true}
+                        min={listing?.private_or_group === "group" && listing.group_size_min ? parseInt(listing.group_size_min) : 1}
+                        max={listing?.private_or_group === "group" && listing.group_size_max ? parseInt(listing.group_size_max) : 100}
+                        error={errors.number_of_people?.[0]}
+                        helperText={listing?.private_or_group === "group" && listing.group_size_min && listing.group_size_max 
+                            ? `Group size: ${listing.group_size_min} - ${listing.group_size_max} people` 
+                            : null}
+                    />
+
+                    {/* Add-ons for Things to Do */}
+                    <div className="mb-4">
+                        <FormLabel component="legend" className="mb-2">
+                            Add-ons
+                        </FormLabel>
+                        {addons.length > 0 ? (
+                            <FormGroup>
+                                {addons.map((addon) => (
+                                    <FormControlLabel
+                                        key={addon.id}
+                                        control={
+                                            <Checkbox
+                                                checked={selectedAddons.includes(
+                                                    addon.id
+                                                )}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        setSelectedAddons([
+                                                            ...selectedAddons,
+                                                            addon.id,
+                                                        ]);
+                                                    } else {
+                                                        setSelectedAddons(
+                                                            selectedAddons.filter(
+                                                                (id) =>
+                                                                    id !==
+                                                                    addon.id
+                                                            )
+                                                        );
+                                                    }
+                                                }}
+                                            />
+                                        }
+                                        label={`${addon.name} - $${addon.price}`}
+                                    />
+                                ))}
+                            </FormGroup>
+                        ) : (
+                            <Typography
+                                variant="body2"
+                                color="textSecondary"
+                                className="italic"
+                            >
+                                {t("booking.noAddonsAvailable", "No add-ons available")}
+                            </Typography>
+                        )}
                     </div>
                 </>
             )}

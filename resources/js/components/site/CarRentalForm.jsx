@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, MapPin, Clock, ChevronDown, Search, Info, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+    Calendar,
+    MapPin,
+    Clock,
+    ChevronDown,
+    Search,
+    Info,
+    ChevronLeft,
+    ChevronRight,
+} from "lucide-react";
 import { IoLocationOutline } from "react-icons/io5";
 import { useMediaQuery } from "react-responsive";
 import axios from "axios";
 import LocationModal from "./LocationModal";
 import TimeModal from "./TimeModal";
+import { useTranslation } from "react-i18next";
 export default function CarRentalForm() {
     const [pickupLocation, setPickupLocation] = useState("");
     const [dropoffLocation, setDropoffLocation] = useState("Same as pickup");
@@ -19,9 +29,10 @@ export default function CarRentalForm() {
     const [showDropOffTimeModal, setShowDropOffTimeModal] = useState(false);
     const [dateError, setDateError] = useState("");
     const isMobile = useMediaQuery({ maxWidth: 900 });
+    const { t } = useTranslation();
 
     const formatDate = (dateString) => {
-        if (!dateString) return "Select date";
+        if (!dateString) return t("homeSearch.selectDate", "Select date");
         const date = new Date(dateString);
         const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         const months = [
@@ -74,13 +85,13 @@ export default function CarRentalForm() {
     };
 
     const [currentDate, setCurrentDate] = useState(new Date());
-    
+
     const navigateMonth = (direction) => {
         const newDate = new Date(currentDate);
         newDate.setMonth(currentDate.getMonth() + direction);
         setCurrentDate(newDate);
     };
-    
+
     const calendarDays = generateCalendarDays(
         currentDate.getFullYear(),
         currentDate.getMonth()
@@ -158,10 +169,10 @@ export default function CarRentalForm() {
             pickup_time: pickupTime,
             dropoff_time: dropoffTime,
         };
-        
+
         // Store in session storage
-        sessionStorage.setItem('searchParams', JSON.stringify(searchParams));
-        
+        sessionStorage.setItem("searchParams", JSON.stringify(searchParams));
+
         const params = new URLSearchParams({
             pickup: pickupLocation,
             dropoff: dropoffLocation,
@@ -193,7 +204,10 @@ export default function CarRentalForm() {
                         {/* Pick-up Location */}
                         <div className="flex-1 relative p-6 border-r border-gray-200">
                             <label className="block text-sm font-medium text-gray-500 mb-2">
-                                Pick-up Location
+                                {t(
+                                    "homeSearch.pickupLocation",
+                                    "Pick-up Location"
+                                )}
                             </label>
                             <input
                                 type="text"
@@ -202,7 +216,10 @@ export default function CarRentalForm() {
                                 onChange={(e) =>
                                     setPickupLocation(e.target.value)
                                 }
-                                placeholder="Airport, city, station, region, district..."
+                                placeholder={t(
+                                    "booking.pickupCity",
+                                    "Airport, city, station, region, district..."
+                                )}
                                 className="w-full text-lg font-semibold text-gray-900 placeholder-gray-400 border-none outline-none bg-transparent"
                             />
                             <LocationModal
@@ -215,7 +232,10 @@ export default function CarRentalForm() {
                         {/* Dropoff Location */}
                         <div className="flex-1 relative p-6 border-r border-gray-200">
                             <label className="block text-sm font-medium text-gray-500 mb-2">
-                                Dropoff Location
+                                {t(
+                                    "homeSearch.dropoffLocation",
+                                    "Dropoff Location"
+                                )}
                             </label>
                             <button
                                 onClick={() => setShowDropOffModal(true)}
@@ -234,7 +254,7 @@ export default function CarRentalForm() {
                         <div className="flex-1 border-r border-gray-200 relative overflow-visible">
                             <div className="p-6">
                                 <label className="block text-sm font-medium text-gray-500 mb-2">
-                                    Pick-up Date
+                                    {t("booking.pickupDate")}
                                 </label>
                                 <div className="flex items-center justify-between">
                                     <button
@@ -252,7 +272,9 @@ export default function CarRentalForm() {
                                     <div className="relative">
                                         <button
                                             className="text-lg font-bold text-gray-900 hvr-text-green transition-colors"
-                                            onClick={() => setShowPickupTimeModal(true)}
+                                            onClick={() =>
+                                                setShowPickupTimeModal(true)
+                                            }
                                         >
                                             {pickupTime}
                                         </button>
@@ -325,14 +347,17 @@ export default function CarRentalForm() {
                                             // Check if date is at least 24 hours in advance
                                             const now = new Date();
                                             const tomorrow = new Date();
-                                            tomorrow.setDate(tomorrow.getDate() + 1);
+                                            tomorrow.setDate(
+                                                tomorrow.getDate() + 1
+                                            );
                                             tomorrow.setHours(0, 0, 0, 0);
-                                            
+
                                             const dayStart = new Date(day);
                                             dayStart.setHours(0, 0, 0, 0);
-                                            
+
                                             // Disable all dates before tomorrow (24hr advance requirement)
-                                            const isDisabled = dayStart < tomorrow;
+                                            const isDisabled =
+                                                dayStart < tomorrow;
 
                                             return (
                                                 <button
@@ -340,32 +365,74 @@ export default function CarRentalForm() {
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         if (!isDisabled) {
-                                                            const selectedDate = formatYMD(day);
-                                                            setPickupDate(selectedDate);
-                                                            
+                                                            const selectedDate =
+                                                                formatYMD(day);
+                                                            setPickupDate(
+                                                                selectedDate
+                                                            );
+
                                                             // Auto-set dropoff date to 3 days later
-                                                            const dropoff = new Date(day);
-                                                            dropoff.setDate(dropoff.getDate() + 3);
-                                                            setDropoffDate(formatYMD(dropoff));
-                                                            
+                                                            const dropoff =
+                                                                new Date(day);
+                                                            dropoff.setDate(
+                                                                dropoff.getDate() +
+                                                                    3
+                                                            );
+                                                            setDropoffDate(
+                                                                formatYMD(
+                                                                    dropoff
+                                                                )
+                                                            );
+
                                                             // Auto-set pickup time to first available hour (24hr advance)
-                                                            const now = new Date();
-                                                            const minBookingDateTime = new Date(now);
-                                                            minBookingDateTime.setHours(minBookingDateTime.getHours() + 24);
-                                                            
+                                                            const now =
+                                                                new Date();
+                                                            const minBookingDateTime =
+                                                                new Date(now);
+                                                            minBookingDateTime.setHours(
+                                                                minBookingDateTime.getHours() +
+                                                                    24
+                                                            );
+
                                                             // Find first available hour
-                                                            for (let hour = 0; hour < 24; hour++) {
-                                                                const selectedDateTime = new Date(`${selectedDate} ${hour.toString().padStart(2, '0')}:00`);
-                                                                if (selectedDateTime >= minBookingDateTime) {
-                                                                    const timeStr = `${hour.toString().padStart(2, '0')}:00`;
-                                                                    setPickupTime(timeStr);
-                                                                    setDropoffTime(timeStr);
+                                                            for (
+                                                                let hour = 0;
+                                                                hour < 24;
+                                                                hour++
+                                                            ) {
+                                                                const selectedDateTime =
+                                                                    new Date(
+                                                                        `${selectedDate} ${hour
+                                                                            .toString()
+                                                                            .padStart(
+                                                                                2,
+                                                                                "0"
+                                                                            )}:00`
+                                                                    );
+                                                                if (
+                                                                    selectedDateTime >=
+                                                                    minBookingDateTime
+                                                                ) {
+                                                                    const timeStr = `${hour
+                                                                        .toString()
+                                                                        .padStart(
+                                                                            2,
+                                                                            "0"
+                                                                        )}:00`;
+                                                                    setPickupTime(
+                                                                        timeStr
+                                                                    );
+                                                                    setDropoffTime(
+                                                                        timeStr
+                                                                    );
                                                                     break;
                                                                 }
                                                             }
-                                                            
+
                                                             setDateError("");
-                                                            setShowCalendar(null);
+                                                            setShowCalendar(
+                                                                null
+                                                            );
                                                         }
                                                     }}
                                                     disabled={isDisabled}
@@ -398,16 +465,37 @@ export default function CarRentalForm() {
                                             );
                                         })}
                                     </div>
-                                    
+
                                     {/* Constraint info */}
                                     <div className="mt-3 p-2 bg-blue-50 rounded-lg">
                                         <div className="flex items-start gap-2">
                                             <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
                                             <div className="text-xs text-blue-700">
-                                                <p className="font-medium">Booking Requirements:</p>
-                                                <p>• Minimum 24 hours advance booking</p>
-                                                <p>• Minimum 3-day rental period</p>
-                                                <p>• Drop-off date auto-set to 3 days after pickup</p>
+                                                <p className="font-medium">
+                                                    {t(
+                                                        "homeSearch.bookingRequirements"
+                                                    )}
+                                                </p>
+                                                <p>
+                                                    •{" "}
+                                                    {t(
+                                                        "booking.advanceBooking24Hour"
+                                                    )}
+                                                </p>
+                                                <p>
+                                                    •{" "}
+                                                    {t(
+                                                        "homeSearch.flexibleMultiDayRentals",
+                                                        "Minimum 3-day rental period"
+                                                    )}
+                                                </p>
+                                                <p>
+                                                    •{" "}
+                                                    {t(
+                                                        "booking.dropoffFeeNotice",
+                                                        "Drop-off date auto-set to 3 days after pickup"
+                                                    )}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -426,7 +514,7 @@ export default function CarRentalForm() {
                         <div className="flex-1 border-r border-gray-200 relative overflow-visible">
                             <div className="p-6">
                                 <label className="block text-sm font-medium text-gray-500 mb-2">
-                                    Drop-off Date
+                                    {t("booking.dropoffDate")}
                                 </label>
                                 <div className="flex items-center justify-between">
                                     <button
@@ -442,9 +530,11 @@ export default function CarRentalForm() {
                                         {formatDate(dropoffDate)}
                                     </button>
                                     <div className="relative">
-                                         <button
+                                        <button
                                             className="text-lg font-bold text-gray-900 hvr-text-green transition-colors"
-                                            onClick={() => setShowDropOffTimeModal(true)}
+                                            onClick={() =>
+                                                setShowDropOffTimeModal(true)
+                                            }
                                         >
                                             {dropoffTime}
                                         </button>
@@ -513,17 +603,24 @@ export default function CarRentalForm() {
                                             const isToday =
                                                 day.toDateString() ===
                                                 new Date().toDateString();
-                                            
+
                                             // Check minimum 3-day rental
                                             let isDisabled = false;
                                             if (pickupDate) {
-                                                const pickup = new Date(pickupDate);
-                                                const minDropoff = new Date(pickup);
-                                                minDropoff.setDate(minDropoff.getDate() + 3);
+                                                const pickup = new Date(
+                                                    pickupDate
+                                                );
+                                                const minDropoff = new Date(
+                                                    pickup
+                                                );
+                                                minDropoff.setDate(
+                                                    minDropoff.getDate() + 3
+                                                );
                                                 minDropoff.setHours(0, 0, 0, 0);
                                                 const dayStart = new Date(day);
                                                 dayStart.setHours(0, 0, 0, 0);
-                                                isDisabled = dayStart < minDropoff;
+                                                isDisabled =
+                                                    dayStart < minDropoff;
                                             }
 
                                             return (
@@ -532,9 +629,13 @@ export default function CarRentalForm() {
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         if (!isDisabled) {
-                                                            setDropoffDate(formatYMD(day));
+                                                            setDropoffDate(
+                                                                formatYMD(day)
+                                                            );
                                                             setDateError("");
-                                                            setShowCalendar(null);
+                                                            setShowCalendar(
+                                                                null
+                                                            );
                                                         }
                                                     }}
                                                     disabled={isDisabled}
@@ -567,20 +668,39 @@ export default function CarRentalForm() {
                                             );
                                         })}
                                     </div>
-                                    
+
                                     {/* Minimum rental info */}
                                     {pickupDate && (
                                         <div className="mt-3 p-2 bg-blue-50 rounded-lg">
                                             <div className="flex items-start gap-2">
                                                 <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
                                                 <div className="text-xs text-blue-700">
-                                                    <p>Minimum 3-day rental period required</p>
-                                                    <p>Earliest drop-off: {(() => {
-                                                        const pickup = new Date(pickupDate);
-                                                        const minDropoff = new Date(pickup);
-                                                        minDropoff.setDate(minDropoff.getDate() + 3);
-                                                        return formatDate(formatYMD(minDropoff));
-                                                    })()}</p>
+                                                    <p>
+                                                        Minimum 3-day rental
+                                                        period required
+                                                    </p>
+                                                    <p>
+                                                        Earliest drop-off:{" "}
+                                                        {(() => {
+                                                            const pickup =
+                                                                new Date(
+                                                                    pickupDate
+                                                                );
+                                                            const minDropoff =
+                                                                new Date(
+                                                                    pickup
+                                                                );
+                                                            minDropoff.setDate(
+                                                                minDropoff.getDate() +
+                                                                    3
+                                                            );
+                                                            return formatDate(
+                                                                formatYMD(
+                                                                    minDropoff
+                                                                )
+                                                            );
+                                                        })()}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -613,7 +733,7 @@ export default function CarRentalForm() {
                                     onClick={(e) => handleSearch(e)}
                                 >
                                     <Search className="w-5 h-5" />
-                                    Search
+                                    {t("common.search", "Search")}
                                 </button>
                             </div>
                         )}
@@ -622,7 +742,11 @@ export default function CarRentalForm() {
             </div>
 
             {/* Click outside to close calendar */}
-            {(showCalendar || showPickupModal || showDropOffModal || showPickupTimeModal || showDropOffTimeModal) && (
+            {(showCalendar ||
+                showPickupModal ||
+                showDropOffModal ||
+                showPickupTimeModal ||
+                showDropOffTimeModal) && (
                 <div
                     className="fixed inset-0 z-40"
                     onClick={() => {

@@ -1395,7 +1395,9 @@ class ListingController extends Controller
                 'vehicleModelObj',
                 'pricings',
                 'actPricings',
-                'customBookingOptions'
+                'customBookingOptions',
+                'driverPricings.cityA',
+                'driverPricings.cityB'
             ])
             ->firstOrFail();
 

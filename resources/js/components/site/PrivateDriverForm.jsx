@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Calendar, MapPin, Clock, ChevronDown, Search, Info, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+    Calendar,
+    MapPin,
+    Clock,
+    ChevronDown,
+    Search,
+    Info,
+    ChevronLeft,
+    ChevronRight,
+} from "lucide-react";
 import LocationModal from "./LocationModal";
 import TimeModal from "./TimeModal";
 import { useMediaQuery } from "react-responsive";
+import { useTranslation } from "react-i18next";
 
 // Minimal Modal component
 function Modal({ open, onClose, children }) {
@@ -34,6 +44,7 @@ export default function PrivateDriverForm() {
     const [showPickupTimeModal, setShowPickupTimeModal] = useState(false);
     const [showDropOffModal, setShowDropOffModal] = useState(false);
     const isMobile = useMediaQuery({ maxWidth: 900 });
+    const { t } = useTranslation();
 
     const formatDate = (dateString) => {
         if (!dateString) return "Select date";
@@ -81,13 +92,13 @@ export default function PrivateDriverForm() {
     };
 
     const [currentDate, setCurrentDate] = useState(new Date());
-    
+
     const navigateMonth = (direction) => {
         const newDate = new Date(currentDate);
         newDate.setMonth(currentDate.getMonth() + direction);
         setCurrentDate(newDate);
     };
-    
+
     const calendarDays = generateCalendarDays(
         currentDate.getFullYear(),
         currentDate.getMonth()
@@ -100,25 +111,29 @@ export default function PrivateDriverForm() {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        
+
         // Determine service type based on locations
-        const serviceType = dropoffLocation === "Same as pickup" ? "hourly" : "point-to-point";
-        
+        const serviceType =
+            dropoffLocation === "Same as pickup" ? "hourly" : "point-to-point";
+
         const searchParams = {
             category: 3, // Private driver category
             service_type: serviceType,
             city_a: pickupLocation,
-            city_b: dropoffLocation === "Same as pickup" ? pickupLocation : dropoffLocation,
+            city_b:
+                dropoffLocation === "Same as pickup"
+                    ? pickupLocation
+                    : dropoffLocation,
             date: pickupDate,
             time: pickupTime,
             pickup_date: pickupDate,
             pickup_time: pickupTime,
             persons: guests,
         };
-        
+
         // Store in session storage
-        sessionStorage.setItem('searchParams', JSON.stringify(searchParams));
-        
+        sessionStorage.setItem("searchParams", JSON.stringify(searchParams));
+
         const params = new URLSearchParams({
             pickup: pickupLocation,
             dropoff: dropoffLocation,
@@ -153,7 +168,10 @@ export default function PrivateDriverForm() {
                         {/* Pick-up Location */}
                         <div className="w-full lg:flex-1 relative p-6 border-r border-gray-200">
                             <label className="block text-sm font-medium text-gray-500 mb-2">
-                                Pick-up Location
+                                {t(
+                                    "homeSearch.pickupLocation",
+                                    "Pick-up Location"
+                                )}
                             </label>
                             <input
                                 type="text"
@@ -175,7 +193,10 @@ export default function PrivateDriverForm() {
                         {/* Dropoff Location */}
                         <div className="w-full lg:flex-1 relative p-6 border-r border-gray-200">
                             <label className="block text-sm font-medium text-gray-500 mb-2">
-                                Dropoff Location
+                                {t(
+                                    "homeSearch.dropoffLocation",
+                                    "Dropoff Location"
+                                )}
                             </label>
                             <button
                                 onClick={() => setShowDropOffModal(true)}
@@ -193,7 +214,7 @@ export default function PrivateDriverForm() {
                         {/* Number of Persons (modal trigger) */}
                         <div className="p-6 border-r border-gray-200 w-full lg:flex-1 flex flex-col justify-center">
                             <label className="block text-sm font-medium text-gray-500 mb-2">
-                                Number of Persons
+                                {t("homeSearch.numberOfPeople")}
                             </label>
                             <button
                                 type="button"
@@ -208,7 +229,7 @@ export default function PrivateDriverForm() {
                         <div className="w-full lg:flex-1 border-r border-gray-200 relative overflow-visible">
                             <div className="p-6">
                                 <label className="block text-sm font-medium text-gray-500 mb-2">
-                                    Date
+                                    {t("homeSearch.date")}
                                 </label>
                                 <div className="flex items-center justify-between">
                                     <button
@@ -294,44 +315,79 @@ export default function PrivateDriverForm() {
                                             const isToday =
                                                 day.toDateString() ===
                                                 new Date().toDateString();
-                                            
+
                                             // Check if date is at least 48 hours in advance (private driver requirement)
                                             const now = new Date();
                                             const dayStart = new Date(day);
                                             dayStart.setHours(0, 0, 0, 0);
-                                            
+
                                             // Private driver services require 48-hour advance booking
                                             const minDate = new Date(now);
-                                            minDate.setDate(minDate.getDate() + 2);
+                                            minDate.setDate(
+                                                minDate.getDate() + 2
+                                            );
                                             minDate.setHours(0, 0, 0, 0);
-                                            
-                                            const isDisabled = dayStart < minDate;
-                                            
+
+                                            const isDisabled =
+                                                dayStart < minDate;
+
                                             return (
                                                 <button
                                                     key={index}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         if (!isDisabled) {
-                                                            const selectedDate = formatYMD(day);
-                                                            setPickupDate(selectedDate);
-                                                            
+                                                            const selectedDate =
+                                                                formatYMD(day);
+                                                            setPickupDate(
+                                                                selectedDate
+                                                            );
+
                                                             // Auto-set pickup time to first available hour (48hr advance)
-                                                            const now = new Date();
-                                                            const minBookingDateTime = new Date(now);
-                                                            minBookingDateTime.setHours(minBookingDateTime.getHours() + 48);
-                                                            
+                                                            const now =
+                                                                new Date();
+                                                            const minBookingDateTime =
+                                                                new Date(now);
+                                                            minBookingDateTime.setHours(
+                                                                minBookingDateTime.getHours() +
+                                                                    48
+                                                            );
+
                                                             // Find first available hour
-                                                            for (let hour = 0; hour < 24; hour++) {
-                                                                const selectedDateTime = new Date(`${selectedDate} ${hour.toString().padStart(2, '0')}:00`);
-                                                                if (selectedDateTime >= minBookingDateTime) {
-                                                                    const timeStr = `${hour.toString().padStart(2, '0')}:00`;
-                                                                    setPickupTime(timeStr);
+                                                            for (
+                                                                let hour = 0;
+                                                                hour < 24;
+                                                                hour++
+                                                            ) {
+                                                                const selectedDateTime =
+                                                                    new Date(
+                                                                        `${selectedDate} ${hour
+                                                                            .toString()
+                                                                            .padStart(
+                                                                                2,
+                                                                                "0"
+                                                                            )}:00`
+                                                                    );
+                                                                if (
+                                                                    selectedDateTime >=
+                                                                    minBookingDateTime
+                                                                ) {
+                                                                    const timeStr = `${hour
+                                                                        .toString()
+                                                                        .padStart(
+                                                                            2,
+                                                                            "0"
+                                                                        )}:00`;
+                                                                    setPickupTime(
+                                                                        timeStr
+                                                                    );
                                                                     break;
                                                                 }
                                                             }
-                                                            
-                                                            setShowCalendar(null);
+
+                                                            setShowCalendar(
+                                                                null
+                                                            );
                                                         }
                                                     }}
                                                     disabled={isDisabled}
@@ -348,13 +404,15 @@ export default function PrivateDriverForm() {
                                                                 : "hover:bg-blue-50 cursor-pointer"
                                                         }
                                                         ${
-                                                            isSelected && !isDisabled
+                                                            isSelected &&
+                                                            !isDisabled
                                                                 ? "bg-blue-500 text-white hvr-bg-green"
                                                                 : ""
                                                         }
                                                         ${
                                                             isToday &&
-                                                            !isSelected && !isDisabled
+                                                            !isSelected &&
+                                                            !isDisabled
                                                                 ? "bg-blue-100 text-green-600"
                                                                 : ""
                                                         }
@@ -365,15 +423,23 @@ export default function PrivateDriverForm() {
                                             );
                                         })}
                                     </div>
-                                    
+
                                     {/* Constraint info */}
                                     <div className="mt-3 p-2 bg-blue-50 rounded-lg">
                                         <div className="flex items-start gap-2">
                                             <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
                                             <div className="text-xs text-blue-700">
-                                                <p className="font-medium">Booking Requirements:</p>
-                                                <p>• Minimum 24 hours advance booking</p>
-                                                <p>• Same-day service only</p>
+                                                <p className="font-medium">
+                                                    {t(
+                                                        "homeSearch.bookingRequirements"
+                                                    )}
+                                                </p>
+                                                <p>
+                                                    •{" "}
+                                                    {t(
+                                                        "homeSearch.advanceBooking48h"
+                                                    )}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -384,10 +450,9 @@ export default function PrivateDriverForm() {
                                 onSelect={(time) => setPickupTime(time)}
                                 onClose={() => setShowPickupTimeModal(false)}
                                 selectedDate={pickupDate}
-                                minHoursAdvance={24}
+                                minHoursAdvance={48}
                             />
                         </div>
-
 
                         {/* Search Button */}
                         {!isMobile ? (
@@ -406,7 +471,7 @@ export default function PrivateDriverForm() {
                                     className="w-full lg:w-auto btn-search-v2 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
                                 >
                                     <Search className="w-5 h-5" />
-                                    Search
+                                    {t("common.search", "Search")}
                                 </button>
                             </div>
                         )}

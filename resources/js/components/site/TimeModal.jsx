@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Calendar, MapPin, Clock, ChevronDown, Search, Info } from "lucide-react";
 
-export default function TimeModal({ open, onSelect, onClose, selectedDate = null, minHoursAdvance = 0 }) {
+export default function TimeModal({ open, onSelect, onClose, selectedDate = null, minHoursAdvance = 0, categoryId = null }) {
     if (!open) return null;
     
     const isTimeDisabled = (hour) => {
@@ -32,6 +32,10 @@ export default function TimeModal({ open, onSelect, onClose, selectedDate = null
             )}
             <div className="trendings-locations">
                 {Array.from({ length: 24 }, (_, i) => {
+                    // For boat rentals (category 4), only show hours from 8 to 20
+                    if (categoryId === 4 && (i < 8 || i > 20)) {
+                        return null;
+                    }
                     const isDisabled = isTimeDisabled(i);
                     return (
                         <div

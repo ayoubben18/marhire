@@ -205,6 +205,192 @@ Route::get('/blog', function (\Illuminate\Http\Request $request) {
     return redirect("/$locale/blog");
 });
 
+// Add missing catch-all redirects for other client routes
+Route::get('/city/{city}', function (\Illuminate\Http\Request $request, $city) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    $queryString = $request->getQueryString();
+    $redirectUrl = "/$locale/city/$city";
+    if ($queryString) {
+        $redirectUrl .= '?' . $queryString;
+    }
+    return redirect($redirectUrl);
+})->where('city', '.*');
+
+Route::get('/car-search', function (\Illuminate\Http\Request $request) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    $queryString = $request->getQueryString();
+    $redirectUrl = "/$locale/car-search";
+    if ($queryString) {
+        $redirectUrl .= '?' . $queryString;
+    }
+    return redirect($redirectUrl);
+});
+
+Route::get('/private-search', function (\Illuminate\Http\Request $request) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    $queryString = $request->getQueryString();
+    $redirectUrl = "/$locale/private-search";
+    if ($queryString) {
+        $redirectUrl .= '?' . $queryString;
+    }
+    return redirect($redirectUrl);
+});
+
+Route::get('/boat-search', function (\Illuminate\Http\Request $request) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    $queryString = $request->getQueryString();
+    $redirectUrl = "/$locale/boat-search";
+    if ($queryString) {
+        $redirectUrl .= '?' . $queryString;
+    }
+    return redirect($redirectUrl);
+});
+
+Route::get('/thingstodo-search', function (\Illuminate\Http\Request $request) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    $queryString = $request->getQueryString();
+    $redirectUrl = "/$locale/thingstodo-search";
+    if ($queryString) {
+        $redirectUrl .= '?' . $queryString;
+    }
+    return redirect($redirectUrl);
+});
+
+Route::get('/agency/{agency_name}', function (\Illuminate\Http\Request $request, $agency_name) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    $queryString = $request->getQueryString();
+    $redirectUrl = "/$locale/agency/$agency_name";
+    if ($queryString) {
+        $redirectUrl .= '?' . $queryString;
+    }
+    return redirect($redirectUrl);
+})->where('agency_name', '.*');
+
+Route::get('/article/{slug}', function (\Illuminate\Http\Request $request, $slug) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    $queryString = $request->getQueryString();
+    $redirectUrl = "/$locale/article/$slug";
+    if ($queryString) {
+        $redirectUrl .= '?' . $queryString;
+    }
+    return redirect($redirectUrl);
+})->where('slug', '.*');
+
+Route::get('/terms-conditions', function (\Illuminate\Http\Request $request) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    return redirect("/$locale/terms-conditions");
+});
+
+Route::get('/privacy-policy', function (\Illuminate\Http\Request $request) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    return redirect("/$locale/privacy-policy");
+});
+
+Route::get('/cookie-policy', function (\Illuminate\Http\Request $request) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    return redirect("/$locale/cookie-policy");
+});
+
+Route::get('/cancellation-policy', function (\Illuminate\Http\Request $request) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    return redirect("/$locale/cancellation-policy");
+});
+
+Route::get('/insurance-conditions', function (\Illuminate\Http\Request $request) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    return redirect("/$locale/insurance-conditions");
+});
+
+Route::get('/category/{category}/subcategory/{subcat}', function (\Illuminate\Http\Request $request, $category, $subcat) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    $queryString = $request->getQueryString();
+    $redirectUrl = "/$locale/category/$category/subcategory/$subcat";
+    if ($queryString) {
+        $redirectUrl .= '?' . $queryString;
+    }
+    return redirect($redirectUrl);
+})->where(['category' => '.*', 'subcat' => '.*']);
+
+Route::get('/category/{slug}/{city}', function (\Illuminate\Http\Request $request, $slug, $city) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    $queryString = $request->getQueryString();
+    $redirectUrl = "/$locale/category/$slug/$city";
+    if ($queryString) {
+        $redirectUrl .= '?' . $queryString;
+    }
+    return redirect($redirectUrl);
+})->where(['slug' => '.*', 'city' => '.*']);
+
 // Routes with locale prefix (pattern defined in RouteServiceProvider)
 Route::group(['prefix' => '{locale?}'], function () {
     

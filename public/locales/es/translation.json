@@ -195,7 +195,17 @@
         "hours": "Horas",
         "minutes": "Minutos",
         "pickupMustBeIn": "La recogida debe ser en {{city}}",
-        "dropoffFeeNotice": "Puede aplicar una tarifa por devolución en ubicaciones diferentes de recogida y devolución."
+        "dropoffFeeNotice": "Puede aplicar una tarifa por devolución en ubicaciones diferentes de recogida y devolución.",
+        "pickupAirportCity": "Ciudad del aeropuerto de recogida",
+        "dropoffHotelCity": "Ciudad del hotel de entrega",
+        "pickupAirportNote": "El lugar de recogida es fijo según la ciudad del conductor",
+        "enterHotelName": "Ingrese el nombre del hotel",
+        "pickupCity": "Ciudad de recogida",
+        "dropoffCity": "Ciudad de entrega",
+        "intercityNotAvailable": "Este conductor no ofrece servicios interurbanos",
+        "selectDropoffCity": "Seleccionar ciudad de entrega",
+        "dropoffAddress": "Dirección de entrega",
+        "enterAddress": "Ingrese hotel o dirección"
     },
     "filters": {
         "carType": "Tipo de Coche",
@@ -407,6 +417,8 @@
         "pricing": {
             "from": "Desde",
             "total": "Precio Total",
+            "estimatedPrice": "Precio Estimado",
+            "estimatedPriceNote": "Este es un precio estimado. El costo exacto se establecerá en su confirmación después de recibir todos los detalles de su viaje.",
             "breakdown": "Desglose de Precios",
             "basePrice": "Precio Base",
             "taxes": "Impuestos y Tasas",
@@ -590,5 +602,28 @@
     },
     "forms": {
         "searchCountry": "Buscar país..."
+    },
+    "homeSearch": {
+        "boatType": "Tipo de Barco",
+        "destination": "Destino",
+        "whereAreYouGoing": "¿A dónde vas?",
+        "enterDestination": "Ingrese destino",
+        "selectRentalDate": "Seleccionar fecha de alquiler",
+        "selectActivityDate": "Seleccionar fecha de actividad",
+        "selectDate": "Seleccionar fecha",
+        "time": "Hora",
+        "preferredTime": "Hora Preferida",
+        "numberOfPeople": "Número de Personas",
+        "bookingRequirements": "Requisitos de Reserva:",
+        "advanceBooking48h": "Mínimo 48 horas de antelación",
+        "boatType_any": "Cualquier tipo",
+        "boatType_yacht": "Yate",
+        "boatType_speedboat": "Lancha rápida",
+        "boatType_sailboat": "Velero",
+        "boatType_custom": "Personalizado",
+        "sameAsPickup": "Igual que la recogida",
+        "date": "Fecha",
+        "pickupLocation": "Lugar de Recogida",
+        "dropoffLocation": "Lugar de Devolución"
     }
 }
