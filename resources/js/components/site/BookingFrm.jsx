@@ -642,6 +642,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     
                 case 3: // Private driver
                     formData.dateOfBirth = dateOfBirth;
+                    formData.flight_number = flightNumber; // Add flight number for private driver
                     formData.prefered_date = startDate;
                     formData.preferredDate = startDate; // Add both formats
                     formData.pickup_time = pickupTime;
@@ -699,6 +700,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     
                 case 4: // Boat rental
                     formData.dateOfBirth = dateOfBirth;
+                    formData.flight_number = flightNumber; // Add flight number for boat rental
                     formData.prefered_date = startDate;
                     formData.pickup_time = boatPickupTime;
                     // Convert duration format (e.g., "1.5h" -> 1.5)
@@ -710,6 +712,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     
                 case 5: // Activity
                     formData.dateOfBirth = dateOfBirth;
+                    formData.flight_number = flightNumber; // Add flight number for activities
                     formData.prefered_date = startDate;
                     formData.time_preference = timePreference;
                     formData.duration_option_id = selectedDurationOption;
@@ -722,6 +725,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     break;
                     
                 default:
+                    formData.flight_number = flightNumber; // Add flight number for any other category
                     formData.prefered_date = startDate;
                     formData.number_of_people = numberOfPeople;
             }

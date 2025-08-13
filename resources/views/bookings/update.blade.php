@@ -1008,7 +1008,8 @@
             
             if (category_id == 3 || category_id == 5) {
                 $('#listing_id').html('<option value="" disabled selected>--Choose Option--</option>');
-                return;
+                // Don't return - let it load listings for these categories too
+                // return;
             }
 
             $.ajax({

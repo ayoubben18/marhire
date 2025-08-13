@@ -255,6 +255,7 @@ class BookingController extends Controller
             ->with(['addons.addon', 'listing.addons.addon'])
             ->first();
         
+        
         // Get the listing's available addons for the dropdowns
         $listingAddons = [];
         if ($booking && $booking->listing) {
@@ -558,6 +559,8 @@ class BookingController extends Controller
             $validationResult = $validationService->validateBookingData($request);
             $listing = $validationResult['listing'];
             $pricingData = $validationResult['pricing'];
+            
+            // ULTRA DEBUG: Step 2 - After validation
 
             \DB::beginTransaction();
 
@@ -600,11 +603,17 @@ class BookingController extends Controller
                 'terms_accepted' => $request->termsAccepted
             ];
 
-            // Add category-specific fields
-            $bookingFields = array_merge($bookingFields, $this->getCategorySpecificFields($request));
+            
+            // Add category-specific fields (preserve base fields)
+            $categoryFields = $this->getCategorySpecificFields($request);
+            $bookingFields = array_merge($bookingFields, $categoryFields);
+            
+            // Ensure flight_number is not overwritten by category fields
+            $bookingFields['flight_number'] = $request->flightNumber ?? $request->flight_number ?? null;
 
             // Create booking
             $booking = Booking::create($bookingFields);
+            
 
             // Handle addons if provided
             $addons = array_filter($request->input('addons', []));
