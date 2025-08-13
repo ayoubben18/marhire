@@ -159,9 +159,9 @@ const BookingDetailsStep = ({
 
     // Auto-switch service type if intercity is not available
     useEffect(() => {
-        if (categoryId === 3 && listing?.driver_pricings) {
-            const hasIntercityPricings = listing.driver_pricings.some(
-                (pricing) => pricing.service_type === "intercity"
+        if (categoryId === 3 && listing?.pricings) {
+            const hasIntercityPricings = listing.pricings.some(
+                (pricing) => pricing.intercity_one > 0 || pricing.intercity_round > 0
             );
 
             // If intercity is selected but not available, switch to airport_transfer
@@ -169,20 +169,17 @@ const BookingDetailsStep = ({
                 setServiceTypes(["airport_transfer"]);
             }
         }
-    }, [listing?.driver_pricings, categoryId]);
+    }, [listing?.pricings, categoryId]);
+    
+    // Set pickup city for airport transfer
+    useEffect(() => {
+        if (categoryId === 3 && serviceTypes.includes("airport_transfer") && listing?.city_id) {
+            setPickupCity(listing.city_id);
+        }
+    }, [categoryId, serviceTypes, listing?.city_id]);
 
     // Load cities on component mount
     useEffect(() => {
-        // Debug driver pricings data
-        if (categoryId === 3 && listing?.driver_pricings) {
-            console.log("Driver Pricings Data:", listing.driver_pricings);
-            console.log(
-                "Intercity pricings:",
-                listing.driver_pricings.filter(
-                    (p) => p.service_type === "intercity"
-                )
-            );
-        }
 
         // Fetch cities from API to ensure correct IDs
         const fetchCities = async () => {
@@ -1044,9 +1041,9 @@ const BookingDetailsStep = ({
                             />
                             {(() => {
                                 const hasIntercityPricings =
-                                    listing?.driver_pricings?.some(
+                                    listing?.pricings?.some(
                                         (pricing) =>
-                                            pricing.service_type === "intercity"
+                                            pricing.intercity_one > 0 || pricing.intercity_round > 0
                                     );
 
                                 return (
@@ -1186,56 +1183,46 @@ const BookingDetailsStep = ({
                                                 );
                                             }
 
-                                            // Then add intercity cities if available
+                                            // For airport transfers, show cities with airport prices
+                                            // The price can be in airport columns OR intercity columns (for airport transfers to other cities)
                                             const selectedRoadType =
                                                 roadTypes.length > 0
                                                     ? roadTypes[0]
                                                     : "one_way";
                                             const availableCities =
-                                                listing?.driver_pricings?.filter(
-                                                    (pricing) =>
-                                                        pricing.service_type ===
-                                                            "intercity" &&
-                                                        pricing.road_type ===
-                                                            selectedRoadType &&
-                                                        pricing.city_b_id &&
-                                                        pricing.city_b
+                                                listing?.pricings?.filter(
+                                                    (pricing) => {
+                                                        const isRoundTrip = selectedRoadType === "road_trip";
+                                                        // Show cities that have either airport prices or intercity prices
+                                                        // (intercity prices can be used for airport transfers to other cities)
+                                                        if (isRoundTrip) {
+                                                            return pricing.airport_round > 0 || pricing.intercity_round > 0;
+                                                        } else {
+                                                            return pricing.airport_one > 0 || pricing.intercity_one > 0;
+                                                        }
+                                                    }
                                                 ) || [];
 
-                                            const cityPricingMap = new Map();
-                                            availableCities.forEach(
-                                                (pricing) => {
-                                                    // Don't add the main city again
-                                                    if (
-                                                        pricing.city_b_id !==
-                                                        listing?.city_id
-                                                    ) {
-                                                        cityPricingMap.set(
-                                                            pricing.city_b_id,
-                                                            pricing
-                                                        );
-                                                    }
+                                            availableCities.forEach((pricing) => {
+                                                // Don't add the main city again
+                                                if (pricing.city_id !== listing?.city_id) {
+                                                    const city = cities.find(c => c.id === pricing.city_id);
+                                                    const isRoundTrip = selectedRoadType === "road_trip";
+                                                    // For airport transfer dropdown, prefer airport price if available, otherwise use intercity price
+                                                    const price = isRoundTrip ? 
+                                                        (pricing.airport_round || pricing.intercity_round) : 
+                                                        (pricing.airport_one || pricing.intercity_one);
+                                                    
+                                                    cityOptions.push(
+                                                        <MenuItem
+                                                            key={pricing.city_id}
+                                                            value={pricing.city_id}
+                                                        >
+                                                            {city?.city_name || city?.name || `City ${pricing.city_id}`}
+                                                            {price > 0 && ` (+€${price})`}
+                                                        </MenuItem>
+                                                    );
                                                 }
-                                            );
-
-                                            Array.from(
-                                                cityPricingMap.values()
-                                            ).forEach((pricing) => {
-                                                cityOptions.push(
-                                                    <MenuItem
-                                                        key={pricing.city_b_id}
-                                                        value={
-                                                            pricing.city_b_id
-                                                        }
-                                                    >
-                                                        {pricing.city_b
-                                                            ?.city_name ||
-                                                            pricing.city_b
-                                                                ?.name}
-                                                        {pricing.price &&
-                                                            ` (+€${pricing.price})`}
-                                                    </MenuItem>
-                                                );
                                             });
 
                                             return cityOptions;
@@ -1345,61 +1332,38 @@ const BookingDetailsStep = ({
                                                 "Select Drop-off City"
                                             )}
                                         </MenuItem>
-                                        {listing?.driver_pricings &&
-                                        listing.driver_pricings.length > 0
-                                            ? (() => {
-                                                  // Filter by service type and road type, then group by city
-                                                  const selectedRoadType =
-                                                      roadTypes.length > 0
-                                                          ? roadTypes[0]
-                                                          : "one_way";
-                                                  const cityPricingMap =
-                                                      new Map();
-
-                                                  listing.driver_pricings
-                                                      .filter(
-                                                          (pricing) =>
-                                                              pricing.service_type ===
-                                                                  "intercity" &&
-                                                              pricing.road_type ===
-                                                                  selectedRoadType &&
-                                                              pricing.city_b_id &&
-                                                              pricing.city_b
-                                                      )
-                                                      .forEach((pricing) => {
-                                                          // Use Map to ensure unique cities
-                                                          cityPricingMap.set(
-                                                              pricing.city_b_id,
-                                                              pricing
-                                                          );
-                                                      });
-
-                                                  return Array.from(
-                                                      cityPricingMap.values()
-                                                  ).map((pricing) => (
-                                                      <MenuItem
-                                                          key={
-                                                              pricing.city_b_id
-                                                          }
-                                                          value={
-                                                              pricing.city_b_id
-                                                          }
-                                                      >
-                                                          {pricing.city_b
-                                                              ?.city_name ||
-                                                              pricing.city_b
-                                                                  ?.name}
-                                                          {pricing.price &&
-                                                              ` (+€${pricing.price})`}
-                                                      </MenuItem>
-                                                  ));
-                                              })()
+                                        {listing?.pricings && listing.pricings.length > 0
+                                            ? listing.pricings
+                                                .filter((pricing) => {
+                                                    // Filter cities that have intercity prices
+                                                    const isRoundTrip = roadTypes.includes("road_trip");
+                                                    if (isRoundTrip) {
+                                                        return pricing.intercity_round > 0;
+                                                    } else {
+                                                        return pricing.intercity_one > 0;
+                                                    }
+                                                })
+                                                .map((pricing) => {
+                                                    const city = cities.find(c => c.id === pricing.city_id);
+                                                    const isRoundTrip = roadTypes.includes("road_trip");
+                                                    const price = isRoundTrip ? pricing.intercity_round : pricing.intercity_one;
+                                                    
+                                                    return (
+                                                        <MenuItem
+                                                            key={pricing.city_id}
+                                                            value={pricing.city_id}
+                                                        >
+                                                            {city?.city_name || city?.name || `City ${pricing.city_id}`}
+                                                            {price > 0 && ` (+€${price})`}
+                                                        </MenuItem>
+                                                    );
+                                                })
                                             : cities.map((city) => (
                                                   <MenuItem
                                                       key={city.id}
                                                       value={city.id}
                                                   >
-                                                      {city.name}
+                                                      {city.name || city.city_name}
                                                   </MenuItem>
                                               ))}
                                     </Select>

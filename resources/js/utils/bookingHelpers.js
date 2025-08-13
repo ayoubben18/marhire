@@ -98,56 +98,54 @@ export const calculatePrice = (categoryId, basePrice, params = {}) => {
             
             return Math.round(totalPrice * 100) / 100; // Round to 2 decimal places
 
-        case 3: // Private Driver - Route-based pricing from DriverPricing table
+        case 3: // Private Driver - Using private_listing_pricings table
             const { serviceTypes, roadTypes, pickupCity, dropoffCity } = params;
-            let driverPrice = basePrice;
             
-            // For driver pricing, we need the driverPricings relationship
-            if (listing?.driverPricings?.length > 0 && serviceTypes?.length > 0 && roadTypes?.length > 0) {
-                // Find matching pricing based on service type, road type, and cities
-                const pricing = listing.driverPricings.find(p => {
-                    const serviceMatch = serviceTypes.includes(p.service_type);
-                    const roadMatch = roadTypes.includes(p.road_type);
-                    const cityAMatch = p.city_a_id == pickupCity;
-                    
-                    if (serviceTypes.includes('airport_transfer') && serviceTypes.length === 1) {
-                        // Airport transfer only needs city_a
-                        return serviceMatch && roadMatch && cityAMatch && !p.city_b_id;
-                    } else if (serviceTypes.includes('intercity')) {
-                        // Intercity needs both cities
-                        const cityBMatch = p.city_b_id == dropoffCity;
-                        return serviceMatch && roadMatch && cityAMatch && cityBMatch;
-                    }
-                    return false;
-                });
-                
-                if (pricing) {
-                    driverPrice = pricing.price;
+            // Initial price should be 0 until user selects service/road type
+            if (!serviceTypes?.length || !roadTypes?.length) {
+                // If no selection made, return 0 (plus any addons)
+                let addonsPrice = 0;
+                if (selectedAddons && Array.isArray(selectedAddons) && listing?.addons?.length > 0) {
+                    addonsPrice = selectedAddons.reduce((total, addonId) => {
+                        const addon = listing.addons.find(item => item?.addon?.id === addonId);
+                        return total + (addon?.addon?.price ? parseFloat(addon.addon.price) : 0);
+                    }, 0);
                 }
-            } else if (listing?.pricings?.length > 0 && serviceTypes && serviceTypes.length > 0) {
-                // Fallback to legacy pricing structure if new pricing not found
-                const pricing = listing.pricings.find(p => {
-                    if (serviceTypes.includes('intercity') && (pickupCity || dropoffCity)) {
-                        return p?.city_id == (dropoffCity || pickupCity);
-                    }
-                    return false;
-                });
+                return Math.round(addonsPrice * 100) / 100;
+            }
+            
+            let driverPrice = 0;
+            
+            // Use the pricings structure (from private_listing_pricings table)
+            if (listing?.pricings?.length > 0) {
+                let pricing = null;
+                const isRoundTrip = roadTypes?.includes('road_trip');
                 
-                if (pricing) {
-                    // - airport_round: Airport transfer round-trip
-                    // - intercity_one: City-to-city one-way
-                    // - intercity_round: City-to-city round-trip
-                    if (serviceTypes.includes('airport_transfer')) {
-                        if (roadTypes?.includes('road_trip')) {
-                            driverPrice = parseFloat(pricing.airport_round) || basePrice;
+                if (serviceTypes.includes('airport_transfer')) {
+                    // For airport transfer:
+                    // - If dropoff city is selected, use that city's row
+                    // - Otherwise, use the listing's city row (same city transfer)
+                    const cityToFind = dropoffCity || listing?.city_id;
+                    pricing = listing.pricings.find(p => p?.city_id == cityToFind);
+                    
+                    if (pricing) {
+                        // Use airport prices if available, otherwise use intercity prices
+                        // (some cities might have their airport transfer prices stored as intercity)
+                        if (isRoundTrip) {
+                            driverPrice = parseFloat(pricing.airport_round || pricing.intercity_round) || 0;
                         } else {
-                            driverPrice = parseFloat(pricing.airport_one) || basePrice;
+                            driverPrice = parseFloat(pricing.airport_one || pricing.intercity_one) || 0;
                         }
-                    } else if (serviceTypes.includes('intercity')) {
-                        if (roadTypes?.includes('road_trip')) {
-                            driverPrice = parseFloat(pricing.intercity_round) || basePrice;
+                    }
+                } else if (serviceTypes.includes('intercity')) {
+                    // For intercity, use the dropoff city's row
+                    pricing = listing.pricings.find(p => p?.city_id == dropoffCity);
+                    
+                    if (pricing) {
+                        if (isRoundTrip) {
+                            driverPrice = parseFloat(pricing.intercity_round) || 0;
                         } else {
-                            driverPrice = parseFloat(pricing.intercity_one) || basePrice;
+                            driverPrice = parseFloat(pricing.intercity_one) || 0;
                         }
                     }
                 }
