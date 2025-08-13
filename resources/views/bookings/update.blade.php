@@ -152,6 +152,19 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6" data-categories="5">
+                                    <div class="form-group">
+                                        <label class="form-label" for="time_preference">Time Preference</label>
+                                        <div class="form-control-wrap">
+                                            <select class="form-control select2-single" name="time_preference" id="time_preference">
+                                                <option value="">--Choose Option--</option>
+                                                <option value="morning" {{ $booking->time_preference == 'morning' ? 'selected' : '' }}>Morning</option>
+                                                <option value="afternoon" {{ $booking->time_preference == 'afternoon' ? 'selected' : '' }}>Afternoon</option>
+                                                <option value="evening" {{ $booking->time_preference == 'evening' ? 'selected' : '' }}>Evening</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-6" data-categories="2">
                                     <div class="form-group">
                                         <label class="form-label" for="pickup_date">Pickup Date <span class="lbl-obligatoire">*</span></label>
@@ -208,18 +221,28 @@
                                 </div>
                                 <div class="col-md-6" data-categories="2">
                                     <div class="form-group">
-                                        <label class="form-label" for="pickup_location">Pickup Location <span class="lbl-obligatoire">*</span></label>
+                                        <label class="form-label" for="pickup_location">Pickup City <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
-                                            <input type="text" class="form-control" name="pickup_location" id="pickup_location" placeholder="Pickup Location" />
+                                            <select class="form-control select2-single" name="pickup_location" id="pickup_location">
+                                                <option value="" disabled selected>--Choose City--</option>
+                                                @foreach($cities as $city)
+                                                <option value="{{ $city->id }}" {{ $booking->pickup_location == $city->id ? 'selected' : '' }}>{{ $city->city_name }}</option>
+                                                @endforeach
+                                            </select>
                                             <small class="error d-none">Required field.</small>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6" data-categories="2">
                                     <div class="form-group">
-                                        <label class="form-label" for="droppoff_location">Dropoff Location <span class="lbl-obligatoire">*</span></label>
+                                        <label class="form-label" for="droppoff_location">Dropoff City <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
-                                            <input type="text" class="form-control" name="droppoff_location" id="droppoff_location" placeholder="Dropoff Location" />
+                                            <select class="form-control select2-single" name="droppoff_location" id="droppoff_location">
+                                                <option value="" disabled selected>--Choose City--</option>
+                                                @foreach($cities as $city)
+                                                <option value="{{ $city->id }}" {{ $booking->droppoff_location == $city->id ? 'selected' : '' }}>{{ $city->city_name }}</option>
+                                                @endforeach
+                                            </select>
                                             <small class="error d-none">Required field.</small>
                                         </div>
                                     </div>
@@ -265,12 +288,60 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6" data-categories="2">
+                                <!-- Additional Private Driver Fields -->
+                                <div class="col-md-6" data-categories="3">
                                     <div class="form-group">
-                                        <label class="form-label" for="flight_number">Flight Number</label>
+                                        <label class="form-label" for="pickup_time">Pickup Time</label>
                                         <div class="form-control-wrap">
-                                            <input type="text" class="form-control" name="flight_number" id="flight_number" placeholder="Flight Number" value="{{ old('flight_number') ?? $booking->flight_number }}" />
-                                            <small class="error d-none">Required field.</small>
+                                            <input type="time" class="form-control" name="pickup_time" id="pickup_time_private" value="{{ $booking->pickup_time }}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" data-categories="3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="service_types">Service Types</label>
+                                        <div class="form-control-wrap">
+                                            <input type="text" class="form-control" name="service_types" id="service_types" value="{{ $booking->service_types }}" placeholder="e.g., airport_transfer, intercity" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" data-categories="3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="road_types">Road Types</label>
+                                        <div class="form-control-wrap">
+                                            <input type="text" class="form-control" name="road_types" id="road_types" value="{{ $booking->road_types }}" placeholder="e.g., one_way, round_trip" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" data-categories="3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="number_of_passengers">Number of Passengers</label>
+                                        <div class="form-control-wrap">
+                                            <input type="number" class="form-control" name="number_of_passengers" id="number_of_passengers" value="{{ $booking->number_of_passengers }}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" data-categories="3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="number_of_luggage">Number of Luggage</label>
+                                        <div class="form-control-wrap">
+                                            <input type="number" class="form-control" name="number_of_luggage" id="number_of_luggage" value="{{ $booking->number_of_luggage }}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" data-categories="3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="pickup_address">Pickup Address</label>
+                                        <div class="form-control-wrap">
+                                            <input type="text" class="form-control" name="pickup_address" id="pickup_address" value="{{ $booking->pickup_address }}" placeholder="Airport or address" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" data-categories="3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="dropoff_address">Dropoff Address</label>
+                                        <div class="form-control-wrap">
+                                            <input type="text" class="form-control" name="dropoff_address" id="dropoff_address" value="{{ $booking->dropoff_address }}" placeholder="Hotel or address" />
                                         </div>
                                     </div>
                                 </div>
@@ -316,18 +387,20 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-label" for="email">Email <span class="lbl-obligatoire">*</span></label>
+                                        <label class="form-label" for="date_of_birth">Date of Birth <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
-                                            <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="{{ $booking->email }}" />
+                                            <input type="date" class="form-control" name="date_of_birth" id="date_of_birth" 
+                                                   value="{{ $booking->date_of_birth }}" 
+                                                   max="{{ date('Y-m-d', strtotime('-18 years')) }}" />
                                             <small class="error d-none">Required field.</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6" data-categories="2">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-label" for="age">Age <span class="lbl-obligatoire">*</span></label>
+                                        <label class="form-label" for="email">Email <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
-                                            <input type="number" step="1" class="form-control" name="age" id="age" placeholder="Age" value="{{ $booking->age }}" />
+                                            <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="{{ $booking->email }}" />
                                             <small class="error d-none">Required field.</small>
                                         </div>
                                     </div>
@@ -338,6 +411,14 @@
                                         <div class="form-control-wrap">
                                             <input type="text" class="form-control" name="whatsapp" id="whatsapp" placeholder="Whatsapp" value="{{ $booking->whatsapp }}" />
                                             <small class="error d-none">Required field.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="flight_number">Flight Number</label>
+                                        <div class="form-control-wrap">
+                                            <input type="text" class="form-control" name="flight_number" id="flight_number" placeholder="Flight Number (Optional)" value="{{ $booking->flight_number }}" />
                                         </div>
                                     </div>
                                 </div>
@@ -511,6 +592,9 @@
         // Initialize form with existing booking data
         const booking = @json($booking);
         const bookingAddons = @json($booking->addons);
+        
+        // Debug: Log the addon data structure
+        console.log('Booking Addons:', bookingAddons);
 
         function initializeForm() {
             // Set category and trigger change
@@ -543,15 +627,27 @@
                             $('#pickup_time').trigger('change');
                             $('#dropoff_time').val(booking.dropoff_time);
                             $('#dropoff_time').trigger('change');
-                            $('#pickup_location').val(booking.pickup_location);
-                            $('#droppoff_location').val(booking.droppoff_location);
-                            $('#age').val(booking.age);
+                            $('#pickup_location').val(booking.pickup_location).trigger('change');
+                            $('#droppoff_location').val(booking.droppoff_location).trigger('change');
+                            $('#date_of_birth').val(booking.date_of_birth);
                             break;
                         case 3:
+                            // Private Driver fields
+                            $('#prefered_date').val(booking.prefered_date);
+                            $('#number_of_people').val(booking.number_of_people);
+                            $('#pickup_time_private').val(booking.pickup_time);
+                            $('#service_types').val(booking.service_types);
+                            $('#road_types').val(booking.road_types);
+                            $('#number_of_passengers').val(booking.number_of_passengers);
+                            $('#number_of_luggage').val(booking.number_of_luggage);
+                            $('#pickup_address').val(booking.pickup_address);
+                            $('#dropoff_address').val(booking.dropoff_address);
+                            break;
                         case 5:
                             $('#pricing_option_id').val(booking.pricing_option_id).trigger('change');
                             $('#prefered_date').val(booking.prefered_date);
                             $('#number_of_people').val(booking.number_of_people);
+                            $('#time_preference').val(booking.time_preference).trigger('change');
                             break;
                         case 4:
                             $('#duration').val(booking.duration).trigger('change');
@@ -561,25 +657,64 @@
                             break;
                     }
 
-                    // Load addons
-                    loadAddons();
+                    // Don't load addons here, they will be loaded after the listing change triggers addon fetch
                 }, 500);
             }, 2000);
         }
 
         // Load existing addons
         function loadAddons() {
+            console.log('Loading addons, count:', bookingAddons ? bookingAddons.length : 0);
             if (bookingAddons && bookingAddons.length > 0) {
-                bookingAddons.forEach(addon => {
-                    $('#add-addon').trigger('click');
-                    const $lastAddon = $('select.addon').last();
+                // Clear any existing addon rows first
+                $('#addons-table > tbody').empty();
+                
+                bookingAddons.forEach((addon, index) => {
+                    console.log(`Adding addon ${index}:`, addon);
+                    // Add a new row
+                    const newRow = `
+                        <tr>
+                            <td>
+                                <select name="addons[]" class="form-control addon" required>
+                                    ${addonsOptions}
+                                </select>
+                            </td>
+                            <td>
+                              <button type="button" class="btn btn-sm remove-addon" style="color:#ff313b;">
+                                  <i class="fa-solid fa-trash-can"></i>
+                              </button>
+                            </td>
+                        </tr>
+                    `;
+                    $('#addons-table > tbody').append(newRow);
+                    
+                    // Set the value for this addon
+                    const $lastAddon = $('#addons-table > tbody > tr').last().find('select.addon');
+                    console.log('Setting addon value:', addon.addon_id);
                     $lastAddon.val(addon.addon_id);
-                    $lastAddon.trigger('change');
+                    
+                    // Verify it was set
+                    const setValue = $lastAddon.val();
+                    console.log('Value after setting:', setValue);
+                    if (!setValue) {
+                        console.error('Failed to set addon value:', addon.addon_id, 'Available options:', $lastAddon.find('option').length);
+                    }
                 });
+                
+                // Recalculate price after loading all addons
+                setTimeout(() => {
+                    calculatePrice();
+                }, 100);
             }
         }
 
         initializeForm();
+        
+        // Calculate initial price after form is loaded
+        setTimeout(() => {
+            console.log('Calculating initial price...');
+            calculatePrice();
+        }, 3500);
 
         function setCategorySpecificFields(booking) {
             switch (parseInt(booking.category_id)) {
@@ -588,17 +723,29 @@
                     $('#dropoff_date').val(booking.dropoff_date);
                     $('#pickup_time').val(booking.pickup_time);
                     $('#dropoff_time').val(booking.dropoff_time);
-                    $('#pickup_location').val(booking.pickup_location);
-                    $('#droppoff_location').val(booking.droppoff_location);
-                    $('#age').val(booking.age);
+                    $('#pickup_location').val(booking.pickup_location).trigger('change');
+                    $('#droppoff_location').val(booking.droppoff_location).trigger('change');
+                    $('#date_of_birth').val(booking.date_of_birth);
                     break;
                 case 3:
+                    // Private Driver fields
+                    $('#prefered_date').val(booking.prefered_date);
+                    $('#number_of_people').val(booking.number_of_people);
+                    $('#pickup_time_private').val(booking.pickup_time);
+                    $('#service_types').val(booking.service_types);
+                    $('#road_types').val(booking.road_types);
+                    $('#number_of_passengers').val(booking.number_of_passengers);
+                    $('#number_of_luggage').val(booking.number_of_luggage);
+                    $('#pickup_address').val(booking.pickup_address);
+                    $('#dropoff_address').val(booking.dropoff_address);
+                    break;
                 case 5:
                     setTimeout(() => {
                         $('#pricing_option_id').val(booking.pricing_option_id).trigger('change');
                     }, 300);
                     $('#prefered_date').val(booking.prefered_date);
                     $('#number_of_people').val(booking.number_of_people);
+                    $('#time_preference').val(booking.time_preference).trigger('change');
                     break;
                 case 4:
                     setTimeout(() => {
@@ -610,8 +757,7 @@
                     break;
             }
 
-            // Load addons
-            loadAddons(booking.id);
+            // Addons are loaded in the initializeForm function
         }
 
 
@@ -711,6 +857,7 @@
         });
 
         function calculatePrice() {
+            console.log('calculatePrice called');
             const category_id = parseInt($('#category_id').val());
             const startDate = $('#pickup_date').val();
             const startTime = $('#pickup_time').val() || '00:00';
@@ -735,15 +882,21 @@
             let addonsTotal = 0;
 
             $('select.addon').each(function() {
-                let selectedOption = $(this).find(':selected');
-                let addonPrice = parseFloat(selectedOption.data('price')) || 0;
+                const selectedValue = $(this).val();
+                console.log('Addon select value:', selectedValue);
+                if (selectedValue) {
+                    let selectedOption = $(this).find(':selected');
+                    let addonPrice = parseFloat(selectedOption.data('price')) || 0;
+                    console.log('Addon price:', addonPrice);
 
-                if (groupOrPrivate === 'Private') {
-                    addonPrice *= numPeople;
+                    if (groupOrPrivate === 'Private' && category_id === 5) {
+                        addonPrice *= numPeople;
+                    }
+
+                    addonsTotal += addonPrice;
                 }
-
-                addonsTotal += addonPrice;
             });
+            console.log('Total addons calculated:', addonsTotal);
 
             if (category_id === 2) {
                 if (startDate && endDate) {
@@ -831,7 +984,8 @@
 
             toggleFieldsByCategory(category_id);
 
-            $('#addons-table > tbody').html('');
+            // Don't clear addons table when changing listing, keep existing addons
+            // $('#addons-table > tbody').html('');
             if (category_id == 2) {
                 $('.booking-pricing-item.per_day').show();
             } else {
@@ -883,7 +1037,8 @@
             let durations = $selectedOption.data('durations');
             let proposes = $selectedOption.data('proposes');
 
-            $('#addons-table > tbody').html('');
+            // Don't clear addons when changing listing
+            // $('#addons-table > tbody').html('');
 
             if (durations) {
                 let durationsArr = durations.split(',');
@@ -931,12 +1086,28 @@
                 , dataType: 'json'
                 , success: function(resp) {
                     let options = '<option value="" disabled selected>--Choose Option--</option>';
+                    console.log('Addon options from API:', resp.addons);
                     resp.addons.forEach(function(addon) {
+                        // The id here is from listing_addon_affecteds which matches booking_addons.addon_id
                         options += `<option value="${addon.id}" data-price="${addon.price}">${addon.addon} (${parseFloat(addon.price).toFixed(2)}€)</option>`;
                     });
 
                     addonsOptions = options;
-                    $('.addon').html(options);
+                    // Update existing addon selects with new options
+                    $('.addon').each(function() {
+                        const currentValue = $(this).val();
+                        $(this).html(options);
+                        if (currentValue) {
+                            $(this).val(currentValue);
+                        }
+                    });
+                    
+                    // Load saved addons after options are fetched
+                    setTimeout(() => {
+                        if ($('.addon').length === 0 && bookingAddons && bookingAddons.length > 0) {
+                            loadAddons();
+                        }
+                    }, 100);
                 }
                 , error: function(err) {
                     console.log(err);

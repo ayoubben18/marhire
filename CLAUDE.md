@@ -84,3 +84,4 @@ Remember: Always check `.ab-method/structure/index.yaml` first to see where file
 NEVER FUCKING RESTORE THE FILE STATUS USING GIT JUST REMOVE WHAT YOU WANT TO REMOVE AND NEVER DO THAT UNLESS I TELL YOU TO BECAUSE THERE MIGHT BE SOME IMPORTANT CHANGES AND YOU WILL DELETE THEM YOU FUCKING IDIOT
 
 - remember that the category id for car is 2, 3 for private driver, 4 boat rental, 5 things to do
+- Database column: droppoff_location (has a typo but we can't change it without a migration) so we are not changing it at all just use it as it is

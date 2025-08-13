@@ -1070,9 +1070,9 @@ const BookingDetailsStep = ({
                                 );
                             })()}
                         </RadioGroup>
-                        {errors.service_type && (
+                        {(errors.service_type || errors.serviceTypes) && (
                             <p className="text-red-500 text-sm mt-1">
-                                {errors.service_type[0]}
+                                {errors.service_type?.[0] || errors.serviceTypes}
                             </p>
                         )}
                     </div>
@@ -1097,9 +1097,9 @@ const BookingDetailsStep = ({
                                 label="Round Trip"
                             />
                         </RadioGroup>
-                        {errors.road_type && (
+                        {(errors.road_type || errors.roadTypes) && (
                             <p className="text-red-500 text-sm mt-1">
-                                {errors.road_type[0]}
+                                {errors.road_type?.[0] || errors.roadTypes}
                             </p>
                         )}
                     </div>
@@ -1228,9 +1228,9 @@ const BookingDetailsStep = ({
                                             return cityOptions;
                                         })()}
                                     </Select>
-                                    {errors.dropoff_city && (
+                                    {(errors.dropoff_city || errors.dropoffCity) && (
                                         <p className="text-red-500 text-sm mt-1">
-                                            {errors.dropoff_city[0]}
+                                            {errors.dropoff_city?.[0] || errors.dropoffCity}
                                         </p>
                                     )}
                                 </div>
@@ -1367,9 +1367,9 @@ const BookingDetailsStep = ({
                                                   </MenuItem>
                                               ))}
                                     </Select>
-                                    {errors.dropoff_city && (
+                                    {(errors.dropoff_city || errors.dropoffCity) && (
                                         <p className="text-red-500 text-sm mt-1">
-                                            {errors.dropoff_city[0]}
+                                            {errors.dropoff_city?.[0] || errors.dropoffCity}
                                         </p>
                                     )}
                                 </div>
@@ -1409,8 +1409,8 @@ const BookingDetailsStep = ({
                             required={true}
                             min={1}
                             max={50}
-                            error={errors.number_of_passengers?.[0]}
-                            helperText="Max allowed: 50"
+                            error={!!errors.number_of_passengers?.[0] || !!errors.numberOfPassengers}
+                            helperText={errors.number_of_passengers?.[0] || errors.numberOfPassengers || "Max allowed: 50"}
                         />
                         <NumberInput
                             value={numberOfLuggage}
@@ -1422,8 +1422,8 @@ const BookingDetailsStep = ({
                             required={false}
                             min={0}
                             max={20}
-                            error={errors.number_of_luggage?.[0]}
-                            helperText="Max allowed: 20"
+                            error={!!errors.number_of_luggage?.[0] || !!errors.numberOfLuggage}
+                            helperText={errors.number_of_luggage?.[0] || errors.numberOfLuggage || "Max allowed: 20"}
                         />
                     </div>
 

@@ -6,6 +6,8 @@ use App\Models\Listing;
 use App\Models\ListingAddon;
 use App\Models\CustomBookingOption;
 use App\Models\DriverPricing;
+use App\Models\PrivateListingPricing;
+use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -60,7 +62,20 @@ class BookingValidationService
             'countryOfResidence' => 'country',
             'termsAccepted' => 'terms_accepted',
             'flightNumber' => 'flight_number',
-            'additionalNotes' => 'additional_notes'
+            'additionalNotes' => 'additional_notes',
+            'serviceTypes' => 'service_types',
+            'roadTypes' => 'road_types',
+            'numberOfPeople' => 'number_of_people',
+            'numberOfPassengers' => 'number_of_passengers',
+            'numberOfLuggage' => 'number_of_luggage',
+            'preferredDate' => 'prefered_date',
+            'pickupTime' => 'pickup_time',
+            'dropoffTime' => 'dropoff_time',
+            'pickupLocation' => 'pickup_location',
+            'dropoffLocation' => 'dropoff_location',
+            'selectedAddons' => 'addons',
+            'pickupCity' => 'pickup_city',
+            'dropoffCity' => 'dropoff_city'
         ];
         
         // Check if we have the old field names and map them
@@ -269,7 +284,7 @@ class BookingValidationService
         $priceRequest->merge($request->all());
         
         // Ensure we have the correct listing relationship loaded
-        $listing->load(['customBookingOptions', 'driverPricings', 'addons.addon', 'city']);
+        $listing->load(['customBookingOptions', 'pricings', 'addons.addon', 'city']);
         
         $priceCalculation = $controller->calculateAdvancedPrice($listing, $priceRequest);
         
@@ -366,28 +381,63 @@ class BookingValidationService
      */
     private function validatePrivateDriver(Request $request): void
     {
+        // Handle field mappings for private driver
+        $data = $request->all();
+        
+        // Map service_types and road_types from frontend
+        if (isset($data['serviceTypes']) && !isset($data['service_types'])) {
+            $data['service_types'] = $data['serviceTypes'];
+        }
+        if (isset($data['roadTypes']) && !isset($data['road_types'])) {
+            $data['road_types'] = $data['roadTypes'];
+        }
+        
+        // Ensure arrays are properly formatted
+        if (isset($data['service_types']) && !is_array($data['service_types'])) {
+            $data['service_types'] = [$data['service_types']];
+        }
+        if (isset($data['road_types']) && !is_array($data['road_types'])) {
+            $data['road_types'] = [$data['road_types']];
+        }
+        
+        $request->merge($data);
+        
         // Use Morocco timezone for validation
         $moroccoNow = now()->setTimezone('Africa/Casablanca');
         $minAdvanceHours = $this->getMinAdvanceHours(3);
         $minDateTime = $moroccoNow->copy()->addHours($minAdvanceHours);
         
+        // Determine which fields are required based on service type
+        $serviceTypes = $request->input('service_types', []);
+        $hasAirportTransfer = in_array('airport_transfer', $serviceTypes);
+        $hasIntercity = in_array('intercity', $serviceTypes);
+        
         $rules = [
-            'car_type' => 'required|integer',
-            'service_type' => 'required|array|min:1',
-            'service_type.*' => 'in:airport_transfer,intercity',
-            'road_type' => 'required|array|min:1',
-            'road_type.*' => 'in:one_way,road_trip',
-            'city_a_id' => 'required|exists:cities,id',
-            'city_b_id' => 'nullable|required_if:service_type.*,intercity|exists:cities,id',
-            'pickup_airport' => 'required_if:service_type.*,airport_transfer|string|max:255',
-            'dropoff_hotel' => 'required_if:service_type.*,airport_transfer|string|max:255',
-            'pickup_city' => 'required_if:service_type.*,intercity|exists:cities,id',
-            'dropoff_city' => 'required_if:service_type.*,intercity|exists:cities,id',
+            // car_type not collected from form, make it optional
+            'car_type' => 'nullable|integer',
+            'service_types' => 'required|array|min:1',
+            'service_types.*' => 'in:airport_transfer,intercity',
+            'road_types' => 'required|array|min:1',
+            'road_types.*' => 'in:one_way,round_trip',
+            'pickup_city' => 'required|exists:cities,id',
             'prefered_date' => ['required', 'date'],
             'pickup_time' => 'required|date_format:H:i',
             'number_of_passengers' => 'required|integer|min:1',
             'number_of_luggage' => 'required|integer|min:0'
         ];
+        
+        // Add conditional rules based on service type
+        if ($hasAirportTransfer) {
+            $rules['address'] = 'required|string|max:500';
+            // For airport transfers to other cities, we also need dropoff_city
+            if ($hasIntercity || $request->has('dropoff_city')) {
+                $rules['dropoff_city'] = 'required|exists:cities,id';
+            }
+        }
+        
+        if ($hasIntercity) {
+            $rules['dropoff_city'] = 'required|exists:cities,id';
+        }
         
         $validator = Validator::make($request->all(), $rules);
         
@@ -414,63 +464,64 @@ class BookingValidationService
             ]);
         }
         
-        // Check pricing exists for selected route combination
-        if (in_array('intercity', $request->service_type)) {
-            $serviceType = $request->service_type[0]; // Get first element since it's an array
-            $roadType = $request->road_type[0]; // Get first element since it's an array
-            
-            $pricing = $listing->driverPricings()
-                ->where('service_type', 'intercity')
-                ->where('road_type', $roadType)
-                ->where('city_a_id', $request->city_a_id)
-                ->where('city_b_id', $request->city_b_id)
-                ->first();
-                
-            if (!$pricing) {
-                // For now, let's skip this validation as pricing data might not be seeded
-                // In production, this should throw an error
-                \Log::warning('No driver pricing found for route', [
-                    'listing_id' => $listing->id,
-                    'service_type' => 'intercity',
-                    'road_type' => $roadType,
-                    'city_a_id' => $request->city_a_id,
-                    'city_b_id' => $request->city_b_id
-                ]);
-                // Comment out the error for now
-                /*
-                throw ValidationException::withMessages([
-                    'city_b_id' => ['No pricing available for the selected route.']
-                ]);
-                */
-            }
-        }
+        // Check pricing exists using the new private_listing_pricings table
+        $serviceTypes = $request->input('service_types', []);
+        $roadTypes = $request->input('road_types', []);
         
-        if (in_array('airport_transfer', $request->service_type)) {
-            $serviceType = $request->service_type[0]; // Get first element since it's an array
-            $roadType = $request->road_type[0]; // Get first element since it's an array
+        if (!empty($serviceTypes) && !empty($roadTypes)) {
+            $isRoundTrip = in_array('round_trip', $roadTypes);
+            $hasAirportTransfer = in_array('airport_transfer', $serviceTypes);
+            $hasIntercity = in_array('intercity', $serviceTypes);
             
-            $pricing = $listing->driverPricings()
-                ->where('service_type', 'airport_transfer')
-                ->where('road_type', $roadType)
-                ->where('city_a_id', $request->city_a_id)
-                ->whereNull('city_b_id')
-                ->first();
+            // Use the pricings relationship (not driverPricings)
+            $pricingQuery = $listing->pricings();
+            
+            // For airport transfers within same city
+            if ($hasAirportTransfer && !$request->has('dropoff_city')) {
+                $pricing = $pricingQuery->where('city_id', $request->pickup_city)->first();
                 
-            if (!$pricing) {
-                // For now, let's skip this validation as pricing data might not be seeded
-                // In production, this should throw an error
-                \Log::warning('No driver pricing found for airport transfer', [
-                    'listing_id' => $listing->id,
-                    'service_type' => 'airport_transfer',
-                    'road_type' => $roadType,
-                    'city_a_id' => $request->city_a_id
-                ]);
-                // Comment out the error for now
-                /*
-                throw ValidationException::withMessages([
-                    'city_a_id' => ['No airport transfer pricing available for the selected city.']
-                ]);
-                */
+                if ($pricing) {
+                    // Check if the appropriate price column has a value
+                    $priceColumn = $isRoundTrip ? 'airport_round' : 'airport_one';
+                    if ($pricing->$priceColumn <= 0) {
+                        \Log::warning('No price set for airport transfer', [
+                            'listing_id' => $listing->id,
+                            'city_id' => $request->pickup_city,
+                            'price_column' => $priceColumn
+                        ]);
+                    }
+                } else {
+                    \Log::warning('No pricing record found for airport transfer', [
+                        'listing_id' => $listing->id,
+                        'city_id' => $request->pickup_city
+                    ]);
+                }
+            }
+            
+            // For intercity or airport transfers to other cities
+            if ($hasIntercity || ($hasAirportTransfer && $request->has('dropoff_city'))) {
+                // For intercity, we check the pricing for pickup city
+                // The logic is that intercity prices might be stored per origin city
+                $pricing = $pricingQuery->where('city_id', $request->pickup_city)->first();
+                
+                if ($pricing) {
+                    // For airport to other city, might use intercity prices
+                    $priceColumn = $isRoundTrip ? 'intercity_round' : 'intercity_one';
+                    if ($pricing->$priceColumn <= 0) {
+                        \Log::warning('No price set for intercity/airport transfer to other city', [
+                            'listing_id' => $listing->id,
+                            'pickup_city' => $request->pickup_city,
+                            'dropoff_city' => $request->dropoff_city ?? null,
+                            'price_column' => $priceColumn
+                        ]);
+                    }
+                } else {
+                    \Log::warning('No pricing record found for intercity', [
+                        'listing_id' => $listing->id,
+                        'pickup_city' => $request->pickup_city,
+                        'dropoff_city' => $request->dropoff_city ?? null
+                    ]);
+                }
             }
         }
     }
@@ -561,7 +612,7 @@ class BookingValidationService
             'time_preference' => 'required|in:morning,afternoon,evening,night',
             'duration_option_id' => 'nullable|integer',
             'number_of_people' => 'required|integer|min:1',
-            'activity_type' => 'required|integer'
+            'activity_type' => 'nullable|integer'  // Not collected from users, make it optional
         ];
         
         $validator = Validator::make($request->all(), $rules);

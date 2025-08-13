@@ -294,6 +294,8 @@ class BookingController extends Controller
             'email' => $request->email,
             'whatsapp' => $request->whatsapp,
             'country' => $request->country,
+            'date_of_birth' => $request->date_of_birth,
+            'flight_number' => $request->flight_number,
             'notes' => $request->notes,
             'booking_price' => $request->booking_price ?? 0,
             'total_addons' => $request->total_addons ?? 0,
@@ -306,14 +308,12 @@ class BookingController extends Controller
         switch ((int) $request->category_id) {
             case 2:
                 $bookingFields += [
-                    'age' => $request->age,
-                    'flight_number' => $request->flight_number,
                     'pickup_date' => $request->pickup_date,
                     'dropoff_date' => $request->dropoff_date,
                     'pickup_time' => $request->pickup_time,
                     'dropoff_time' => $request->dropoff_time,
                     'pickup_location' => $request->pickup_location,
-                    'dropoff_location' => $request->dropoff_location
+                    'droppoff_location' => $request->dropoff_location  // Database column has typo: droppoff_location
                 ];
                 break;
 
@@ -321,10 +321,17 @@ class BookingController extends Controller
                 $bookingFields += [
                     'car_type' => $request->car_type,
                     'airport_or_intercity' => $request->airport_or_intercity,
+                    'service_types' => $request->service_types,
+                    'road_types' => $request->road_types,
                     'city_a_id' => $request->city_a_id,
                     'city_b_id' => $request->city_b_id,
                     'prefered_date' => $request->prefered_date,
-                    'number_of_people' => $request->number_of_people
+                    'pickup_time' => $request->pickup_time,
+                    'number_of_people' => $request->number_of_people,
+                    'number_of_passengers' => $request->number_of_passengers,
+                    'number_of_luggage' => $request->number_of_luggage,
+                    'pickup_address' => $request->pickup_address,
+                    'dropoff_address' => $request->dropoff_address
                 ];
                 break;
 
@@ -333,7 +340,8 @@ class BookingController extends Controller
                     'duration' => $request->duration,
                     'propose' => $request->propose,
                     'prefered_date' => $request->prefered_date,
-                    'number_of_people' => $request->number_of_people
+                    'number_of_people' => $request->number_of_people,
+                    'pickup_time' => $request->pickup_time
                 ];
                 break;
 
@@ -341,7 +349,9 @@ class BookingController extends Controller
                 $bookingFields += [
                     'prefered_date' => $request->prefered_date,
                     'pricing_option_id' => $request->pricing_option_id,
-                    'number_of_people' => $request->number_of_people
+                    'number_of_people' => $request->number_of_people,
+                    'time_preference' => $request->time_preference,
+                    'activity_type' => $request->activity_type
                 ];
                 break;
         }
@@ -656,54 +666,65 @@ class BookingController extends Controller
         $categoryId = (int) $request->category_id;
         $fields = [];
         
-        // Calculate age from dateOfBirth for backward compatibility
-        $dateOfBirth = $request->dateOfBirth ? \Carbon\Carbon::parse($request->dateOfBirth) : null;
-        $age = $dateOfBirth ? $dateOfBirth->age : null;
-        
         switch ($categoryId) {
             case 2: // Car rental
                 $fields = [
-                    'age' => $age,
-                    'flight_number' => $request->flightNumber ?? null,
-                    'pickup_date' => $request->pickup_date,
-                    'dropoff_date' => $request->dropoff_date,
-                    'pickup_time' => $request->pickup_time,
-                    'dropoff_time' => $request->dropoff_time,
-                    'pickup_location' => $request->pickup_location,
-                    'dropoff_location' => $request->dropoff_location
+                    'pickup_date' => $request->pickupDate ?? $request->pickup_date,
+                    'dropoff_date' => $request->dropoffDate ?? $request->dropoff_date,
+                    'pickup_time' => $request->pickupTime ?? $request->pickup_time,
+                    'dropoff_time' => $request->dropoffTime ?? $request->dropoff_time,
+                    'pickup_location' => $request->pickupLocation ?? $request->pickup_location,
+                    'droppoff_location' => $request->dropoffLocation ?? $request->dropoff_location  // Database column has typo
                 ];
                 break;
                 
             case 3: // Private driver
+                // Handle both new and old field names
+                $serviceTypes = $request->serviceTypes ?? $request->service_types ?? $request->service_type ?? [];
+                $roadTypes = $request->roadTypes ?? $request->road_types ?? $request->road_type ?? [];
+                $pickupCity = $request->pickupCity ?? $request->pickup_city ?? $request->city_a_id;
+                $dropoffCity = $request->dropoffCity ?? $request->dropoff_city ?? $request->city_b_id;
+                
+                // Store service types and road types as comma-separated strings
+                $serviceTypeStr = is_array($serviceTypes) ? implode(',', $serviceTypes) : $serviceTypes;
+                $roadTypeStr = is_array($roadTypes) ? implode(',', $roadTypes) : $roadTypes;
+                
                 $fields = [
-                    'car_type' => $request->car_type,
-                    'airport_or_intercity' => is_array($request->service_type) ? implode(',', $request->service_type) : $request->service_type,
-                    'city_a_id' => $request->city_a_id,
-                    'city_b_id' => $request->city_b_id,
-                    'prefered_date' => $request->prefered_date,
-                    'number_of_people' => $request->number_of_people,
-                    'notes' => (isset($request->road_type) ? 'Road type: ' . (is_array($request->road_type) ? implode(',', $request->road_type) : $request->road_type) : '') .
-                              (isset($request->number_of_luggage) ? ' Luggage: ' . $request->number_of_luggage : '')
+                    // car_type not collected from users, leave as null
+                    'car_type' => null,
+                    'airport_or_intercity' => $serviceTypeStr,
+                    'service_types' => $serviceTypeStr,
+                    'road_types' => $roadTypeStr,
+                    'city_a_id' => $pickupCity,
+                    'city_b_id' => $dropoffCity,
+                    'prefered_date' => $request->preferredDate ?? $request->prefered_date,
+                    'pickup_time' => $request->pickupTime ?? $request->pickup_time ?? null,
+                    'number_of_people' => $request->numberOfPassengers ?? $request->numberOfPeople ?? $request->number_of_passengers ?? $request->number_of_people ?? 1,
+                    'number_of_passengers' => $request->numberOfPassengers ?? $request->number_of_passengers ?? 1,
+                    'number_of_luggage' => $request->numberOfLuggage ?? $request->number_of_luggage ?? 0,
+                    'pickup_address' => $request->address ?? $request->pickupAirport ?? $request->pickup_airport ?? null,
+                    'dropoff_address' => $request->dropoffHotel ?? $request->dropoff_hotel ?? null
                 ];
                 break;
                 
             case 4: // Boat rental
                 $fields = [
-                    'duration' => $request->duration,
-                    'propose' => $request->propose,
-                    'prefered_date' => $request->prefered_date,
-                    'number_of_people' => $request->number_of_people,
-                    'pickup_time' => $request->pickup_time ?? null
+                    'duration' => $request->boatDuration ?? $request->duration,
+                    'propose' => null, // Not collected in form, leave as null
+                    'prefered_date' => $request->preferredDate ?? $request->prefered_date,
+                    'number_of_people' => $request->numberOfPeople ?? $request->number_of_people,
+                    'pickup_time' => $request->boatPickupTime ?? $request->pickupTime ?? $request->pickup_time ?? null
                 ];
                 break;
                 
-            case 5: // Activity
+            case 5: // Activity/Things to Do
                 $fields = [
-                    'prefered_date' => $request->prefered_date,
-                    'pricing_option_id' => $request->pricing_option_id ?? 0,
-                    'number_of_people' => $request->number_of_people,
-                    'activity_type' => $request->activity_type,
-                    'pickup_time' => $request->pickup_time ?? null
+                    'prefered_date' => $request->preferredDate ?? $request->prefered_date,
+                    'pricing_option_id' => $request->selectedDurationOption ?? $request->pricing_option_id ?? $request->duration_option_id ?? null,
+                    'number_of_people' => $request->numberOfPeople ?? $request->number_of_people,
+                    'activity_type' => null, // Not collected in form, leave as null
+                    'time_preference' => $request->timePreference ?? $request->time_preference ?? null,
+                    'pickup_time' => null // Not needed, we have time_preference
                 ];
                 break;
         }
@@ -1379,60 +1400,126 @@ class BookingController extends Controller
      */
     private function calculatePrivateDriverPrice(Listing $listing, Request $request): array
     {
-        // Build query based on selected options
-        $query = DriverPricing::where('listing_id', $listing->id);
-
-        // Handle service type
-        if (count($request->service_type) === 1) {
-            $query->where('service_type', $request->service_type[0]);
-        } else {
-            $query->whereIn('service_type', $request->service_type);
+        // Handle field mappings
+        $serviceTypes = $request->input('service_types', $request->input('service_type', []));
+        $roadTypes = $request->input('road_types', $request->input('road_type', []));
+        $pickupCity = $request->input('pickup_city', $request->input('city_a_id'));
+        $dropoffCity = $request->input('dropoff_city', $request->input('city_b_id'));
+        
+        // Ensure arrays
+        if (!is_array($serviceTypes)) {
+            $serviceTypes = [$serviceTypes];
         }
-
-        // Handle road type
-        if (count($request->road_type) === 1) {
-            $query->where('road_type', $request->road_type[0]);
-        } else {
-            $query->whereIn('road_type', $request->road_type);
+        if (!is_array($roadTypes)) {
+            $roadTypes = [$roadTypes];
         }
-
-        $query->where('city_a_id', $request->city_a_id);
-
-        // Handle city_b based on service type
-        if (in_array('airport_transfer', $request->service_type) && count($request->service_type) === 1) {
-            $query->whereNull('city_b_id');
-        } else if ($request->city_b_id) {
-            $query->where('city_b_id', $request->city_b_id);
+        
+        // Determine service and road type
+        $isAirportTransfer = in_array('airport_transfer', $serviceTypes);
+        $isIntercity = in_array('intercity', $serviceTypes);
+        $isRoundTrip = in_array('round_trip', $roadTypes) || in_array('road_trip', $roadTypes);
+        
+        // Get pricing from private_listing_pricings table using pricings relationship
+        // For airport transfers to different cities, use the dropoff city pricing
+        // For intercity routes or same-city airport transfers, use the pickup city pricing
+        $cityForPricing = $pickupCity;
+        if ($isAirportTransfer && $dropoffCity && $dropoffCity != $pickupCity) {
+            $cityForPricing = $dropoffCity;
         }
-
-        $pricing = $query->first();
-
+        
+        $pricing = $listing->pricings()
+            ->where('city_id', $cityForPricing)
+            ->first();
+            
         if (!$pricing) {
+            // Fallback to old driver_pricings table if exists
+            $oldPricing = DriverPricing::where('listing_id', $listing->id)
+                ->where('city_a_id', $pickupCity);
+                
+            if ($isIntercity && $dropoffCity) {
+                $oldPricing->where('city_b_id', $dropoffCity);
+            } else if ($isAirportTransfer) {
+                $oldPricing->whereNull('city_b_id');
+            }
+            
+            $oldPricing = $oldPricing->first();
+            
+            if ($oldPricing) {
+                return [
+                    'base_price' => $oldPricing->price,
+                    'pricing_details' => [
+                        'driver' => [
+                            'service' => implode(', ', $serviceTypes),
+                            'road' => implode(', ', $roadTypes),
+                            'route' => $this->buildRouteDescription($pickupCity, $dropoffCity, $isAirportTransfer)
+                        ]
+                    ],
+                    'notifications' => []
+                ];
+            }
+            
             throw new \Exception('Route pricing not available for the selected options');
         }
-
-        // Build route description
-        $routeDesc = '';
-        if (in_array('airport_transfer', $request->service_type)) {
-            $cityA = City::find($request->city_a_id);
-            $routeDesc = 'Airport → ' . ($cityA ? $cityA->city_name : 'City');
-        } else {
-            $cityA = City::find($request->city_a_id);
-            $cityB = City::find($request->city_b_id);
-            $routeDesc = ($cityA ? $cityA->city_name : 'City A') . ' → ' . ($cityB ? $cityB->city_name : 'City B');
+        
+        // Determine which price column to use
+        $price = 0;
+        
+        if ($isAirportTransfer && !$dropoffCity) {
+            // Airport transfer within same city
+            $price = $isRoundTrip ? $pricing->airport_round : $pricing->airport_one;
+        } else if ($isIntercity || ($isAirportTransfer && $dropoffCity && $dropoffCity != $pickupCity)) {
+            // Intercity or airport transfer to different city
+            $price = $isRoundTrip ? $pricing->intercity_round : $pricing->intercity_one;
+        } else if ($isAirportTransfer && $dropoffCity == $pickupCity) {
+            // Airport transfer within same city (when dropoff_city is explicitly set)
+            $price = $isRoundTrip ? $pricing->airport_round : $pricing->airport_one;
+        }
+        
+        if ($price <= 0) {
+            // Try to find a fallback price or use default
+            \Log::warning('No price found in pricing table', [
+                'listing_id' => $listing->id,
+                'pickup_city' => $pickupCity,
+                'dropoff_city' => $dropoffCity,
+                'service_types' => $serviceTypes,
+                'road_types' => $roadTypes
+            ]);
+            
+            // Use a default price or throw exception
+            throw new \Exception('Price not configured for the selected route and options');
         }
 
         return [
-            'base_price' => $pricing->price,
+            'base_price' => $price,
             'pricing_details' => [
                 'driver' => [
-                    'service' => implode(', ', $request->service_type),
-                    'road' => implode(', ', $request->road_type),
-                    'route' => $routeDesc
+                    'service' => implode(', ', $serviceTypes),
+                    'road' => implode(', ', $roadTypes),
+                    'route' => $this->buildRouteDescription($pickupCity, $dropoffCity, $isAirportTransfer)
                 ]
             ],
             'notifications' => []
         ];
+    }
+    
+    /**
+     * Build route description for private driver
+     */
+    private function buildRouteDescription($pickupCityId, $dropoffCityId, $isAirportTransfer): string
+    {
+        if ($isAirportTransfer && !$dropoffCityId) {
+            $city = City::find($pickupCityId);
+            return 'Airport → ' . ($city ? $city->city_name : 'City');
+        } else {
+            $pickupCity = City::find($pickupCityId);
+            $dropoffCity = $dropoffCityId ? City::find($dropoffCityId) : null;
+            
+            if ($dropoffCity) {
+                return ($pickupCity ? $pickupCity->city_name : 'City A') . ' → ' . ($dropoffCity->city_name ?? 'City B');
+            } else {
+                return ($pickupCity ? $pickupCity->city_name : 'City');
+            }
+        }
     }
 
     /**

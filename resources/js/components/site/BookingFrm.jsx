@@ -233,8 +233,22 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
             case 3: // Private Driver
                 if (!startDate) newErrors.startDate = t('booking.errors.selectDate');
                 if (!pickupTime) newErrors.pickupTime = t('booking.errors.selectTime');
-                if (!cityAId) newErrors.cityA = t('booking.errors.selectPickupCity');
-                if (!cityBId) newErrors.cityB = t('booking.errors.selectDestinationCity');
+                if (!serviceTypes || serviceTypes.length === 0) newErrors.serviceTypes = t('booking.errors.selectServiceType', 'Please select service type');
+                if (!roadTypes || roadTypes.length === 0) newErrors.roadTypes = t('booking.errors.selectRoadType', 'Please select road type');
+                
+                // For airport transfer, pickup city is automatic (listing city)
+                // For intercity, we need both cities
+                if (serviceTypes && serviceTypes.includes('intercity')) {
+                    if (!pickupCity) newErrors.pickupCity = t('booking.errors.selectPickupCity');
+                    if (!dropoffCity) newErrors.dropoffCity = t('booking.errors.selectDestinationCity');
+                } else if (serviceTypes && serviceTypes.includes('airport_transfer')) {
+                    // For airport transfer to other cities, we need dropoff city
+                    // For same city, it's optional
+                    // We can make this validation more flexible
+                }
+                
+                if (!numberOfPassengers || numberOfPassengers < 1) newErrors.numberOfPassengers = t('booking.errors.numberOfPassengersRequired', 'Number of passengers is required');
+                if (numberOfLuggage === undefined || numberOfLuggage === null || numberOfLuggage < 0) newErrors.numberOfLuggage = t('booking.errors.numberOfLuggageRequired', 'Number of luggage is required');
                 break;
                 
             case 4: // Boat Rental
@@ -257,7 +271,8 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         setErrors(prev => {
             const cleaned = { ...prev };
             ['startDate', 'endDate', 'pickupLocation', 'dropoffLocation', 'pickupTime', 
-             'cityA', 'cityB', 'boatPickupTime', 'timePreference'].forEach(key => delete cleaned[key]);
+             'cityA', 'cityB', 'pickupCity', 'dropoffCity', 'serviceTypes', 'roadTypes',
+             'numberOfPassengers', 'numberOfLuggage', 'boatPickupTime', 'timePreference'].forEach(key => delete cleaned[key]);
             return cleaned;
         });
         
@@ -299,8 +314,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
     // Handle step navigation
     const handleNext = () => {
         if (currentStep === 0) {
-            // Validate step 1 but navigate anyway
-            validateStep1();
+            // Don't validate, just navigate to next step
             setCurrentStep(1);
             
             // Scroll to top of form on mobile devices
@@ -328,10 +342,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         }
         // Navigate to step 1 (Your Information)
         else if (stepIndex === 1) {
-            if (currentStep === 0) {
-                // Validate step 1 but navigate anyway
-                validateStep1();
-            }
+            // Don't validate, just navigate
             setCurrentStep(1);
             scrollToFormTop();
         }
@@ -538,6 +549,23 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         const step1Valid = validateStep1();
         const step2Valid = validateStep2();
         
+        // Debug log for private driver
+        if (numericCategoryId === 3) {
+            console.log('Private Driver Validation Debug:', {
+                step1Valid,
+                step2Valid,
+                startDate,
+                pickupTime,
+                serviceTypes,
+                roadTypes,
+                pickupCity,
+                dropoffCity,
+                numberOfPassengers,
+                numberOfLuggage,
+                errors
+            });
+        }
+        
         // If validation fails, scroll to the first error
         if (!step1Valid || !step2Valid) {
             // If step 1 has errors and we're on step 2, go back to step 1
@@ -615,23 +643,48 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                 case 3: // Private driver
                     formData.dateOfBirth = dateOfBirth;
                     formData.prefered_date = startDate;
+                    formData.preferredDate = startDate; // Add both formats
                     formData.pickup_time = pickupTime;
-                    formData.service_type = serviceTypes; // Fixed: service_types -> service_type
-                    formData.road_type = roadTypes; // Fixed: road_types -> road_type
+                    formData.pickupTime = pickupTime; // Add camelCase version
+                    formData.service_type = serviceTypes;
+                    formData.service_types = serviceTypes; // Add plural version
+                    formData.serviceTypes = serviceTypes; // Add camelCase version
+                    
+                    // Fix road_types value - backend expects 'round_trip' not 'road_trip'
+                    const mappedRoadTypes = roadTypes.map(type => 
+                        type === 'road_trip' ? 'round_trip' : type
+                    );
+                    formData.road_type = mappedRoadTypes;
+                    formData.road_types = mappedRoadTypes; // Add plural version with correct values
+                    formData.roadTypes = roadTypes; // Keep original for frontend compatibility
+                    
                     formData.number_of_passengers = numberOfPassengers;
+                    formData.numberOfPassengers = numberOfPassengers; // Add camelCase version
                     formData.number_of_luggage = numberOfLuggage;
+                    formData.numberOfLuggage = numberOfLuggage; // Add camelCase version
+                    
+                    // Always set pickup_city (required by backend)
+                    formData.pickup_city = pickupCity || listing?.city_id || 1;
+                    formData.pickupCity = pickupCity || listing?.city_id || 1; // CamelCase version
+                    
                     // Add conditional fields
-                    if (serviceTypes.includes('airport_transfer')) {
-                        formData.pickup_airport = pickupAirport;
-                        formData.dropoff_hotel = dropoffHotel;
+                    if (serviceTypes && serviceTypes.includes('airport_transfer')) {
+                        formData.pickup_airport = pickupAirport || '';
+                        formData.dropoff_hotel = dropoffHotel || '';
+                        formData.address = dropoffHotel || pickupAirport || ''; // Backend expects 'address' field
+                        formData.dropoff_city = dropoffCity; // Add dropoff city for airport transfers too
+                        formData.dropoffCity = dropoffCity; // CamelCase version
                     }
-                    if (serviceTypes.includes('intercity')) {
-                        formData.pickup_city = pickupCity;
+                    if (serviceTypes && serviceTypes.includes('intercity')) {
+                        formData.pickup_city = pickupCity || listing?.city_id || 1;
+                        formData.pickupCity = pickupCity || listing?.city_id || 1; // CamelCase version
                         formData.dropoff_city = dropoffCity;
+                        formData.dropoffCity = dropoffCity; // CamelCase version
+                        formData.address = ''; // Intercity doesn't need address
                     }
                     // Legacy compatibility
                     formData.number_of_people = numberOfPassengers;
-                    formData.car_type = 1; // Standard car type ID
+                    // Don't send car_type - it's not collected from the user
                     formData.airport_or_intercity = serviceTypes.includes('airport_transfer') ? 'airport' : 'intercity';
                     // Always use listing's city as the starting point
                     formData.city_a_id = listing?.city_id || 1;
@@ -652,8 +705,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     const durationValue = parseFloat(boatDuration.replace('h', '').replace('min', ''));
                     formData.duration = boatDuration.includes('min') ? durationValue / 60 : durationValue;
                     formData.number_of_people = numberOfPeople;
-                    // Legacy compatibility
-                    formData.propose = purpose || 'Leisure';
+                    // Don't send hardcoded values - only what user provides
                     break;
                     
                 case 5: // Activity
@@ -663,8 +715,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     formData.duration_option_id = selectedDurationOption;
                     formData.custom_booking_option_id = selectedDurationOption; // Backend expects this field
                     formData.number_of_people = numberOfPeople;
-                    // Legacy compatibility
-                    formData.activity_type = 1; // Default activity type ID
+                    // Don't send hardcoded values - only what user provides
                     if (selectedDurationOption) {
                         formData.pricing_option_id = selectedDurationOption;
                     }
@@ -735,11 +786,15 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                 // Handle validation errors
                 console.log('Validation errors:', error.response.data.errors);
                 setErrors(error.response.data.errors || {});
+                // Scroll to top to show API validation errors
+                scrollToFormTop();
             } else {
                 // Handle other errors
                 setErrors({
                     general: error.response?.data?.message || t('booking.errors.processingError')
                 });
+                // Scroll to top to show error
+                scrollToFormTop();
             }
         } finally {
             setIsSubmitting(false);
@@ -1080,61 +1135,21 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     </Alert>
                 )}
                 
-                {/* Validation errors display */}
+                {/* API Validation Errors Display */}
                 {Object.keys(errors).length > 0 && !errors.general && (
                     <Alert severity="error" className="mb-4">
-                        <div className="font-semibold mb-2">{t('booking.errors.fixErrors')}:</div>
-                        <ul className="list-disc list-inside space-y-1">
-                            {errors.age && errors.age.map((error, idx) => (
-                                <li key={`age-${idx}`}>Age: {error}</li>
-                            ))}
-                            {errors.date_of_birth && errors.date_of_birth.map((error, idx) => (
-                                <li key={`dob-${idx}`}>Date of Birth: {error}</li>
-                            ))}
-                            {errors.dateOfBirth && errors.dateOfBirth.map((error, idx) => (
-                                <li key={`dateOfBirth-${idx}`}>Date of Birth: {error}</li>
-                            ))}
-                            {errors.terms_accepted && errors.terms_accepted.map((error, idx) => (
-                                <li key={`terms-${idx}`}>Terms: {error}</li>
-                            ))}
-                            {errors.termsAccepted && errors.termsAccepted.map((error, idx) => (
-                                <li key={`termsAccepted-${idx}`}>Terms: {error}</li>
-                            ))}
-                            {errors.fullName && errors.fullName.map((error, idx) => (
-                                <li key={`name-${idx}`}>Full Name: {error}</li>
-                            ))}
-                            {errors.email && errors.email.map((error, idx) => (
-                                <li key={`email-${idx}`}>Email: {error}</li>
-                            ))}
-                            {errors.whatsAppNumber && errors.whatsAppNumber.map((error, idx) => (
-                                <li key={`whatsapp-${idx}`}>WhatsApp: {error}</li>
-                            ))}
-                            {errors.whatsapp && errors.whatsapp.map((error, idx) => (
-                                <li key={`whatsapp2-${idx}`}>WhatsApp: {error}</li>
-                            ))}
-                            {errors.pickup_date && errors.pickup_date.map((error, idx) => (
-                                <li key={`pickup-${idx}`}>Pickup Date: {error}</li>
-                            ))}
-                            {errors.pickup_time && errors.pickup_time.map((error, idx) => (
-                                <li key={`pickuptime-${idx}`}>Pickup Time: {error}</li>
-                            ))}
-                            {errors.dropoff_date && errors.dropoff_date.map((error, idx) => (
-                                <li key={`dropoff-${idx}`}>Dropoff Date: {error}</li>
-                            ))}
-                            {errors.prefered_date && errors.prefered_date.map((error, idx) => (
-                                <li key={`prefdate-${idx}`}>Preferred Date: {error}</li>
-                            ))}
-                            {/* Add any other fields that might have errors */}
-                            {Object.keys(errors).filter(key => 
-                                !['general', 'age', 'date_of_birth', 'dateOfBirth', 'terms_accepted', 
-                                 'termsAccepted', 'fullName', 'email', 'whatsAppNumber', 'whatsapp',
-                                 'pickup_date', 'pickup_time', 'dropoff_date', 'prefered_date'].includes(key)
-                            ).map(key => (
-                                errors[key] && Array.isArray(errors[key]) && errors[key].map((error, idx) => (
-                                    <li key={`${key}-${idx}`}>{key.replace(/_/g, ' ')}: {error}</li>
-                                ))
-                            ))}
-                        </ul>
+                        <div>
+                            <strong>{t('booking.errors.validationTitle', 'Please fix the following errors:')}</strong>
+                            <ul className="mt-2 list-disc list-inside">
+                                {Object.entries(errors).map(([field, messages]) => {
+                                    if (field === 'general') return null;
+                                    const fieldMessages = Array.isArray(messages) ? messages : [messages];
+                                    return fieldMessages.map((message, index) => (
+                                        <li key={`${field}-${index}`}>{message}</li>
+                                    ));
+                                })}
+                            </ul>
+                        </div>
                     </Alert>
                 )}
                 
