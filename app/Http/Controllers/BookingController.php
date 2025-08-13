@@ -666,7 +666,18 @@ class BookingController extends Controller
             // Send booking_received email to customer and admin
             if (EmailSetting::isEmailEnabled($booking->listing->category, 'booking_received')) {
                 // Get customer's preferred language for returning customers
-                $customerLanguage = getCustomerLanguage($booking->email);
+                // Check if helper function exists, otherwise use fallback
+                $customerLanguage = 'en';
+                if (function_exists('getCustomerLanguage')) {
+                    $customerLanguage = getCustomerLanguage($booking->email);
+                } else {
+                    // Fallback: Get the most recent booking language for this email
+                    $previousBooking = Booking::where('email', $booking->email)
+                        ->where('id', '!=', $booking->id)
+                        ->orderBy('created_at', 'desc')
+                        ->first();
+                    $customerLanguage = $previousBooking ? ($previousBooking->booking_language ?? 'en') : ($booking->booking_language ?? 'en');
+                }
                 
                 // Send to customer in their preferred language
                 $emailService->send($booking->email, 'booking_received', $booking, null, $customerLanguage);
