@@ -295,6 +295,20 @@ class BookingController extends Controller
         $addons = array_filter($request->input('addons', []));
         $listing = Listing::find($request->listing_id);
 
+        // Calculate total addon price from selected addons
+        $totalAddons = 0;
+        if (!empty($addons)) {
+            $addonPrices = ListingAddon::whereIn('id', $addons)->pluck('price', 'id');
+            foreach ($addons as $addonId) {
+                $totalAddons += $addonPrices[$addonId] ?? 0;
+            }
+        }
+
+        // Calculate total price
+        $bookingPrice = $request->booking_price ?? 0;
+        $discountOrExtra = $request->discount_or_extra ?? 0;
+        $totalPrice = $bookingPrice + $totalAddons + $discountOrExtra;
+
         // Base booking fields
         $bookingFields = [
             'category_id' => $request->category_id,
@@ -308,10 +322,10 @@ class BookingController extends Controller
             'date_of_birth' => $request->date_of_birth,
             'flight_number' => $request->flight_number,
             'notes' => $request->notes,
-            'booking_price' => $request->booking_price ?? 0,
-            'total_addons' => $request->total_addons ?? 0,
-            'total_price' => $request->total_price ?? 0,
-            'discount_or_extra' => $request->discount_or_extra ?? 0,
+            'booking_price' => $bookingPrice,
+            'total_addons' => $totalAddons,
+            'total_price' => $totalPrice,
+            'discount_or_extra' => $discountOrExtra,
             'status' => $request->status ?? 'Pending' // Maintain existing status if not provided
         ];
 
@@ -614,11 +628,25 @@ class BookingController extends Controller
             // Create booking
             $booking = Booking::create($bookingFields);
             
+            // Debug logging for addons
+            \Log::info('Processing addons for booking', [
+                'booking_id' => $booking->id,
+                'category_id' => $request->category_id,
+                'raw_addons' => $request->input('addons'),
+                'filtered_addons' => array_filter($request->input('addons', [])),
+                'request_all' => $request->all()
+            ]);
 
             // Handle addons if provided
             $addons = array_filter($request->input('addons', []));
             foreach ($addons as $addonId) {
                 $addon = ListingAddon::find($addonId);
+                \Log::info('Creating addon for booking', [
+                    'booking_id' => $booking->id,
+                    'addon_id' => $addonId,
+                    'addon_found' => $addon ? true : false,
+                    'addon_price' => $addon ? $addon->price : 0
+                ]);
                 BookingAddon::create([
                     'booking_id' => $booking->id,
                     'addon_id' => $addonId,

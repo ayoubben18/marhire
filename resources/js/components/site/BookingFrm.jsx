@@ -664,6 +664,10 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     formData.number_of_luggage = numberOfLuggage;
                     formData.numberOfLuggage = numberOfLuggage; // Add camelCase version
                     
+                    // Add addons for private driver
+                    formData.addons = selectedAddons; // Backend expects 'addons' field
+                    formData.selected_addons = selectedAddons; // Keep for backward compatibility
+                    
                     // Always set pickup_city (required by backend)
                     formData.pickup_city = pickupCity || listing?.city_id || 1;
                     formData.pickupCity = pickupCity || listing?.city_id || 1; // CamelCase version
@@ -707,6 +711,9 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     const durationValue = parseFloat(boatDuration.replace('h', '').replace('min', ''));
                     formData.duration = boatDuration.includes('min') ? durationValue / 60 : durationValue;
                     formData.number_of_people = numberOfPeople;
+                    // Add addons for boat rental
+                    formData.addons = selectedAddons; // Backend expects 'addons' field
+                    formData.selected_addons = selectedAddons; // Keep for backward compatibility
                     // Don't send hardcoded values - only what user provides
                     break;
                     
@@ -718,6 +725,9 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     formData.duration_option_id = selectedDurationOption;
                     formData.custom_booking_option_id = selectedDurationOption; // Backend expects this field
                     formData.number_of_people = numberOfPeople;
+                    // Add addons for activities
+                    formData.addons = selectedAddons; // Backend expects 'addons' field
+                    formData.selected_addons = selectedAddons; // Keep for backward compatibility
                     // Don't send hardcoded values - only what user provides
                     if (selectedDurationOption) {
                         formData.pricing_option_id = selectedDurationOption;
@@ -728,6 +738,9 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     formData.flight_number = flightNumber; // Add flight number for any other category
                     formData.prefered_date = startDate;
                     formData.number_of_people = numberOfPeople;
+                    // Add addons for any other category
+                    formData.addons = selectedAddons; // Backend expects 'addons' field
+                    formData.selected_addons = selectedAddons; // Keep for backward compatibility
             }
             
             // Calculate price locally with advanced pricing logic

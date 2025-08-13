@@ -196,21 +196,43 @@ class BookingValidationService
     {
         $addonIds = array_filter($request->input('addons', []));
         
+        \Log::info('Validating addons', [
+            'listing_id' => $listing->id,
+            'category_id' => $listing->category_id,
+            'requested_addon_ids' => $addonIds,
+            'addon_count' => count($addonIds)
+        ]);
+        
         if (empty($addonIds)) {
+            \Log::info('No addons to validate');
             return;
         }
         
         // Get all valid addon IDs for this listing through the pivot table
         $validAddonIds = $listing->addons()->pluck('addon_id')->toArray();
         
+        \Log::info('Valid addon IDs for listing', [
+            'listing_id' => $listing->id,
+            'valid_addon_ids' => $validAddonIds,
+            'valid_count' => count($validAddonIds)
+        ]);
+        
         // Check if all requested addons are valid
         $invalidAddons = array_diff($addonIds, $validAddonIds);
         
         if (!empty($invalidAddons)) {
+            \Log::error('Invalid addons detected', [
+                'listing_id' => $listing->id,
+                'invalid_addon_ids' => $invalidAddons,
+                'requested' => $addonIds,
+                'valid' => $validAddonIds
+            ]);
             throw ValidationException::withMessages([
                 'addons' => ['One or more selected add-ons are not available for this listing.']
             ]);
         }
+        
+        \Log::info('Addons validated successfully');
     }
     
     /**

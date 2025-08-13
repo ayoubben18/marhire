@@ -247,6 +247,12 @@ const BookingFrmEnhanced = ({ loading, listingId, categoryId, listing }) => {
             // Prepare submission data
             const submissionData = prepareSubmissionData(formData);
             
+            // Debug log submission data
+            console.log('Form data collected:', formData);
+            console.log('Selected addons state:', selectedAddons);
+            console.log('Submission data for category', categoryId, ':', submissionData);
+            console.log('Addons being sent:', submissionData.addons);
+            
             // Submit booking
             const response = await axios.post('/api/bookings/submit', submissionData);
             
