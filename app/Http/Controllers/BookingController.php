@@ -627,6 +627,7 @@ class BookingController extends Controller
                 'success' => true,
                 'booking_id' => $booking->id,
                 'confirmation_number' => $confirmationNumber,
+                'invoice_number' => $booking->invoice_no,
                 'message' => 'Thank you! Your booking has been successfully submitted. We\'ve received your request and our team is reviewing the details. You\'ll receive a confirmation shortly by email or WhatsApp.'
             ], 201);
 

@@ -40,6 +40,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [confirmationNumber, setConfirmationNumber] = useState("");
+    const [invoiceNumber, setInvoiceNumber] = useState("");
     const [errors, setErrors] = useState({});
     
     // Guest information - common for all categories
@@ -197,15 +198,141 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         return isStep1Valid() && isStep2Valid();
     };
 
+    // Helper function to scroll to form top
+    const scrollToFormTop = () => {
+        setTimeout(() => {
+            const formElement = document.getElementById('singlelistingBooking');
+            if (formElement) {
+                // Add offset for sticky header if needed (adjust value as necessary)
+                const headerOffset = 80;
+                const elementPosition = formElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }, 100);
+    };
+
+    // Validate Step 1 and set errors
+    const validateStep1 = () => {
+        const newErrors = {};
+        
+        switch(numericCategoryId) {
+            case 2: // Car Rental
+                if (!startDate) newErrors.startDate = t('booking.errors.selectStartDate');
+                if (!endDate) newErrors.endDate = t('booking.errors.selectEndDate');
+                if (!pickupLocation) newErrors.pickupLocation = t('booking.errors.selectPickupLocation');
+                if (!dropoffLocation) newErrors.dropoffLocation = t('booking.errors.selectDropoffLocation');
+                break;
+                
+            case 3: // Private Driver
+                if (!startDate) newErrors.startDate = t('booking.errors.selectDate');
+                if (!pickupTime) newErrors.pickupTime = t('booking.errors.selectTime');
+                if (!cityAId) newErrors.cityA = t('booking.errors.selectPickupCity');
+                if (!cityBId) newErrors.cityB = t('booking.errors.selectDestinationCity');
+                break;
+                
+            case 4: // Boat Rental
+                if (!startDate) newErrors.startDate = t('booking.errors.selectDate');
+                if (!boatPickupTime) newErrors.boatPickupTime = t('booking.errors.selectTime');
+                break;
+                
+            case 5: // Activity
+                if (!startDate) newErrors.startDate = t('booking.errors.selectDate');
+                if (!timePreference) newErrors.timePreference = t('booking.errors.selectTimePreference');
+                break;
+        }
+        
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(prev => ({ ...prev, ...newErrors }));
+            return false;
+        }
+        
+        // Clear step 1 errors if validation passes
+        setErrors(prev => {
+            const cleaned = { ...prev };
+            ['startDate', 'endDate', 'pickupLocation', 'dropoffLocation', 'pickupTime', 
+             'cityA', 'cityB', 'boatPickupTime', 'timePreference'].forEach(key => delete cleaned[key]);
+            return cleaned;
+        });
+        
+        return true;
+    };
+
+    // Validate Step 2 and set errors
+    const validateStep2 = () => {
+        const newErrors = {};
+        
+        if (!fullName.trim()) newErrors.fullName = t('booking.errors.fullNameRequired');
+        if (!email.trim()) newErrors.email = t('booking.errors.emailRequired');
+        if (!whatsAppNumber.trim()) newErrors.whatsAppNumber = t('booking.errors.whatsappRequired');
+        if (!countryOfResidence.trim()) newErrors.countryOfResidence = t('booking.errors.countryRequired');
+        if (!dateOfBirth) newErrors.dateOfBirth = t('booking.errors.dobRequired');
+        if (!termsAccepted) newErrors.termsAccepted = t('booking.errors.termsRequired');
+        
+        // Email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (email && !emailRegex.test(email)) {
+            newErrors.email = t('booking.errors.invalidEmail');
+        }
+        
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(prev => ({ ...prev, ...newErrors }));
+            return false;
+        }
+        
+        // Clear step 2 errors if validation passes
+        setErrors(prev => {
+            const cleaned = { ...prev };
+            ['fullName', 'email', 'whatsAppNumber', 'countryOfResidence', 'dateOfBirth', 'termsAccepted'].forEach(key => delete cleaned[key]);
+            return cleaned;
+        });
+        
+        return true;
+    };
+
     // Handle step navigation
     const handleNext = () => {
-        if (currentStep === 0 && isStep1Valid()) {
+        if (currentStep === 0) {
+            // Validate step 1 but navigate anyway
+            validateStep1();
             setCurrentStep(1);
+            
+            // Scroll to top of form on mobile devices
+            if (window.innerWidth < 768) {
+                scrollToFormTop();
+            }
         }
     };
     
     const handleBack = () => {
         setCurrentStep(0);
+        
+        // Scroll to top of form on mobile devices
+        if (window.innerWidth < 768) {
+            scrollToFormTop();
+        }
+    };
+
+    // Handle stepper click navigation
+    const handleStepClick = (stepIndex) => {
+        // Navigate to step 0 (Booking Details)
+        if (stepIndex === 0) {
+            setCurrentStep(0);
+            scrollToFormTop();
+        }
+        // Navigate to step 1 (Your Information)
+        else if (stepIndex === 1) {
+            if (currentStep === 0) {
+                // Validate step 1 but navigate anyway
+                validateStep1();
+            }
+            setCurrentStep(1);
+            scrollToFormTop();
+        }
     };
 
 
@@ -405,10 +532,20 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
             return;
         }
         
-        if (!isFormValid()) {
-            setErrors({
-                general: t('booking.errors.requiredFields')
-            });
+        // Validate both steps and collect all errors
+        const step1Valid = validateStep1();
+        const step2Valid = validateStep2();
+        
+        // If validation fails, scroll to the first error
+        if (!step1Valid || !step2Valid) {
+            // If step 1 has errors and we're on step 2, go back to step 1
+            if (!step1Valid && currentStep === 1) {
+                setCurrentStep(0);
+                scrollToFormTop();
+            } else {
+                // Otherwise just scroll to top to show errors
+                scrollToFormTop();
+            }
             return;
         }
         
@@ -582,6 +719,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
             
             if (response.data.success && response.data.confirmation_number) {
                 setConfirmationNumber(response.data.confirmation_number);
+                setInvoiceNumber(response.data.invoice_number || '');
                 setShowSuccess(true);
                 // Clear search params after successful booking
                 sessionStorage.removeItem('searchParams');
@@ -901,10 +1039,16 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                 {/* Stepper */}
                 <Box sx={{ width: '100%', mb: 4 }}>
                     <Stepper activeStep={currentStep} alternativeLabel>
-                        <Step>
+                        <Step 
+                            onClick={() => handleStepClick(0)}
+                            sx={{ cursor: 'pointer' }}
+                        >
                             <StepLabel>{t("booking.bookingDetails")}</StepLabel>
                         </Step>
-                        <Step>
+                        <Step 
+                            onClick={() => handleStepClick(1)}
+                            sx={{ cursor: 'pointer' }}
+                        >
                             <StepLabel>{t("booking.yourInformation")}</StepLabel>
                         </Step>
                     </Stepper>
@@ -1172,7 +1316,6 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                             variant="contained"
                             color="primary"
                             size="large"
-                            disabled={!isStep1Valid()}
                             className="ml-auto px-6"
                         >
                             {t('common.next')}
@@ -1180,7 +1323,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     ) : (
                         <button
                             type="submit"
-                            disabled={isSubmitting || !isFormValid()}
+                            disabled={isSubmitting}
                             className="ml-auto btn-search-v2 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                         >
                             {isSubmitting ? (
@@ -1218,7 +1361,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                                 {t("booking.confirmationNumber")}:
                             </Typography>
                             <Typography variant="h5" className="font-bold text-blue-600">
-                                {confirmationNumber}
+                                {invoiceNumber}
                             </Typography>
                         </div>
                         <Typography variant="body1" className="text-gray-600 mb-2">

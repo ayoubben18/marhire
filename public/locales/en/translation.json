@@ -111,7 +111,7 @@
         "selectPickupDateFirst": "Please select pickup date first",
         "thankYou": "Thank you!",
         "successMessage": "Your booking has been successfully submitted.",
-        "confirmationNumber": "Confirmation Number",
+        "confirmationNumber": "Invoice Number",
         "receivedMessage": "We've received your request and our team is reviewing the details.",
         "confirmationSoon": "You'll receive a confirmation shortly by email or WhatsApp.",
         "errors": {

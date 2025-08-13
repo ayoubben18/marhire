@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { FormControlLabel, Checkbox } from "@mui/material";
-import PhoneInput from 'react-phone-input-2';
-import { useTranslation } from 'react-i18next';
-import 'react-phone-input-2/lib/style.css';
-import '../../../css/phone-input-custom.css';
+import { useTranslation } from "react-i18next";
+import RequiredAsterisk from "./RequiredAsterisk";
+import { getCountryOptions } from "../../utils/countries";
+import DateOfBirthCalendar from "./DateOfBirthCalendar";
 
 const ClientInfoStep = ({
     fullName,
@@ -17,136 +17,300 @@ const ClientInfoStep = ({
     setTermsAccepted,
     handleFieldChange,
     errors,
-    categoryId
+    categoryId,
 }) => {
-    const { t } = useTranslation();
-    
+    const { t, i18n } = useTranslation();
+    const countryOptions = useMemo(
+        () => getCountryOptions(i18n.language),
+        [i18n.language]
+    );
+
+    // Local DOB selectors state for better UX
+    const [dobDay, setDobDay] = useState("");
+    const [dobMonth, setDobMonth] = useState("");
+    const [dobYear, setDobYear] = useState("");
+
+    // Sync local selectors from parent value (e.g., when form resets)
+    useEffect(() => {
+        if (dateOfBirth && /^\d{4}-\d{2}-\d{2}$/.test(dateOfBirth)) {
+            const [y, m, d] = dateOfBirth.split("-");
+            setDobYear(y);
+            setDobMonth(m);
+            setDobDay(d);
+        } else {
+            setDobYear("");
+            setDobMonth("");
+            setDobDay("");
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dateOfBirth]);
+
+    function getDaysInMonth(yearStr, monthStr) {
+        const year = parseInt(yearStr, 10);
+        const month = parseInt(monthStr, 10);
+        if (!year || !month) return 31;
+        return new Date(year, month, 0).getDate();
+    }
+
+    const currentYear = new Date().getFullYear();
+    const maxYear = currentYear - 18; // Must be 18+
+    const minYear = currentYear - 100; // Up to 100 years back
+
+    const years = useMemo(() => {
+        const arr = [];
+        for (let y = maxYear; y >= minYear; y -= 1) arr.push(String(y));
+        return arr;
+    }, [maxYear, minYear]);
+
+    const months = useMemo(() => {
+        return Array.from({ length: 12 }, (_, idx) => {
+            const monthIndex = idx + 1; // 1-12
+            const name = new Date(2000, idx, 1).toLocaleString(
+                i18n.language || "en",
+                { month: "long" }
+            );
+            return { value: String(monthIndex).padStart(2, "0"), label: name };
+        });
+    }, [i18n.language]);
+
+    const daysInSelectedMonth = getDaysInMonth(dobYear, dobMonth);
+    const days = useMemo(() => {
+        return Array.from({ length: daysInSelectedMonth }, (_, idx) =>
+            String(idx + 1).padStart(2, "0")
+        );
+    }, [daysInSelectedMonth]);
+
+    function tryEmitDob(nextYear, nextMonth, nextDay) {
+        if (nextYear && nextMonth && nextDay) {
+            const composed = `${nextYear}-${nextMonth}-${nextDay}`;
+            handleFieldChange("dateOfBirth", composed);
+        } else {
+            // Clear parent value until all parts selected
+            handleFieldChange("dateOfBirth", "");
+        }
+    }
+
+    function onYearChange(e) {
+        const y = e.target.value;
+        const maxDay = getDaysInMonth(y, dobMonth);
+        const adjustedDay =
+            dobDay && parseInt(dobDay, 10) > maxDay
+                ? String(maxDay).padStart(2, "0")
+                : dobDay;
+        setDobYear(y);
+        setDobDay(adjustedDay);
+        tryEmitDob(y, dobMonth, adjustedDay);
+    }
+
+    function onMonthChange(e) {
+        const m = e.target.value;
+        const maxDay = getDaysInMonth(dobYear, m);
+        const adjustedDay =
+            dobDay && parseInt(dobDay, 10) > maxDay
+                ? String(maxDay).padStart(2, "0")
+                : dobDay;
+        setDobMonth(m);
+        setDobDay(adjustedDay);
+        tryEmitDob(dobYear, m, adjustedDay);
+    }
+
+    function onDayChange(e) {
+        const d = e.target.value;
+        setDobDay(d);
+        tryEmitDob(dobYear, dobMonth, d);
+    }
+
     return (
         <div className="mb-4">
-            <h3 className="text-lg font-semibold mb-3">{t('booking.yourInformation')}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <h3 className="text-lg font-semibold mb-3">
+                {t("booking.yourInformation")}
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {t("booking.fullName", "Full Name")}
+                        <RequiredAsterisk />
+                    </label>
                     <input
                         type="text"
                         value={fullName}
-                        onChange={(e) => handleFieldChange('fullName', e.target.value)}
-                        placeholder={t('booking.fullName') + ' *'}
-                        className={`w-full px-3 py-3 text-lg border ${errors.fullName ? 'border-red-500' : 'border-gray-300'} rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                        onChange={(e) =>
+                            handleFieldChange("fullName", e.target.value)
+                        }
+                        placeholder={t(
+                            "booking.fullNamePlaceholder",
+                            "John Doe"
+                        )}
+                        className={`w-full px-3 py-3 text-lg border ${
+                            errors.fullName
+                                ? "border-red-500"
+                                : "border-gray-300"
+                        } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                         required
                     />
                     {errors.fullName && (
-                        <p className="text-red-500 text-sm mt-1">{errors.fullName[0]}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                            {errors.fullName[0]}
+                        </p>
                     )}
                 </div>
                 <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {t("booking.email", "Email")}
+                        <RequiredAsterisk />
+                    </label>
                     <input
                         type="email"
                         value={email}
-                        onChange={(e) => handleFieldChange('email', e.target.value)}
+                        onChange={(e) =>
+                            handleFieldChange("email", e.target.value)
+                        }
                         onBlur={(e) => {
                             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                            if (e.target.value && !emailRegex.test(e.target.value)) {
+                            if (
+                                e.target.value &&
+                                !emailRegex.test(e.target.value)
+                            ) {
                                 // Email validation will be handled by parent component
                             }
                         }}
-                        placeholder={t('booking.email') + ' *'}
-                        className={`w-full px-3 py-3 text-lg border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                        placeholder={t(
+                            "booking.emailPlaceholder",
+                            "john@example.com"
+                        )}
+                        className={`w-full px-3 py-3 text-lg border ${
+                            errors.email ? "border-red-500" : "border-gray-300"
+                        } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                         required
                     />
                     {errors.email && (
-                        <p className="text-red-500 text-sm mt-1">{errors.email[0]}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                            {errors.email[0]}
+                        </p>
                     )}
                 </div>
                 <div>
-                    <div className={`phone-input-wrapper ${errors.whatsAppNumber ? 'error' : ''}`}>
-                        <PhoneInput
-                            country={'us'}
-                            value={whatsAppNumber}
-                            onChange={(phone) => handleFieldChange('whatsAppNumber', phone.startsWith('+') ? phone : '+' + phone)}
-                            placeholder={t('booking.whatsapp')}
-                            enableSearch={true}
-                            searchPlaceholder="Search country..."
-                            containerStyle={{
-                                width: '100%'
-                            }}
-                            inputStyle={{
-                                width: '100%',
-                                height: '52px',
-                                fontSize: '1.125rem',
-                                paddingLeft: '48px',
-                                paddingRight: '12px',
-                                borderRadius: '0.75rem',
-                                border: errors.whatsAppNumber ? '1px solid #ef4444' : '1px solid #d1d5db',
-                                backgroundColor: '#ffffff'
-                            }}
-                            buttonStyle={{
-                                borderRadius: '0.75rem 0 0 0.75rem',
-                                border: errors.whatsAppNumber ? '1px solid #ef4444' : '1px solid #d1d5db',
-                                borderRight: 'none',
-                                backgroundColor: '#f9fafb',
-                                padding: '0 8px'
-                            }}
-                            dropdownStyle={{
-                                borderRadius: '0.5rem'
-                            }}
-                            searchStyle={{
-                                borderRadius: '0.5rem',
-                                padding: '8px 12px',
-                                margin: '8px'
-                            }}
-                        />
-                    </div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {t("booking.whatsappNumber", "WhatsApp Number")}
+                        <RequiredAsterisk />
+                    </label>
+                    <input
+                        type="tel"
+                        value={whatsAppNumber}
+                        onChange={(e) =>
+                            handleFieldChange("whatsAppNumber", e.target.value)
+                        }
+                        placeholder={t(
+                            "booking.whatsappPlaceholder",
+                            "+1 234 567 8900"
+                        )}
+                        className={`w-full px-3 py-3 text-lg border ${
+                            errors.whatsAppNumber
+                                ? "border-red-500"
+                                : "border-gray-300"
+                        } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                        required
+                    />
                     {errors.whatsAppNumber && (
-                        <p className="text-red-500 text-sm mt-1">{errors.whatsAppNumber[0]}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                            {errors.whatsAppNumber[0]}
+                        </p>
                     )}
                 </div>
                 <div>
-                    <input
-                        type="text"
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {t("booking.country", "Country of Residence")}
+                        <RequiredAsterisk />
+                    </label>
+                    <select
                         value={countryOfResidence}
-                        onChange={(e) => handleFieldChange('countryOfResidence', e.target.value)}
-                        placeholder={t('booking.country') + ' *'}
-                        className={`w-full px-3 py-3 text-lg border ${errors.countryOfResidence ? 'border-red-500' : 'border-gray-300'} rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                        onChange={(e) =>
+                            handleFieldChange(
+                                "countryOfResidence",
+                                e.target.value
+                            )
+                        }
+                        className={`w-full px-3 py-3 text-lg border ${
+                            errors.countryOfResidence
+                                ? "border-red-500"
+                                : "border-gray-300"
+                        } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white`}
                         required
-                    />
+                    >
+                        <option value="">
+                            {t(
+                                "booking.countryPlaceholder",
+                                "Select your country"
+                            )}
+                        </option>
+                        {countryOptions.map(({ code, name }) => (
+                            <option key={code} value={name}>
+                                {name}
+                            </option>
+                        ))}
+                    </select>
                     {errors.countryOfResidence && (
-                        <p className="text-red-500 text-sm mt-1">{errors.countryOfResidence[0]}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                            {errors.countryOfResidence[0]}
+                        </p>
                     )}
                 </div>
+                <DateOfBirthCalendar
+                    value={dateOfBirth}
+                    onChange={(val) => handleFieldChange("dateOfBirth", val)}
+                    required
+                    hasError={Boolean(errors.dateOfBirth)}
+                    errorMessage={errors.dateOfBirth?.[0]}
+                    minAgeYears={18}
+                    maxAgeYears={100}
+                />
                 <div>
-                    <input
-                        type="date"
-                        value={dateOfBirth}
-                        onChange={(e) => handleFieldChange('dateOfBirth', e.target.value)}
-                        placeholder={t('booking.dateOfBirth') + ' *'}
-                        className={`w-full px-3 py-3 text-lg border ${errors.dateOfBirth ? 'border-red-500' : 'border-gray-300'} rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
-                        required
-                        onFocus={(e) => e.target.showPicker && e.target.showPicker()}
-                    />
-                    {errors.dateOfBirth && (
-                        <p className="text-red-500 text-sm mt-1">{errors.dateOfBirth[0]}</p>
-                    )}
-                    <label className="text-xs text-gray-500 mt-1">{t('booking.dateOfBirth')} * ({t('booking.mustBe18')})</label>
-                </div>
-                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {t("booking.flightNumber", "Flight Number")}
+                        <span className="text-xs text-gray-500 font-normal ml-1">
+                            (Optional)
+                        </span>
+                    </label>
                     <input
                         type="text"
                         value={flightNumber}
-                        onChange={(e) => handleFieldChange('flightNumber', e.target.value)}
-                        placeholder={t('booking.flightNumber')}
+                        onChange={(e) =>
+                            handleFieldChange("flightNumber", e.target.value)
+                        }
+                        placeholder={t(
+                            "booking.flightNumberPlaceholder",
+                            "AA1234"
+                        )}
                         className="w-full px-3 py-3 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     />
                 </div>
                 <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {t("booking.additionalNotes", "Additional Notes")}
+                        <span className="text-xs text-gray-500 font-normal ml-1">
+                            (Optional)
+                        </span>
+                    </label>
                     <textarea
                         value={additionalNotes}
-                        onChange={(e) => handleFieldChange('additionalNotes', e.target.value)}
-                        placeholder={t('booking.additionalNotes')}
+                        onChange={(e) =>
+                            handleFieldChange("additionalNotes", e.target.value)
+                        }
+                        placeholder={t(
+                            "booking.additionalNotesPlaceholder",
+                            "Any special requests or information..."
+                        )}
                         rows="3"
-                        className={`w-full px-3 py-3 text-lg border ${errors.additionalNotes ? 'border-red-500' : 'border-gray-300'} rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                        className={`w-full px-3 py-3 text-lg border ${
+                            errors.additionalNotes
+                                ? "border-red-500"
+                                : "border-gray-300"
+                        } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                     />
                     {errors.additionalNotes && (
-                        <p className="text-red-500 text-sm mt-1">{errors.additionalNotes[0]}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                            {errors.additionalNotes[0]}
+                        </p>
                     )}
                 </div>
                 <div className="md:col-span-2">
@@ -154,36 +318,61 @@ const ClientInfoStep = ({
                         control={
                             <Checkbox
                                 checked={termsAccepted}
-                                onChange={(e) => setTermsAccepted(e.target.checked)}
+                                onChange={(e) =>
+                                    setTermsAccepted(e.target.checked)
+                                }
                                 required
                                 sx={{
-                                    color: errors.termsAccepted ? '#ef4444' : undefined,
-                                    '&.Mui-checked': {
-                                        color: '#3b82f6'
-                                    }
+                                    color: errors.termsAccepted
+                                        ? "#ef4444"
+                                        : undefined,
+                                    "&.Mui-checked": {
+                                        color: "#3b82f6",
+                                    },
                                 }}
                             />
                         }
                         label={
-                            <span className={errors.termsAccepted ? 'text-red-500' : ''}>
-                                {t('booking.agreeToTerms')}{" "}
-                                <a href="/terms-conditions" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                                    {t('footer.termsConditions')}
+                            <span
+                                className={
+                                    errors.termsAccepted ? "text-red-500" : ""
+                                }
+                            >
+                                {t("booking.agreeToTerms")}{" "}
+                                <a
+                                    href="/terms-conditions"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:underline"
+                                >
+                                    {t("footer.termsConditions")}
                                 </a>
                                 ,{" "}
-                                <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                                    {t('footer.privacyPolicy')}
+                                <a
+                                    href="/privacy-policy"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:underline"
+                                >
+                                    {t("footer.privacyPolicy")}
                                 </a>
-                                , {t('common.and')}{" "}
-                                <a href="/cancellation-policy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                                    {t('footer.cancellationPolicy')}
+                                , {t("common.and")}{" "}
+                                <a
+                                    href="/cancellation-policy"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 hover:underline"
+                                >
+                                    {t("footer.cancellationPolicy")}
                                 </a>
-                                {" *"}
+                                <RequiredAsterisk />
                             </span>
                         }
                     />
                     {errors.termsAccepted && (
-                        <p className="text-red-500 text-sm mt-1">{errors.termsAccepted[0]}</p>
+                        <p className="text-red-500 text-sm mt-1">
+                            {errors.termsAccepted[0]}
+                        </p>
                     )}
                 </div>
             </div>
