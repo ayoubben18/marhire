@@ -4,6 +4,8 @@ import axios from "axios";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, CircularProgress, Typography, Alert, Stepper, Step, StepLabel, Box, FormControlLabel, Checkbox, Chip, Tooltip } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { FaWhatsapp } from "react-icons/fa";
+import getWtspUrl from "../utils/WhatsappMsg";
 import BookingDetailsStep from "./BookingDetailsStep";
 import ClientInfoStep from "./ClientInfoStep";
 import { 
@@ -93,7 +95,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
     // Activity (Category 5)
     const [activityType, setActivityType] = useState("");
     const [pricingOptionId, setPricingOptionId] = useState("");
-    const [timePreference, setTimePreference] = useState("morning");
+    const [timePreference, setTimePreference] = useState("");
     const [selectedDurationOption, setSelectedDurationOption] = useState("");
     
     // Calendar navigation state
@@ -160,7 +162,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     return false;
                 }
                 // Check group size limits for group activities
-                if (listing?.private_or_group === 'group') {
+                if (listing?.private_or_group?.toLowerCase() === 'group') {
                     const minSize = listing.group_size_min ? parseInt(listing.group_size_min) : 1;
                     const maxSize = listing.group_size_max ? parseInt(listing.group_size_max) : 100;
                     if (numberOfPeople < minSize || numberOfPeople > maxSize) {
@@ -680,6 +682,8 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                 basePrice = listing?.price_per_hour || 100;
             } else if (numericCategoryId === 2) { // Car Rental
                 basePrice = listing?.price_per_day || listing?.price || 100;
+            } else if (numericCategoryId === 5) { // Activity - only show price when option selected
+                basePrice = 0; // No default price for activities
             } else {
                 basePrice = listing?.price || listing?.price_per_day || listing?.price_per_person || 100;
             }
@@ -818,6 +822,19 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
     }, []);
     
     // Handle search parameters from URL or session storage
+    // Set minimum number of people for group activities
+    React.useEffect(() => {
+        if (numericCategoryId === 5 && listing) {
+            // Check if it's a group activity
+            if (listing.private_or_group?.toLowerCase() === 'group' && listing.group_size_min) {
+                const minSize = parseInt(listing.group_size_min);
+                if (minSize > 0) {
+                    setNumberOfPeople(minSize);
+                }
+            }
+        }
+    }, [listing, numericCategoryId]);
+
     React.useEffect(() => {
         if (!searchParams) return;
         
@@ -1005,6 +1022,8 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
             basePrice = listing?.price_per_hour || 100;
         } else if (numericCategoryId === 2) { // Car Rental
             basePrice = listing?.price_per_day || listing?.price || 100;
+        } else if (numericCategoryId === 5) { // Activity - only show price when option selected
+            basePrice = 0; // No default price for activities
         } else {
             basePrice = listing?.price || listing?.price_per_day || listing?.price_per_person || 100;
         }
@@ -1228,6 +1247,34 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                             <span className="font-semibold">€{priceDetails.basePrice || (priceDetails.price - priceDetails.addonsTotal) || priceDetails.price}</span>
                         </div>
                         
+                        {/* Activity Type and Pricing Method for Things to Do */}
+                        {categoryId === 5 && listing && (
+                            <div className="border-t pt-2 space-y-2">
+                                <div className="flex justify-between items-center text-sm">
+                                    <span className="text-gray-600">{t('booking.activityType', 'Activity Type')}:</span>
+                                    <span className="font-medium">
+                                        {listing.private_or_group?.toLowerCase() === 'group' ? 
+                                            t('booking.groupActivity', 'Group Activity') : 
+                                            t('booking.privateActivity', 'Private Activity')}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between items-center text-sm">
+                                    <span className="text-gray-600">{t('booking.pricingMethod', 'Pricing')}:</span>
+                                    <span className="font-medium">
+                                        {listing.private_or_group?.toLowerCase() === 'group' ? 
+                                            t('booking.perGroup', 'Per Group') : 
+                                            t('booking.perPerson', 'Per Person')}
+                                    </span>
+                                </div>
+                                {numberOfPeople > 0 && listing.private_or_group !== 'group' && (
+                                    <div className="flex justify-between items-center text-sm">
+                                        <span className="text-gray-600">{t('booking.numberOfPeople', 'Number of People')}:</span>
+                                        <span className="font-medium">{numberOfPeople}</span>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        
                         {/* Addons breakdown */}
                         {selectedAddons && selectedAddons.length > 0 && listing?.addons && (
                             <>
@@ -1318,31 +1365,53 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                         </Button>
                     )}
                     {currentStep === 0 ? (
-                        <Button
-                            type="button"
-                            onClick={handleNext}
-                            variant="contained"
-                            color="primary"
-                            size="large"
-                            className="ml-auto px-6"
-                        >
-                            {t('common.next')}
-                        </Button>
+                        <>
+                            <Button
+                                type="button"
+                                onClick={handleNext}
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                className="ml-auto px-6"
+                            >
+                                {t('common.next')}
+                            </Button>
+                            <a
+                                href={getWtspUrl(listing)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-center p-3 bg-green-400 hover:bg-green-500 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg ml-2"
+                                title="WhatsApp"
+                            >
+                                <FaWhatsapp size={24} />
+                            </a>
+                        </>
                     ) : (
-                        <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className="ml-auto btn-search-v2 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                        >
-                            {isSubmitting ? (
-                                <>
-                                    <CircularProgress size={20} color="inherit" />
-                                    <span>{t("common.loading")}</span>
-                                </>
-                            ) : (
-                                t("common.bookNow")
-                            )}
-                        </button>
+                        <>
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="ml-auto btn-search-v2 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                            >
+                                {isSubmitting ? (
+                                    <>
+                                        <CircularProgress size={20} color="inherit" />
+                                        <span>{t("common.loading")}</span>
+                                    </>
+                                ) : (
+                                    t("common.bookNow")
+                                )}
+                            </button>
+                            <a
+                                href={getWtspUrl(listing)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-center p-3 bg-green-400 hover:bg-green-500 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg ml-2"
+                                title="WhatsApp"
+                            >
+                                <FaWhatsapp size={24} />
+                            </a>
+                        </>
                     )}
                 </div>
 

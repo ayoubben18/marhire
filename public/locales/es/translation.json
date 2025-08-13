@@ -205,7 +205,21 @@
         "intercityNotAvailable": "Este conductor no ofrece servicios interurbanos",
         "selectDropoffCity": "Seleccionar ciudad de entrega",
         "dropoffAddress": "Dirección de entrega",
-        "enterAddress": "Ingrese hotel o dirección"
+        "enterAddress": "Ingrese hotel o dirección",
+        "timePreference": "Preferencia de horario",
+        "selectTimePreference": "Seleccionar preferencia de horario",
+        "activityOptions": "Opciones de actividad",
+        "selectActivityOption": "Seleccionar opción",
+        "activityType": "Tipo de actividad",
+        "groupActivity": "Actividad grupal",
+        "privateActivity": "Actividad privada",
+        "pricingMethod": "Tarificación",
+        "perGroup": "Por grupo",
+        "perPerson": "Por persona",
+        "groupSize": "Tamaño del grupo",
+        "peopleRequired": "personas requeridas",
+        "groupActivityText": "Esta es una actividad grupal",
+        "privateActivityHelper": "El precio es por persona"
     },
     "filters": {
         "carType": "Tipo de Coche",

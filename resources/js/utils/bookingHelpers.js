@@ -100,6 +100,7 @@ export const calculatePrice = (categoryId, basePrice, params = {}) => {
 
         case 3: // Private Driver - Route-based pricing from DriverPricing table
             const { serviceTypes, roadTypes, pickupCity, dropoffCity } = params;
+            let driverPrice = basePrice;
             
             // For driver pricing, we need the driverPricings relationship
             if (listing?.driverPricings?.length > 0 && serviceTypes?.length > 0 && roadTypes?.length > 0) {
@@ -121,12 +122,10 @@ export const calculatePrice = (categoryId, basePrice, params = {}) => {
                 });
                 
                 if (pricing) {
-                    return Math.round(pricing.price * 100) / 100;
+                    driverPrice = pricing.price;
                 }
-            }
-            
-            // Fallback to legacy pricing structure if new pricing not found
-            if (listing?.pricings?.length > 0 && serviceTypes && serviceTypes.length > 0) {
+            } else if (listing?.pricings?.length > 0 && serviceTypes && serviceTypes.length > 0) {
+                // Fallback to legacy pricing structure if new pricing not found
                 const pricing = listing.pricings.find(p => {
                     if (serviceTypes.includes('intercity') && (pickupCity || dropoffCity)) {
                         return p?.city_id == (dropoffCity || pickupCity);
@@ -140,22 +139,33 @@ export const calculatePrice = (categoryId, basePrice, params = {}) => {
                     // - intercity_round: City-to-city round-trip
                     if (serviceTypes.includes('airport_transfer')) {
                         if (roadTypes?.includes('road_trip')) {
-                            return parseFloat(pricing.airport_round) || basePrice;
+                            driverPrice = parseFloat(pricing.airport_round) || basePrice;
                         } else {
-                            return parseFloat(pricing.airport_one) || basePrice;
+                            driverPrice = parseFloat(pricing.airport_one) || basePrice;
                         }
                     } else if (serviceTypes.includes('intercity')) {
                         if (roadTypes?.includes('road_trip')) {
-                            return parseFloat(pricing.intercity_round) || basePrice;
+                            driverPrice = parseFloat(pricing.intercity_round) || basePrice;
                         } else {
-                            return parseFloat(pricing.intercity_one) || basePrice;
+                            driverPrice = parseFloat(pricing.intercity_one) || basePrice;
                         }
                     }
                 }
             }
             
-            // Fallback to base price if no specific route pricing found
-            return basePrice;
+            // Start with the driver price
+            let driverTotalPrice = driverPrice;
+            
+            // Add selected add-ons to the total price
+            if (selectedAddons && Array.isArray(selectedAddons) && listing?.addons?.length > 0) {
+                const addonsPrice = selectedAddons.reduce((total, addonId) => {
+                    const addon = listing.addons.find(item => item?.addon?.id === addonId);
+                    return total + (addon?.addon?.price ? parseFloat(addon.addon.price) : 0);
+                }, 0);
+                driverTotalPrice += addonsPrice;
+            }
+            
+            return Math.round(driverTotalPrice * 100) / 100;
 
         case 4: // Boat Rental - Hour range pricing
             if (!listing) return basePrice;
@@ -194,40 +204,73 @@ export const calculatePrice = (categoryId, basePrice, params = {}) => {
                 price = (listing.price_per_hour || basePrice) * hours;
             }
             
+            // Add selected add-ons to the total price
+            if (selectedAddons && Array.isArray(selectedAddons) && listing?.addons?.length > 0) {
+                const addonsPrice = selectedAddons.reduce((total, addonId) => {
+                    const addon = listing.addons.find(item => item?.addon?.id === addonId);
+                    return total + (addon?.addon?.price ? parseFloat(addon.addon.price) : 0);
+                }, 0);
+                price += addonsPrice;
+            }
+            
             return Math.round(price * 100) / 100;
 
         case 5: // Activity - Custom booking options
             const people = parseInt(numberOfPeople) || 1;
+            let activityPrice = 0;
             
             // Activities use customBookingOptions for pricing
-            if (selectedDurationOption && listing?.customBookingOptions?.length > 0) {
-                const selectedOption = listing.customBookingOptions.find(opt => opt?.id == selectedDurationOption);
+            // Check both customBookingOptions and custom_booking_options (different API responses)
+            const customOptions = listing?.customBookingOptions || listing?.custom_booking_options;
+            
+            if (selectedDurationOption && customOptions?.length > 0) {
+                const selectedOption = customOptions.find(opt => opt?.id == selectedDurationOption);
                 if (selectedOption?.price) {
+                    const optionPrice = parseFloat(selectedOption.price);
                     // Check activity type (private vs group)
-                    if (listing?.activity_type === 'group' || listing?.private_or_group === 'group') {
+                    if (listing?.private_or_group?.toLowerCase() === 'group') {
                         // Group activities: Fixed price for the whole group
-                        return Math.round(parseFloat(selectedOption.price) * 100) / 100;
+                        activityPrice = optionPrice;
                     } else {
                         // Private activities: Price per person
-                        return Math.round(parseFloat(selectedOption.price) * people * 100) / 100;
+                        activityPrice = optionPrice * people;
                     }
                 }
-            }
-            
-            // Fallback to actPricings if customBookingOptions not available
-            if (selectedDurationOption && listing?.actPricings?.length > 0) {
+            } else if (selectedDurationOption && listing?.actPricings?.length > 0) {
+                // Fallback to actPricings if customBookingOptions not available
                 const selectedPricing = listing.actPricings.find(p => p?.id == selectedDurationOption);
                 if (selectedPricing?.price) {
-                    if (listing?.private_or_group === 'group') {
-                        return Math.round(parseFloat(selectedPricing.price) * 100) / 100;
+                    const pricingPrice = parseFloat(selectedPricing.price);
+                    if (listing?.private_or_group?.toLowerCase() === 'group') {
+                        activityPrice = pricingPrice;
                     } else {
-                        return Math.round(parseFloat(selectedPricing.price) * people * 100) / 100;
+                        activityPrice = pricingPrice * people;
                     }
                 }
+            } else if (!selectedDurationOption) {
+                // If no option selected for activities, start with 0
+                activityPrice = 0;
+            } else {
+                // Final fallback: base price × number of people
+                activityPrice = people * basePrice;
             }
             
-            // Final fallback: base price × number of people
-            return Math.round(people * basePrice * 100) / 100;
+            // Add selected add-ons to the total price
+            if (selectedAddons && Array.isArray(selectedAddons) && listing?.addons?.length > 0) {
+                const addonsPrice = selectedAddons.reduce((total, addonId) => {
+                    const addon = listing.addons.find(item => item?.addon?.id === addonId);
+                    const addonBasePrice = addon?.addon?.price ? parseFloat(addon.addon.price) : 0;
+                    // For private activities, multiply addon price by number of people
+                    if (listing?.private_or_group?.toLowerCase() === 'private') {
+                        return total + (addonBasePrice * people);
+                    }
+                    // For group activities, addon price is fixed
+                    return total + addonBasePrice;
+                }, 0);
+                activityPrice += addonsPrice;
+            }
+            
+            return Math.round(activityPrice * 100) / 100;
 
         default:
             return basePrice;
@@ -245,12 +288,12 @@ export const calculatePriceWithDetails = (categoryId, basePrice, params = {}) =>
     const baseCalculatedPrice = calculatePrice(categoryId, basePrice, params);
     
     // Calculate addons separately
-    const { selectedAddons, listing } = params;
-    const addonsTotal = calculateAddonsTotal(selectedAddons, listing);
+    const { selectedAddons, listing, numberOfPeople } = params;
+    const addonsTotal = calculateAddonsTotal(selectedAddons, listing, numberOfPeople || 1);
     
     const details = {
         price: baseCalculatedPrice,
-        basePrice: baseCalculatedPrice - addonsTotal,
+        basePrice: Math.max(0, baseCalculatedPrice - addonsTotal), // Ensure basePrice never goes negative
         addonsTotal: addonsTotal,
         rateType: '',
         rateDescription: '',
@@ -327,14 +370,23 @@ export const calculatePriceWithDetails = (categoryId, basePrice, params = {}) =>
  * Calculate total add-ons price
  * @param {Array} selectedAddons - Array of selected add-on IDs
  * @param {object} listing - Listing object containing addons array
+ * @param {number} numberOfPeople - Number of people for activities (optional)
  * @returns {number} Total add-ons price
  */
-export const calculateAddonsTotal = (selectedAddons, listing) => {
+export const calculateAddonsTotal = (selectedAddons, listing, numberOfPeople = 1) => {
     if (!Array.isArray(selectedAddons) || !listing?.addons?.length) return 0;
     
     return selectedAddons.reduce((total, addonId) => {
         const addon = listing.addons.find(item => item?.addon?.id === addonId);
-        return total + (addon?.addon?.price ? parseFloat(addon.addon.price) : 0);
+        const addonBasePrice = addon?.addon?.price ? parseFloat(addon.addon.price) : 0;
+        
+        // For private activities (category 5), multiply addon price by number of people
+        if (listing?.category_id === 5 && listing?.private_or_group?.toLowerCase() === 'private') {
+            return total + (addonBasePrice * numberOfPeople);
+        }
+        
+        // For other categories or group activities, addon price is fixed
+        return total + addonBasePrice;
     }, 0);
 };
 

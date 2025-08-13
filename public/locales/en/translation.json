@@ -206,7 +206,21 @@
         "intercityNotAvailable": "This driver does not support intercity services",
         "selectDropoffCity": "Select Dropoff City",
         "dropoffAddress": "Dropoff Address",
-        "enterAddress": "Enter hotel or address"
+        "enterAddress": "Enter hotel or address",
+        "timePreference": "Time Preference",
+        "selectTimePreference": "Select Time Preference",
+        "activityOptions": "Activity Options",
+        "selectActivityOption": "Select Option",
+        "activityType": "Activity Type",
+        "groupActivity": "Group Activity",
+        "privateActivity": "Private Activity",
+        "pricingMethod": "Pricing",
+        "perGroup": "Per Group",
+        "perPerson": "Per Person",
+        "groupSize": "Group size",
+        "peopleRequired": "people required",
+        "groupActivityText": "This is a group activity",
+        "privateActivityHelper": "Price is per person"
     },
     "filters": {
         "carType": "Car Type",

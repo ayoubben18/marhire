@@ -205,7 +205,21 @@
         "intercityNotAvailable": "Ce chauffeur ne propose pas de services interurbains",
         "selectDropoffCity": "Sélectionner la ville d'arrivée",
         "dropoffAddress": "Adresse d'arrivée",
-        "enterAddress": "Entrez l'hôtel ou l'adresse"
+        "enterAddress": "Entrez l'hôtel ou l'adresse",
+        "timePreference": "Préférence horaire",
+        "selectTimePreference": "Sélectionner la préférence horaire",
+        "activityOptions": "Options d'activité",
+        "selectActivityOption": "Sélectionner une option",
+        "activityType": "Type d'activité",
+        "groupActivity": "Activité de groupe",
+        "privateActivity": "Activité privée",
+        "pricingMethod": "Tarification",
+        "perGroup": "Par groupe",
+        "perPerson": "Par personne",
+        "groupSize": "Taille du groupe",
+        "peopleRequired": "personnes requises",
+        "groupActivityText": "Il s'agit d'une activité de groupe",
+        "privateActivityHelper": "Le prix est par personne"
     },
     "filters": {
         "carType": "Type de Voiture",
