@@ -16,14 +16,77 @@ import {
     calculatePrice as calculatePriceAPI,
     validatePriceBeforeSubmission
 } from "../../utils/priceCalculationApi";
+import { mapValidationErrors } from "../../utils/fieldMappings";
 
 /**
  * Enhanced Booking Form with Backend API Integration
  * This component properly integrates with the advanced pricing backend
  */
 const BookingFrmEnhanced = ({ loading, listingId, categoryId, listing }) => {
-    // ... [Keep all existing state declarations]
+    // Step management state
     const [currentStep, setCurrentStep] = useState(0);
+    const [searchParamsLoaded, setSearchParamsLoaded] = useState(false);
+    
+    // Common states for all categories
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [showCalendar, setShowCalendar] = useState(false);
+    const [isSelectingEndDate, setIsSelectingEndDate] = useState(false);
+    
+    // Form submission states
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [confirmationNumber, setConfirmationNumber] = useState("");
+    const [errors, setErrors] = useState({});
+    
+    // Guest information - common for all categories
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [whatsAppNumber, setWhatsAppNumber] = useState("");
+    const [countryOfResidence, setCountryOfResidence] = useState("");
+    const [dateOfBirth, setDateOfBirth] = useState("");
+    const [flightNumber, setFlightNumber] = useState("");
+    const [additionalNotes, setAdditionalNotes] = useState("");
+    const [termsAccepted, setTermsAccepted] = useState(false);
+    
+    // Category-specific states
+    // Car Rental (Category 2)
+    const [pickupLocation, setPickupLocation] = useState("");
+    const [dropoffLocation, setDropoffLocation] = useState("");
+    const [pickupTime, setPickupTime] = useState("");
+    const [dropoffTime, setDropoffTime] = useState("");
+    const [selectedAddons, setSelectedAddons] = useState([]);
+    
+    // Private Driver (Category 3)
+    const [carType, setCarType] = useState("standard");
+    const [airportOrIntercity, setAirportOrIntercity] = useState("intercity");
+    const [numberOfPeople, setNumberOfPeople] = useState(1);
+    const [serviceTypes, setServiceTypes] = useState([]);
+    const [roadTypes, setRoadTypes] = useState([]);
+    const [pickupAirport, setPickupAirport] = useState("");
+    const [dropoffHotel, setDropoffHotel] = useState("");
+    const [pickupCity, setPickupCity] = useState("");
+    const [dropoffCity, setDropoffCity] = useState("");
+    const [numberOfPassengers, setNumberOfPassengers] = useState(1);
+    const [numberOfLuggage, setNumberOfLuggage] = useState(0);
+    
+    // Boat Rental (Category 4)
+    const [duration, setDuration] = useState("1");
+    const [purpose, setPurpose] = useState("Leisure");
+    const [destination, setDestination] = useState("");
+    const [boatPickupTime, setBoatPickupTime] = useState("");
+    const [boatDuration, setBoatDuration] = useState("");
+    
+    // Activity (Category 5)
+    const [activityType, setActivityType] = useState("");
+    const [timePreference, setTimePreference] = useState("");
+    const [selectedDurationOption, setSelectedDurationOption] = useState("");
+    
+    // Calendar states
+    const [calendarMonth, setCalendarMonth] = useState(new Date().getMonth());
+    const [calendarYear, setCalendarYear] = useState(new Date().getFullYear());
+    
+    // Price calculation states
     const [isCalculatingPrice, setIsCalculatingPrice] = useState(false);
     const [calculatedPrice, setCalculatedPrice] = useState(null);
     const [priceDetails, setPriceDetails] = useState(null);
@@ -33,6 +96,338 @@ const BookingFrmEnhanced = ({ loading, listingId, categoryId, listing }) => {
     
     // Debounce timer for price calculation
     const [priceCalculationTimer, setPriceCalculationTimer] = useState(null);
+    
+    /**
+     * Load search parameters from sessionStorage and URL
+     */
+    useEffect(() => {
+        const loadSearchParams = () => {
+            try {
+                // Get search params from sessionStorage
+                const storedParams = sessionStorage.getItem('searchParams');
+                const urlParams = new URLSearchParams(window.location.search);
+                
+                let searchData = {};
+                
+                // Parse stored search params
+                if (storedParams) {
+                    try {
+                        searchData = JSON.parse(storedParams);
+                    } catch (e) {
+                        console.warn('Invalid search params in sessionStorage:', e);
+                    }
+                }
+                
+                // Override with URL params if available
+                const urlData = {};
+                for (const [key, value] of urlParams.entries()) {
+                    urlData[key] = value;
+                }
+                
+                // Merge URL params over stored params
+                searchData = { ...searchData, ...urlData };
+                
+                console.log('Loading search params:', searchData);
+                
+                // Apply search parameters based on category
+                if (Object.keys(searchData).length > 0) {
+                    switch (parseInt(categoryId)) {
+                        case 2: // Car rental
+                            if (searchData.pickup_location || searchData.pickup) {
+                                setPickupLocation(searchData.pickup_location || searchData.pickup || '');
+                            }
+                            if (searchData.dropoff_location || searchData.dropoff) {
+                                setDropoffLocation(searchData.dropoff_location || searchData.dropoff || '');
+                            }
+                            if (searchData.pickup_date) {
+                                setStartDate(searchData.pickup_date);
+                            }
+                            if (searchData.dropoff_date) {
+                                setEndDate(searchData.dropoff_date);
+                            }
+                            if (searchData.pickup_time) {
+                                setPickupTime(searchData.pickup_time);
+                            }
+                            if (searchData.dropoff_time) {
+                                setDropoffTime(searchData.dropoff_time);
+                            }
+                            break;
+                            
+                        case 3: // Private driver
+                            if (searchData.city_a || searchData.pickup) {
+                                setPickupCity(searchData.city_a || searchData.pickup || '');
+                            }
+                            if (searchData.city_b || searchData.dropoff) {
+                                setDropoffCity(searchData.city_b || searchData.dropoff || '');
+                            }
+                            if (searchData.pickup_date || searchData.date) {
+                                setStartDate(searchData.pickup_date || searchData.date);
+                            }
+                            if (searchData.pickup_time || searchData.time) {
+                                setPickupTime(searchData.pickup_time || searchData.time);
+                            }
+                            if (searchData.persons) {
+                                setNumberOfPassengers(parseInt(searchData.persons) || 1);
+                            }
+                            if (searchData.service_type) {
+                                setServiceTypes([searchData.service_type]);
+                            }
+                            break;
+                            
+                        case 4: // Boat rental
+                            if (searchData.destination) {
+                                setDestination(searchData.destination);
+                            }
+                            if (searchData.start_date || searchData.date) {
+                                setStartDate(searchData.start_date || searchData.date);
+                            }
+                            if (searchData.people) {
+                                setNumberOfPeople(parseInt(searchData.people) || 1);
+                            }
+                            break;
+                            
+                        case 5: // Activities
+                            if (searchData.destination) {
+                                setDestination(searchData.destination);
+                            }
+                            if (searchData.start_date || searchData.date) {
+                                setStartDate(searchData.start_date || searchData.date);
+                            }
+                            if (searchData.people) {
+                                setNumberOfPeople(parseInt(searchData.people) || 1);
+                            }
+                            if (searchData.time_preference) {
+                                setTimePreference(searchData.time_preference);
+                            }
+                            break;
+                    }
+                }
+                
+                setSearchParamsLoaded(true);
+                
+            } catch (error) {
+                console.error('Error loading search params:', error);
+                setSearchParamsLoaded(true);
+            }
+        };
+        
+        // Only load once when component mounts
+        if (!searchParamsLoaded) {
+            loadSearchParams();
+        }
+    }, [categoryId, searchParamsLoaded]);
+    
+    /**
+     * Helper function to handle field changes with consistent naming
+     */
+    const handleFieldChange = (fieldName, value) => {
+        console.log('Field change:', fieldName, value);
+        
+        // Clear any existing error for this field
+        if (errors[fieldName]) {
+            const newErrors = { ...errors };
+            delete newErrors[fieldName];
+            setErrors(newErrors);
+        }
+        
+        switch (fieldName) {
+            // Common fields
+            case 'fullName':
+                setFullName(value);
+                break;
+            case 'email':
+                setEmail(value);
+                break;
+            case 'whatsAppNumber':
+                setWhatsAppNumber(value);
+                break;
+            case 'countryOfResidence':
+                setCountryOfResidence(value);
+                break;
+            case 'dateOfBirth':
+                setDateOfBirth(value);
+                break;
+            case 'flightNumber':
+                setFlightNumber(value);
+                break;
+            case 'additionalNotes':
+                setAdditionalNotes(value);
+                break;
+                
+            // Car rental fields
+            case 'pickup_location':
+                setPickupLocation(value);
+                break;
+            case 'dropoff_location':
+                setDropoffLocation(value);
+                break;
+            case 'pickup_time':
+                setPickupTime(value);
+                break;
+            case 'dropoff_time':
+                setDropoffTime(value);
+                break;
+                
+            // Private driver fields
+            case 'pickup_city':
+                setPickupCity(value);
+                break;
+            case 'dropoff_city':
+                setDropoffCity(value);
+                break;
+            case 'number_of_passengers':
+                setNumberOfPassengers(value);
+                break;
+            case 'number_of_luggage':
+                setNumberOfLuggage(value);
+                break;
+            case 'dropoff_hotel':
+                setDropoffHotel(value);
+                break;
+                
+            // Boat rental fields
+            case 'number_of_people':
+                setNumberOfPeople(value);
+                break;
+            case 'boat_duration':
+                setBoatDuration(value);
+                break;
+            case 'boat_pickup_time':
+                setBoatPickupTime(value);
+                break;
+                
+            // Activity fields
+            case 'time_preference':
+                setTimePreference(value);
+                break;
+            case 'selected_duration_option':
+                setSelectedDurationOption(value);
+                break;
+                
+            default:
+                console.warn('Unknown field:', fieldName);
+        }
+    };
+    
+    /**
+     * Form validation helper
+     */
+    const isFormValid = () => {
+        const newErrors = {};
+        
+        // Common validations
+        if (!fullName.trim()) {
+            newErrors.fullName = ['Full name is required'];
+        }
+        if (!email.trim()) {
+            newErrors.email = ['Email is required'];
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            newErrors.email = ['Please enter a valid email address'];
+        }
+        if (!whatsAppNumber.trim()) {
+            newErrors.whatsAppNumber = ['WhatsApp number is required'];
+        }
+        if (!countryOfResidence) {
+            newErrors.countryOfResidence = ['Country of residence is required'];
+        }
+        if (!dateOfBirth) {
+            newErrors.dateOfBirth = ['Date of birth is required'];
+        }
+        if (!termsAccepted) {
+            newErrors.termsAccepted = ['You must accept the terms and conditions'];
+        }
+        
+        // Category-specific validations
+        switch (parseInt(categoryId)) {
+            case 2: // Car rental
+                if (!startDate) newErrors.pickup_date = ['Pickup date is required'];
+                if (!endDate) newErrors.dropoff_date = ['Dropoff date is required'];
+                if (!pickupTime) newErrors.pickup_time = ['Pickup time is required'];
+                if (!dropoffTime) newErrors.dropoff_time = ['Dropoff time is required'];
+                if (!pickupLocation) newErrors.pickup_location = ['Pickup location is required'];
+                if (!dropoffLocation) newErrors.dropoff_location = ['Dropoff location is required'];
+                break;
+                
+            case 3: // Private driver
+                if (!startDate) newErrors.prefered_date = ['Service date is required'];
+                if (!pickupTime) newErrors.pickup_time = ['Pickup time is required'];
+                if (serviceTypes.length === 0) newErrors.service_type = ['Please select a service type'];
+                if (roadTypes.length === 0) newErrors.road_type = ['Please select a road type'];
+                if (!dropoffHotel.trim()) newErrors.dropoff_hotel = ['Dropoff address is required'];
+                if (numberOfPassengers < 1) newErrors.number_of_passengers = ['At least 1 passenger is required'];
+                break;
+                
+            case 4: // Boat rental
+                if (!startDate) newErrors.prefered_date = ['Rental date is required'];
+                if (!boatDuration) newErrors.duration = ['Duration is required'];
+                if (!boatPickupTime) newErrors.pickup_time = ['Pickup time is required'];
+                if (numberOfPeople < 1) newErrors.number_of_people = ['At least 1 person is required'];
+                break;
+                
+            case 5: // Activity
+                if (!startDate) newErrors.prefered_date = ['Activity date is required'];
+                if (!selectedDurationOption) newErrors.duration_option = ['Please select an activity option'];
+                if (!timePreference) newErrors.time_preference = ['Time preference is required'];
+                if (numberOfPeople < 1) newErrors.number_of_people = ['At least 1 person is required'];
+                break;
+        }
+        
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return false;
+        }
+        
+        return true;
+    };
+    
+    /**
+     * Reset form to initial state
+     */
+    const resetForm = () => {
+        setCurrentStep(0);
+        setStartDate("");
+        setEndDate("");
+        setFullName("");
+        setEmail("");
+        setWhatsAppNumber("");
+        setCountryOfResidence("");
+        setDateOfBirth("");
+        setFlightNumber("");
+        setAdditionalNotes("");
+        setTermsAccepted(false);
+        setSelectedAddons([]);
+        setErrors({});
+        
+        // Category-specific resets
+        switch (parseInt(categoryId)) {
+            case 2:
+                setPickupLocation("");
+                setDropoffLocation("");
+                setPickupTime("");
+                setDropoffTime("");
+                break;
+            case 3:
+                setServiceTypes([]);
+                setRoadTypes([]);
+                setPickupCity("");
+                setDropoffCity("");
+                setDropoffHotel("");
+                setNumberOfPassengers(1);
+                setNumberOfLuggage(0);
+                setPickupTime("");
+                break;
+            case 4:
+                setBoatDuration("");
+                setBoatPickupTime("");
+                setNumberOfPeople(1);
+                break;
+            case 5:
+                setSelectedDurationOption("");
+                setTimePreference("");
+                setNumberOfPeople(1);
+                break;
+        }
+    };
     
     /**
      * Calculate price when form data changes
@@ -263,7 +658,15 @@ const BookingFrmEnhanced = ({ loading, listingId, categoryId, listing }) => {
             }
         } catch (error) {
             if (error.response?.status === 422) {
-                setErrors(error.response.data.errors || {});
+                // Map backend validation errors to frontend field names
+                const backendErrors = error.response.data.errors || {};
+                const mappedErrors = mapValidationErrors(backendErrors);
+                setErrors(mappedErrors);
+                
+                console.log('Validation errors:', {
+                    backend: backendErrors,
+                    mapped: mappedErrors
+                });
             } else {
                 setErrors({
                     general: error.response?.data?.message || 'An error occurred. Please try again.'
@@ -318,15 +721,19 @@ const BookingFrmEnhanced = ({ loading, listingId, categoryId, listing }) => {
             case 3: // Private driver
                 return {
                     ...baseData,
-                    prefered_date: startDate,
+                    prefered_date: startDate, // Keep typo as is
                     service_type: serviceTypes,
                     road_type: roadTypes,
                     city_a_id: pickupCity,
                     city_b_id: dropoffCity,
+                    droppoff_location: dropoffHotel, // Add dropoff location with typo
                     number_of_people: numberOfPassengers,
+                    number_of_passengers: numberOfPassengers, // Alternative mapping
+                    max_luggage: numberOfLuggage, // Add luggage mapping
                     car_type: listing?.vehicule_type || 'Standard',
                     airport_or_intercity: serviceTypes.join(','),
-                    notes: `Service: ${serviceTypes.join(', ')}, Road: ${roadTypes.join(', ')}, Luggage: ${numberOfLuggage}`,
+                    languages_spoken: listing?.languages_spoken,
+                    notes: `Service: ${serviceTypes.join(', ')}, Road: ${roadTypes.join(', ')}, Luggage: ${numberOfLuggage}, Dropoff: ${dropoffHotel}`,
                     addons: selectedAddons
                 };
                 
@@ -412,7 +819,161 @@ const BookingFrmEnhanced = ({ loading, listingId, categoryId, listing }) => {
                     </Alert>
                 </Snackbar>
                 
-                {/* ... Rest of the form remains the same ... */}
+                {/* Multi-Step Form */}
+                <Stepper activeStep={currentStep} alternativeLabel className="mb-6">
+                    <Step key="details">
+                        <StepLabel>Booking Details</StepLabel>
+                    </Step>
+                    <Step key="personal">
+                        <StepLabel>Your Information</StepLabel>
+                    </Step>
+                </Stepper>
+
+                {/* Step 1: Booking Details */}
+                {currentStep === 0 && (
+                    <BookingDetailsStep
+                        categoryId={parseInt(categoryId)}
+                        listing={listing}
+                        // Common states
+                        startDate={startDate}
+                        setStartDate={setStartDate}
+                        endDate={endDate}
+                        setEndDate={setEndDate}
+                        showCalendar={showCalendar}
+                        setShowCalendar={setShowCalendar}
+                        isSelectingEndDate={isSelectingEndDate}
+                        setIsSelectingEndDate={setIsSelectingEndDate}
+                        errors={errors}
+                        handleFieldChange={handleFieldChange}
+                        // Car rental states
+                        pickupLocation={pickupLocation}
+                        dropoffLocation={dropoffLocation}
+                        pickupTime={pickupTime}
+                        setPickupTime={setPickupTime}
+                        dropoffTime={dropoffTime}
+                        setDropoffTime={setDropoffTime}
+                        selectedAddons={selectedAddons}
+                        setSelectedAddons={setSelectedAddons}
+                        // Private driver states
+                        carType={carType}
+                        airportOrIntercity={airportOrIntercity}
+                        setAirportOrIntercity={setAirportOrIntercity}
+                        numberOfPeople={numberOfPeople}
+                        serviceTypes={serviceTypes}
+                        setServiceTypes={setServiceTypes}
+                        roadTypes={roadTypes}
+                        setRoadTypes={setRoadTypes}
+                        pickupAirport={pickupAirport}
+                        setPickupAirport={setPickupAirport}
+                        dropoffHotel={dropoffHotel}
+                        setDropoffHotel={setDropoffHotel}
+                        pickupCity={pickupCity}
+                        setPickupCity={setPickupCity}
+                        dropoffCity={dropoffCity}
+                        setDropoffCity={setDropoffCity}
+                        numberOfPassengers={numberOfPassengers}
+                        setNumberOfPassengers={setNumberOfPassengers}
+                        numberOfLuggage={numberOfLuggage}
+                        setNumberOfLuggage={setNumberOfLuggage}
+                        // Boat rental states
+                        duration={duration}
+                        setDuration={setDuration}
+                        purpose={purpose}
+                        destination={destination}
+                        setDestination={setDestination}
+                        boatPickupTime={boatPickupTime}
+                        setBoatPickupTime={setBoatPickupTime}
+                        boatDuration={boatDuration}
+                        setBoatDuration={setBoatDuration}
+                        // Activity states
+                        activityType={activityType}
+                        timePreference={timePreference}
+                        setTimePreference={setTimePreference}
+                        selectedDurationOption={selectedDurationOption}
+                        setSelectedDurationOption={setSelectedDurationOption}
+                        // Calendar states
+                        calendarMonth={calendarMonth}
+                        setCalendarMonth={setCalendarMonth}
+                        calendarYear={calendarYear}
+                        setCalendarYear={setCalendarYear}
+                    />
+                )}
+
+                {/* Step 2: Client Information */}
+                {currentStep === 1 && (
+                    <ClientInfoStep
+                        fullName={fullName}
+                        email={email}
+                        whatsAppNumber={whatsAppNumber}
+                        countryOfResidence={countryOfResidence}
+                        dateOfBirth={dateOfBirth}
+                        flightNumber={flightNumber}
+                        additionalNotes={additionalNotes}
+                        termsAccepted={termsAccepted}
+                        setTermsAccepted={setTermsAccepted}
+                        handleFieldChange={handleFieldChange}
+                        errors={errors}
+                        categoryId={parseInt(categoryId)}
+                    />
+                )}
+
+                {/* Navigation Buttons */}
+                <div className="flex justify-between mt-6 pt-4 border-t border-gray-200">
+                    {currentStep > 0 && (
+                        <Button
+                            variant="outlined"
+                            onClick={() => setCurrentStep(currentStep - 1)}
+                            disabled={isSubmitting}
+                        >
+                            Previous
+                        </Button>
+                    )}
+                    
+                    <div className="flex-grow"></div>
+                    
+                    {currentStep < 1 ? (
+                        <Button
+                            variant="contained"
+                            onClick={() => setCurrentStep(currentStep + 1)}
+                            disabled={isSubmitting}
+                            color="primary"
+                        >
+                            Next
+                        </Button>
+                    ) : (
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            disabled={isSubmitting}
+                            color="primary"
+                            startIcon={isSubmitting ? <CircularProgress size={20} /> : null}
+                        >
+                            {isSubmitting ? 'Submitting...' : 'Submit Booking'}
+                        </Button>
+                    )}
+                </div>
+
+                {/* Error Display */}
+                {errors.general && (
+                    <Alert severity="error" className="mt-4">
+                        {errors.general}
+                    </Alert>
+                )}
+
+                {/* Success Dialog */}
+                <Dialog open={showSuccess} onClose={() => setShowSuccess(false)}>
+                    <DialogTitle>Booking Confirmed!</DialogTitle>
+                    <DialogContent>
+                        <Typography>
+                            Your booking has been confirmed. Your confirmation number is: <strong>{confirmationNumber}</strong>
+                        </Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setShowSuccess(false)} color="primary">
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </form>
         )
     );

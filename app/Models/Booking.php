@@ -10,6 +10,18 @@ class Booking extends Model
 {
     use HasFactory, SoftDeletes;
 
+    /**
+     * IMPORTANT: Database Column Typos Documentation
+     * 
+     * The following columns have typos but MUST NOT be renamed to maintain backward compatibility:
+     * - droppoff_location: Should be "dropoff_location" (missing 'o')
+     * - prefered_date: Should be "preferred_date" (missing 'r')
+     * - propose: Should be "purpose" (wrong word)
+     * 
+     * All code should continue using these incorrect names.
+     * Any fixes would require a major refactoring of both frontend and backend code.
+     */
+
     protected $fillable = [
         'invoice_no',
         'category_id',

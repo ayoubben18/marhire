@@ -275,6 +275,20 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-4" data-categories="3">
+                                    <div class="form-group">
+                                        <label for="service_type" class="form-label">Service Type <span class="lbl-obligatoire">*</span></label>
+                                        <div class="form-control-wrap">
+                                            <select class="form-control select2-single" name="service_type" id="service_type">
+                                                <option value="" disabled {{ !isset($listing) || !$listing->service_type ? 'selected' : '' }}>--Choose Option--</option>
+                                                @foreach($serviceTypes as $serviceType)
+                                                <option value="{{ $serviceType['id'] }}" {{ old('service_type', isset($listing) ? $listing->service_type : '') == $serviceType['id'] ? 'selected' : '' }}>{{ $serviceType['option'] }}</option>
+                                                @endforeach
+                                            </select>
+                                            <small class="error d-none">Required field.</small>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-4" data-categories="2">
                                     <div class="form-group">
                                         <label for="car_make_model" class="form-label">Year <span class="lbl-obligatoire">*</span></label>
@@ -541,7 +555,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 boat-deposit" data-categories="4" style="display: none;">
+                                <div class="col-md-4 boat-deposit" style="display: none;">
                                     <div class="form-group">
                                         <label for="deposit_amount" class="form-label">Deposit Amount</label>
                                         <div class="form-control-wrap">
@@ -549,7 +563,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 boat-deposit" data-categories="4" style="display: none;">
+                                <div class="col-md-4 boat-deposit" style="display: none;">
                                     <div class="form-group">
                                         <label for="deposit_currency" class="form-label">Deposit Currency</label>
                                         <div class="form-control-wrap">
@@ -882,9 +896,11 @@
                                         </thead>
                                         <tbody>
                                             @foreach($cities as $city)
-                                            <input type="hidden" name="private_city[]" value="{{ $city->id }}"/>
-                                            <tr>
-                                                <td>{{ $city->city_name }}</td>
+                                            <tr data-city-id="{{ $city->id }}">
+                                                <td>
+                                                    {{ $city->city_name }}
+                                                    <input type="hidden" name="private_city[]" value="{{ $city->id }}"/>
+                                                </td>
                                                 <td>
                                                     <input type="number" step="any" class="form-control" name="airport_one[]" />
                                                 </td>
@@ -909,8 +925,44 @@
                             </div>
                         </div>
                         <div id="step3" style="display: none;">
+                            <!-- Existing Images Section (Edit Mode Only) -->
+                            @if(isset($listing) && $listing->galleries && $listing->galleries->count() > 0)
                             <div class="form-group">
-                                <label class="font-weight-bold mb-2">Upload Images</label>
+                                <label class="font-weight-bold mb-2">Current Images</label>
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <div class="row" id="existing-images-grid">
+                                            @foreach($listing->galleries as $image)
+                                            <div class="col-md-3 mb-3" id="image-{{ $image->id }}">
+                                                <div class="card">
+                                                    <div class="position-relative">
+                                                        <img src="{{ asset($image->file_path) }}" class="card-img-top img-thumbnail" style="height: 150px; object-fit: cover;" alt="Listing Image">
+                                                        <div class="position-absolute" style="top: 5px; right: 5px;">
+                                                            <button type="button" class="btn btn-danger btn-sm remove-existing-image" 
+                                                                    data-id="{{ $image->id }}" title="Remove Image">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body p-2">
+                                                        <small class="text-muted">{{ basename($image->file_path) }}</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                        <div class="mt-2">
+                                            <small class="text-info">
+                                                <i class="fas fa-info-circle"></i> You can remove images or set a primary image. Changes will be applied when you save the listing.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+                            
+                            <div class="form-group">
+                                <label class="font-weight-bold mb-2">{{ isset($listing) ? 'Upload Additional Images' : 'Upload Images' }}</label>
                                 <!-- Enhanced Image Guidelines -->
                                 <div class="mb-3">
                                     <div class="alert alert-info">
@@ -1047,7 +1099,7 @@
 
         const categoryRequiredMap = {
             2: ['car_types', 'car_model', 'year', 'fuel_type', 'transmission', 'seats', 'doors', 'ac', 'mileage_policy', 'fuel_policy', 'driver_requirement', 'deposit_required']
-            , 3: ['vehicule_type', 'vehicule_model', 'max_passengers', 'max_luggage', 'languages_spoken']
+            , 3: ['vehicule_type', 'vehicule_model', 'service_type', 'max_passengers', 'max_luggage', 'languages_spoken']
             , 4: ['boat_type', 'with_captain', 'capacity', 'departure_location']
             , 5: ['languages_spoken', 'activity_type', 'pickup', 'meeting_point', 'private_or_group', 'difficulty']
         };
@@ -1103,6 +1155,15 @@
                 $(this).hide();
             }
         });
+        
+        // Special handling for boat deposit fields (category 4)
+        // They should only show if deposit_required_boat is 'yes'
+        if (categoryId == 4) {
+            const boatDepositRequired = $('#deposit_required_boat').val();
+            if (boatDepositRequired !== 'yes' && boatDepositRequired !== 'Yes') {
+                $('.boat-deposit').hide();
+            }
+        }
         
         // Duration fields are now handled automatically by data-categories attributes
     }
@@ -1593,15 +1654,16 @@
         // Load existing private pricing (for category 3)
         if (listing.pricings && listing.pricings.length > 0) {
             listing.pricings.forEach(function(privatePricing) {
-                const cityRow = $(`#pricing-private-table tr`).filter(function() {
-                    return $(this).find('input[name="private_city[]"]').val() == privatePricing.city_id;
-                });
+                // Use data-city-id attribute for more reliable selection
+                const cityRow = $(`#pricing-private-table tr[data-city-id="${privatePricing.city_id}"]`);
                 
                 if (cityRow.length > 0) {
                     cityRow.find('input[name="airport_one[]"]').val(privatePricing.airport_one);
                     cityRow.find('input[name="airport_round[]"]').val(privatePricing.airport_round);
                     cityRow.find('input[name="intercity_one[]"]').val(privatePricing.intercity_one);
                     cityRow.find('input[name="intercity_round[]"]').val(privatePricing.intercity_round);
+                } else {
+                    console.warn('City row not found for city_id:', privatePricing.city_id);
                 }
             });
         }
@@ -1621,7 +1683,7 @@
         }
         
         // Initialize boat deposit fields on page load
-        const currentBoatDepositRequired = $('#boat_deposit_required').val();
+        const currentBoatDepositRequired = $('#deposit_required_boat').val();
         if (currentBoatDepositRequired === 'yes' || currentBoatDepositRequired === 'Yes') {
             $('.boat-deposit').show();
         } else {
@@ -1962,7 +2024,7 @@
     
     function initializeBoatDepositFields() {
         // Initialize boat deposit fields visibility on page load
-        const currentBoatDepositRequired = $('#boat_deposit_required').val();
+        const currentBoatDepositRequired = $('#deposit_required_boat').val();
         if (currentBoatDepositRequired === 'yes' || currentBoatDepositRequired === 'Yes') {
             $('.boat-deposit').show();
         } else {
@@ -2005,6 +2067,75 @@
         setTimeout(() => {
             hideImageProcessingStatus();
         }, 2000);
+    }
+
+    // Handle existing image removal
+    $(document).on('click', '.remove-existing-image', function() {
+        const imageId = $(this).data('id');
+        const imageContainer = $('#image-' + imageId);
+        
+        if (confirm('Are you sure you want to remove this image? This action cannot be undone.')) {
+            // Show loading state
+            $(this).html('<i class="fas fa-spinner fa-spin"></i>').prop('disabled', true);
+            
+            $.ajax({
+                type: 'POST',
+                url: '{{ route("listings.unlink") }}',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: imageId
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // Remove the image container with animation
+                        imageContainer.fadeOut(300, function() {
+                            $(this).remove();
+                            
+                            // Check if no more images exist and hide the section
+                            if ($('#existing-images-grid .col-md-3').length === 0) {
+                                $('#existing-images-grid').closest('.form-group').fadeOut();
+                            }
+                        });
+                        
+                        // Show success message
+                        showAlert('success', 'Image removed successfully');
+                    } else {
+                        showAlert('danger', 'Failed to remove image: ' + (response.message || 'Unknown error'));
+                    }
+                },
+                error: function() {
+                    showAlert('danger', 'Failed to remove image. Please try again.');
+                    $(this).html('<i class="fas fa-trash"></i>').prop('disabled', false);
+                }
+            });
+        }
+    });
+
+
+    // Helper function to show alert messages
+    function showAlert(type, message) {
+        const alertHtml = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                <strong>${type === 'success' ? 'Success!' : 'Error!'}</strong> ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+        
+        // Insert the alert at the top of the form or step
+        const step3 = $('#step3');
+        step3.prepend(alertHtml);
+        
+        // Auto-dismiss after 5 seconds
+        setTimeout(function() {
+            step3.find('.alert').fadeOut(function() {
+                $(this).remove();
+            });
+        }, 5000);
+        
+        // Scroll to the alert
+        $('html, body').animate({
+            scrollTop: step3.offset().top - 100
+        }, 300);
     }
 
 </script>

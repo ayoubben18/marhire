@@ -1236,30 +1236,6 @@ const BookingDetailsStep = ({
                                 </div>
                             </div>
 
-                            {/* Address input field - always visible */}
-                            <div className="mb-3">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t(
-                                        "booking.dropoffAddress",
-                                        "Dropoff Address"
-                                    )}
-                                    <RequiredAsterisk />
-                                </label>
-                                <TextField
-                                    value={dropoffHotel}
-                                    onChange={(e) =>
-                                        setDropoffHotel(e.target.value)
-                                    }
-                                    placeholder={t(
-                                        "booking.enterAddress",
-                                        "Enter hotel or address"
-                                    )}
-                                    variant="outlined"
-                                    fullWidth
-                                    error={!!errors.dropoff_hotel}
-                                    helperText={errors.dropoff_hotel?.[0]}
-                                />
-                            </div>
                         </>
                     )}
 
@@ -1377,6 +1353,25 @@ const BookingDetailsStep = ({
                         </>
                     )}
 
+                    {/* Dropoff Address field - visible for both airport_transfer and intercity */}
+                    {(serviceTypes.includes("airport_transfer") || serviceTypes.includes("intercity")) && (
+                        <div className="mb-3">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                {t("booking.dropoffAddress", "Dropoff Address")}
+                                <RequiredAsterisk />
+                            </label>
+                            <TextField
+                                value={dropoffHotel}
+                                onChange={(e) => setDropoffHotel(e.target.value)}
+                                placeholder={t("booking.enterAddress", "Enter hotel or address")}
+                                variant="outlined"
+                                fullWidth
+                                error={!!errors.dropoff_hotel || !!errors.droppoff_location}
+                                helperText={errors.dropoff_hotel?.[0] || errors.droppoff_location?.[0]}
+                            />
+                        </div>
+                    )}
+
                     {/* Pick-up Date & Time */}
                     <div className="mb-3">
                         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -1408,9 +1403,13 @@ const BookingDetailsStep = ({
                             )}
                             required={true}
                             min={1}
-                            max={50}
+                            max={listing?.max_passengers || 50}
                             error={!!errors.number_of_passengers?.[0] || !!errors.numberOfPassengers}
-                            helperText={errors.number_of_passengers?.[0] || errors.numberOfPassengers || "Max allowed: 50"}
+                            helperText={
+                                errors.number_of_passengers?.[0] || 
+                                errors.numberOfPassengers || 
+                                `Max allowed: ${listing?.max_passengers || 50}`
+                            }
                         />
                         <NumberInput
                             value={numberOfLuggage}
@@ -1421,12 +1420,17 @@ const BookingDetailsStep = ({
                             )}
                             required={false}
                             min={0}
-                            max={20}
-                            error={!!errors.number_of_luggage?.[0] || !!errors.numberOfLuggage}
-                            helperText={errors.number_of_luggage?.[0] || errors.numberOfLuggage || "Max allowed: 20"}
+                            max={listing?.max_luggage || 999}
+                            error={!!errors.number_of_luggage?.[0] || !!errors.numberOfLuggage || !!errors.max_luggage}
+                            helperText={
+                                errors.number_of_luggage?.[0] || 
+                                errors.numberOfLuggage || 
+                                errors.max_luggage?.[0] ||
+                                `Max allowed: ${listing?.max_luggage || 999}`
+                            }
                         />
                     </div>
-
+                    
                     {/* Add-ons for Private Driver */}
                     <div className="mb-4">
                         <FormLabel component="legend" className="mb-2">
@@ -1685,6 +1689,17 @@ const BookingDetailsStep = ({
                             {t("booking.activityOptions", "Activity Options")}
                             <RequiredAsterisk />
                         </label>
+                        {/* Debug logging for activity options */}
+                        {(() => {
+                            console.log('Activity Options Debug:', {
+                                listingId: listing?.id,
+                                customBookingOptions: listing?.customBookingOptions,
+                                custom_booking_options: listing?.custom_booking_options, 
+                                actPricings: listing?.actPricings,
+                                category: categoryId
+                            });
+                            return null;
+                        })()}
                         {(listing?.customBookingOptions ||
                             listing?.custom_booking_options) &&
                         (
@@ -1764,9 +1779,22 @@ const BookingDetailsStep = ({
                                 )}
                             </>
                         ) : (
-                            <Typography variant="body2" color="textSecondary">
-                                Duration options not available
-                            </Typography>
+                            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                <Typography variant="body2" color="textSecondary" className="mb-2">
+                                    <strong>No activity options available</strong>
+                                </Typography>
+                                <Typography variant="caption" color="textSecondary">
+                                    This activity does not have any pricing options configured. Please contact the provider directly.
+                                </Typography>
+                                {/* Show debug info in development */}
+                                {process.env.NODE_ENV === 'development' && (
+                                    <div className="mt-2 p-2 bg-gray-100 rounded text-xs font-mono">
+                                        <div>customBookingOptions: {JSON.stringify(listing?.customBookingOptions?.length || 0)}</div>
+                                        <div>actPricings: {JSON.stringify(listing?.actPricings?.length || 0)}</div>
+                                        <div>Listing ID: {listing?.id}</div>
+                                    </div>
+                                )}
+                            </div>
                         )}
                     </div>
 

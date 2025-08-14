@@ -275,18 +275,14 @@ class ListingController extends Controller
                     $processedImage = $imageProcessingService->processImage($file, $destination, $baseFileName);
                     
                     if ($processedImage) {
-                        // Save both WebP and original paths
-                        ListingGallery::create([
-                            'listing_id' => $listing->id,
-                            'file_path' => $processedImage['webp_path'], // Primary path is WebP
-                            'file_name' => $processedImage['webp_name']
-                        ]);
+                        // Save only one record - prefer WebP if available, otherwise original
+                        $imagePath = $processedImage['webp_path'] ?? $processedImage['original_path'];
+                        $imageName = $processedImage['webp_name'] ?? $processedImage['original_name'];
                         
-                        // Also save original format as fallback
                         ListingGallery::create([
                             'listing_id' => $listing->id,
-                            'file_path' => $processedImage['original_path'],
-                            'file_name' => $processedImage['original_name']
+                            'file_path' => $imagePath,
+                            'file_name' => $imageName
                         ]);
                         
                         \Log::info('Image processed and saved successfully', [
@@ -643,18 +639,14 @@ class ListingController extends Controller
                     $processedImage = $imageProcessingService->processImage($file, $destination, $baseFileName);
                     
                     if ($processedImage) {
-                        // Save both WebP and original paths
-                        ListingGallery::create([
-                            'listing_id' => $listing->id,
-                            'file_path' => $processedImage['webp_path'], // Primary path is WebP
-                            'file_name' => $processedImage['webp_name']
-                        ]);
+                        // Save only one record - prefer WebP if available, otherwise original
+                        $imagePath = $processedImage['webp_path'] ?? $processedImage['original_path'];
+                        $imageName = $processedImage['webp_name'] ?? $processedImage['original_name'];
                         
-                        // Also save original format as fallback
                         ListingGallery::create([
                             'listing_id' => $listing->id,
-                            'file_path' => $processedImage['original_path'],
-                            'file_name' => $processedImage['original_name']
+                            'file_path' => $imagePath,
+                            'file_name' => $imageName
                         ]);
                         
                         \Log::info('Image processed and saved successfully during update', [
@@ -1379,10 +1371,8 @@ class ListingController extends Controller
         
         $listing = Listing::where('slug', $request->slug)
             ->withCurrentTranslations() // Optimized: Load only current locale + English fallback
+            ->withCompleteData() // Use new scope for all relationships
             ->with([
-                'included',
-                'notIncluded',
-                'galleries',
                 'provider',
                 'city',
                 'addons.addon',
@@ -1944,5 +1934,49 @@ class ListingController extends Controller
         }
         
         return response()->json($formData);
+    }
+
+    /**
+     * Remove an image from a listing
+     */
+    public function unlink(Request $request)
+    {
+        try {
+            $imageId = $request->input('id');
+            
+            // Find the image
+            $image = ListingGallery::find($imageId);
+            
+            if (!$image) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Image not found'
+                ], 404);
+            }
+            
+            // Get the file path
+            $filePath = public_path($image->file_path);
+            
+            // Delete the physical file if it exists
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+            
+            // Delete the database record
+            $image->delete();
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Image removed successfully'
+            ]);
+            
+        } catch (\Exception $e) {
+            \Log::error('Error removing image: ' . $e->getMessage());
+            
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to remove image: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

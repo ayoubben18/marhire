@@ -35,7 +35,7 @@ class CategoryValidationService
             'category_id' => 'required|integer|in:2,3,4,5',
             'provider_id' => 'sometimes|nullable|integer|exists:agencies,id',
             'description' => 'nullable|string',
-            'short_description' => 'nullable|string|max:500',
+            'short_description' => 'nullable|string',
             'special_notes' => 'nullable|string',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:300',
@@ -126,7 +126,7 @@ class CategoryValidationService
             
             // Capacity information
             'max_passengers' => 'required|integer|min:1|max:15',
-            'max_luggage' => 'required|integer|min:0|max:20',
+            'max_luggage' => 'required|integer|min:0',
             
             // Location and services
             'pickup_location' => 'sometimes|nullable|string|max:255',

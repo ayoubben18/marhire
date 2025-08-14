@@ -486,6 +486,13 @@ class BookingValidationService
             ]);
         }
         
+        // Validate luggage count against listing capacity
+        if ($listing && $listing->max_luggage && $request->number_of_luggage > $listing->max_luggage) {
+            throw ValidationException::withMessages([
+                'number_of_luggage' => ['Number of luggage exceeds vehicle capacity of ' . $listing->max_luggage . '.']
+            ]);
+        }
+        
         // Check pricing exists using the new private_listing_pricings table
         $serviceTypes = $request->input('service_types', []);
         $roadTypes = $request->input('road_types', []);

@@ -78,10 +78,34 @@ class Listing extends Model
     protected $casts = [
         'custom_duration_options' => 'array',
         'car_types_new' => 'array',
+        // Fix integer fields that might be stored as strings
         'category_id' => 'integer',
         'city_id' => 'integer',
+        'provider_id' => 'integer',
         'car_model' => 'integer',
         'car_type' => 'integer',
+        'vehicule_type' => 'integer',
+        'vehicule_model' => 'integer',
+        'boat_type' => 'integer',
+        'activity_type' => 'integer',
+        'year' => 'integer',
+        'seats' => 'integer',
+        'doors' => 'integer',
+        'capacity' => 'integer',
+        'max_passengers' => 'integer',
+        'max_luggage' => 'integer',
+        'group_size_min' => 'integer',
+        'group_size_max' => 'integer',
+        'service_type' => 'integer',
+        // Fix float fields
+        'deposit_amount' => 'float',
+        'price_per_hour' => 'float',
+        'price_per_half_day' => 'float',
+        'price_per_day' => 'float',
+        'price_per_week' => 'float',
+        'price_per_month' => 'float',
+        'price_per_person' => 'float',
+        'price_per_group' => 'float',
         'vehicule_type' => 'integer',
         'vehicule_model' => 'integer',
         'year' => 'integer',
@@ -130,6 +154,27 @@ class Listing extends Model
     public function translations()
     {
         return $this->hasMany(ListingTranslation::class);
+    }
+    
+    /**
+     * Scope to eager load all necessary relationships for display
+     * This prevents N+1 query problems
+     */
+    public function scopeWithCompleteData($query)
+    {
+        return $query->with([
+            'galleries',
+            'pricings',
+            'addons',
+            'included',
+            'notIncluded',
+            'category',
+            'city',
+            'provider',
+            'customBookingOptions',
+            'actPricings',
+            'driverPricings'
+        ]);
     }
 
     /**
@@ -396,6 +441,119 @@ class Listing extends Model
         }
         
         return !empty($value) ? (float) $value : null;
+    }
+    
+    /**
+     * Check if listing has complete pricing data
+     * 
+     * @return bool
+     */
+    public function hasCompletePricing()
+    {
+        switch ($this->category_id) {
+            case 3: // Private Driver
+                // Check if private driver pricing exists
+                return $this->driverPricings()->exists() || 
+                       $this->pricings()->exists();
+                
+            case 5: // Activities
+                // Check for either custom booking options or activity pricings
+                return $this->customBookingOptions()->exists() || 
+                       $this->actPricings()->exists();
+                
+            default:
+                // For other categories, check standard pricing fields
+                return !empty($this->price_per_day) || 
+                       !empty($this->price_per_hour) ||
+                       $this->pricings()->exists();
+        }
+    }
+    
+    /**
+     * Get pricing data with fallback logic
+     * 
+     * @return array
+     */
+    public function getPricingWithFallback()
+    {
+        $pricing = [];
+        
+        // Base pricing from model fields
+        if ($this->price_per_hour) $pricing['per_hour'] = $this->price_per_hour;
+        if ($this->price_per_half_day) $pricing['per_half_day'] = $this->price_per_half_day;
+        if ($this->price_per_day) $pricing['per_day'] = $this->price_per_day;
+        if ($this->price_per_week) $pricing['per_week'] = $this->price_per_week;
+        if ($this->price_per_month) $pricing['per_month'] = $this->price_per_month;
+        
+        // Category-specific pricing
+        switch ($this->category_id) {
+            case 3: // Private Driver
+                if ($this->driverPricings()->exists()) {
+                    $pricing['driver_pricings'] = $this->driverPricings;
+                }
+                break;
+                
+            case 5: // Activities
+                if ($this->customBookingOptions()->exists()) {
+                    $pricing['custom_options'] = $this->customBookingOptions;
+                } elseif ($this->actPricings()->exists()) {
+                    $pricing['activity_pricings'] = $this->actPricings;
+                }
+                break;
+        }
+        
+        // Add any additional pricings
+        if ($this->pricings()->exists()) {
+            $pricing['additional'] = $this->pricings;
+        }
+        
+        return $pricing;
+    }
+    
+    /**
+     * Check data integrity and log warnings
+     * 
+     * @return array Issues found
+     */
+    public function checkDataIntegrity()
+    {
+        $issues = [];
+        
+        // Check for missing images
+        if (!$this->galleries()->exists()) {
+            $issues[] = 'No images uploaded';
+        }
+        
+        // Check for missing pricing based on category
+        if (!$this->hasCompletePricing()) {
+            $issues[] = 'Incomplete pricing configuration';
+        }
+        
+        // Check category-specific requirements
+        switch ($this->category_id) {
+            case 2: // Car Rental
+                if (empty($this->car_types_new) && empty($this->car_type)) {
+                    $issues[] = 'Missing car type information';
+                }
+                break;
+                
+            case 3: // Private Driver
+                if (empty($this->max_passengers)) {
+                    $issues[] = 'Missing max passengers';
+                }
+                if (empty($this->max_luggage)) {
+                    $issues[] = 'Missing max luggage';
+                }
+                break;
+                
+            case 5: // Activities
+                if (empty($this->meeting_point)) {
+                    $issues[] = 'Missing meeting point';
+                }
+                break;
+        }
+        
+        return $issues;
     }
 
 }
