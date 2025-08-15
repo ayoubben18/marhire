@@ -85,3 +85,4 @@ NEVER FUCKING RESTORE THE FILE STATUS USING GIT JUST REMOVE WHAT YOU WANT TO REM
 
 - remember that the category id for car is 2, 3 for private driver, 4 boat rental, 5 things to do
 - Database column: droppoff_location (has a typo but we can't change it without a migration) so we are not changing it at all just use it as it is
+- for all form on react or blade each time we remove or add or change a field check that it correlates with the backend so we don't get some forms not passing or false-positive validation errors

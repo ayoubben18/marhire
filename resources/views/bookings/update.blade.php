@@ -60,48 +60,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6" data-categories="5">
-                                    <div class="form-group">
-                                        <label class="form-label" for="activity_type">Activity Type <span class="lbl-obligatoire">*</span></label>
-                                        <div class="form-control-wrap">
-                                            <select class="form-control select2-single" name="activity_type" id="activity_type">
-                                                <option value="" disabled selected>--Choose option--</option>
-                                                @foreach($activityTypes as $type)
-                                                <option value="{{ $type['id'] }}">{{ $type['option'] }}</option>
-                                                @endforeach
-                                            </select>
-                                            <small class="error d-none">Required field.</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6" data-categories="3">
-                                    <div class="form-group">
-                                        <label class="form-label" for="car_type">Vehicule Type <span class="lbl-obligatoire">*</span></label>
-                                        <div class="form-control-wrap">
-                                            <select class="form-control select2-single" name="car_type" id="car_type">
-                                                <option value="" disabled selected>--Choose Option--</option>
-                                                @foreach($vehiculeTypes as $type)
-                                                <option value="{{ $type['id'] }}" {{ $booking->car_type == $type['id'] ? 'selected' : '' }}>{{ $type['option'] }}</option>
-                                                @endforeach
-                                            </select>
-                                            <small class="error d-none">Required field.</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6" data-categories="3">
-                                    <div class="form-group">
-                                        <label class="form-label" for="airport_or_intercity">Airport / Intercity <span class="lbl-obligatoire">*</span></label>
-                                        <div class="form-control-wrap">
-                                            <select class="form-control select2-single" name="airport_or_intercity" id="airport_or_intercity">
-                                                <option value="Airport (One Way)" {{ $booking->airport_or_intercity == 'Airport (One Way)' ? 'selected': '' }}>Airport (One Way)</option>
-                                                <option value="Airport (Round Way)" {{ $booking->airport_or_intercity == 'Airport (Round Way)' ? 'selected': '' }}>Airport (Round Way)</option>
-                                                <option value="Intercity (One Way)" {{ $booking->airport_or_intercity == 'Intercity (One Way)' ? 'selected': '' }}>Intercity (One Way)</option>
-                                                <option value="Intercity (Round Way)" {{ $booking->airport_or_intercity == 'Intercity (Round Way)' ? 'selected': '' }}>Intercity (Round Way)</option>
-                                            </select>
-                                            <small class="error d-none">Required field.</small>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="col-md-6" data-categories="3">
                                     <div class="form-group">
                                         <label class="form-label" for="city_a_id">Departure City <span class="lbl-obligatoire">*</span></label>
@@ -253,17 +211,6 @@
                                         <label class="form-label" for="duration">Duration <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
                                             <select class="form-control select2-single" name="duration" id="duration">
-                                                <option value="" selected disabled>--Choose Option--</option>
-                                            </select>
-                                            <small class="error d-none">Required field.</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6" data-categories="4">
-                                    <div class="form-group">
-                                        <label class="form-label" for="propose">Propose <span class="lbl-obligatoire">*</span></label>
-                                        <div class="form-control-wrap">
-                                            <select class="form-control select2-single" name="propose" id="propose">
                                                 <option value="" selected disabled>--Choose Option--</option>
                                             </select>
                                             <small class="error d-none">Required field.</small>
@@ -599,8 +546,6 @@ $(document).ready(function() {
                 $('#pickup_time_private').val(booking.pickup_time);
                 $('#service_types').val(booking.service_types);
                 $('#road_types').val(booking.road_types);
-                $('#airport_or_intercity').val(booking.airport_or_intercity);
-                $('#car_type').val(booking.car_type);
                 $('#city_a_id').val(booking.city_a_id);
                 $('#city_b_id').val(booking.city_b_id);
                 $('#number_of_passengers').val(booking.number_of_passengers);
@@ -611,13 +556,11 @@ $(document).ready(function() {
                 
             case 4: // Boat Rental
                 $('#duration').val(booking.duration);
-                $('#propose').val(booking.propose);
                 $('#prefered_date').val(booking.prefered_date);
                 $('#number_of_people').val(booking.number_of_people);
                 break;
                 
             case 5: // Activities
-                $('#activity_type').val(booking.activity_type);
                 $('#prefered_date').val(booking.prefered_date);
                 $('#number_of_people').val(booking.number_of_people);
                 $('#time_preference').val(booking.time_preference);
@@ -634,9 +577,9 @@ $(document).ready(function() {
         if (categoryId === 3) {
             // Private Driver - special handling
             loadPrivateDriverListings();
-        } else if (categoryId === 5 && booking.activity_type) {
-            // Activities with activity type
-            loadActivityListings();
+        } else if (categoryId === 5) {
+            // Activities
+            loadCategoryListings(5);
         } else {
             // All other categories
             loadCategoryListings(categoryId);
@@ -663,12 +606,10 @@ $(document).ready(function() {
     
     function loadPrivateDriverListings() {
         // Check if we have all required fields
-        const airportOrIntercity = booking.airport_or_intercity || $('#airport_or_intercity').val();
-        const carType = booking.car_type || $('#car_type').val();
         const cityA = booking.city_a_id || $('#city_a_id').val();
         const cityB = booking.city_b_id || $('#city_b_id').val();
         
-        if (!airportOrIntercity || !carType || !cityA || !cityB) {
+        if (!cityA || !cityB) {
             // Fall back to category listings if missing data
             loadCategoryListings(3);
             return;
@@ -678,8 +619,6 @@ $(document).ready(function() {
             type: 'post',
             url: "{{ route('bookings.getListings') }}",
             data: {
-                airportOrIntercity: airportOrIntercity,
-                car_type: carType,
                 city_a_id: cityA,
                 city_b_id: cityB,
                 _token: $('meta[name="csrf-token"]').attr('content')
@@ -695,31 +634,6 @@ $(document).ready(function() {
         });
     }
     
-    function loadActivityListings() {
-        const activityType = booking.activity_type || $('#activity_type').val();
-        
-        if (!activityType) {
-            loadCategoryListings(5);
-            return;
-        }
-        
-        $.ajax({
-            type: 'post',
-            url: "{{ route('bookings.getActivityListings') }}",
-            data: { 
-                activity_type: activityType,
-                _token: $('meta[name="csrf-token"]').attr('content')
-            },
-            dataType: 'json',
-            success: function(resp) {
-                populateListingDropdown(resp.listings, 'activity');
-            },
-            error: function() {
-                console.error('Failed to load activity listings');
-                loadCategoryListings(5);
-            }
-        });
-    }
     
     function populateListingDropdown(listings, type) {
         let options = '<option value="" disabled>--Choose Option--</option>';
@@ -753,7 +667,7 @@ $(document).ready(function() {
         
         $('#listing_id').html(options);
         
-        // If we have a selected listing, trigger change to load addons
+        // If we have a selected listing, trigger change to load addons and options
         // But only if we don't already have addon rows (to preserve initial server-side values)
         if (booking.listing_id) {
             setTimeout(() => {
@@ -764,6 +678,16 @@ $(document).ready(function() {
                 } else {
                     // Just load the addons options for the "Add addon" button without updating existing selects
                     loadAddonsForNewRows(booking.listing_id);
+                    
+                    // Load boat options if it's a boat rental
+                    if (parseInt(booking.category_id) === 4) {
+                        loadBoatOptions(booking.listing_id);
+                    }
+                    
+                    // Load pricing options for categories 3 and 5
+                    if ([3, 5].includes(parseInt(booking.category_id))) {
+                        loadPricingOptions(booking.listing_id);
+                    }
                 }
             }, 300);
         }
@@ -851,8 +775,10 @@ $(document).ready(function() {
                     loadPricingOptions(listingId);
                 }
                 
-                // Calculate price
-                setTimeout(calculatePrice, 300);
+                // Load duration and propose options for category 4 (Boat Rental)
+                if (parseInt(booking.category_id) === 4) {
+                    loadBoatOptions(listingId);
+                }
             }
         });
     }
@@ -878,10 +804,29 @@ $(document).ready(function() {
         });
     }
     
+    function loadBoatOptions(listingId) {
+        const $selectedListing = $('#listing_id option:selected');
+        const durations = $selectedListing.data('durations');
+        
+        // Load duration options
+        if (durations) {
+            let durationsArr = durations.toString().split(',');
+            let durationOptions = '<option value="" disabled>--Choose Option--</option>';
+            durationsArr.forEach(function(duration) {
+                const trimmedDuration = duration.trim();
+                if (trimmedDuration) {
+                    const isSelected = trimmedDuration == booking.duration ? 'selected' : '';
+                    durationOptions += `<option value="${trimmedDuration}" ${isSelected}>${trimmedDuration}</option>`;
+                }
+            });
+            $('#duration').html(durationOptions);
+        }
+    }
+    
     // ========================================
-    // PRICE CALCULATION
+    // PRICE CALCULATION FOR FORM SUBMISSION
     // ========================================
-    function calculatePrice() {
+    function calculateAndSetPrices() {
         const categoryId = parseInt($('#category_id').val());
         let basePrice = 0;
         let addonsTotal = 0;
@@ -906,19 +851,23 @@ $(document).ready(function() {
                 break;
                 
             case 3: // Private Driver
-                const airportOrIntercity = $('#airport_or_intercity').val();
+                const serviceType = $('#service_types').val();
+                const roadType = $('#road_types').val();
                 const $listing = $('#listing_id option:selected');
                 
-                if (airportOrIntercity) {
-                    if (airportOrIntercity.includes('Airport')) {
-                        basePrice = airportOrIntercity.includes('One Way') ? 
+                if (serviceType && roadType) {
+                    if (serviceType === 'airport_transfer') {
+                        basePrice = roadType === 'one_way' ? 
                             parseFloat($listing.attr('airport_one')) || 0 :
                             parseFloat($listing.attr('airport_round')) || 0;
-                    } else {
-                        basePrice = airportOrIntercity.includes('One Way') ?
+                    } else if (serviceType === 'intercity') {
+                        basePrice = roadType === 'one_way' ?
                             parseFloat($listing.attr('intercity_one')) || 0 :
                             parseFloat($listing.attr('intercity_round')) || 0;
                     }
+                } else {
+                    // Fallback to per-day pricing if service/road types not selected
+                    basePrice = parseFloat($listing.data('price-per-day')) || 0;
                 }
                 break;
                 
@@ -937,18 +886,11 @@ $(document).ready(function() {
         const discountOrExtra = parseFloat($('#discount_or_extra').val()) || 0;
         basePrice += discountOrExtra;
         
-        // Update UI
+        // Set hidden form fields for submission
         const total = basePrice + addonsTotal;
-        $('.booking-pricing-item.price .amount').text(basePrice.toFixed(2) + '€');
-        $('.booking-pricing-item.addons .amount').text(addonsTotal.toFixed(2) + '€');
-        $('.booking-pricing-item.total .amount').text(total.toFixed(2) + '€');
-        
-        // Show/hide per day based on category
-        if (categoryId === 2) {
-            $('.booking-pricing-item.per_day').show();
-        } else {
-            $('.booking-pricing-item.per_day').hide();
-        }
+        $('#booking_price').val(basePrice.toFixed(2));
+        $('#total_addons').val(addonsTotal.toFixed(2));
+        $('#total_price').val(total.toFixed(2));
     }
     
     // ========================================
@@ -976,22 +918,14 @@ $(document).ready(function() {
         });
         
         // Private driver fields change
-        $('#airport_or_intercity, #car_type, #city_a_id, #city_b_id').change(function() {
+        $('#city_a_id, #city_b_id').change(function() {
             if (parseInt($('#category_id').val()) === 3) {
                 loadPrivateDriverListings();
             }
         });
         
-        // Activity type change
-        $('#activity_type').change(function() {
-            if (parseInt($('#category_id').val()) === 5) {
-                loadActivityListings();
-            }
-        });
         
-        // Price recalculation triggers
-        $('#pickup_date, #dropoff_date, #pricing_option_id, #discount_or_extra').change(calculatePrice);
-        $(document).on('change', '.addon', calculatePrice);
+        // Price recalculation triggers removed - price will be calculated on save
         
         // Add addon
         $('#add-addon').click(function() {
@@ -1014,11 +948,12 @@ $(document).ready(function() {
         // Remove addon
         $(document).on('click', '.remove-addon', function() {
             $(this).closest('tr').remove();
-            calculatePrice();
         });
         
         // Form submit
         $('#submit-form-btn').click(function() {
+            // Calculate and set price values before submitting
+            calculateAndSetPrices();
             $('#bookingFrm').submit();
         });
     }

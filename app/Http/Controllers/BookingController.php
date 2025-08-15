@@ -191,7 +191,6 @@ class BookingController extends Controller
     public function getListings(Request $request)
     {
         $listings = Listing::where('category_id', 3)
-            ->where('vehicule_type', $request->car_type)
             ->where('city_id', $request->city_a_id)
             ->orderBy('title')
             ->with([
