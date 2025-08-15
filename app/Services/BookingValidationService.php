@@ -11,7 +11,7 @@ use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use App\Http\Controllers\BookingController;
+use App\Services\PricingService;
 
 class BookingValidationService
 {
@@ -247,11 +247,41 @@ class BookingValidationService
         // The pricing structure depends on category and might involve related pricing tables
         $basePrice = $this->calculateBasePrice($request, $listing);
         
-        // Calculate add-ons total
+        // Calculate add-ons total with proper validation
         if ($request->has('addons') && !empty($request->addons)) {
             $addonIds = array_filter($request->input('addons', []));
-            $addonsTotal = ListingAddon::whereIn('id', $addonIds)
+            
+            // Get valid addon IDs for this listing through pivot table
+            // The listing_addons pivot table has listing_id and addon_id columns
+            $validAddonIds = $listing->addons()->pluck('addon_id')->toArray();
+            
+            // Filter to only include addons that belong to this listing
+            $validSelectedAddons = array_intersect($addonIds, $validAddonIds);
+            
+            // Calculate total from valid addons only
+            // We need to get the price from the addons table, not listing_addons
+            $addonsBaseTotal = ListingAddon::whereIn('id', $validSelectedAddons)
                 ->sum('price');
+            
+            // For private activities (category 5), multiply addon prices by number of people
+            if ($listing->category_id == 5 && strtolower($listing->private_or_group) === 'private') {
+                $numberOfPeople = $request->input('number_of_people', 1);
+                $addonsTotal = $addonsBaseTotal * $numberOfPeople;
+            } else {
+                // For other categories or group activities, addon price is fixed
+                $addonsTotal = $addonsBaseTotal;
+            }
+            
+            // Log any invalid addons for security monitoring
+            $invalidAddons = array_diff($addonIds, $validSelectedAddons);
+            if (!empty($invalidAddons)) {
+                \Log::warning('Invalid addons attempted', [
+                    'listing_id' => $listing->id,
+                    'requested_addons' => $addonIds,
+                    'invalid_addons' => $invalidAddons,
+                    'ip' => $request->ip()
+                ]);
+            }
         }
         
         $calculatedTotal = $basePrice + $addonsTotal;
@@ -298,19 +328,13 @@ class BookingValidationService
      */
     private function calculateBasePrice(Request $request, Listing $listing): float
     {
-        // Use the BookingController's advanced pricing logic
-        $controller = new BookingController();
+        // Use the centralized PricingService for consistent calculations
+        $pricingService = app(PricingService::class);
         
-        // Build request data for price calculation
-        $priceRequest = new Request();
-        $priceRequest->merge($request->all());
+        // Ensure we have the correct listing relationships loaded
+        $listing->load(['customBookingOptions', 'pricings', 'addons.addon', 'actPricings', 'city']);
         
-        // Ensure we have the correct listing relationship loaded
-        $listing->load(['customBookingOptions', 'pricings', 'addons.addon', 'city']);
-        
-        $priceCalculation = $controller->calculateAdvancedPrice($listing, $priceRequest);
-        
-        return $priceCalculation['base_price'];
+        return $pricingService->calculateBasePrice($listing, $request);
     }
     
     /**

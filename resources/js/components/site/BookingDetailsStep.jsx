@@ -1689,113 +1689,62 @@ const BookingDetailsStep = ({
                             {t("booking.activityOptions", "Activity Options")}
                             <RequiredAsterisk />
                         </label>
-                        {/* Debug logging for activity options */}
                         {(() => {
-                            console.log('Activity Options Debug:', {
-                                listingId: listing?.id,
-                                customBookingOptions: listing?.customBookingOptions,
-                                custom_booking_options: listing?.custom_booking_options, 
-                                actPricings: listing?.actPricings,
-                                category: categoryId
-                            });
-                            return null;
+                            // Activity pricing uses act_pricings (snake_case from Laravel API)
+                            const activityPricings = listing?.act_pricings || [];
+                            
+                            if (activityPricings.length > 0) {
+                                return (
+                                    <>
+                                        <Select
+                                            value={selectedDurationOption}
+                                            onChange={(e) =>
+                                                setSelectedDurationOption(
+                                                    e.target.value
+                                                )
+                                            }
+                                            displayEmpty
+                                            fullWidth
+                                            error={!!errors.duration_option}
+                                        >
+                                            <MenuItem value="" disabled>
+                                                {t("booking.selectActivityOption", "Select Option")}
+                                            </MenuItem>
+                                            {activityPricings.map((option) => {
+                                                // act_pricings has 'element' as the name and 'price' fields
+                                                const displayName = option.element;
+                                                const displayPrice = option.price;
+                                                
+                                                return (
+                                                    <MenuItem
+                                                        key={option.id}
+                                                        value={option.id}
+                                                    >
+                                                        {displayName} - ${displayPrice}
+                                                    </MenuItem>
+                                                );
+                                            })}
+                                        </Select>
+                                        {errors.duration_option && (
+                                            <p className="text-red-500 text-sm mt-1">
+                                                {errors.duration_option[0]}
+                                            </p>
+                                        )}
+                                    </>
+                                );
+                            }
+                            
+                            return (
+                                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                    <Typography variant="body2" color="textSecondary" className="mb-2">
+                                        <strong>{t("booking.noActivityOptions", "No activity options available")}</strong>
+                                    </Typography>
+                                    <Typography variant="caption" color="textSecondary">
+                                        {t("booking.contactProviderForPricing", "This activity does not have any pricing options configured. Please contact the provider directly.")}
+                                    </Typography>
+                                </div>
+                            );
                         })()}
-                        {(listing?.customBookingOptions ||
-                            listing?.custom_booking_options) &&
-                        (
-                            listing.customBookingOptions ||
-                            listing.custom_booking_options
-                        ).length > 0 ? (
-                            <>
-                                <Select
-                                    value={selectedDurationOption}
-                                    onChange={(e) =>
-                                        setSelectedDurationOption(
-                                            e.target.value
-                                        )
-                                    }
-                                    displayEmpty
-                                    fullWidth
-                                    error={!!errors.duration_option}
-                                >
-                                    <MenuItem value="" disabled>
-                                        {t("booking.selectActivityOption", "Select Option")}
-                                    </MenuItem>
-                                    {(
-                                        listing.customBookingOptions ||
-                                        listing.custom_booking_options
-                                    ).map((option) => {
-                                        // Display option name exactly as stored
-                                        return (
-                                            <MenuItem
-                                                key={option.id}
-                                                value={option.id}
-                                            >
-                                                {option.name} - ${option.price}
-                                            </MenuItem>
-                                        );
-                                    })}
-                                </Select>
-                                {errors.duration_option && (
-                                    <p className="text-red-500 text-sm mt-1">
-                                        {errors.duration_option[0]}
-                                    </p>
-                                )}
-                            </>
-                        ) : listing?.actPricings &&
-                          listing.actPricings.length > 0 ? (
-                            // Fallback to actPricings if customBookingOptions not available
-                            <>
-                                <Select
-                                    value={selectedDurationOption}
-                                    onChange={(e) =>
-                                        setSelectedDurationOption(
-                                            e.target.value
-                                        )
-                                    }
-                                    displayEmpty
-                                    fullWidth
-                                    error={!!errors.duration_option}
-                                >
-                                    <MenuItem value="" disabled>
-                                        {t("booking.selectActivityOption", "Select Option")}
-                                    </MenuItem>
-                                    {listing.actPricings.map((pricing) => {
-                                        // Display pricing element exactly as stored
-                                        return (
-                                            <MenuItem
-                                                key={pricing.id}
-                                                value={pricing.id}
-                                            >
-                                                {pricing.element} - ${pricing.price}
-                                            </MenuItem>
-                                        );
-                                    })}
-                                </Select>
-                                {errors.duration_option && (
-                                    <p className="text-red-500 text-sm mt-1">
-                                        {errors.duration_option[0]}
-                                    </p>
-                                )}
-                            </>
-                        ) : (
-                            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                <Typography variant="body2" color="textSecondary" className="mb-2">
-                                    <strong>No activity options available</strong>
-                                </Typography>
-                                <Typography variant="caption" color="textSecondary">
-                                    This activity does not have any pricing options configured. Please contact the provider directly.
-                                </Typography>
-                                {/* Show debug info in development */}
-                                {process.env.NODE_ENV === 'development' && (
-                                    <div className="mt-2 p-2 bg-gray-100 rounded text-xs font-mono">
-                                        <div>customBookingOptions: {JSON.stringify(listing?.customBookingOptions?.length || 0)}</div>
-                                        <div>actPricings: {JSON.stringify(listing?.actPricings?.length || 0)}</div>
-                                        <div>Listing ID: {listing?.id}</div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
                     </div>
 
                     {/* Number of People */}

@@ -1397,6 +1397,18 @@ class ListingController extends Controller
             $listing->car_type_objs = \App\Models\SubCategoryOption::whereIn('id', $carTypeIds)->get();
         }
 
+        // Debug: Log actPricings for Things to Do
+        if ($listing->category_id == 5) {
+            \Log::info('Things to Do pricing debug', [
+                'listing_id' => $listing->id,
+                'actPricings_count' => $listing->actPricings->count(),
+                'customBookingOptions_count' => $listing->customBookingOptions->count(),
+                'actPricings_data' => $listing->actPricings->toArray(),
+                'customBookingOptions_data' => $listing->customBookingOptions->toArray(),
+                'response_keys' => array_keys($listing->toArray())
+            ]);
+        }
+        
         // Add translated data to the response (optimized for current locale only)
         $listing->translated_fields = $listing->getCurrentTranslatedData();
         

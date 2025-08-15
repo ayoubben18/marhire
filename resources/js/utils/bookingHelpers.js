@@ -213,16 +213,15 @@ export const calculatePrice = (categoryId, basePrice, params = {}) => {
             
             return Math.round(price * 100) / 100;
 
-        case 5: // Activity - Custom booking options
+        case 5: // Activity - Using act_pricings from API
             const people = parseInt(numberOfPeople) || 1;
             let activityPrice = 0;
             
-            // Activities use customBookingOptions for pricing
-            // Check both customBookingOptions and custom_booking_options (different API responses)
-            const customOptions = listing?.customBookingOptions || listing?.custom_booking_options;
+            // Activities use act_pricings (snake_case from Laravel API)
+            const activityPricings = listing?.act_pricings || listing?.actPricings || [];
             
-            if (selectedDurationOption && customOptions?.length > 0) {
-                const selectedOption = customOptions.find(opt => opt?.id == selectedDurationOption);
+            if (selectedDurationOption && activityPricings.length > 0) {
+                const selectedOption = activityPricings.find(opt => opt?.id == selectedDurationOption);
                 if (selectedOption?.price) {
                     const optionPrice = parseFloat(selectedOption.price);
                     // Check activity type (private vs group)
@@ -232,17 +231,6 @@ export const calculatePrice = (categoryId, basePrice, params = {}) => {
                     } else {
                         // Private activities: Price per person
                         activityPrice = optionPrice * people;
-                    }
-                }
-            } else if (selectedDurationOption && listing?.actPricings?.length > 0) {
-                // Fallback to actPricings if customBookingOptions not available
-                const selectedPricing = listing.actPricings.find(p => p?.id == selectedDurationOption);
-                if (selectedPricing?.price) {
-                    const pricingPrice = parseFloat(selectedPricing.price);
-                    if (listing?.private_or_group?.toLowerCase() === 'group') {
-                        activityPrice = pricingPrice;
-                    } else {
-                        activityPrice = pricingPrice * people;
                     }
                 }
             } else if (!selectedDurationOption) {

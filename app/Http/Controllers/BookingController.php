@@ -882,7 +882,7 @@ class BookingController extends Controller
 
         try {
             // Load listing with necessary relationships
-            $listing = Listing::with(['addons.addon', 'pricings', 'customBookingOptions'])
+            $listing = Listing::with(['addons.addon', 'pricings', 'actPricings'])
                 ->findOrFail($request->listing_id);
 
             // Verify category matches
@@ -1366,19 +1366,27 @@ class BookingController extends Controller
         $hours = floatval($request->duration);
         
         if ($hours >= 0.5 && $hours <= 1.5) {
+            // 30min to 1.5 hours: price_per_hour * hours
             $price = $listing->price_per_hour * $hours;
             $rateType = 'hourly';
             $calculation = $listing->price_per_hour . ' * ' . $hours;
         } elseif ($hours >= 2 && $hours <= 4) {
-            $price = $listing->price_per_half_day * ($hours / 4);
+            // 2 to 4 hours: use flat half-day rate (NO FRACTIONAL MULTIPLIER)
+            // This matches the frontend logic exactly
+            $price = $listing->price_per_half_day ?: $listing->price_per_hour * 4;
             $rateType = 'half_day';
-            $calculation = $listing->price_per_half_day . ' * (' . $hours . '/4)';
+            $calculation = 'Half-day rate: ' . ($listing->price_per_half_day ?: $listing->price_per_hour * 4);
         } elseif ($hours >= 4.5 && $hours <= 8) {
-            $price = $listing->price_per_day * ($hours / 8);
+            // 4.5 to 8 hours: use flat full-day rate (NO FRACTIONAL MULTIPLIER)
+            // This matches the frontend logic exactly
+            $price = $listing->price_per_day ?: $listing->price_per_hour * 8;
             $rateType = 'full_day';
-            $calculation = $listing->price_per_day . ' * (' . $hours . '/8)';
+            $calculation = 'Full-day rate: ' . ($listing->price_per_day ?: $listing->price_per_hour * 8);
         } else {
-            throw new \Exception('Invalid duration selected. Must be between 0.5 and 8 hours in valid ranges.');
+            // Invalid duration - use hourly rate as fallback (matching frontend)
+            $price = ($listing->price_per_hour ?: 0) * $hours;
+            $rateType = 'hourly_fallback';
+            $calculation = 'Hourly fallback: ' . ($listing->price_per_hour ?: 0) . ' * ' . $hours;
         }
 
         return [
@@ -1406,17 +1414,20 @@ class BookingController extends Controller
         // Debug logging
         \Log::info('Things to Do price calculation', [
             'listing_id' => $listing->id,
-            'custom_booking_option_id' => $request->custom_booking_option_id,
-            'duration_option_id' => $request->duration_option_id,
-            'available_options' => $listing->customBookingOptions()->pluck('id')->toArray()
+            'pricing_option_id' => $request->pricing_option_id ?? $request->duration_option_id,
+            'available_options' => $listing->actPricings()->pluck('id')->toArray()
         ]);
         
-        // Get selected custom booking option
-        $selectedOption = $listing->customBookingOptions()
-            ->find($request->custom_booking_option_id);
+        // Get selected pricing option from actPricings
+        $selectedOption = $listing->actPricings()
+            ->find($request->pricing_option_id ?? $request->duration_option_id);
 
         if (!$selectedOption) {
-            throw new \Exception('Invalid booking option selected. Option ID: ' . $request->custom_booking_option_id);
+            \Log::warning('Activity pricing option not found', [
+                'requested_id' => $request->pricing_option_id ?? $request->duration_option_id,
+                'available_ids' => $listing->actPricings()->pluck('id')->toArray()
+            ]);
+            throw new \Exception('Invalid pricing option selected. Please select a valid activity option.');
         }
 
         // Check if activity is private or group
@@ -1478,17 +1489,23 @@ class BookingController extends Controller
         $isIntercity = in_array('intercity', $serviceTypes);
         $isRoundTrip = in_array('round_trip', $roadTypes) || in_array('road_trip', $roadTypes);
         
-        // Get pricing from private_listing_pricings table using pricings relationship
-        // For airport transfers to different cities, use the dropoff city pricing
-        // For intercity routes or same-city airport transfers, use the pickup city pricing
-        $cityForPricing = $pickupCity;
-        if ($isAirportTransfer && $dropoffCity && $dropoffCity != $pickupCity) {
-            $cityForPricing = $dropoffCity;
-        }
+        // Match frontend logic exactly for city selection
+        $pricing = null;
+        $driverPrice = 0;
         
-        $pricing = $listing->pricings()
-            ->where('city_id', $cityForPricing)
-            ->first();
+        if ($isAirportTransfer) {
+            // For airport transfer: use dropoff city if specified, otherwise listing city
+            // This matches the frontend logic: const cityToFind = dropoffCity || listing?.city_id;
+            $cityToFind = $dropoffCity ?: $listing->city_id;
+            $pricing = $listing->pricings()
+                ->where('city_id', $cityToFind)
+                ->first();
+        } elseif ($isIntercity) {
+            // For intercity, use the dropoff city's pricing row
+            $pricing = $listing->pricings()
+                ->where('city_id', $dropoffCity)
+                ->first();
+        }
             
         if (!$pricing) {
             // Fallback to old driver_pricings table if exists
@@ -1520,19 +1537,27 @@ class BookingController extends Controller
             throw new \Exception('Route pricing not available for the selected options');
         }
         
-        // Determine which price column to use
-        $price = 0;
-        
-        if ($isAirportTransfer && !$dropoffCity) {
-            // Airport transfer within same city
-            $price = $isRoundTrip ? $pricing->airport_round : $pricing->airport_one;
-        } else if ($isIntercity || ($isAirportTransfer && $dropoffCity && $dropoffCity != $pickupCity)) {
-            // Intercity or airport transfer to different city
-            $price = $isRoundTrip ? $pricing->intercity_round : $pricing->intercity_one;
-        } else if ($isAirportTransfer && $dropoffCity == $pickupCity) {
-            // Airport transfer within same city (when dropoff_city is explicitly set)
-            $price = $isRoundTrip ? $pricing->airport_round : $pricing->airport_one;
+        // Determine which price column to use - matching frontend logic exactly
+        if ($pricing) {
+            if ($isAirportTransfer) {
+                // Use airport prices if available, otherwise intercity prices
+                // This matches frontend: pricing.airport_round || pricing.intercity_round
+                if ($isRoundTrip) {
+                    $driverPrice = floatval($pricing->airport_round ?: $pricing->intercity_round);
+                } else {
+                    $driverPrice = floatval($pricing->airport_one ?: $pricing->intercity_one);
+                }
+            } elseif ($isIntercity) {
+                // For intercity routes, use intercity pricing
+                if ($isRoundTrip) {
+                    $driverPrice = floatval($pricing->intercity_round);
+                } else {
+                    $driverPrice = floatval($pricing->intercity_one);
+                }
+            }
         }
+        
+        $price = $driverPrice;
         
         if ($price <= 0) {
             // Try to find a fallback price or use default

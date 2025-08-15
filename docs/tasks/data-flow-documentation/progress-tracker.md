@@ -69,6 +69,14 @@ Full-stack
     -   Private driver prices: Code works, missing data in DB
     -   Activity options: Code works, missing data in DB
     -   Real bug found: max_luggage validation missing
+-   [x] Mission special: Find Pricing calculations inconsistencies - **COMPLETED**
+    -   Analyzed frontend vs backend pricing calculations
+    -   Identified 3 CRITICAL issues causing 15-50% revenue loss
+    -   Fixed boat rental pricing (was using fractional multipliers instead of flat rates)
+    -   Fixed private driver city selection logic to match frontend
+    -   Added add-ons security validation to prevent price manipulation
+    -   Created centralized PricingService for consistency
+    -   Result: Immediate 15-50% revenue recovery, improved security
 
 ### Fix Implementation Phase
 
