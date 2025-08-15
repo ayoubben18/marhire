@@ -145,7 +145,7 @@ const ClientInfoStep = ({
                             errors.fullName
                                 ? "border-red-500"
                                 : "border-gray-300"
-                        } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                        } rounded-xl focus:ring-2 focus:ring-[#048667] focus:border-transparent transition-all duration-200`}
                         required
                     />
                     {errors.fullName && (
@@ -180,7 +180,7 @@ const ClientInfoStep = ({
                         )}
                         className={`w-full px-3 py-3 text-lg border ${
                             errors.email ? "border-red-500" : "border-gray-300"
-                        } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                        } rounded-xl focus:ring-2 focus:ring-[#048667] focus:border-transparent transition-all duration-200`}
                         required
                     />
                     {errors.email && (
@@ -208,7 +208,7 @@ const ClientInfoStep = ({
                             errors.whatsAppNumber
                                 ? "border-red-500"
                                 : "border-gray-300"
-                        } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                        } rounded-xl focus:ring-2 focus:ring-[#048667] focus:border-transparent transition-all duration-200`}
                         required
                     />
                     {errors.whatsAppNumber && (
@@ -234,7 +234,7 @@ const ClientInfoStep = ({
                             errors.countryOfResidence
                                 ? "border-red-500"
                                 : "border-gray-300"
-                        } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white`}
+                        } rounded-xl focus:ring-2 focus:ring-[#048667] focus:border-transparent transition-all duration-200 bg-white`}
                         required
                     >
                         <option value="">
@@ -281,7 +281,7 @@ const ClientInfoStep = ({
                             "booking.flightNumberPlaceholder",
                             "AA1234"
                         )}
-                        className="w-full px-3 py-3 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                        className="w-full px-3 py-3 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#048667] focus:border-transparent transition-all duration-200"
                     />
                 </div>
                 <div className="md:col-span-2">
@@ -305,7 +305,7 @@ const ClientInfoStep = ({
                             errors.additionalNotes
                                 ? "border-red-500"
                                 : "border-gray-300"
-                        } rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                        } rounded-xl focus:ring-2 focus:ring-[#048667] focus:border-transparent transition-all duration-200`}
                     />
                     {errors.additionalNotes && (
                         <p className="text-red-500 text-sm mt-1">
@@ -327,7 +327,7 @@ const ClientInfoStep = ({
                                         ? "#ef4444"
                                         : undefined,
                                     "&.Mui-checked": {
-                                        color: "#3b82f6",
+                                        color: "#048667",
                                     },
                                 }}
                             />
@@ -343,7 +343,7 @@ const ClientInfoStep = ({
                                     href="/terms-conditions"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-blue-600 hover:underline"
+                                    className="text-[#048667] hover:underline"
                                 >
                                     {t("footer.termsConditions")}
                                 </a>
@@ -352,7 +352,7 @@ const ClientInfoStep = ({
                                     href="/privacy-policy"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-blue-600 hover:underline"
+                                    className="text-[#048667] hover:underline"
                                 >
                                     {t("footer.privacyPolicy")}
                                 </a>
@@ -361,7 +361,7 @@ const ClientInfoStep = ({
                                     href="/cancellation-policy"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-blue-600 hover:underline"
+                                    className="text-[#048667] hover:underline"
                                 >
                                     {t("footer.cancellationPolicy")}
                                 </a>

@@ -1129,7 +1129,30 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                 
                 {/* Stepper */}
                 <Box sx={{ width: '100%', mb: 4 }}>
-                    <Stepper activeStep={currentStep} alternativeLabel>
+                    <Stepper 
+                        activeStep={currentStep} 
+                        alternativeLabel
+                        sx={{
+                            '& .MuiStepIcon-root': {
+                                color: '#e0e0e0',
+                                '&.Mui-active': {
+                                    color: '#048667',
+                                },
+                                '&.Mui-completed': {
+                                    color: '#048667',
+                                },
+                            },
+                            '& .MuiStepConnector-line': {
+                                borderColor: '#e0e0e0',
+                            },
+                            '& .MuiStepConnector-root.Mui-active .MuiStepConnector-line': {
+                                borderColor: '#048667',
+                            },
+                            '& .MuiStepConnector-root.Mui-completed .MuiStepConnector-line': {
+                                borderColor: '#048667',
+                            },
+                        }}
+                    >
                         <Step 
                             onClick={() => handleStepClick(0)}
                             sx={{ cursor: 'pointer' }}
@@ -1333,14 +1356,14 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                                         </Tooltip>
                                     )}
                                 </div>
-                                <span className="text-2xl font-bold text-blue-600">
+                                <span className="text-2xl font-bold" style={{ color: '#048667' }}>
                                     €{priceDetails.price}
                                 </span>
                             </div>
                             {priceDetails.rateDescription && (
                                 <div className="text-sm text-gray-600 flex items-center gap-2 mt-2">
                                     <span className={`px-2 py-1 rounded-md ${
-                                        priceDetails.rateType === 'hourly' ? 'bg-blue-100 text-blue-700' :
+                                        priceDetails.rateType === 'hourly' ? 'bg-[#048667]/15 text-[#048667]' :
                                         priceDetails.rateType === 'halfDay' ? 'bg-green-100 text-green-700' :
                                         priceDetails.rateType === 'fullDay' ? 'bg-purple-100 text-purple-700' :
                                         priceDetails.rateType === 'daily' ? 'bg-orange-100 text-orange-700' :
@@ -1370,9 +1393,16 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                             type="button"
                             onClick={handleBack}
                             variant="outlined"
-                            color="primary"
                             size="large"
                             className="px-6"
+                            sx={{
+                                borderColor: '#048667',
+                                color: '#048667',
+                                '&:hover': {
+                                    borderColor: '#037056',
+                                    backgroundColor: 'rgba(4, 134, 103, 0.04)',
+                                },
+                            }}
                         >
                             Back
                         </Button>
@@ -1383,9 +1413,14 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                                 type="button"
                                 onClick={handleNext}
                                 variant="contained"
-                                color="primary"
                                 size="large"
                                 className="ml-auto px-6"
+                                sx={{
+                                    backgroundColor: '#048667',
+                                    '&:hover': {
+                                        backgroundColor: '#037056',
+                                    },
+                                }}
                             >
                                 {t('common.next')}
                             </Button>
@@ -1456,7 +1491,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                             <Typography variant="body2" className="text-gray-600 mb-2">
                                 {t("booking.confirmationNumber")}:
                             </Typography>
-                            <Typography variant="h5" className="font-bold text-blue-600">
+                            <Typography variant="h5" className="font-bold" style={{ color: '#048667' }}>
                                 {invoiceNumber}
                             </Typography>
                         </div>

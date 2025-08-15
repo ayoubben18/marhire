@@ -489,15 +489,15 @@ const BookingDetailsStep = ({
             </h3>
 
             {/* Advance Booking Notice */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 flex items-start gap-2">
-                <Clock className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+            <div className="rounded-lg p-3 mb-4 flex items-start gap-2" style={{ backgroundColor: 'rgba(4, 134, 103, 0.1)', border: '1px solid rgba(4, 134, 103, 0.2)' }}>
+                <Clock className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: '#048667' }} />
                 <div className="text-sm">
-                    <p className="text-blue-900 font-medium">
+                    <p className="font-medium" style={{ color: '#048667' }}>
                         {[3, 4, 5].includes(categoryId)
                             ? t("booking.advanceBooking48Hour")
                             : t("booking.advanceBooking24Hour")}
                     </p>
-                    <p className="text-blue-700 mt-1">
+                    <p className="mt-1" style={{ color: '#048667' }}>
                         {categoryId === 2 &&
                             t("booking.advanceBookingCarRental")}
                         {categoryId === 3 &&
@@ -508,7 +508,7 @@ const BookingDetailsStep = ({
                             t("booking.advanceBookingActivities")}
                         {![2, 3, 4, 5].includes(categoryId) &&
                             t("booking.advanceBookingGeneral")}
-                        <span className="block text-xs mt-1 text-blue-600">
+                        <span className="block text-xs mt-1" style={{ color: '#048667' }}>
                             {t("booking.currentMoroccoTime")}:{" "}
                             {getMoroccoTime().toLocaleString("en-US", {
                                 timeZone: "Africa/Casablanca",
@@ -538,7 +538,7 @@ const BookingDetailsStep = ({
                                 onClick={() => {
                                     setShowCalendar("start");
                                 }}
-                                className="w-full px-3 py-3 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 transition-all duration-200 bg-white flex items-center justify-between"
+                                className="w-full px-3 py-3 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-[#048667] transition-all duration-200 bg-white flex items-center justify-between"
                             >
                                 <span
                                     className={`${
@@ -576,7 +576,7 @@ const BookingDetailsStep = ({
                                     }
                                     setShowCalendar("end");
                                 }}
-                                className="w-full px-3 py-3 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 transition-all duration-200 bg-white flex items-center justify-between"
+                                className="w-full px-3 py-3 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-[#048667] transition-all duration-200 bg-white flex items-center justify-between"
                             >
                                 <span
                                     className={`${
@@ -613,7 +613,7 @@ const BookingDetailsStep = ({
                         </label>
                         <div
                             onClick={handleDateClick}
-                            className="w-full px-3 py-3 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 transition-all duration-200 bg-white flex items-center justify-between"
+                            className="w-full px-3 py-3 text-lg border border-gray-300 rounded-xl cursor-pointer hover:border-[#048667] transition-all duration-200 bg-white flex items-center justify-between"
                         >
                             <span
                                 className={`${
@@ -646,8 +646,8 @@ const BookingDetailsStep = ({
                                         : t("booking.selectDropoffDate")
                                     : t("booking.selectDate")}
                             </h3>
-                            <div className="text-xs text-gray-500 mt-1">
-                                <div className="mt-1 text-xs">
+                            <div className="text-xs mt-1" style={{ color: '#048667' }}>
+                                <div className="mt-1 text-xs font-medium">
                                     Current Morocco time:{" "}
                                     {getMoroccoTime().toLocaleString("en-US", {
                                         timeZone: "Africa/Casablanca",
@@ -759,16 +759,16 @@ const BookingDetailsStep = ({
                                         ${
                                             isPast
                                                 ? "text-gray-300 cursor-not-allowed bg-gray-50"
-                                                : "hover:bg-blue-50 cursor-pointer"
+                                                : "hover:bg-[#048667]/10 cursor-pointer"
                                         }
                                         ${
                                             isSelected
-                                                ? "bg-blue-600 text-white hover:bg-blue-700"
+                                                ? "bg-[#048667] text-white hover:bg-[#037056]"
                                                 : ""
                                         }
                                         ${
                                             isInRange && !isSelected
-                                                ? "bg-blue-100 text-blue-800"
+                                                ? "bg-[#048667]/15 text-[#048667]"
                                                 : ""
                                         }
                                       `}
@@ -801,7 +801,7 @@ const BookingDetailsStep = ({
                             <button
                                 type="button"
                                 onClick={() => setShowCalendar(false)}
-                                className="text-sm bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-700"
+                                className="text-sm bg-[#048667] text-white px-4 py-1 rounded-lg hover:bg-[#037056]"
                             >
                                 {t("booking.done")}
                             </button>
@@ -1008,7 +1008,7 @@ const BookingDetailsStep = ({
                     {pickupLocation &&
                         dropoffLocation &&
                         pickupLocation !== dropoffLocation && (
-                            <Alert severity="info" className="mb-3">
+                            <Alert severity="success" className="mb-3">
                                 {t("booking.dropoffFeeNotice")}
                             </Alert>
                         )}
