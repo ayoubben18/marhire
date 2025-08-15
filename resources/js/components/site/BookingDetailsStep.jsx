@@ -647,11 +647,6 @@ const BookingDetailsStep = ({
                                     : t("booking.selectDate")}
                             </h3>
                             <div className="text-xs text-gray-500 mt-1">
-                                {categoryId === 2 && (
-                                    <div className="mt-1">
-                                        * Minimum rental duration: 3 days
-                                    </div>
-                                )}
                                 <div className="mt-1 text-xs">
                                     Current Morocco time:{" "}
                                     {getMoroccoTime().toLocaleString("en-US", {

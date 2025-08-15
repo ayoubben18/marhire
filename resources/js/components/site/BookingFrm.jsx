@@ -233,8 +233,8 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
             case 3: // Private Driver
                 if (!startDate) newErrors.startDate = t('booking.errors.selectDate');
                 if (!pickupTime) newErrors.pickupTime = t('booking.errors.selectTime');
-                if (!serviceTypes || serviceTypes.length === 0) newErrors.serviceTypes = t('booking.errors.selectServiceType', 'Please select service type');
-                if (!roadTypes || roadTypes.length === 0) newErrors.roadTypes = t('booking.errors.selectRoadType', 'Please select road type');
+                if (!serviceTypes || serviceTypes.length === 0) newErrors.serviceTypes = t('booking.errors.selectServiceType');
+                if (!roadTypes || roadTypes.length === 0) newErrors.roadTypes = t('booking.errors.selectRoadType');
                 
                 // For airport transfer, pickup city is automatic (listing city)
                 // For intercity, we need both cities
@@ -247,8 +247,8 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     // We can make this validation more flexible
                 }
                 
-                if (!numberOfPassengers || numberOfPassengers < 1) newErrors.numberOfPassengers = t('booking.errors.numberOfPassengersRequired', 'Number of passengers is required');
-                if (numberOfLuggage === undefined || numberOfLuggage === null || numberOfLuggage < 0) newErrors.numberOfLuggage = t('booking.errors.numberOfLuggageRequired', 'Number of luggage is required');
+                if (!numberOfPassengers || numberOfPassengers < 1) newErrors.numberOfPassengers = t('booking.errors.numberOfPassengersRequired');
+                if (numberOfLuggage === undefined || numberOfLuggage === null || numberOfLuggage < 0) newErrors.numberOfLuggage = t('booking.errors.numberOfLuggageRequired');
                 break;
                 
             case 4: // Boat Rental
@@ -1166,25 +1166,6 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                                     ));
                                 })}
                             </ul>
-                        </div>
-                    </Alert>
-                )}
-                
-                {/* Pre-filled from search indicator */}
-                {searchParamsLoaded && (
-                    <Alert 
-                        severity="info" 
-                        className="mb-4"
-                        icon={<Search className="w-5 h-5" />}
-                    >
-                        <div className="flex items-center justify-between">
-                            <span>Some fields have been pre-filled from your search. You can edit them as needed.</span>
-                            <Chip 
-                                label="Pre-filled from search" 
-                                size="small" 
-                                color="primary" 
-                                variant="outlined"
-                            />
                         </div>
                     </Alert>
                 )}
