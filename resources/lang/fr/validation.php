@@ -145,6 +145,49 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'whatsapp' => [
+            'format' => 'Le numéro WhatsApp doit être au format international (ex: +212612345678)',
+        ],
+        'date_of_birth' => [
+            'age_requirement' => 'Vous devez avoir au moins 18 ans pour effectuer une réservation',
+            'max_age' => 'Veuillez entrer une date de naissance valide',
+        ],
+        'terms_accepted' => [
+            'required' => 'Vous devez accepter les termes et conditions pour continuer',
+        ],
+        'listing' => [
+            'not_found' => 'L\'annonce sélectionnée n\'existe pas',
+            'not_available' => 'L\'annonce sélectionnée n\'est plus disponible',
+            'category_mismatch' => 'L\'annonce sélectionnée n\'appartient pas à la catégorie spécifiée',
+        ],
+        'addons' => [
+            'not_available' => 'Un ou plusieurs add-ons sélectionnés ne sont pas disponibles pour cette annonce',
+        ],
+        'car_rental' => [
+            'advance_booking' => 'La location de voiture doit être réservée au moins 24 heures à l\'avance',
+            'pickup_location' => 'Le lieu de prise en charge doit être à :city',
+            'listing_city' => 'la ville de l\'annonce',
+            'minimum_duration' => 'La location de voiture nécessite une durée minimale de réservation de 3 jours',
+            'surf_rack_restriction' => 'Le porte-surf n\'est disponible que pour les véhicules SUV et MPV',
+        ],
+        'private_driver' => [
+            'advance_booking' => 'Le service de chauffeur privé doit être réservé au moins 48 heures à l\'avance',
+            'passengers_exceed' => 'Le nombre de passagers dépasse la capacité du véhicule de :max',
+            'luggage_exceed' => 'Le nombre de bagages dépasse la capacité du véhicule de :max',
+        ],
+        'boat_rental' => [
+            'advance_booking' => 'La location de bateau doit être réservée au moins 48 heures à l\'avance',
+            'time_range' => 'L\'heure de location du bateau doit être entre 8h00 et 20h00',
+            'duration_increments' => 'La durée doit être par tranches de 30 minutes (0,5 heures)',
+            'end_time' => 'La location du bateau doit se terminer avant 20h00. Veuillez ajuster la durée ou l\'heure de début',
+            'capacity_exceed' => 'Le nombre de personnes dépasse la capacité du bateau de :max',
+        ],
+        'activities' => [
+            'advance_booking' => 'Les activités doivent être réservées au moins 48 heures à l\'avance',
+            'duration_not_available' => 'L\'option de durée sélectionnée n\'est pas disponible pour cette activité',
+            'group_size_exceed' => 'Le nombre de personnes dépasse la taille maximale du groupe de :max',
+            'group_size_minimum' => 'Minimum :min personnes requises pour cette activité de groupe',
+        ],
     ],
 
     /*
@@ -158,6 +201,39 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'full_name' => 'Nom complet',
+        'first_name' => 'Prénom',
+        'last_name' => 'Nom de famille',
+        'email' => 'Email',
+        'whatsapp' => 'Numéro WhatsApp',
+        'country' => 'Pays de résidence',
+        'age' => 'Âge',
+        'date_of_birth' => 'Date de naissance',
+        'terms_accepted' => 'Termes et conditions',
+        'flight_number' => 'Numéro de vol',
+        'additional_notes' => 'Notes supplémentaires',
+        'pickup_date' => 'Date de prise en charge',
+        'dropoff_date' => 'Date de retour',
+        'pickup_time' => 'Heure de prise en charge',
+        'dropoff_time' => 'Heure de retour',
+        'pickup_location' => 'Lieu de prise en charge',
+        'dropoff_location' => 'Lieu de retour',
+        'car_type' => 'Type de voiture',
+        'service_types' => 'Types de service',
+        'road_types' => 'Types de route',
+        'pickup_city' => 'Ville de prise en charge',
+        'dropoff_city' => 'Ville de retour',
+        'prefered_date' => 'Date préférée',
+        'number_of_passengers' => 'Nombre de passagers',
+        'number_of_luggage' => 'Nombre de bagages',
+        'address' => 'Adresse',
+        'duration' => 'Durée',
+        'propose' => 'Objectif',
+        'number_of_people' => 'Nombre de personnes',
+        'duration_option_id' => 'Option de durée',
+        'time_preference' => 'Préférence horaire',
+        'activity_type' => 'Type d\'activité',
+    ],
 
 ];

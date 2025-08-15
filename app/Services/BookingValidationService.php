@@ -24,6 +24,14 @@ class BookingValidationService
      */
     public function validateBookingData(Request $request): array
     {
+        // Set the locale based on the request
+        $locale = $request->booking_language ?? $request->locale ?? session('locale', config('app.locale'));
+        $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+        if (!in_array($locale, $supportedLocales)) {
+            $locale = config('app.fallback_locale', 'en');
+        }
+        app()->setLocale($locale);
+        
         // First, validate common fields
         $this->validateCommonFields($request);
         
@@ -121,6 +129,29 @@ class BookingValidationService
             'discount_or_extra' => 'numeric'
         ]);
         
+        // Set custom attribute names for better error messages
+        $validator->setAttributeNames([
+            'full_name' => __('validation.attributes.full_name'),
+            'first_name' => __('validation.attributes.first_name'),
+            'last_name' => __('validation.attributes.last_name'),
+            'email' => __('validation.attributes.email'),
+            'whatsapp' => __('validation.attributes.whatsapp'),
+            'country' => __('validation.attributes.country'),
+            'age' => __('validation.attributes.age'),
+            'date_of_birth' => __('validation.attributes.date_of_birth'),
+            'terms_accepted' => __('validation.attributes.terms_accepted'),
+            'flight_number' => __('validation.attributes.flight_number'),
+            'additional_notes' => __('validation.attributes.additional_notes')
+        ]);
+        
+        // Set custom error messages
+        $validator->setCustomMessages([
+            'whatsapp.regex' => __('validation.custom.whatsapp.format'),
+            'date_of_birth.before' => __('validation.custom.date_of_birth.age_requirement'),
+            'date_of_birth.after' => __('validation.custom.date_of_birth.max_age'),
+            'terms_accepted.accepted' => __('validation.custom.terms_accepted.required')
+        ]);
+        
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
@@ -164,21 +195,21 @@ class BookingValidationService
         
         if (!$listing) {
             throw ValidationException::withMessages([
-                'listing_id' => ['The selected listing does not exist.']
+                'listing_id' => [__('validation.custom.listing.not_found')]
             ]);
         }
         
         // Check if listing is soft deleted
         if ($listing->trashed()) {
             throw ValidationException::withMessages([
-                'listing_id' => ['The selected listing is no longer available.']
+                'listing_id' => [__('validation.custom.listing.not_available')]
             ]);
         }
         
         // Verify category match
         if ($listing->category_id != $request->category_id) {
             throw ValidationException::withMessages([
-                'listing_id' => ['The selected listing does not belong to the specified category.']
+                'listing_id' => [__('validation.custom.listing.category_mismatch')]
             ]);
         }
         
@@ -228,7 +259,7 @@ class BookingValidationService
                 'valid' => $validAddonIds
             ]);
             throw ValidationException::withMessages([
-                'addons' => ['One or more selected add-ons are not available for this listing.']
+                'addons' => [__('validation.custom.addons.not_available')]
             ]);
         }
         
@@ -385,7 +416,7 @@ class BookingValidationService
             ->setTimezone('Africa/Casablanca');
         if ($pickupDateTime < $minDateTime) {
             throw ValidationException::withMessages([
-                'pickup_date' => ['Car rental must be booked at least 24 hours in advance based on Morocco time.']
+                'pickup_date' => [__('validation.custom.car_rental.advance_booking')]
             ]);
         }
         
@@ -393,7 +424,7 @@ class BookingValidationService
         $listing = Listing::find($request->listing_id);
         if ($listing && $listing->city_id != $request->pickup_location) {
             throw ValidationException::withMessages([
-                'pickup_location' => ['Pickup location must be in ' . ($listing->city ? $listing->city->city_name : 'the listing city') . '.']
+                'pickup_location' => [__('validation.custom.car_rental.pickup_location', ['city' => $listing->city ? $listing->city->city_name : __('validation.custom.car_rental.listing_city')])]
             ]);
         }
         
@@ -407,7 +438,7 @@ class BookingValidationService
         
         if ($durationInDays < 3) {
             throw ValidationException::withMessages([
-                'dropoff_date' => ['Car rental requires a minimum of 3 days booking duration.']
+                'dropoff_date' => [__('validation.custom.car_rental.minimum_duration')]
             ]);
         }
         
@@ -416,7 +447,7 @@ class BookingValidationService
             $listing = Listing::find($request->listing_id);
             if ($listing && !in_array($listing->vehicule_type, ['SUV', 'MPV'])) {
                 throw ValidationException::withMessages([
-                    'surf_rack' => ['Surf rack is only available for SUV and MPV vehicles.']
+                    'surf_rack' => [__('validation.custom.car_rental.surf_rack_restriction')]
                 ]);
             }
         }
@@ -497,7 +528,7 @@ class BookingValidationService
                 ->setTimezone('Africa/Casablanca');
             if ($preferredDateTime < $minDateTime) {
                 throw ValidationException::withMessages([
-                    'prefered_date' => ['Private driver service must be booked at least 48 hours in advance based on Morocco time.']
+                    'prefered_date' => [__('validation.custom.private_driver.advance_booking')]
                 ]);
             }
         }
@@ -506,14 +537,14 @@ class BookingValidationService
         $listing = Listing::find($request->listing_id);
         if ($listing && $listing->max_passengers && $request->number_of_passengers > $listing->max_passengers) {
             throw ValidationException::withMessages([
-                'number_of_passengers' => ['Number of passengers exceeds vehicle capacity of ' . $listing->max_passengers . '.']
+                'number_of_passengers' => [__('validation.custom.private_driver.passengers_exceed', ['max' => $listing->max_passengers])]
             ]);
         }
         
         // Validate luggage count against listing capacity
         if ($listing && $listing->max_luggage && $request->number_of_luggage > $listing->max_luggage) {
             throw ValidationException::withMessages([
-                'number_of_luggage' => ['Number of luggage exceeds vehicle capacity of ' . $listing->max_luggage . '.']
+                'number_of_luggage' => [__('validation.custom.private_driver.luggage_exceed', ['max' => $listing->max_luggage])]
             ]);
         }
         
@@ -599,6 +630,15 @@ class BookingValidationService
         
         $validator = Validator::make($request->all(), $rules);
         
+        // Set custom attribute names for boat rental
+        $validator->setAttributeNames([
+            'duration' => __('validation.attributes.duration'),
+            'propose' => __('validation.attributes.propose'),
+            'prefered_date' => __('validation.attributes.prefered_date'),
+            'number_of_people' => __('validation.attributes.number_of_people'),
+            'pickup_time' => __('validation.attributes.pickup_time')
+        ]);
+        
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
@@ -608,7 +648,7 @@ class BookingValidationService
             ->setTimezone('Africa/Casablanca');
         if ($preferredDateTime < $minDateTime) {
             throw ValidationException::withMessages([
-                'prefered_date' => ['Boat rental must be booked at least 48 hours in advance based on Morocco time.']
+                'prefered_date' => [__('validation.custom.boat_rental.advance_booking')]
             ]);
         }
         
@@ -619,7 +659,7 @@ class BookingValidationService
         
         if ($pickupTime->lt($startLimit) || $pickupTime->gt($endLimit)) {
             throw ValidationException::withMessages([
-                'pickup_time' => ['Boat rental time must be between 8:00 AM and 8:00 PM.']
+                'pickup_time' => [__('validation.custom.boat_rental.time_range')]
             ]);
         }
         
@@ -627,7 +667,7 @@ class BookingValidationService
         $duration = (float) $request->duration;
         if (fmod($duration, 0.5) != 0) {
             throw ValidationException::withMessages([
-                'duration' => ['Duration must be in 30-minute increments (0.5 hours).']
+                'duration' => [__('validation.custom.boat_rental.duration_increments')]
             ]);
         }
         
@@ -635,7 +675,7 @@ class BookingValidationService
         $endTime = $pickupTime->copy()->addMinutes($duration * 60);
         if ($endTime->gt($endLimit)) {
             throw ValidationException::withMessages([
-                'duration' => ['Boat rental must end by 8:00 PM. Please adjust duration or start time.']
+                'duration' => [__('validation.custom.boat_rental.end_time')]
             ]);
         }
         
@@ -643,7 +683,7 @@ class BookingValidationService
         $listing = Listing::find($request->listing_id);
         if ($listing && $listing->capacity && $request->number_of_people > $listing->capacity) {
             throw ValidationException::withMessages([
-                'number_of_people' => ['Number of people exceeds boat capacity of ' . $listing->capacity . '.']
+                'number_of_people' => [__('validation.custom.boat_rental.capacity_exceed', ['max' => $listing->capacity])]
             ]);
         }
         
@@ -680,7 +720,7 @@ class BookingValidationService
             ->endOfDay(); // Consider the whole day
         if ($preferredDate < $minDateTime) {
             throw ValidationException::withMessages([
-                'prefered_date' => ['Activities must be booked at least 48 hours in advance based on Morocco time.']
+                'prefered_date' => [__('validation.custom.activities.advance_booking')]
             ]);
         }
         
@@ -708,7 +748,7 @@ class BookingValidationService
                 
             if (!$optionExists) {
                 throw ValidationException::withMessages([
-                    'duration_option_id' => ['Selected duration option is not available for this activity.']
+                    'duration_option_id' => [__('validation.custom.activities.duration_not_available')]
                 ]);
             }
         }
@@ -717,13 +757,13 @@ class BookingValidationService
         if ($listing->private_or_group === 'group') {
             if ($listing->group_size_max && $request->number_of_people > $listing->group_size_max) {
                 throw ValidationException::withMessages([
-                    'number_of_people' => ['Number of people exceeds maximum group size of ' . $listing->group_size_max . '.']
+                    'number_of_people' => [__('validation.custom.activities.group_size_exceed', ['max' => $listing->group_size_max])]
                 ]);
             }
             
             if ($listing->group_size_min && $request->number_of_people < $listing->group_size_min) {
                 throw ValidationException::withMessages([
-                    'number_of_people' => ['Minimum ' . $listing->group_size_min . ' people required for this group activity.']
+                    'number_of_people' => [__('validation.custom.activities.group_size_minimum', ['min' => $listing->group_size_min])]
                 ]);
             }
         }

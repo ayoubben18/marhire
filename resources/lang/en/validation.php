@@ -145,6 +145,49 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'whatsapp' => [
+            'format' => 'WhatsApp number must be in international format (e.g., +212612345678)',
+        ],
+        'date_of_birth' => [
+            'age_requirement' => 'You must be at least 18 years old to make a booking',
+            'max_age' => 'Please enter a valid date of birth',
+        ],
+        'terms_accepted' => [
+            'required' => 'You must accept the terms and conditions to proceed',
+        ],
+        'listing' => [
+            'not_found' => 'The selected listing does not exist',
+            'not_available' => 'The selected listing is no longer available',
+            'category_mismatch' => 'The selected listing does not belong to the specified category',
+        ],
+        'addons' => [
+            'not_available' => 'One or more selected add-ons are not available for this listing',
+        ],
+        'car_rental' => [
+            'advance_booking' => 'Car rental must be booked at least 24 hours in advance',
+            'pickup_location' => 'Pickup location must be in :city',
+            'listing_city' => 'the listing city',
+            'minimum_duration' => 'Car rental requires a minimum of 3 days booking duration',
+            'surf_rack_restriction' => 'Surf rack is only available for SUV and MPV vehicles',
+        ],
+        'private_driver' => [
+            'advance_booking' => 'Private driver service must be booked at least 48 hours in advance',
+            'passengers_exceed' => 'Number of passengers exceeds vehicle capacity of :max',
+            'luggage_exceed' => 'Number of luggage exceeds vehicle capacity of :max',
+        ],
+        'boat_rental' => [
+            'advance_booking' => 'Boat rental must be booked at least 48 hours in advance',
+            'time_range' => 'Boat rental time must be between 8:00 AM and 8:00 PM',
+            'duration_increments' => 'Duration must be in 30-minute increments (0.5 hours)',
+            'end_time' => 'Boat rental must end by 8:00 PM. Please adjust duration or start time',
+            'capacity_exceed' => 'Number of people exceeds boat capacity of :max',
+        ],
+        'activities' => [
+            'advance_booking' => 'Activities must be booked at least 48 hours in advance',
+            'duration_not_available' => 'Selected duration option is not available for this activity',
+            'group_size_exceed' => 'Number of people exceeds maximum group size of :max',
+            'group_size_minimum' => 'Minimum :min people required for this group activity',
+        ],
     ],
 
     /*
@@ -158,6 +201,39 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'full_name' => 'Full Name',
+        'first_name' => 'First Name',
+        'last_name' => 'Last Name',
+        'email' => 'Email',
+        'whatsapp' => 'WhatsApp Number',
+        'country' => 'Country of Residence',
+        'age' => 'Age',
+        'date_of_birth' => 'Date of Birth',
+        'terms_accepted' => 'Terms and Conditions',
+        'flight_number' => 'Flight Number',
+        'additional_notes' => 'Additional Notes',
+        'pickup_date' => 'Pickup Date',
+        'dropoff_date' => 'Dropoff Date',
+        'pickup_time' => 'Pickup Time',
+        'dropoff_time' => 'Dropoff Time',
+        'pickup_location' => 'Pickup Location',
+        'dropoff_location' => 'Dropoff Location',
+        'car_type' => 'Car Type',
+        'service_types' => 'Service Types',
+        'road_types' => 'Road Types',
+        'pickup_city' => 'Pickup City',
+        'dropoff_city' => 'Dropoff City',
+        'prefered_date' => 'Preferred Date',
+        'number_of_passengers' => 'Number of Passengers',
+        'number_of_luggage' => 'Number of Luggage',
+        'address' => 'Address',
+        'duration' => 'Duration',
+        'propose' => 'Purpose',
+        'number_of_people' => 'Number of People',
+        'duration_option_id' => 'Duration Option',
+        'time_preference' => 'Time Preference',
+        'activity_type' => 'Activity Type',
+    ],
 
 ];
