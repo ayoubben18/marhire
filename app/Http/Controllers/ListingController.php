@@ -1427,7 +1427,7 @@ class ListingController extends Controller
             'og_title' => $translatedMeta['meta_title'] ?? $translatedMeta['title'] ?? $listing->title,
             'og_description' => $translatedMeta['meta_description'] ?? $translatedMeta['description'] ?? \Illuminate\Support\Str::limit($listing->description, 160),
             'og_image' => $listing->galleries && count($listing->galleries) > 0 
-                ? asset('images/listings/' . $listing->galleries[0]->image) 
+                ? asset($listing->galleries[0]->file_path) 
                 : null,
             'locale' => app()->getLocale(),
             'structured_data' => $seoService->generateStructuredData('listing', $listing)

@@ -224,8 +224,8 @@ class EntereController extends Controller
             
             // Add image if available
             if ($listing->galleries && count($listing->galleries) > 0) {
-                $seoData['og_image'] = asset('images/listings/' . $listing->galleries[0]->image);
-                $seoData['twitter_image'] = asset('images/listings/' . $listing->galleries[0]->image);
+                $seoData['og_image'] = asset($listing->galleries[0]->file_path);
+                $seoData['twitter_image'] = asset($listing->galleries[0]->file_path);
             }
         }
         
