@@ -259,20 +259,16 @@ class EmailService implements EmailServiceInterface
         // Load necessary relationships
         $booking->load(['listing.city', 'addons.addon', 'city']);
         
-        // Handle date formatting properly
+        // Handle date and time formatting based on category
         $checkInDate = $booking->check_in;
         $checkOutDate = $booking->check_out;
-        $checkInTime = '10:00'; // Default time
-        $checkOutTime = '10:00'; // Default time
+        $checkInTime = '';
+        $checkOutTime = '';
         
         // Format dates if they exist
         if ($checkInDate) {
             $checkInCarbon = \Carbon\Carbon::parse($checkInDate);
             $checkInDateFormatted = $checkInCarbon->format('M d, Y');
-            // Extract time if available
-            if ($checkInCarbon->format('H:i') !== '00:00') {
-                $checkInTime = $checkInCarbon->format('H:i');
-            }
         } else {
             $checkInDateFormatted = 'N/A';
         }
@@ -280,12 +276,41 @@ class EmailService implements EmailServiceInterface
         if ($checkOutDate) {
             $checkOutCarbon = \Carbon\Carbon::parse($checkOutDate);
             $checkOutDateFormatted = $checkOutCarbon->format('M d, Y');
-            // Extract time if available
-            if ($checkOutCarbon->format('H:i') !== '00:00') {
-                $checkOutTime = $checkOutCarbon->format('H:i');
-            }
         } else {
             $checkOutDateFormatted = 'N/A';
+        }
+        
+        // Category-specific time handling
+        if ($booking->category_id == 2) {
+            // Car Rental - use exact pickup/dropoff times
+            $checkInTime = $booking->pickup_time ?: '';
+            $checkOutTime = $booking->dropoff_time ?: '';
+        } elseif ($booking->category_id == 4) {
+            // Boat Rental - start date + pickup time, end = start + (pickup time + duration)
+            $pickupTime = $booking->pickup_time ?: '';
+            $duration = $booking->duration ? floatval($booking->duration) : 0;
+            
+            $checkInTime = $pickupTime;
+            
+            if ($pickupTime && $duration > 0) {
+                try {
+                    $startTime = \Carbon\Carbon::createFromFormat('H:i', $pickupTime);
+                    $endTime = $startTime->copy()->addHours($duration);
+                    $checkOutTime = $endTime->format('H:i');
+                } catch (\Exception $e) {
+                    $checkOutTime = '';
+                }
+            } else {
+                $checkOutTime = '';
+            }
+        } elseif ($booking->category_id == 3) {
+            // Private Driver - use pickup_time, no end time since we don't store it
+            $checkInTime = $booking->pickup_time ?: '';
+            $checkOutTime = ''; // No end time stored
+        } elseif ($booking->category_id == 5) {
+            // Things to Do - add time preference to start date, end date only date (no time)
+            $checkInTime = $booking->time_preference ?: '';
+            $checkOutTime = ''; // No time for end date
         }
         
         // Get start and end locations based on booking category
@@ -358,8 +383,8 @@ class EmailService implements EmailServiceInterface
             '{{check_out_date}}' => $checkOutDateFormatted,
             '{{check_in}}' => $checkInDateFormatted,
             '{{check_out}}' => $checkOutDateFormatted,
-            '{{start_date_time}}' => $checkInDateFormatted . ' at ' . $checkInTime,
-            '{{end_date_time}}' => $checkOutDateFormatted . ' at ' . $checkOutTime,
+            '{{start_date_time}}' => $checkInDateFormatted . ($checkInTime ? ' at ' . $checkInTime : ''),
+            '{{end_date_time}}' => $checkOutDateFormatted . ($checkOutTime ? ' at ' . $checkOutTime : ''),
             '{{start_location}}' => $startLocation,
             '{{end_location}}' => $endLocation,
         ];
