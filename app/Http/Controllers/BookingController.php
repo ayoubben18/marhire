@@ -167,8 +167,8 @@ class BookingController extends Controller
         $booking->load('listing.category');
         
         if (EmailSetting::isEmailEnabled($booking->listing->category, 'booking_received')) {
-            // Get customer's preferred language for returning customers
-            $customerLanguage = getCustomerLanguage($booking->email);
+            // Use the language saved with the booking
+            $customerLanguage = $booking->booking_language ?? 'en';
             
             // Send to customer in their preferred language
             $emailService->send($booking->email, 'booking_received', $booking, null, $customerLanguage);
@@ -665,19 +665,8 @@ class BookingController extends Controller
             
             // Send booking_received email to customer and admin
             if (EmailSetting::isEmailEnabled($booking->listing->category, 'booking_received')) {
-                // Get customer's preferred language for returning customers
-                // Check if helper function exists, otherwise use fallback
-                $customerLanguage = 'en';
-                if (function_exists('getCustomerLanguage')) {
-                    $customerLanguage = getCustomerLanguage($booking->email);
-                } else {
-                    // Fallback: Get the most recent booking language for this email
-                    $previousBooking = Booking::where('email', $booking->email)
-                        ->where('id', '!=', $booking->id)
-                        ->orderBy('created_at', 'desc')
-                        ->first();
-                    $customerLanguage = $previousBooking ? ($previousBooking->booking_language ?? 'en') : ($booking->booking_language ?? 'en');
-                }
+                // Use the language selected for this booking
+                $customerLanguage = $booking->booking_language ?? 'en';
                 
                 // Send to customer in their preferred language
                 $emailService->send($booking->email, 'booking_received', $booking, null, $customerLanguage);
@@ -1060,14 +1049,17 @@ class BookingController extends Controller
         try {
             $emailService = app(EmailServiceInterface::class);
             
-            // Send to customer
-            $customerSuccess = $emailService->send($booking->email, $emailType, $booking);
+            // Use the language saved with the booking
+            $customerLanguage = $booking->booking_language ?? 'en';
+            
+            // Send to customer in their preferred language
+            $customerSuccess = $emailService->send($booking->email, $emailType, $booking, null, $customerLanguage);
             
             if ($customerSuccess) {
-                // Also send to admin
+                // Also send to admin (always in English)
                 $adminEmail = EmailSetting::getAdminEmail();
                 if ($adminEmail) {
-                    $emailService->send($adminEmail, $emailType, $booking);
+                    $emailService->send($adminEmail, $emailType, $booking, null, 'en');
                 }
                 
                 // Get updated email status
@@ -1177,9 +1169,16 @@ class BookingController extends Controller
                 sleep($delay);
             }
             
-            // Resend the email using the same type
+            // Resend the email using the same type and booking's language
             $emailService = app(EmailServiceInterface::class);
-            $success = $emailService->send($emailLog->recipient_email, $emailLog->email_type, $booking);
+            
+            // Determine the language based on recipient (admin gets English, customer gets their language)
+            $language = 'en';
+            if ($emailLog->recipient_email === $booking->email) {
+                $language = $booking->booking_language ?? 'en';
+            }
+            
+            $success = $emailService->send($emailLog->recipient_email, $emailLog->email_type, $booking, null, $language);
             
             if ($success) {
                 return response()->json([
