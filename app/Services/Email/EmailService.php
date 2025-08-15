@@ -295,7 +295,11 @@ class EmailService implements EmailServiceInterface
             if ($pickupTime && $duration > 0) {
                 try {
                     $startTime = \Carbon\Carbon::createFromFormat('H:i', $pickupTime);
-                    $endTime = $startTime->copy()->addHours($duration);
+                    // Convert decimal hours to total minutes for accurate calculation
+                    $totalMinutes = $duration * 60;
+                    $hours = floor($totalMinutes / 60);
+                    $minutes = $totalMinutes % 60;
+                    $endTime = $startTime->copy()->addHours($hours)->addMinutes($minutes);
                     $checkOutTime = $endTime->format('H:i');
                 } catch (\Exception $e) {
                     $checkOutTime = '';
