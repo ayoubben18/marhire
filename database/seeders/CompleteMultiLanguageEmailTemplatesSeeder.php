@@ -28,8 +28,10 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
             '{{booking_reference}}' => 'Booking reference number',
             '{{booking_id}}' => 'Booking ID',
             '{{listing_title}}' => 'Service/Product name',
-            '{{start_details}}' => 'Start location, date and time',
-            '{{end_details}}' => 'End location, date and time',
+            '{{start_date_time}}' => 'Start date and time',
+            '{{end_date_time}}' => 'End date and time',
+            '{{start_location}}' => 'Start location',
+            '{{end_location}}' => 'End location',
             '{{total_amount}}' => 'Total price',
             '{{currency}}' => 'Currency symbol',
             '{{admin_email}}' => 'Admin email address'
@@ -81,8 +83,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>Invoice No:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Status:</strong></td><td style="color: #f0ad4e; font-weight: bold;">Pending</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Start:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>End:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Start:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>End:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -148,8 +150,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>Invoice No:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Status:</strong></td><td style="color: #f0ad4e; font-weight: bold;">Pending</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Start:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>End:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Start:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>End:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -226,8 +228,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>Invoice No:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Status:</strong></td><td style="color: #28a745; font-weight: bold;">Confirmed</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Start:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>End:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Start:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>End:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -293,8 +295,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>Invoice No:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Status:</strong></td><td style="color: #28a745; font-weight: bold;">Confirmed</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Start:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>End:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Start:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>End:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -371,8 +373,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>Invoice No:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Status:</strong></td><td style="color: #d9534f; font-weight: bold;">Canceled</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Start:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>End:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Start:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>End:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -438,8 +440,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>Invoice No:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Status:</strong></td><td style="color: #d9534f; font-weight: bold;">Canceled</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Start:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>End:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Start:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>End:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -516,8 +518,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>Invoice No:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Status:</strong></td><td style="color: #f0ad4e; font-weight: bold;">Upcoming</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Start:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>End:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Start:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>End:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -583,8 +585,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>Invoice No:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Status:</strong></td><td style="color: #f0ad4e; font-weight: bold;">Upcoming</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Start:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>End:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Start:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>End:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -663,8 +665,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de facture:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Statut:</strong></td><td style="color: #f0ad4e; font-weight: bold;">En attente</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Début:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Début:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -730,8 +732,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de facture:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Statut:</strong></td><td style="color: #f0ad4e; font-weight: bold;">En attente</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Début:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Début:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -808,8 +810,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de facture:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Statut:</strong></td><td style="color: #28a745; font-weight: bold;">Confirmée</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Début:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Début:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -875,8 +877,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de facture:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Statut:</strong></td><td style="color: #28a745; font-weight: bold;">Confirmée</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Début:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Début:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -953,8 +955,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de facture:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Statut:</strong></td><td style="color: #d9534f; font-weight: bold;">Annulée</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Début:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Début:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -1020,8 +1022,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de facture:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Statut:</strong></td><td style="color: #d9534f; font-weight: bold;">Annulée</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Début:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Début:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -1098,8 +1100,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de facture:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Statut:</strong></td><td style="color: #f0ad4e; font-weight: bold;">À venir</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Début:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Début:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -1165,8 +1167,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de facture:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Statut:</strong></td><td style="color: #f0ad4e; font-weight: bold;">À venir</td></tr>
       <tr><td><strong>Service:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Début:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Début:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -1245,8 +1247,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de factura:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Estado:</strong></td><td style="color: #f0ad4e; font-weight: bold;">Pendiente</td></tr>
       <tr><td><strong>Servicio:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Inicio:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Inicio:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -1312,8 +1314,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de factura:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Estado:</strong></td><td style="color: #f0ad4e; font-weight: bold;">Pendiente</td></tr>
       <tr><td><strong>Servicio:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Inicio:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Inicio:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -1390,8 +1392,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de factura:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Estado:</strong></td><td style="color: #28a745; font-weight: bold;">Confirmada</td></tr>
       <tr><td><strong>Servicio:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Inicio:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Inicio:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -1457,8 +1459,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de factura:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Estado:</strong></td><td style="color: #28a745; font-weight: bold;">Confirmada</td></tr>
       <tr><td><strong>Servicio:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Inicio:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Inicio:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -1535,8 +1537,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de factura:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Estado:</strong></td><td style="color: #d9534f; font-weight: bold;">Cancelada</td></tr>
       <tr><td><strong>Servicio:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Inicio:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Inicio:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -1602,8 +1604,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de factura:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Estado:</strong></td><td style="color: #d9534f; font-weight: bold;">Cancelada</td></tr>
       <tr><td><strong>Servicio:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Inicio:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Inicio:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -1680,8 +1682,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de factura:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Estado:</strong></td><td style="color: #f0ad4e; font-weight: bold;">Próxima</td></tr>
       <tr><td><strong>Servicio:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Inicio:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Inicio:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
@@ -1747,8 +1749,8 @@ class CompleteMultiLanguageEmailTemplatesSeeder extends Seeder
       <tr><td><strong>N° de factura:</strong></td><td>{{booking_reference}}</td></tr>
       <tr><td><strong>Estado:</strong></td><td style="color: #f0ad4e; font-weight: bold;">Próxima</td></tr>
       <tr><td><strong>Servicio:</strong></td><td>{{listing_title}}</td></tr>
-      <tr><td><strong>Inicio:</strong></td><td>{{start_details}}</td></tr>
-      <tr><td><strong>Fin:</strong></td><td>{{end_details}}</td></tr>
+      <tr><td><strong>Inicio:</strong></td><td>{{start_location}} - {{start_date_time}}</td></tr>
+      <tr><td><strong>Fin:</strong></td><td>{{end_location}} - {{end_date_time}}</td></tr>
       <tr><td><strong>Total:</strong></td><td><strong>{{currency}} {{total_amount}}</strong></td></tr>
     </table>
 
