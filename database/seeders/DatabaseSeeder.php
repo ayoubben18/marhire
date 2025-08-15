@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             EmailTemplateSeeder::class,
             EmailSettingsSeeder::class,
             UpdateEmailTemplatesFromDocs::class,
+            CompleteMultiLanguageEmailTemplatesSeeder::class,
         ]);
     }
 }
