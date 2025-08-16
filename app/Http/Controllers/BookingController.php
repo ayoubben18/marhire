@@ -33,7 +33,7 @@ class BookingController extends Controller
     public function list(Request $request)
     {
         $layout = 'layouts.dashboard_admin';
-        $bookings = Booking::latest()->get();
+        $bookings = Booking::with(['category', 'listing', 'createdBy', 'addons'])->latest()->get();
 
         return view('bookings.list')->with([
             'layout' => $layout,
