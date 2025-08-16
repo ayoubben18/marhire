@@ -394,7 +394,7 @@ section {
 
 .recommendation-image-container {
     position: relative;
-    height: 200px;
+    aspect-ratio: 3/2;
     width: 100%;
     overflow: hidden;
     z-index: 1;

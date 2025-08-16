@@ -971,8 +971,8 @@
                                             <div class="col-md-6">
                                                 <strong>Recommended Sizes:</strong>
                                                 <ul class="mb-2">
-                                                    <li><strong>Optimal Size:</strong> 1000×750px (4:3 ratio)</li>
-                                                    <li><strong>Alternative:</strong> Any 4:3 aspect ratio</li>
+                                                    <li><strong>Optimal Size:</strong> 1200×800px (3:2 ratio)</li>
+                                                    <li><strong>Alternative:</strong> Any 3:2 aspect ratio</li>
                                                 </ul>
                                             </div>
                                             <div class="col-md-6">
