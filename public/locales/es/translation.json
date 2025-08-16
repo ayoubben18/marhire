@@ -38,7 +38,8 @@
         "morocco": "Marruecos",
         "sending": "Enviando...",
         "sendMessage": "Enviar Mensaje",
-        "home": "Inicio"
+        "home": "Inicio",
+        "compareSimilarListings": "Comparar Anuncios Similares"
     },
     "messages": {
         "whatsappInterest": "Hola, estoy interesado en reservar este alquiler.\n\nTítulo: {{title}}\n\nURL: {{url}}\n\n¿Podría proporcionar más detalles sobre disponibilidad, precios y el proceso de reserva?\n\n¡Gracias!"

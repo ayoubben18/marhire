@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaStar } from "react-icons/fa";
-import { FaCalendarAlt, FaWhatsapp } from "react-icons/fa";
-import { MdVerified } from "react-icons/md";
-import { BsFillFuelPumpDieselFill } from "react-icons/bs";
-import { GiCarDoor } from "react-icons/gi";
-import Skeleton from "react-loading-skeleton";
 import { Swiper, SwiperSlide } from "swiper/react";
-import ListingIcons from "./ListingIcons";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation, Autoplay } from "swiper/modules";
@@ -31,10 +24,10 @@ const getTranslatedField = (listing, field, locale) => {
 };
 
 const TYPES = {
-    1: "cars",
-    2: "drivers",
-    3: "boats",
-    4: "activities",
+    2: "cars",
+    3: "drivers",
+    4: "boats",
+    5: "activities",
 };
 
 const RelatedProducts = ({ category = 2, loading }) => {
@@ -71,24 +64,20 @@ const RelatedProducts = ({ category = 2, loading }) => {
     const generatePrice = (listing) => {
         try {
             if (type === "cars") {
-                return `${t("common.from")} ${listing.price_per_day}€ / ${t(
-                    "units.day"
-                )}`;
+                return `${t("common.from")} ${listing.price_per_day || 0}€ / ${t("units.day")}`;
             } else if (type === "drivers") {
-                const driverPrice = listing.pricings[0].airport_one || 0;
-                return `${t("common.from")} ${driverPrice}€ / ${t(
-                    "units.day"
-                )}`;
+                const driverPrice = listing.pricings?.[0]?.airport_one || 0;
+                return `${t("common.from")} ${driverPrice}€ / ${t("units.day")}`;
             } else if (type === "boats") {
-                return `${t("common.from")} ${listing.price_per_hour}€ / ${t(
-                    "units.hour"
-                )}`;
-            } else {
-                const price = listing.act_pricings[0].price || 0;
+                return `${t("common.from")} ${listing.price_per_hour || 0}€ / ${t("units.hour")}`;
+            } else if (type === "activities") {
+                const price = listing.act_pricings?.[0]?.price || 0;
                 return `${t("common.from")} ${price}€ / ${t("units.person")}`;
             }
+            return `${t("common.from")} 0€`;
         } catch (err) {
-            console.log(err);
+            console.log("Price generation error:", err);
+            return `${t("common.from")} 0€`;
         }
     };
 
@@ -105,6 +94,8 @@ const RelatedProducts = ({ category = 2, loading }) => {
     };
 
     useEffect(() => {
+        if (!category) return; // Don't fetch if category is not available yet
+        
         try {
             const fetchListings = async () => {
                 const response = await axios.get("/api/related_products", {
@@ -121,11 +112,12 @@ const RelatedProducts = ({ category = 2, loading }) => {
         } catch (err) {
             console.log(err);
         }
-    }, []);
+    }, [category, currentLocale]);
 
     return (
         !loading && (
             <div className="related-products">
+                <h2 className="section-title mb-4">{t("common.compareSimilarListings")}</h2>
                 <div className="">
                     <Swiper
                         modules={[Navigation, Autoplay]}
@@ -178,7 +170,9 @@ const RelatedProducts = ({ category = 2, loading }) => {
                                     <div className="recommendation-content">
                                         <div className="recommendation-header">
                                             <h3 className="recommendation-title">
-                                                {getTranslatedField(listing, 'title', currentLocale)}
+                                                <a href={getLocalizedUrl(`details/${listing.slug}`)}>
+                                                    {getTranslatedField(listing, 'title', currentLocale)}
+                                                </a>
                                             </h3>
                                             <p className="recommendation-location">
                                                 📍{" "}
@@ -187,25 +181,6 @@ const RelatedProducts = ({ category = 2, loading }) => {
                                                     : "Morocco"}
                                             </p>
                                         </div>
-                                        <ListingIcons type={type} l={listing} />
-                                    </div>
-                                    <div className="recommendation-footer">
-                                        <a
-                                            href={getLocalizedUrl(`details/${listing.slug}`)}
-                                            className="recommendation-button"
-                                        >
-                                            <span>
-                                                <FaCalendarAlt />
-                                            </span>{" "}
-                                            {t("common.bookNow")}
-                                        </a>
-                                        <a
-                                            href={getWtspUrl(listing)}
-                                            target="_blank"
-                                            className="recommendation-wtsp"
-                                        >
-                                            <FaWhatsapp />
-                                        </a>
                                     </div>
                                 </div>
                             </SwiperSlide>

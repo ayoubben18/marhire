@@ -38,7 +38,8 @@
         "morocco": "Maroc",
         "sending": "Envoi...",
         "sendMessage": "Envoyer Message",
-        "home": "Accueil"
+        "home": "Accueil",
+        "compareSimilarListings": "Comparer les Annonces Similaires"
     },
     "messages": {
         "whatsappInterest": "Bonjour, je suis intéressé par la réservation de cette location.\n\nTitre: {{title}}\n\nURL: {{url}}\n\nPourriez-vous me fournir plus de détails sur la disponibilité, les prix et le processus de réservation?\n\nMerci!"

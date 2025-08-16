@@ -989,7 +989,7 @@ const BookingDetailsStep = ({
                                                 }}
                                             />
                                         }
-                                        label={`${addon.name} - $${addon.price}`}
+                                        label={`${addon.name} - €${addon.price}`}
                                     />
                                 ))}
                             </FormGroup>
@@ -1459,7 +1459,7 @@ const BookingDetailsStep = ({
                                                 }}
                                             />
                                         }
-                                        label={`${addon.name} - $${addon.price}`}
+                                        label={`${addon.name} - €${addon.price}`}
                                     />
                                 ))}
                             </FormGroup>
@@ -1627,7 +1627,7 @@ const BookingDetailsStep = ({
                                                 }}
                                             />
                                         }
-                                        label={`${addon.name} - $${addon.price}`}
+                                        label={`${addon.name} - €${addon.price}`}
                                     />
                                 ))}
                             </FormGroup>
@@ -1807,7 +1807,7 @@ const BookingDetailsStep = ({
                                                 }}
                                             />
                                         }
-                                        label={`${addon.name} - $${addon.price}`}
+                                        label={`${addon.name} - €${addon.price}`}
                                     />
                                 ))}
                             </FormGroup>

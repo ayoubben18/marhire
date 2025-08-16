@@ -67,7 +67,10 @@ const ListingOverview = ({ loading, listing }) => {
             {isLongContent && (
                 <button
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className="mt-4 flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200"
+                    className="mt-4 flex items-center font-medium transition-colors duration-200"
+                    style={{ color: '#048667' }}
+                    onMouseEnter={(e) => e.target.style.color = '#036a52'}
+                    onMouseLeave={(e) => e.target.style.color = '#048667'}
                 >
                     {isExpanded ? (
                         <>

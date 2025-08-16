@@ -68,7 +68,7 @@ const ListingSpecifications = ({ loading, listing }) => {
 };
 
 // Specification Item Component
-const SpecItem = ({ icon: Icon, label, value, iconColor = "text-primary-600" }) => {
+const SpecItem = ({ icon: Icon, label, value, iconColor = "text-[#048667]" }) => {
     if (!value && value !== 0) return null;
     
     return (
@@ -145,7 +145,7 @@ const CarRentalSpecs = ({ listing, t }) => {
                 ? t('listing.specs.ac', 'A/C') 
                 : t('listing.specs.noAc', 'No A/C'),
             iconColor: listing.ac === 1 || listing.ac === '1' || listing.ac === true || listing.ac === 'Yes'
-                ? "text-blue-600" 
+                ? "text-[#048667]" 
                 : "text-gray-400"
         },
         {
@@ -170,8 +170,8 @@ const CarRentalSpecs = ({ listing, t }) => {
                 ? `${t('listing.specs.deposit_required', 'Deposit Required')}${listing.deposit_amount ? ` (${listing.deposit_amount} ${t('common.currency', 'MAD')})` : ''}`
                 : t('listing.specs.no_deposit', 'No Deposit'),
             iconColor: listing.deposit_required === 1 || listing.deposit_required === '1' || listing.deposit_required === true
-                ? "text-orange-600" 
-                : "text-green-600"
+                ? "text-[#048667]" 
+                : "text-[#048667]"
         }
     ];
 
@@ -256,8 +256,8 @@ const BoatRentalSpecs = ({ listing, t }) => {
                 ? t('listing.specs.captain_included', 'Captain Included')
                 : t('listing.specs.captain_not_included', 'No Captain'),
             iconColor: listing.with_captain === 1 || listing.with_captain === '1' || listing.with_captain === true
-                ? "text-blue-600" 
-                : "text-gray-500"
+                ? "text-[#048667]" 
+                : "text-gray-400"
         },
         {
             icon: FaUsers,
@@ -313,8 +313,8 @@ const ThingsToDoSpecs = ({ listing, t }) => {
                 ? t('listing.specs.pickup_yes', 'Pickup Included')
                 : t('listing.specs.pickup_no', 'No Pickup'),
             iconColor: listing.pickup === 1 || listing.pickup === '1' || listing.pickup === true
-                ? "text-green-600" 
-                : "text-gray-500"
+                ? "text-[#048667]" 
+                : "text-gray-400"
         },
         {
             icon: FaUserFriends,
@@ -351,12 +351,12 @@ const ThingsToDoSpecs = ({ listing, t }) => {
 
 // Helper function for difficulty color
 const getDifficultyColor = (difficulty) => {
-    if (!difficulty) return "text-gray-500";
+    if (!difficulty) return "text-gray-400";
     const lower = difficulty.toLowerCase();
-    if (lower.includes('easy')) return "text-green-600";
-    if (lower.includes('moderate') || lower.includes('medium')) return "text-orange-600";
-    if (lower.includes('hard') || lower.includes('difficult')) return "text-red-600";
-    return "text-gray-600";
+    if (lower.includes('easy')) return "text-[#048667]";
+    if (lower.includes('moderate') || lower.includes('medium')) return "text-[#048667]";
+    if (lower.includes('hard') || lower.includes('difficult')) return "text-[#048667]";
+    return "text-[#048667]";
 };
 
 export default ListingSpecifications;

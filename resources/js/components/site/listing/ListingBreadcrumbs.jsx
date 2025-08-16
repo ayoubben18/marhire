@@ -20,31 +20,43 @@ const ListingBreadcrumbs = ({ loading, listing, currentLocale, getTranslatedFiel
 
     // Category mapping - Fixed correct category IDs
     const categoryNames = {
-        1: 'Car Rental',
-        2: 'Private Driver',
-        3: 'Boat Rental',
-        4: 'Activities'
+        2: 'Car Rental',
+        3: 'Private Driver',
+        4: 'Boat Rental',
+        5: 'Things To Do'
+    };
+
+    // Category slug mapping for URLs
+    const categorySlugs = {
+        2: 'car-rental',
+        3: 'private-driver',
+        4: 'boats',
+        5: 'things-to-do'
     };
 
     const categoryName = categoryNames[listing?.category_id] || t('common.category', 'Category');
+    const categorySlug = categorySlugs[listing?.category_id];
     const listingTitle = listing ? getTranslatedField(listing, 'title', currentLocale) : '';
     const cityName = listing?.city?.city_name || listing?.city?.name || '';
 
+    // Get locale prefix for URLs (if currentLocale is provided)
+    const localePrefix = currentLocale && currentLocale !== 'en' ? `/${currentLocale}` : '';
+    
     // Breadcrumb items
     const breadcrumbItems = [
         {
             label: t('common.home', 'Home'),
-            href: '/',
+            href: localePrefix || '/',
             active: false
         },
         {
             label: categoryName,
-            href: `/category/${listing?.category_id}`,
+            href: categorySlug ? `${localePrefix}/category/${categorySlug}` : '#',
             active: false
         },
         {
             label: cityName,
-            href: `/city/${listing?.city?.id}`,
+            href: `${localePrefix}/city/${cityName}`,
             active: false
         },
         {
@@ -64,9 +76,36 @@ const ListingBreadcrumbs = ({ loading, listing, currentLocale, getTranslatedFiel
     // Filter out empty breadcrumb items
     const validBreadcrumbItems = breadcrumbItems.filter(item => item.label && item.label.trim() !== '');
 
+    // Generate JSON-LD schema for breadcrumbs
+    const generateBreadcrumbSchema = () => {
+        const baseUrl = window.location.origin;
+        
+        const itemListElement = validBreadcrumbItems.map((item, index) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "name": item.label,
+            "item": item.href === '#' ? undefined : `${baseUrl}${item.href}`
+        }));
+
+        return {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": itemListElement.filter(item => item.item !== undefined)
+        };
+    };
+
     return (
-        <nav className="mb-4" aria-label="Breadcrumb">
-            <ol className="flex flex-wrap items-center text-sm text-gray-600">
+        <>
+            {/* JSON-LD Schema for Breadcrumbs */}
+            <script 
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(generateBreadcrumbSchema())
+                }}
+            />
+            
+            <nav className="mb-4" aria-label="Breadcrumb">
+                <ol className="flex flex-wrap items-center text-sm text-gray-600">
                 {/* Desktop: Show all breadcrumbs */}
                 <div className="hidden md:flex items-center">
                     {validBreadcrumbItems.map((item, index) => (
@@ -84,7 +123,11 @@ const ListingBreadcrumbs = ({ loading, listing, currentLocale, getTranslatedFiel
                             ) : (
                                 <a 
                                     href={item.href}
-                                    className="hover:text-blue-600 transition-colors duration-200 truncate max-w-xs"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        window.location.href = item.href;
+                                    }}
+                                    className="hover:text-blue-600 transition-colors duration-200 truncate max-w-xs cursor-pointer"
                                 >
                                     {item.label}
                                 </a>
@@ -110,7 +153,11 @@ const ListingBreadcrumbs = ({ loading, listing, currentLocale, getTranslatedFiel
                             ) : (
                                 <a 
                                     href={item.href}
-                                    className="hover:text-blue-600 transition-colors duration-200 truncate max-w-32"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        window.location.href = item.href;
+                                    }}
+                                    className="hover:text-blue-600 transition-colors duration-200 truncate max-w-32 cursor-pointer"
                                 >
                                     {item.label}
                                 </a>
@@ -120,6 +167,7 @@ const ListingBreadcrumbs = ({ loading, listing, currentLocale, getTranslatedFiel
                 </div>
             </ol>
         </nav>
+        </>
     );
 };
 
