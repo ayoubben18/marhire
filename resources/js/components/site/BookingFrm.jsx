@@ -1098,6 +1098,99 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         }
     };
 
+    const getMinimumPrice = (categoryId, listing) => {
+        if (!listing) return null;
+        
+        switch(categoryId) {
+            case 2: // Car rental - use direct price fields
+                return listing.price_per_day || listing.price || null;
+                
+            case 4: // Boat rental - use direct price fields  
+                return listing.price_per_hour || null;
+                
+            case 3: // Private driver - get minimum from pricings array
+                if (listing.pricings && listing.pricings.length > 0) {
+                    // Get all available prices from the first pricing entry (following existing pattern)
+                    const pricing = listing.pricings[0];
+                    const availablePrices = [
+                        pricing.airport_one,
+                        pricing.airport_round, 
+                        pricing.intercity_one,
+                        pricing.intercity_round
+                    ].filter(price => price && parseFloat(price) > 0).map(price => parseFloat(price));
+                    
+                    return availablePrices.length > 0 ? Math.min(...availablePrices) : null;
+                }
+                return listing.price_per_day || listing.price_per_hour || null;
+                
+            case 5: // Activity - get price from act_pricings first item
+                let activityPrice = null;
+                
+                // Use act_pricings first item price (correct field name with underscore)
+                if (listing.act_pricings && listing.act_pricings.length > 0) {
+                    activityPrice = parseFloat(listing.act_pricings[0].price);
+                }
+                
+                // Fallback to customBookingOptions
+                if (!activityPrice && listing.customBookingOptions && listing.customBookingOptions.length > 0) {
+                    const customPrices = listing.customBookingOptions.map(o => parseFloat(o.price)).filter(p => p > 0);
+                    if (customPrices.length > 0) {
+                        activityPrice = Math.min(...customPrices);
+                    }
+                }
+                
+                // Finally fallback to direct price fields
+                if (!activityPrice) {
+                    if (listing.private_or_group?.toLowerCase() === 'group') {
+                        activityPrice = listing.price_per_group;
+                    } else {
+                        activityPrice = listing.price_per_person;
+                    }
+                }
+                
+                return activityPrice;
+        }
+        
+        return null;
+    };
+
+    const getPricingTitle = () => {
+        if (!listing) return getCategoryName();
+        
+        let price = getMinimumPrice(numericCategoryId, listing);
+        let unit = "";
+        
+        switch(numericCategoryId) {
+            case 2: // Car rental
+                unit = t("booking.pricing.perDay", "per Day");
+                break;
+            case 4: // Boat rental  
+                unit = t("booking.pricing.perHour", "per Hour");
+                break;
+            case 3: // Private driver
+                unit = t("booking.pricing.perTrip", "per Trip");
+                break;
+            case 5: // Activity
+                if (listing.private_or_group?.toLowerCase() === 'group') {
+                    unit = t("booking.pricing.perGroup", "per Group");
+                } else {
+                    unit = t("booking.pricing.perPerson", "per Person");
+                }
+                break;
+            default:
+                return getCategoryName();
+        }
+        
+        if (price && price > 0) {
+            return t("booking.pricing.fromPrice", "From €{{price}} {{unit}}", { 
+                price: price.toFixed(0), 
+                unit: unit 
+            });
+        }
+        
+        return getCategoryName();
+    };
+
     // Memoize price calculations to prevent infinite loops
     const priceDetails = useMemo(() => {
         // Use appropriate base price based on category
@@ -1136,7 +1229,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                 {/* Category Header */}
                 <div className="mb-4 flex items-center">
                     {getCategoryIcon()}
-                    <h2 className="text-xl font-semibold">{getCategoryName()}</h2>
+                    <h2 className="text-xl font-semibold">{getPricingTitle()}</h2>
                 </div>
                 
                 {/* Stepper */}

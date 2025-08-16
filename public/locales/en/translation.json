@@ -262,7 +262,15 @@
         "groupSize": "Group size",
         "peopleRequired": "people required",
         "groupActivityText": "This is a group activity",
-        "privateActivityHelper": "Price is per person"
+        "privateActivityHelper": "Price is per person",
+        "pricing": {
+            "fromPrice": "From €{{price}} {{unit}}",
+            "perDay": "per Day",
+            "perHour": "per Hour",
+            "perTrip": "per Trip",
+            "perPerson": "per Person",
+            "perGroup": "per Group"
+        }
     },
     "filters": {
         "carType": "Car Type",
