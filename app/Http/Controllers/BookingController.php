@@ -77,7 +77,13 @@ class BookingController extends Controller
 
         $addons = array_filter($request->input('addons', []));
 
-        $listing = Listing::find($request->listing_id);
+        // Load listing with relationships needed for pricing
+        $listing = Listing::with(['pricings', 'actPricings', 'addons.addon'])
+            ->find($request->listing_id);
+
+        // Calculate prices using PricingService (same as client bookings)
+        $pricingService = app(\App\Services\PricingService::class);
+        $priceData = $pricingService->calculateTotalPrice($listing, $request);
 
         // Get language from session or request, default to app locale
         $locale = session('locale', config('app.locale'));
@@ -101,9 +107,9 @@ class BookingController extends Controller
             'country' => $request->country,
             'flight_number' => $request->flight_number,  // Flight number for all categories
             'notes' => $request->notes,
-            'booking_price' => $request->booking_price ?? 0,
-            'total_addons' => $request->total_addons ?? 0,
-            'total_price' => $request->total_price ?? 0,
+            'booking_price' => $priceData['base_price'],  // Use server-calculated price
+            'total_addons' => $priceData['addons_total'],  // Use server-calculated addons total
+            'total_price' => $priceData['total_price'],  // Use server-calculated total
             'booking_source' => 'Admin Entry',
             'booking_language' => $locale,
             'discount_or_extra' => $request->discount_or_extra ?? 0,
@@ -299,21 +305,14 @@ class BookingController extends Controller
         ]);
 
         $addons = array_filter($request->input('addons', []));
-        $listing = Listing::find($request->listing_id);
+        
+        // Load listing with relationships needed for pricing
+        $listing = Listing::with(['pricings', 'actPricings', 'addons.addon'])
+            ->find($request->listing_id);
 
-        // Calculate total addon price from selected addons
-        $totalAddons = 0;
-        if (!empty($addons)) {
-            $addonPrices = ListingAddon::whereIn('id', $addons)->pluck('price', 'id');
-            foreach ($addons as $addonId) {
-                $totalAddons += $addonPrices[$addonId] ?? 0;
-            }
-        }
-
-        // Calculate total price (without applying discount - just store it)
-        $bookingPrice = $request->booking_price ?? 0;
-        $discountOrExtra = $request->discount_or_extra ?? 0;
-        $totalPrice = $bookingPrice + $totalAddons; // Don't apply discount to total
+        // Calculate prices using PricingService (same as client bookings and insert)
+        $pricingService = app(\App\Services\PricingService::class);
+        $priceData = $pricingService->calculateTotalPrice($listing, $request);
 
         // Base booking fields
         $bookingFields = [
@@ -328,10 +327,10 @@ class BookingController extends Controller
             'date_of_birth' => $request->date_of_birth,
             'flight_number' => $request->flight_number,
             'notes' => $request->notes,
-            'booking_price' => $bookingPrice,
-            'total_addons' => $totalAddons,
-            'total_price' => $totalPrice,
-            'discount_or_extra' => $discountOrExtra,
+            'booking_price' => $priceData['base_price'],  // Use server-calculated price
+            'total_addons' => $priceData['addons_total'],  // Use server-calculated addons total
+            'total_price' => $priceData['total_price'],  // Use server-calculated total
+            'discount_or_extra' => $request->discount_or_extra ?? 0,
             'status' => $request->status ?? 'Pending' // Maintain existing status if not provided
         ];
 
@@ -394,11 +393,9 @@ class BookingController extends Controller
         $booking->addons()->delete(); // Remove all existing addons
 
         foreach ($addons as $addonId) {
-            $addonPrice = ListingAddon::find($addonId)->price ?? 0;
             BookingAddon::create([
                 'booking_id' => $booking->id,
-                'addon_id' => $addonId,
-                'price' => $addonPrice
+                'addon_id' => $addonId
             ]);
         }
 
