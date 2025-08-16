@@ -194,6 +194,9 @@ Route::name('bookings.')->middleware(['auth'])->prefix('bookings')->group(functi
     Route::post('/getListings', [BookingController::class, 'getListings'])->name('getListings');
     Route::post('/getActivityListings', [BookingController::class, 'getActivityListings'])->name('getActivityListings');
     
+    // Calendar data route
+    Route::get('/calendarData', [BookingController::class, 'calendarData'])->name('calendarData');
+    
     // Email management routes
     Route::get('/{id}/email-status', [BookingController::class, 'getEmailStatus'])->name('email-status');
     Route::post('/{id}/send-email', [BookingController::class, 'sendEmail'])->name('send-email');
