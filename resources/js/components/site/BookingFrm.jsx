@@ -1545,10 +1545,11 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                                 href={getWtspUrl(listing)}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center justify-center p-3 bg-green-400 hover:bg-green-500 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg ml-2"
+                                className="flex items-center justify-center gap-2 px-4 py-3 bg-green-400 hover:bg-green-500 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg ml-2"
                                 title="WhatsApp"
                             >
-                                <FaWhatsapp size={24} />
+                                <FaWhatsapp size={20} />
+                                <span className="font-medium">WhatsApp</span>
                             </a>
                         </>
                     ) : (
@@ -1556,7 +1557,8 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="ml-auto btn-search-v2 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                className="ml-auto text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                style={{ backgroundColor: '#048667' }}
                             >
                                 {isSubmitting ? (
                                     <>
@@ -1571,10 +1573,11 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                                 href={getWtspUrl(listing)}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center justify-center p-3 bg-green-400 hover:bg-green-500 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg ml-2"
+                                className="flex items-center justify-center gap-2 px-4 py-3 bg-green-400 hover:bg-green-500 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg ml-2"
                                 title="WhatsApp"
                             >
-                                <FaWhatsapp size={24} />
+                                <FaWhatsapp size={20} />
+                                <span className="font-medium">WhatsApp</span>
                             </a>
                         </>
                     )}
