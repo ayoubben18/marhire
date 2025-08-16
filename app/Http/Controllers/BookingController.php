@@ -58,7 +58,7 @@ class BookingController extends Controller
             ->select('sub_category_options.id', 'option')
             ->get();
 
-        return view('bookings.add')->with([
+        return view('bookings.form')->with([
             'layout' => $layout,
             'categories' => $categories,
             'countries' => $countries,
@@ -113,13 +113,13 @@ class BookingController extends Controller
         switch ((int) $request->category_id) {
             case 2:
                 $bookingFields += [
-                    'age' => $request->age,
+                    'date_of_birth' => $request->date_of_birth,  // Changed from age to date_of_birth
                     'pickup_date' => $request->pickup_date,
                     'dropoff_date' => $request->dropoff_date,
                     'pickup_time' => $request->pickup_time,
                     'dropoff_time' => $request->dropoff_time,
                     'pickup_location' => $request->pickup_location,
-                    'dropoff_location' => $request->dropoff_location
+                    'droppoff_location' => $request->droppoff_location  // Database column has typo: droppoff_location
                 ];
                 break;
 
@@ -127,10 +127,17 @@ class BookingController extends Controller
                 $bookingFields += [
                     'car_type' => $request->car_type,
                     'airport_or_intercity' => $request->airport_or_intercity,
+                    'service_types' => $request->service_types,
+                    'road_types' => $request->road_types,
                     'city_a_id' => $request->city_a_id,
                     'city_b_id' => $request->city_b_id,
                     'prefered_date' => $request->prefered_date,
-                    'number_of_people' => $request->number_of_people
+                    'pickup_time' => $request->pickup_time_private,  // Changed from pickup_time to pickup_time_private
+                    'number_of_people' => $request->number_of_passengers,  // Use number_of_passengers for both fields
+                    'number_of_passengers' => $request->number_of_passengers,
+                    'number_of_luggage' => $request->number_of_luggage,
+                    'pickup_address' => $request->pickup_address,
+                    'dropoff_address' => $request->dropoff_address
                 ];
                 break;
 
@@ -138,7 +145,8 @@ class BookingController extends Controller
                 $bookingFields += [
                     'duration' => $request->duration,
                     'prefered_date' => $request->prefered_date,
-                    'number_of_people' => $request->number_of_people
+                    'number_of_people' => $request->number_of_people,
+                    'pickup_time' => $request->pickup_time_boat  // Changed from pickup_time to pickup_time_boat
                 ];
                 break;
 
@@ -270,7 +278,7 @@ class BookingController extends Controller
             ->select('sub_category_options.id', 'option')
             ->get();
 
-        return view('bookings.update')->with([
+        return view('bookings.form')->with([
             'layout' => $layout,
             'booking' => $booking,
             'countries' => $countries,
@@ -349,8 +357,8 @@ class BookingController extends Controller
                     'city_a_id' => $request->city_a_id,
                     'city_b_id' => $request->city_b_id,
                     'prefered_date' => $request->prefered_date,
-                    'pickup_time' => $request->pickup_time,
-                    'number_of_people' => $request->number_of_people,
+                    'pickup_time' => $request->pickup_time_private,  // Changed from pickup_time to pickup_time_private
+                    'number_of_people' => $request->number_of_passengers,  // Use number_of_passengers for both fields
                     'number_of_passengers' => $request->number_of_passengers,
                     'number_of_luggage' => $request->number_of_luggage,
                     'pickup_address' => $request->pickup_address,
@@ -363,7 +371,7 @@ class BookingController extends Controller
                     'duration' => $request->duration,
                     'prefered_date' => $request->prefered_date,
                     'number_of_people' => $request->number_of_people,
-                    'pickup_time' => $request->pickup_time
+                    'pickup_time' => $request->pickup_time_boat  // Changed from pickup_time to pickup_time_boat
                 ];
                 break;
 

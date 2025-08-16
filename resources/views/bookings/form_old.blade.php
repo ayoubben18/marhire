@@ -1,14 +1,14 @@
 @extends('layouts.dashboard_admin')
 
-@section('title', 'Add Booking')
+@section('title', isset($booking) ? 'Edit Booking' : 'Add Booking')
 
 @section('content')
 <div class="nk-block-head nk-block-head-sm">
     <div class="nk-block-between">
         <div class="nk-block-head-content">
-            <h3 class="nk-block-title page-title">Add Booking</h3>
+            <h3 class="nk-block-title page-title">{{ isset($booking) ? 'Edit' : 'Add' }} Booking</h3>
             <div class="nk-block-des text-soft">
-                <p>Add informations of new booking.</p>
+                <p>{{ isset($booking) ? 'Edit informations of booking.' : 'Add informations of new booking.' }}</p>
             </div>
         </div>
         <div>
@@ -25,8 +25,11 @@
     }
 
 </style>
-<form id="bookingFrm" action="{{ route('bookings.insert') }}" method="post" enctype="multipart/form-data">
+<form id="bookingFrm" action="{{ isset($booking) ? route('bookings.update') : route('bookings.insert') }}" method="post" enctype="multipart/form-data">
     @csrf
+    @if(isset($booking))
+        <input type="hidden" name="id" value="{{ $booking->id }}" />
+    @endif
     <input type="hidden" name="booking_price" id="booking_price" />
     <input type="hidden" name="total_addons" id="total_addons" />
     <input type="hidden" name="total_price" id="total_price" />
@@ -39,7 +42,14 @@
                         @if(session('inserted'))
                         <div class="example-alert mb-3">
                             <div class="alert alert-success alert-icon">
-                                <em class="icon ni ni-check-circle"></em> <strong>Success</strong>. new booking has been created.
+                                <em class="icon ni ni-check-circle"></em> <strong>Success</strong>. New booking has been created.
+                            </div>
+                        </div>
+                        @endif
+                        @if(session('updated'))
+                        <div class="example-alert mb-3">
+                            <div class="alert alert-success alert-icon">
+                                <em class="icon ni ni-check-circle"></em> <strong>Success</strong>. Booking has been updated.
                             </div>
                         </div>
                         @endif
@@ -50,9 +60,9 @@
                                         <label class="form-label" for="category_id">Category <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
                                             <select class="form-control select2-single" name="category_id" id="category_id">
-                                                <option value="" disabled selected>--Choose option--</option>
+                                                <option value="" disabled {{ !isset($booking) ? 'selected' : '' }}>--Choose option--</option>
                                                 @foreach($categories as $category)
-                                                <option value="{{ $category->id }}">{{ $category->category }}</option>
+                                                <option value="{{ $category->id }}" {{ isset($booking) && $booking->category_id == $category->id ? 'selected' : '' }}>{{ $category->category }}</option>
                                                 @endforeach
                                             </select>
                                             <small class="error d-none">Required field.</small>
@@ -126,6 +136,71 @@
                                                 @endforeach
                                             </select>
                                             <small class="error d-none">Required field.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Additional Private Driver Fields -->
+                                <div class="col-md-6" data-categories="3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="pickup_time_private">Pickup Time</label>
+                                        <div class="form-control-wrap">
+                                            <input type="time" class="form-control" name="pickup_time" id="pickup_time_private" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" data-categories="3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="service_types">Service Types</label>
+                                        <div class="form-control-wrap">
+                                            <select class="form-control select2-single" name="service_types" id="service_types">
+                                                <option value="" disabled selected>--Choose Option--</option>
+                                                <option value="airport_transfer">Airport Transfer</option>
+                                                <option value="intercity">Intercity</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" data-categories="3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="road_types">Road Types</label>
+                                        <div class="form-control-wrap">
+                                            <select class="form-control select2-single" name="road_types" id="road_types">
+                                                <option value="" disabled selected>--Choose Option--</option>
+                                                <option value="one_way">One Way</option>
+                                                <option value="round_trip">Round Trip</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" data-categories="3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="number_of_passengers">Number of Passengers</label>
+                                        <div class="form-control-wrap">
+                                            <input type="number" class="form-control" name="number_of_passengers" id="number_of_passengers" min="1" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" data-categories="3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="number_of_luggage">Number of Luggage</label>
+                                        <div class="form-control-wrap">
+                                            <input type="number" class="form-control" name="number_of_luggage" id="number_of_luggage" min="0" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" data-categories="3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="pickup_address">Pickup Address</label>
+                                        <div class="form-control-wrap">
+                                            <input type="text" class="form-control" name="pickup_address" id="pickup_address" placeholder="Enter pickup address" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" data-categories="3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="dropoff_address">Dropoff Address</label>
+                                        <div class="form-control-wrap">
+                                            <input type="text" class="form-control" name="dropoff_address" id="dropoff_address" placeholder="Enter dropoff address" />
                                         </div>
                                     </div>
                                 </div>
@@ -239,7 +314,22 @@
                                     <div class="form-group">
                                         <label class="form-label" for="pickup_time_boat">Pickup Time</label>
                                         <div class="form-control-wrap">
-                                            <input type="time" class="form-control" name="pickup_time" id="pickup_time_boat" />
+                                            @php
+                                            $start = 0;
+                                            $end = 23 * 60 + 45;
+                                            $interval = 30;
+                                            @endphp
+                                            <select class="form-control select2-single" name="pickup_time" id="pickup_time_boat">
+                                                <option value="" selected disabled>--Choose Option--</option>
+                                                @for ($i = $start; $i <= $end; $i +=$interval) 
+                                                    @php 
+                                                    $hours = floor($i / 60); 
+                                                    $minutes = $i % 60; 
+                                                    $time = sprintf('%02d:%02d', $hours, $minutes); 
+                                                    @endphp 
+                                                    <option value="{{ $time }}">{{ $time }}</option>
+                                                @endfor
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -257,15 +347,6 @@
                                         <label class="form-label" for="number_of_people">Number Of People <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
                                             <input type="number" step="1" class="form-control" name="number_of_people" id="number_of_people" placeholder="Number Of People" />
-                                            <small class="error d-none">Required field.</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6" data-categories="2">
-                                    <div class="form-group">
-                                        <label class="form-label" for="flight_number">Flight Number</label>
-                                        <div class="form-control-wrap">
-                                            <input type="text" class="form-control" name="flight_number" id="flight_number" placeholder="Flight Number" />
                                             <small class="error d-none">Required field.</small>
                                         </div>
                                     </div>
@@ -350,6 +431,22 @@
                                                 @endforeach
                                             </select>
                                             <small class="error d-none">Required field.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="date_of_birth">Date of Birth</label>
+                                        <div class="form-control-wrap">
+                                            <input type="date" class="form-control" name="date_of_birth" id="date_of_birth" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="flight_number">Flight Number</label>
+                                        <div class="form-control-wrap">
+                                            <input type="text" class="form-control" name="flight_number" id="flight_number" placeholder="Flight Number" />
                                         </div>
                                     </div>
                                 </div>

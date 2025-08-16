@@ -1,14 +1,14 @@
 @extends('layouts.dashboard_admin')
 
-@section('title', 'Edit Booking')
+@section('title', isset($booking) ? 'Edit Booking' : 'Add Booking')
 
 @section('content')
 <div class="nk-block-head nk-block-head-sm">
     <div class="nk-block-between">
         <div class="nk-block-head-content">
-            <h3 class="nk-block-title page-title">Edit Booking</h3>
+            <h3 class="nk-block-title page-title">{{ isset($booking) ? 'Edit' : 'Add' }} Booking</h3>
             <div class="nk-block-des text-soft">
-                <p>Edit informations of your booking.</p>
+                <p>{{ isset($booking) ? 'Edit informations of booking.' : 'Add informations of new booking.' }}</p>
             </div>
         </div>
         <div>
@@ -25,9 +25,11 @@
     }
 
 </style>
-<form id="bookingFrm" action="{{ route('bookings.update') }}" method="post" enctype="multipart/form-data">
+<form id="bookingFrm" action="{{ isset($booking) ? route('bookings.update') : route('bookings.insert') }}" method="post" enctype="multipart/form-data">
     @csrf
+    @if(isset($booking))
     <input type="hidden" name="id" value="{{ $booking->id }}" />
+    @endif
     <input type="hidden" name="booking_price" id="booking_price" />
     <input type="hidden" name="total_addons" id="total_addons" />
     <input type="hidden" name="total_price" id="total_price" />
@@ -44,6 +46,13 @@
                             </div>
                         </div>
                         @endif
+                        @if(session('inserted'))
+                        <div class="example-alert mb-3">
+                            <div class="alert alert-success alert-icon">
+                                <em class="icon ni ni-check-circle"></em> <strong>Success</strong>. booking has been created.
+                            </div>
+                        </div>
+                        @endif
                         <div id="step1">
                             <div class="row gy-4">
                                 <div class="col-md-6">
@@ -53,7 +62,7 @@
                                             <select class="form-control select2-single" name="category_id" id="category_id">
                                                 <option value="" disabled selected>--Choose option--</option>
                                                 @foreach($categories as $category)
-                                                <option value="{{ $category->id }}" {{ $booking->category_id == $category->id ? 'selected' : '' }}>{{ $category->category }}</option>
+                                                <option value="{{ $category->id }}" {{ isset($booking) && $booking->category_id == $category->id ? 'selected' : '' }}>{{ $category->category }}</option>
                                                 @endforeach
                                             </select>
                                             <small class="error d-none">Required field.</small>
@@ -67,7 +76,7 @@
                                             <select class="form-control select2-single" name="city_a_id" id="city_a_id">
                                                 <option value="" disabled selected>--Choose option--</option>
                                                 @foreach($cities as $city)
-                                                <option value="{{ $city->id }}" {{ $booking->city_a_id == $city->id ? 'selected' : '' }}>{{ $city->city_name }}</option>
+                                                <option value="{{ $city->id }}" {{ isset($booking) && $booking->city_a_id == $city->id ? 'selected' : '' }}>{{ $city->city_name }}</option>
                                                 @endforeach
                                             </select>
                                             <small class="error d-none">Required field.</small>
@@ -81,7 +90,7 @@
                                             <select class="form-control select2-single" name="city_b_id" id="city_b_id">
                                                 <option value="" disabled selected>--Choose option--</option>
                                                 @foreach($cities as $city)
-                                                <option value="{{ $city->id }}" {{ $booking->city_b_id == $city->id ? 'selected' : '' }}>{{ $city->city_name }}</option>
+                                                <option value="{{ $city->id }}" {{ isset($booking) && $booking->city_b_id == $city->id ? 'selected' : '' }}>{{ $city->city_name }}</option>
                                                 @endforeach
                                             </select>
                                             <small class="error d-none">Required field.</small>
@@ -116,9 +125,9 @@
                                         <div class="form-control-wrap">
                                             <select class="form-control select2-single" name="time_preference" id="time_preference">
                                                 <option value="">--Choose Option--</option>
-                                                <option value="morning" {{ $booking->time_preference == 'morning' ? 'selected' : '' }}>Morning</option>
-                                                <option value="afternoon" {{ $booking->time_preference == 'afternoon' ? 'selected' : '' }}>Afternoon</option>
-                                                <option value="evening" {{ $booking->time_preference == 'evening' ? 'selected' : '' }}>Evening</option>
+                                                <option value="morning" {{ isset($booking) && $booking->time_preference == 'morning' ? 'selected' : '' }}>Morning</option>
+                                                <option value="afternoon" {{ isset($booking) && $booking->time_preference == 'afternoon' ? 'selected' : '' }}>Afternoon</option>
+                                                <option value="evening" {{ isset($booking) && $booking->time_preference == 'evening' ? 'selected' : '' }}>Evening</option>
                                             </select>
                                         </div>
                                     </div>
@@ -127,7 +136,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="pickup_date">Pickup Date <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
-                                            <input type="date" name="pickup_date" id="pickup_date" class="form-control" />
+                                            <input type="date" name="pickup_date" id="pickup_date" class="form-control" value="{{ isset($booking) ? $booking->pickup_date : '' }}" />
                                             <small class="error d-none">Required field.</small>
                                         </div>
                                     </div>
@@ -136,7 +145,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="dropoff_date">Dropoff Date <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
-                                            <input type="date" name="dropoff_date" id="dropoff_date" class="form-control" />
+                                            <input type="date" name="dropoff_date" id="dropoff_date" class="form-control" value="{{ isset($booking) ? $booking->dropoff_date : '' }}" />
                                             <small class="error d-none">Required field.</small>
                                         </div>
                                     </div>
@@ -184,7 +193,7 @@
                                             <select class="form-control select2-single" name="pickup_location" id="pickup_location">
                                                 <option value="" disabled selected>--Choose City--</option>
                                                 @foreach($cities as $city)
-                                                <option value="{{ $city->id }}" {{ $booking->pickup_location == $city->id ? 'selected' : '' }}>{{ $city->city_name }}</option>
+                                                <option value="{{ $city->id }}" {{ isset($booking) && $booking->pickup_location == $city->id ? 'selected' : '' }}>{{ $city->city_name }}</option>
                                                 @endforeach
                                             </select>
                                             <small class="error d-none">Required field.</small>
@@ -198,7 +207,7 @@
                                             <select class="form-control select2-single" name="droppoff_location" id="droppoff_location">
                                                 <option value="" disabled selected>--Choose City--</option>
                                                 @foreach($cities as $city)
-                                                <option value="{{ $city->id }}" {{ $booking->droppoff_location == $city->id ? 'selected' : '' }}>{{ $city->city_name }}</option>
+                                                <option value="{{ $city->id }}" {{ isset($booking) && $booking->droppoff_location == $city->id ? 'selected' : '' }}>{{ $city->city_name }}</option>
                                                 @endforeach
                                             </select>
                                             <small class="error d-none">Required field.</small>
@@ -217,20 +226,43 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6" data-categories="3,4,5">
+                                <div class="col-md-6" data-categories="4">
                                     <div class="form-group">
-                                        <label class="form-label" for="prefered_date">Prefered Date <span class="lbl-obligatoire">*</span></label>
+                                        <label class="form-label" for="pickup_time_boat">Pickup Time</label>
                                         <div class="form-control-wrap">
-                                            <input type="date" class="form-control" name="prefered_date" id="prefered_date" placeholder="Prefered Date" />
-                                            <small class="error d-none">Required field.</small>
+                                            @php
+                                            $start = 0;
+                                            $end = 23 * 60 + 45;
+                                            $interval = 30;
+                                            @endphp
+                                            <select class="form-control select2-single" name="pickup_time_boat" id="pickup_time_boat">
+                                                <option value="" selected disabled>--Choose Option--</option>
+                                                @for ($i = $start; $i <= $end; $i +=$interval) 
+                                                    @php 
+                                                    $hours = floor($i / 60); 
+                                                    $minutes = $i % 60; 
+                                                    $time = sprintf('%02d:%02d', $hours, $minutes); 
+                                                    @endphp 
+                                                    <option value="{{ $time }}" {{ isset($booking) && $booking->pickup_time == $time ? 'selected' : '' }}>{{ $time }}</option>
+                                                @endfor
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6" data-categories="3,4,5">
                                     <div class="form-group">
+                                        <label class="form-label" for="prefered_date">Prefered Date <span class="lbl-obligatoire">*</span></label>
+                                        <div class="form-control-wrap">
+                                            <input type="date" class="form-control" name="prefered_date" id="prefered_date" placeholder="Prefered Date" value="{{ isset($booking) ? $booking->prefered_date : '' }}" />
+                                            <small class="error d-none">Required field.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" data-categories="4,5">
+                                    <div class="form-group">
                                         <label class="form-label" for="number_of_people">Number Of People <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
-                                            <input type="number" step="1" class="form-control" name="number_of_people" id="number_of_people" placeholder="Number Of People" />
+                                            <input type="number" step="1" class="form-control" name="number_of_people" id="number_of_people" placeholder="Number Of People" value="{{ isset($booking) ? $booking->number_of_people : '' }}" />
                                             <small class="error d-none">Required field.</small>
                                         </div>
                                     </div>
@@ -238,9 +270,24 @@
                                 <!-- Additional Private Driver Fields -->
                                 <div class="col-md-6" data-categories="3">
                                     <div class="form-group">
-                                        <label class="form-label" for="pickup_time">Pickup Time</label>
+                                        <label class="form-label" for="pickup_time_private">Pickup Time</label>
                                         <div class="form-control-wrap">
-                                            <input type="time" class="form-control" name="pickup_time" id="pickup_time_private" value="{{ $booking->pickup_time }}" />
+                                            @php
+                                            $start = 0;
+                                            $end = 23 * 60 + 45;
+                                            $interval = 30;
+                                            @endphp
+                                            <select class="form-control select2-single" name="pickup_time_private" id="pickup_time_private">
+                                                <option value="" selected disabled>--Choose Option--</option>
+                                                @for ($i = $start; $i <= $end; $i +=$interval) 
+                                                    @php 
+                                                    $hours = floor($i / 60); 
+                                                    $minutes = $i % 60; 
+                                                    $time = sprintf('%02d:%02d', $hours, $minutes); 
+                                                    @endphp 
+                                                    <option value="{{ $time }}" {{ isset($booking) && $booking->pickup_time == $time ? 'selected' : '' }}>{{ $time }}</option>
+                                                @endfor
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -249,9 +296,9 @@
                                         <label class="form-label" for="service_types">Service Types</label>
                                         <div class="form-control-wrap">
                                             <select class="form-control select2-single" name="service_types" id="service_types">
-                                                <option value="" disabled {{ !$booking->service_types ? 'selected' : '' }}>--Choose Option--</option>
-                                                <option value="airport_transfer" {{ $booking->service_types == 'airport_transfer' ? 'selected' : '' }}>Airport Transfer</option>
-                                                <option value="intercity" {{ $booking->service_types == 'intercity' ? 'selected' : '' }}>Intercity</option>
+                                                <option value="" disabled {{ !isset($booking) || !$booking->service_types ? 'selected' : '' }}>--Choose Option--</option>
+                                                <option value="airport_transfer" {{ isset($booking) && $booking->service_types == 'airport_transfer' ? 'selected' : '' }}>Airport Transfer</option>
+                                                <option value="intercity" {{ isset($booking) && $booking->service_types == 'intercity' ? 'selected' : '' }}>Intercity</option>
                                             </select>
                                         </div>
                                     </div>
@@ -261,18 +308,19 @@
                                         <label class="form-label" for="road_types">Road Types</label>
                                         <div class="form-control-wrap">
                                             <select class="form-control select2-single" name="road_types" id="road_types">
-                                                <option value="" disabled {{ !$booking->road_types ? 'selected' : '' }}>--Choose Option--</option>
-                                                <option value="one_way" {{ $booking->road_types == 'one_way' ? 'selected' : '' }}>One Way</option>
-                                                <option value="round_trip" {{ $booking->road_types == 'round_trip' ? 'selected' : '' }}>Round Trip</option>
+                                                <option value="" disabled {{ !isset($booking) || !$booking->road_types ? 'selected' : '' }}>--Choose Option--</option>
+                                                <option value="one_way" {{ isset($booking) && $booking->road_types == 'one_way' ? 'selected' : '' }}>One Way</option>
+                                                <option value="round_trip" {{ isset($booking) && $booking->road_types == 'round_trip' ? 'selected' : '' }}>Round Trip</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6" data-categories="3">
                                     <div class="form-group">
-                                        <label class="form-label" for="number_of_passengers">Number of Passengers</label>
+                                        <label class="form-label" for="number_of_passengers">Number of Passengers <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
-                                            <input type="number" class="form-control" name="number_of_passengers" id="number_of_passengers" value="{{ $booking->number_of_passengers }}" />
+                                            <input type="number" class="form-control" name="number_of_passengers" id="number_of_passengers" placeholder="Number of Passengers" value="{{ isset($booking) ? $booking->number_of_passengers : '' }}" />
+                                            <small class="error d-none">Required field.</small>
                                         </div>
                                     </div>
                                 </div>
@@ -280,7 +328,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="number_of_luggage">Number of Luggage</label>
                                         <div class="form-control-wrap">
-                                            <input type="number" class="form-control" name="number_of_luggage" id="number_of_luggage" value="{{ $booking->number_of_luggage }}" />
+                                            <input type="number" class="form-control" name="number_of_luggage" id="number_of_luggage" value="{{ isset($booking) ? $booking->number_of_luggage : '' }}" />
                                         </div>
                                     </div>
                                 </div>
@@ -288,7 +336,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="pickup_address">Pickup Address</label>
                                         <div class="form-control-wrap">
-                                            <input type="text" class="form-control" name="pickup_address" id="pickup_address" value="{{ $booking->pickup_address }}" placeholder="Airport or address" />
+                                            <input type="text" class="form-control" name="pickup_address" id="pickup_address" value="{{ isset($booking) ? $booking->pickup_address : '' }}" placeholder="Airport or address" />
                                         </div>
                                     </div>
                                 </div>
@@ -296,7 +344,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="dropoff_address">Dropoff Address</label>
                                         <div class="form-control-wrap">
-                                            <input type="text" class="form-control" name="dropoff_address" id="dropoff_address" value="{{ $booking->dropoff_address }}" placeholder="Hotel or address" />
+                                            <input type="text" class="form-control" name="dropoff_address" id="dropoff_address" value="{{ isset($booking) ? $booking->dropoff_address : '' }}" placeholder="Hotel or address" />
                                         </div>
                                     </div>
                                 </div>
@@ -315,7 +363,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="discount_or_extra">Discount Or Extra Price</label>
                                         <div class="form-control-wrap">
-                                            <input type="number" step="any" class="form-control" name="discount_or_extra" id="discount_or_extra" value="{{ old('discount_or_extra') ?? $booking->discount_or_extra }}" placeholder="Discount Or Extra Price" />
+                                            <input type="number" step="any" class="form-control" name="discount_or_extra" id="discount_or_extra" value="{{ isset($booking) ? (old('discount_or_extra') ?? $booking->discount_or_extra) : old('discount_or_extra') }}" placeholder="Discount Or Extra Price" />
                                         </div>
                                     </div>
                                 </div>
@@ -326,7 +374,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="first_name">First Name <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
-                                            <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First Name" value="{{ $booking->first_name }}" />
+                                            <input type="text" class="form-control" name="first_name" id="first_name" placeholder="First Name" value="{{ isset($booking) ? $booking->first_name : '' }}" />
                                             <small class="error d-none">Required field.</small>
                                         </div>
                                     </div>
@@ -335,7 +383,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="last_name">Last Name <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
-                                            <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last Name" value="{{ $booking->last_name }}" />
+                                            <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Last Name" value="{{ isset($booking) ? $booking->last_name : '' }}" />
                                             <small class="error d-none">Required field.</small>
                                         </div>
                                     </div>
@@ -345,7 +393,7 @@
                                         <label class="form-label" for="date_of_birth">Date of Birth <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
                                             <input type="date" class="form-control" name="date_of_birth" id="date_of_birth" 
-                                                   value="{{ $booking->date_of_birth }}" 
+                                                   value="{{ isset($booking) ? $booking->date_of_birth : '' }}" 
                                                    max="{{ date('Y-m-d', strtotime('-18 years')) }}" />
                                             <small class="error d-none">Required field.</small>
                                         </div>
@@ -355,7 +403,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="email">Email <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
-                                            <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="{{ $booking->email }}" />
+                                            <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="{{ isset($booking) ? $booking->email : '' }}" />
                                             <small class="error d-none">Required field.</small>
                                         </div>
                                     </div>
@@ -364,7 +412,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="whatsapp">Whatsapp <span class="lbl-obligatoire">*</span></label>
                                         <div class="form-control-wrap">
-                                            <input type="text" class="form-control" name="whatsapp" id="whatsapp" placeholder="Whatsapp" value="{{ $booking->whatsapp }}" />
+                                            <input type="text" class="form-control" name="whatsapp" id="whatsapp" placeholder="Whatsapp" value="{{ isset($booking) ? $booking->whatsapp : '' }}" />
                                             <small class="error d-none">Required field.</small>
                                         </div>
                                     </div>
@@ -373,7 +421,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="flight_number">Flight Number</label>
                                         <div class="form-control-wrap">
-                                            <input type="text" class="form-control" name="flight_number" id="flight_number" placeholder="Flight Number (Optional)" value="{{ old('flight_number', $booking->flight_number) }}" />
+                                            <input type="text" class="form-control" name="flight_number" id="flight_number" placeholder="Flight Number (Optional)" value="{{ isset($booking) ? old('flight_number', $booking->flight_number) : old('flight_number') }}" />
                                         </div>
                                     </div>
                                 </div>
@@ -384,7 +432,7 @@
                                             <select class="form-control select2-single" name="country" id="country">
                                                 <option value="" selected disabled>--Choose Option--</option>
                                                 @foreach($countries as $country)
-                                                <option value="{{ $country->country }}" {{ $booking->country == $country->country ? 'selected' : '' }}>{{ $country->country }}</option>
+                                                <option value="{{ $country->country }}" {{ isset($booking) && $booking->country == $country->country ? 'selected' : '' }}>{{ $country->country }}</option>
                                                 @endforeach
                                             </select>
                                             <small class="error d-none">Required field.</small>
@@ -395,7 +443,7 @@
                                     <div class="form-group">
                                         <label class="form-label" for="notes">Notes</label>
                                         <div class="form-control-wrap">
-                                            <textarea rows="3" class="form-control" name="notes" id="notes" placeholder="Notes">{{ $booking->notes }}</textarea>
+                                            <textarea rows="3" class="form-control" name="notes" id="notes" placeholder="Notes">{{ isset($booking) ? $booking->notes : '' }}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -409,7 +457,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if($booking->addons && count($booking->addons) > 0)
+                                            @if(isset($booking) && $booking->addons && count($booking->addons) > 0)
                                                 @foreach($booking->addons as $bookingAddon)
                                                 <tr>
                                                     <td>
@@ -462,19 +510,19 @@
                             </div>
                             <div class="booking-pricing-item">
                                 <span class="label">Booking Price</span>
-                                <span class="price" id="summary_booking_price">{{ $booking->booking_price }}€</span>
+                                <span class="price" id="summary_booking_price">{{ isset($booking) ? $booking->booking_price : 0 }}€</span>
                             </div>
                             <div class="booking-pricing-item">
                                 <span class="label">Addons Total</span>
-                                <span class="price" id="summary_total_addons">{{ $booking->total_addons }}€</span>
+                                <span class="price" id="summary_total_addons">{{ isset($booking) ? $booking->total_addons : 0 }}€</span>
                             </div>
                             <div class="booking-pricing-item">
                                 <span class="label">Discount/Extra</span>
-                                <span class="price" id="summary_discount">{{ $booking->discount_or_extra }}€</span>
+                                <span class="price" id="summary_discount">{{ isset($booking) ? $booking->discount_or_extra : 0 }}€</span>
                             </div>
                             <div class="booking-pricing-item total">
                                 <span class="label">Total</span>
-                                <span class="price" id="summary_total">{{ $booking->booking_price + $booking->total_addons + $booking->discount_or_extra }}€</span>
+                                <span class="price" id="summary_total">{{ isset($booking) ? ($booking->booking_price + $booking->total_addons + $booking->discount_or_extra) : 0 }}€</span>
                             </div>
                         </div>
                     </div>
@@ -491,7 +539,7 @@ $(document).ready(function() {
     // ========================================
     // GLOBAL VARIABLES
     // ========================================
-    const booking = @json($booking); // Will be set from blade template
+    const booking = @json(isset($booking) ? $booking : null); // Will be set from blade template
     let addonsOptions = '<option value="" selected disabled>--Choose Addon--</option>';
     
     console.log('Starting booking form initialization', booking);
@@ -504,16 +552,18 @@ $(document).ready(function() {
         $('[data-categories]').hide();
         
         // Set category and show relevant fields
-        $('#category_id').val(booking.category_id);
-        $(`[data-categories*="${booking.category_id}"]`).show();
-        
-        // Set all form fields
-        setFormFields();
-        
-        // Load listings after a short delay
-        setTimeout(() => {
-            loadListings();
-        }, 500);
+        if (booking) {
+            $('#category_id').val(booking.category_id);
+            $(`[data-categories*="${booking.category_id}"]`).show();
+            
+            // Set all form fields
+            setFormFields();
+            
+            // Load listings after a short delay
+            setTimeout(() => {
+                loadListings();
+            }, 500);
+        }
         
         // Setup event handlers
         setupEventHandlers();
@@ -523,6 +573,8 @@ $(document).ready(function() {
     // SET FORM FIELDS
     // ========================================
     function setFormFields() {
+        if (!booking) return;
+        
         // Common fields
         $('#first_name').val(booking.first_name);
         $('#last_name').val(booking.last_name);
@@ -546,13 +598,13 @@ $(document).ready(function() {
                 
             case 3: // Private Driver
                 $('#prefered_date').val(booking.prefered_date);
-                $('#number_of_people').val(booking.number_of_people);
+                // Note: Private drivers use number_of_passengers, not number_of_people
                 $('#pickup_time_private').val(booking.pickup_time);
                 $('#service_types').val(booking.service_types);
                 $('#road_types').val(booking.road_types);
                 $('#city_a_id').val(booking.city_a_id);
                 $('#city_b_id').val(booking.city_b_id);
-                $('#number_of_passengers').val(booking.number_of_passengers);
+                $('#number_of_passengers').val(booking.number_of_passengers || booking.number_of_people); // Fallback for existing data
                 $('#number_of_luggage').val(booking.number_of_luggage);
                 $('#pickup_address').val(booking.pickup_address);
                 $('#dropoff_address').val(booking.dropoff_address);
@@ -562,6 +614,7 @@ $(document).ready(function() {
                 $('#duration').val(booking.duration);
                 $('#prefered_date').val(booking.prefered_date);
                 $('#number_of_people').val(booking.number_of_people);
+                $('#pickup_time_boat').val(booking.pickup_time);
                 break;
                 
             case 5: // Activities
@@ -576,6 +629,7 @@ $(document).ready(function() {
     // LOAD LISTINGS
     // ========================================
     function loadListings() {
+        if (!booking) return;
         const categoryId = parseInt(booking.category_id);
         
         if (categoryId === 3) {
@@ -610,8 +664,8 @@ $(document).ready(function() {
     
     function loadPrivateDriverListings() {
         // Check if we have all required fields
-        const cityA = booking.city_a_id || $('#city_a_id').val();
-        const cityB = booking.city_b_id || $('#city_b_id').val();
+        const cityA = (booking && booking.city_a_id) || $('#city_a_id').val();
+        const cityB = (booking && booking.city_b_id) || $('#city_b_id').val();
         
         if (!cityA || !cityB) {
             // Fall back to category listings if missing data
@@ -643,7 +697,7 @@ $(document).ready(function() {
         let options = '<option value="" disabled>--Choose Option--</option>';
         
         listings.forEach(function(listing) {
-            const isSelected = listing.id == booking.listing_id ? 'selected' : '';
+            const isSelected = booking && listing.id == booking.listing_id ? 'selected' : '';
             
             if (type === 'private_driver') {
                 // Private driver specific attributes
@@ -673,7 +727,7 @@ $(document).ready(function() {
         
         // If we have a selected listing, trigger change to load addons and options
         // But only if we don't already have addon rows (to preserve initial server-side values)
-        if (booking.listing_id) {
+        if (booking && booking.listing_id) {
             setTimeout(() => {
                 // Check if we already have addon rows from server
                 const hasExistingAddons = $('#addons-table tbody tr').length > 0;
@@ -774,15 +828,7 @@ $(document).ready(function() {
                     }
                 });
                 
-                // Load pricing options for categories 3 and 5
-                if ([3, 5].includes(parseInt(booking.category_id))) {
-                    loadPricingOptions(listingId);
-                }
-                
-                // Load duration and propose options for category 4 (Boat Rental)
-                if (parseInt(booking.category_id) === 4) {
-                    loadBoatOptions(listingId);
-                }
+                // These are now handled in the listing change event handler
             }
         });
     }
@@ -799,7 +845,7 @@ $(document).ready(function() {
             success: function(resp) {
                 let options = '<option value="" disabled>--Choose Option--</option>';
                 resp.options.forEach(function(option) {
-                    const isSelected = option.id == booking.pricing_option_id ? 'selected' : '';
+                    const isSelected = booking && option.id == booking.pricing_option_id ? 'selected' : '';
                     options += `<option value="${option.id}" ${isSelected} data-price="${option.price}">
                         ${option.element}</option>`;
                 });
@@ -819,7 +865,7 @@ $(document).ready(function() {
             durationsArr.forEach(function(duration) {
                 const trimmedDuration = duration.trim();
                 if (trimmedDuration) {
-                    const isSelected = trimmedDuration == booking.duration ? 'selected' : '';
+                    const isSelected = booking && trimmedDuration == booking.duration ? 'selected' : '';
                     durationOptions += `<option value="${trimmedDuration}" ${isSelected}>${trimmedDuration}</option>`;
                 }
             });
@@ -1003,16 +1049,39 @@ $(document).ready(function() {
             $(`[data-categories*="${categoryId}"]`).show();
             $('#listing_id').html('<option value="" disabled selected>--Choose Option--</option>');
             
-            if (categoryId == 4 || categoryId == 5) {
+            // Load listings for all categories
+            if (categoryId == 2 || categoryId == 4 || categoryId == 5) {
                 loadCategoryListings(categoryId);
+            } else if (categoryId == 3) {
+                // For private driver, check if cities are already selected
+                const cityA = $('#city_a_id').val();
+                const cityB = $('#city_b_id').val();
+                if (cityA && cityB) {
+                    loadPrivateDriverListings();
+                } else {
+                    // Load all private driver listings as fallback
+                    loadCategoryListings(3);
+                }
             }
         });
         
         // Listing change
         $('#listing_id').change(function() {
             const listingId = $(this).val();
+            const categoryId = parseInt($('#category_id').val());
+            
             if (listingId) {
                 loadAddons(listingId);
+                
+                // Load boat options for boat rentals
+                if (categoryId === 4) {
+                    loadBoatOptions(listingId);
+                }
+                
+                // Load pricing options for categories 3 and 5
+                if ([3, 5].includes(categoryId)) {
+                    loadPricingOptions(listingId);
+                }
             }
         });
         
