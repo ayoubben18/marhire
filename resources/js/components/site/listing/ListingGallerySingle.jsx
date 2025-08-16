@@ -79,14 +79,14 @@ const ListingGallerySingle = ({ loading, listing }) => {
     if (loading) {
         return (
             <div className="mb-6">
-                <div className="bg-gray-200 rounded-lg aspect-[4/3] animate-pulse"></div>
+                <div className="bg-gray-200 rounded-lg aspect-[3/2] animate-pulse"></div>
             </div>
         );
     }
 
     if (!images || images.length === 0) {
         return (
-            <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center mb-6">
+            <div className="bg-gray-200 rounded-lg aspect-[3/2] flex items-center justify-center mb-6">
                 <div className="text-center">
                     <div className="text-4xl mb-2">🚗</div>
                     <p className="text-gray-500">{t('common.no_image_available', 'No image available')}</p>
@@ -103,7 +103,7 @@ const ListingGallerySingle = ({ loading, listing }) => {
         <>
             <div className="mb-6">
                 <div 
-                    className="relative group cursor-pointer overflow-hidden rounded-lg aspect-[4/3]"
+                    className="relative group cursor-pointer overflow-hidden rounded-lg aspect-[3/2]"
                     onClick={openModal}
                 >
                     {!imageError ? (

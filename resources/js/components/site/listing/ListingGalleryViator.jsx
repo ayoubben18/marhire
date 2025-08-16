@@ -138,11 +138,11 @@ const ListingGalleryViator = ({ loading, listing }) => {
         return (
             <div className="mb-6">
                 <div className="w-full mb-4">
-                    <div className="bg-gray-200 rounded-lg aspect-[4/3] animate-pulse"></div>
+                    <div className="bg-gray-200 rounded-lg aspect-[3/2] animate-pulse"></div>
                 </div>
                 <div className="flex gap-2 pb-2">
                     {[1, 2, 3, 4, 5].map(i => (
-                        <div key={i} className="bg-gray-200 rounded-lg aspect-[4/3] w-16 h-12 md:w-20 md:h-15 animate-pulse"></div>
+                        <div key={i} className="bg-gray-200 rounded-lg aspect-[3/2] w-16 h-12 md:w-20 md:h-15 animate-pulse"></div>
                     ))}
                 </div>
             </div>
@@ -151,7 +151,7 @@ const ListingGalleryViator = ({ loading, listing }) => {
 
     if (!images || images.length === 0) {
         return (
-            <div className="bg-gray-200 rounded-lg aspect-[4/3] flex items-center justify-center mb-6">
+            <div className="bg-gray-200 rounded-lg aspect-[3/2] flex items-center justify-center mb-6">
                 <div className="text-center">
                     <div className="text-4xl mb-2">🖼️</div>
                     <p className="text-gray-500">{t('common.no_images_available', 'No images available')}</p>
@@ -170,7 +170,7 @@ const ListingGalleryViator = ({ loading, listing }) => {
                 {/* Main image container (full width, 4:3 aspect ratio) */}
                 <div className="w-full mb-4">
                     <div 
-                        className="relative group cursor-pointer overflow-hidden rounded-lg aspect-[4/3] w-full"
+                        className="relative group cursor-pointer overflow-hidden rounded-lg aspect-[3/2] w-full"
                         onClick={() => {
                             console.log('Main image clicked, opening modal with index:', mainImageIndex);
                             console.log('Images array:', images);
@@ -249,7 +249,7 @@ const ListingGalleryViator = ({ loading, listing }) => {
                                 return (
                                     <div 
                                         key={image.id || index}
-                                        className={`relative group cursor-pointer overflow-hidden rounded-lg aspect-[4/3] border-2 transition-all duration-200 flex-shrink-0 w-20 h-15 md:w-24 md:h-18 ${
+                                        className={`relative group cursor-pointer overflow-hidden rounded-lg aspect-[3/2] border-2 transition-all duration-200 flex-shrink-0 w-20 h-15 md:w-24 md:h-18 ${
                                             isActive ? 'border-blue-500 ring-2 ring-blue-200' : 'border-transparent hover:border-gray-300'
                                         }`}
                                         onClick={() => setMainImageIndex(index)}

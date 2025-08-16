@@ -778,8 +778,8 @@ video {
 .hidden {
   display: none;
 }
-.aspect-\[4\/3\] {
-  aspect-ratio: 4/3;
+.aspect-\[3\/2\] {
+  aspect-ratio: 3/2;
 }
 .aspect-video {
   aspect-ratio: 16 / 9;
