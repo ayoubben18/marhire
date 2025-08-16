@@ -922,10 +922,11 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         
         // Car rental parameters
         if (numericCategoryId === 2) {
-            if (mappedParams.pickupLocation) {
-                setPickupLocation(mappedParams.pickupLocation);
-                paramsFound = true;
-            }
+            // Don't set pickup location from search params - it should always be listing city
+            // if (mappedParams.pickupLocation) {
+            //     setPickupLocation(mappedParams.pickupLocation);
+            //     paramsFound = true;
+            // }
             if (mappedParams.dropoffLocation) {
                 setDropoffLocation(mappedParams.dropoffLocation);
                 paramsFound = true;
@@ -966,6 +967,17 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                 setDropoffTime(mappedParams.dropoffTime);
                 paramsFound = true;
             }
+            // Set dropoff city from search parameters
+            if (mappedParams.dropoffCity) {
+                setDropoffLocation(mappedParams.dropoffCity);
+                paramsFound = true;
+            }
+            // Also try dropoffLocation as fallback
+            if (mappedParams.dropoffLocation && !mappedParams.dropoffCity) {
+                setDropoffLocation(mappedParams.dropoffLocation);
+                paramsFound = true;
+            }
+            // Pickup city should always be listing city, so don't override it
         }
         
         // Private driver parameters
@@ -1330,6 +1342,18 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                             </>
                         )}
                         
+                        {/* Discount if available */}
+                        {listing?.special_price && listing?.price && listing.special_price < listing.price && (
+                            <div className="border-t pt-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-gray-600">{t('listing.pricing.discount', 'Discount')}:</span>
+                                    <span className="font-semibold text-green-600">
+                                        -€{(listing.price - listing.special_price).toFixed(2)}
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+                        
                         {/* Total */}
                         <div className="border-t pt-3">
                             <div className="flex justify-between items-center">
@@ -1404,7 +1428,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                                 },
                             }}
                         >
-                            Back
+                            {t('common.back', 'Back')}
                         </Button>
                     )}
                     {currentStep === 0 ? (

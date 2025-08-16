@@ -17,7 +17,9 @@ import TimeModal from "./TimeModal";
 import { useTranslation } from "react-i18next";
 export default function CarRentalForm() {
     const [pickupLocation, setPickupLocation] = useState("");
+    const [pickupLocationId, setPickupLocationId] = useState("");
     const [dropoffLocation, setDropoffLocation] = useState("Same as pickup");
+    const [dropoffLocationId, setDropoffLocationId] = useState("");
     const [pickupDate, setPickupDate] = useState("");
     const [pickupTime, setPickupTime] = useState("");
     const [dropoffDate, setDropoffDate] = useState("");
@@ -162,8 +164,10 @@ export default function CarRentalForm() {
         e.preventDefault();
         const searchParams = {
             category: 2, // Car rental category
-            pickup_location: pickupLocation,
-            dropoff_location: dropoffLocation,
+            pickup_location: pickupLocation, // City name for display
+            dropoff_location: dropoffLocation, // City name for display
+            pickup_city: pickupLocationId, // City ID for backend
+            dropoff_city: dropoffLocationId, // City ID for backend
             pickup_date: pickupDate,
             dropoff_date: dropoffDate,
             pickup_time: pickupTime,
@@ -224,7 +228,11 @@ export default function CarRentalForm() {
                             />
                             <LocationModal
                                 open={showPickupModal}
-                                onSelect={(city) => setPickupLocation(city)}
+                                returnBoth={true}
+                                onSelect={(cityId, cityName) => {
+                                    setPickupLocationId(cityId);
+                                    setPickupLocation(cityName);
+                                }}
                                 onClose={() => setShowPickupModal(false)}
                             />
                         </div>
@@ -245,7 +253,11 @@ export default function CarRentalForm() {
                             </button>
                             <LocationModal
                                 open={showDropOffModal}
-                                onSelect={(city) => setDropoffLocation(city)}
+                                returnBoth={true}
+                                onSelect={(cityId, cityName) => {
+                                    setDropoffLocationId(cityId);
+                                    setDropoffLocation(cityName);
+                                }}
                                 onClose={() => setShowDropOffModal(false)}
                             />
                         </div>

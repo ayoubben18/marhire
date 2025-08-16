@@ -176,7 +176,9 @@
                                 <br>
                                 <span>Addons: <span class="">{{ number_format($booking->total_addons,2) . '€' }}</span></span>
                                 <br>
-                                <span>Total: <span class="money">{{ number_format($booking->total_price,2) . '€' }}</span></span>
+                                <span>Discount/Extra: <span class="">{{ number_format($booking->discount_or_extra,2) . '€' }}</span></span>
+                                <br>
+                                <span>Total: <span class="money">{{ number_format($booking->booking_price + $booking->total_addons + $booking->discount_or_extra,2) . '€' }}</span></span>
                             </td>
                             <td>{{ $booking->created_at }}</td>
                             <td>{{ $booking->createdBy ? $booking->createdBy->prenom . ' ' . $booking->createdBy->nom : '' }}</td>

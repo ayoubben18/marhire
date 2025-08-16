@@ -468,9 +468,13 @@
                                 <span class="label">Addons Total</span>
                                 <span class="price" id="summary_total_addons">{{ $booking->total_addons }}€</span>
                             </div>
+                            <div class="booking-pricing-item">
+                                <span class="label">Discount/Extra</span>
+                                <span class="price" id="summary_discount">{{ $booking->discount_or_extra }}€</span>
+                            </div>
                             <div class="booking-pricing-item total">
                                 <span class="label">Total</span>
-                                <span class="price" id="summary_total">{{ $booking->total_price }}€</span>
+                                <span class="price" id="summary_total">{{ $booking->booking_price + $booking->total_addons + $booking->discount_or_extra }}€</span>
                             </div>
                         </div>
                     </div>
@@ -882,15 +886,10 @@ $(document).ready(function() {
                 break;
         }
         
-        // Add discount/extra
-        const discountOrExtra = parseFloat($('#discount_or_extra').val()) || 0;
-        basePrice += discountOrExtra;
-        
-        // Set hidden form fields for submission
-        const total = basePrice + addonsTotal;
+        // Send clean values to backend - let server calculate final totals
         $('#booking_price').val(basePrice.toFixed(2));
         $('#total_addons').val(addonsTotal.toFixed(2));
-        $('#total_price').val(total.toFixed(2));
+        // Note: total_price will be calculated on server side including discount_or_extra
     }
     
     // ========================================

@@ -446,7 +446,7 @@ const BoatForm = () => {
                                 onClick={() => setShowTimeModal(true)}
                                 className="text-lg font-bold text-gray-900 hvr-text-green transition-colors w-full text-left"
                             >
-                                {time}
+                                {time || t("homeSearch.selectTime", "Select time")}
                             </button>
                             <TimeModal
                                 open={showTimeModal}
@@ -551,13 +551,12 @@ const BoatForm = () => {
                 </div>
             )}
 
-            {(showCalendar || showDestinationModal || showTimeModal) && (
+            {(showCalendar || showDestinationModal) && (
                 <div
                     className="fixed inset-0 z-40"
                     onClick={() => {
                         setShowCalendar(false);
                         setShowDestinationModal(false);
-                        setShowTimeModal(false);
                     }}
                 />
             )}

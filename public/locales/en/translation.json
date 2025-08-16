@@ -511,7 +511,8 @@
             "basePrice": "Base Price",
             "taxes": "Taxes & Fees",
             "insurance": "Insurance",
-            "extras": "Extras"
+            "extras": "Extras",
+            "discount": "Discount"
         },
         "relatedProducts": {
             "title": "You Might Also Like",
@@ -712,6 +713,7 @@
         "sameAsPickup": "Same as pickup",
         "date": "Date",
         "pickupLocation": "Pick-up Location",
-        "dropoffLocation": "Dropoff Location"
+        "dropoffLocation": "Dropoff Location",
+        "selectTime": "Select time"
     }
 }

@@ -680,6 +680,7 @@
         "sameAsPickup": "Identique à la prise en charge",
         "date": "Date",
         "pickupLocation": "Lieu de Prise en Charge",
-        "dropoffLocation": "Lieu de Retour"
+        "dropoffLocation": "Lieu de Retour",
+        "selectTime": "Sélectionner l'heure"
     }
 }

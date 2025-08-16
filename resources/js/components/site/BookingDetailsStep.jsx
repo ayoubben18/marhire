@@ -558,6 +558,153 @@ const BookingDetailsStep = ({
                                     {errors.pickup_date[0]}
                                 </p>
                             )}
+
+                            {/* Calendar Dropdown for Start Date */}
+                            {showCalendar === "start" && (
+                                <div className="dropdown-container absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-40 p-4 w-80">
+                                    <div className="mb-4">
+                                        <h3 className="font-semibold text-gray-800 mb-2">
+                                            {t("booking.selectPickupDate")}
+                                        </h3>
+                                        <div className="text-xs mt-1" style={{ color: '#048667' }}>
+                                            <div className="mt-1 text-xs font-medium">
+                                                Current Morocco time:{" "}
+                                                {getMoroccoTime().toLocaleString("en-US", {
+                                                    timeZone: "Africa/Casablanca",
+                                                    month: "short",
+                                                    day: "numeric",
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                })}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Month Navigation */}
+                                    <div className="flex items-center justify-between mb-4">
+                                        <button
+                                            type="button"
+                                            onClick={() => navigateMonth("prev")}
+                                            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                        >
+                                            <ChevronDown className="w-5 h-5 transform rotate-90" />
+                                        </button>
+                                        <div className="text-lg font-semibold text-gray-900">
+                                            {getMonthYearDisplay()}
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => navigateMonth("next")}
+                                            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                        >
+                                            <ChevronDown className="w-5 h-5 transform -rotate-90" />
+                                        </button>
+                                    </div>
+
+                                    {/* Calendar Header */}
+                                    <div className="grid grid-cols-7 gap-1 mb-2">
+                                        {[
+                                            "Sun",
+                                            "Mon",
+                                            "Tue",
+                                            "Wed",
+                                            "Thu",
+                                            "Fri",
+                                            "Sat",
+                                        ].map((day) => (
+                                            <div
+                                                key={day}
+                                                className="text-center text-xs font-medium text-gray-500 py-2"
+                                            >
+                                                {day}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Calendar Days */}
+                                    <div className="grid grid-cols-7 gap-1">
+                                        {generateCalendarDays.map((dayObj, index) => {
+                                            if (!dayObj) {
+                                                return (
+                                                    <div key={index} className="py-2"></div>
+                                                );
+                                            }
+
+                                            const { day, dateStr } = dayObj;
+                                            const isSelected = isDateSelected(dateStr);
+                                            const isInRange = isDateInRange(dateStr);
+
+                                            // Use Morocco timezone for validation
+                                            const minBookingDateTime =
+                                                getMinBookingDateTime();
+                                            const currentDate = new Date(dateStr);
+                                            currentDate.setHours(23, 59, 59, 999); // End of selected day
+
+                                            // Date is in the past if it's before 24 hours from now in Morocco time
+                                            let isPast = currentDate < minBookingDateTime;
+
+                                            // For pickup date, allow same day booking until 11:59 PM Morocco time
+                                            if (showCalendar === "start") {
+                                                const moroccoNow = getMoroccoTime();
+                                                const selectedDateTime = new Date(dateStr);
+                                                selectedDateTime.setHours(23, 59, 59, 999);
+                                                
+                                                const hoursDiff = (selectedDateTime - moroccoNow) / (1000 * 60 * 60);
+                                                isPast = hoursDiff < 24;
+                                            }
+
+                                            return (
+                                                <button
+                                                    type="button"
+                                                    key={dateStr}
+                                                    onClick={() =>
+                                                        !isPast && handleDateSelect(dateStr)
+                                                    }
+                                                    disabled={isPast}
+                                                    className={`
+                                                    py-2 px-1 text-sm rounded-lg transition-all duration-200 relative
+                                                    ${
+                                                        isPast
+                                                            ? "text-gray-300 cursor-not-allowed bg-gray-50"
+                                                            : "hover:bg-[#048667]/10 cursor-pointer"
+                                                    }
+                                                    ${
+                                                        isSelected
+                                                            ? "bg-[#048667] text-white hover:bg-[#037056]"
+                                                            : ""
+                                                    }
+                                                    ${
+                                                        isInRange && !isSelected
+                                                            ? "bg-[#048667]/15 text-[#048667]"
+                                                            : ""
+                                                    }
+                                                  `}
+                                                >
+                                                    {day}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+
+                                    {/* Calendar Footer */}
+                                    <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between">
+                                        <button
+                                            type="button"
+                                            onClick={() => setStartDate("")}
+                                            className="text-sm text-gray-600 hover:text-gray-800"
+                                        >
+                                            {t("booking.clear")}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowCalendar(false)}
+                                            className="text-sm bg-[#048667] text-white px-4 py-1 rounded-lg hover:bg-[#037056]"
+                                        >
+                                            {t("booking.done")}
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* End Date */}
@@ -596,6 +743,158 @@ const BookingDetailsStep = ({
                                     {errors.dropoff_date[0]}
                                 </p>
                             )}
+
+                            {/* Calendar Dropdown for End Date */}
+                            {showCalendar === "end" && (
+                                <div className="dropdown-container absolute top-full right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-50 p-4 w-80">
+                                    <div className="mb-4">
+                                        <h3 className="font-semibold text-gray-800 mb-2">
+                                            {t("booking.selectDropoffDate")}
+                                        </h3>
+                                        <div className="text-xs mt-1" style={{ color: '#048667' }}>
+                                            <div className="mt-1 text-xs font-medium">
+                                                Current Morocco time:{" "}
+                                                {getMoroccoTime().toLocaleString("en-US", {
+                                                    timeZone: "Africa/Casablanca",
+                                                    month: "short",
+                                                    day: "numeric",
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                })}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Month Navigation */}
+                                    <div className="flex items-center justify-between mb-4">
+                                        <button
+                                            type="button"
+                                            onClick={() => navigateMonth("prev")}
+                                            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                        >
+                                            <ChevronDown className="w-5 h-5 transform rotate-90" />
+                                        </button>
+                                        <div className="text-lg font-semibold text-gray-900">
+                                            {getMonthYearDisplay()}
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => navigateMonth("next")}
+                                            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                        >
+                                            <ChevronDown className="w-5 h-5 transform -rotate-90" />
+                                        </button>
+                                    </div>
+
+                                    {/* Calendar Header */}
+                                    <div className="grid grid-cols-7 gap-1 mb-2">
+                                        {[
+                                            "Sun",
+                                            "Mon",
+                                            "Tue",
+                                            "Wed",
+                                            "Thu",
+                                            "Fri",
+                                            "Sat",
+                                        ].map((day) => (
+                                            <div
+                                                key={day}
+                                                className="text-center text-xs font-medium text-gray-500 py-2"
+                                            >
+                                                {day}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Calendar Days */}
+                                    <div className="grid grid-cols-7 gap-1">
+                                        {generateCalendarDays.map((dayObj, index) => {
+                                            if (!dayObj) {
+                                                return (
+                                                    <div key={index} className="py-2"></div>
+                                                );
+                                            }
+
+                                            const { day, dateStr } = dayObj;
+                                            const isSelected = isDateSelected(dateStr);
+                                            const isInRange = isDateInRange(dateStr);
+
+                                            // Use Morocco timezone for validation
+                                            const minBookingDateTime =
+                                                getMinBookingDateTime();
+                                            const currentDate = new Date(dateStr);
+                                            currentDate.setHours(23, 59, 59, 999); // End of selected day
+
+                                            // Date is in the past if it's before 24 hours from now in Morocco time
+                                            let isPast = currentDate < minBookingDateTime;
+
+                                            // For dropoff date, check if it's before pickup date + 3 days
+                                            if (showCalendar === "end" && startDate) {
+                                                const pickupDate = new Date(startDate);
+                                                const threeDaysLater = new Date(pickupDate);
+                                                threeDaysLater.setDate(pickupDate.getDate() + 3);
+                                                threeDaysLater.setHours(0, 0, 0, 0);
+
+                                                const currentDateCheck = new Date(dateStr);
+                                                currentDateCheck.setHours(0, 0, 0, 0);
+
+                                                if (currentDateCheck < threeDaysLater) {
+                                                    isPast = true;
+                                                }
+                                            }
+
+                                            return (
+                                                <button
+                                                    type="button"
+                                                    key={dateStr}
+                                                    onClick={() =>
+                                                        !isPast && handleDateSelect(dateStr)
+                                                    }
+                                                    disabled={isPast}
+                                                    className={`
+                                                    py-2 px-1 text-sm rounded-lg transition-all duration-200 relative
+                                                    ${
+                                                        isPast
+                                                            ? "text-gray-300 cursor-not-allowed bg-gray-50"
+                                                            : "hover:bg-[#048667]/10 cursor-pointer"
+                                                    }
+                                                    ${
+                                                        isSelected
+                                                            ? "bg-[#048667] text-white hover:bg-[#037056]"
+                                                            : ""
+                                                    }
+                                                    ${
+                                                        isInRange && !isSelected
+                                                            ? "bg-[#048667]/15 text-[#048667]"
+                                                            : ""
+                                                    }
+                                                  `}
+                                                >
+                                                    {day}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+
+                                    {/* Calendar Footer */}
+                                    <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between">
+                                        <button
+                                            type="button"
+                                            onClick={() => setEndDate("")}
+                                            className="text-sm text-gray-600 hover:text-gray-800"
+                                        >
+                                            {t("booking.clear")}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowCalendar(false)}
+                                            className="text-sm bg-[#048667] text-white px-4 py-1 rounded-lg hover:bg-[#037056]"
+                                        >
+                                            {t("booking.done")}
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 ) : (
@@ -628,186 +927,147 @@ const BookingDetailsStep = ({
                             </span>
                             <Calendar className="text-gray-400 w-5 h-5" />
                         </div>
-                    </div>
-                )}
 
-                {/* Calendar Dropdown */}
-                {showCalendar && (
-                    <div
-                        className={`dropdown-container absolute top-full ${
-                            showCalendar === "end" ? "right-0" : "left-0"
-                        } mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-40 p-4 w-80`}
-                    >
-                        <div className="mb-4">
-                            <h3 className="font-semibold text-gray-800 mb-2">
-                                {categoryId === 2
-                                    ? showCalendar === "start"
-                                        ? t("booking.selectPickupDate")
-                                        : t("booking.selectDropoffDate")
-                                    : t("booking.selectDate")}
-                            </h3>
-                            <div className="text-xs mt-1" style={{ color: '#048667' }}>
-                                <div className="mt-1 text-xs font-medium">
-                                    Current Morocco time:{" "}
-                                    {getMoroccoTime().toLocaleString("en-US", {
-                                        timeZone: "Africa/Casablanca",
-                                        month: "short",
-                                        day: "numeric",
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                    })}
-                                </div>
-                                {categoryId === 2 && showCalendar === "end" && (
-                                    <div className="mt-1">
-                                        * Dropoff must be on or after pickup
-                                        date
+                        {/* Calendar Dropdown for Single Date */}
+                        {showCalendar && (
+                            <div className="dropdown-container absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-40 p-4 w-80">
+                                <div className="mb-4">
+                                    <h3 className="font-semibold text-gray-800 mb-2">
+                                        {t("booking.selectDate")}
+                                    </h3>
+                                    <div className="text-xs mt-1" style={{ color: '#048667' }}>
+                                        <div className="mt-1 text-xs font-medium">
+                                            Current Morocco time:{" "}
+                                            {getMoroccoTime().toLocaleString("en-US", {
+                                                timeZone: "Africa/Casablanca",
+                                                month: "short",
+                                                day: "numeric",
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                            })}
+                                        </div>
                                     </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Month Navigation */}
-                        <div className="flex items-center justify-between mb-4">
-                            <button
-                                type="button"
-                                onClick={() => navigateMonth("prev")}
-                                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                            >
-                                <ChevronDown className="w-5 h-5 transform rotate-90" />
-                            </button>
-                            <div className="text-lg font-semibold text-gray-900">
-                                {getMonthYearDisplay()}
-                            </div>
-                            <button
-                                type="button"
-                                onClick={() => navigateMonth("next")}
-                                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                            >
-                                <ChevronDown className="w-5 h-5 transform -rotate-90" />
-                            </button>
-                        </div>
-
-                        {/* Calendar Header */}
-                        <div className="grid grid-cols-7 gap-1 mb-2">
-                            {[
-                                "Sun",
-                                "Mon",
-                                "Tue",
-                                "Wed",
-                                "Thu",
-                                "Fri",
-                                "Sat",
-                            ].map((day) => (
-                                <div
-                                    key={day}
-                                    className="text-center text-xs font-medium text-gray-500 py-2"
-                                >
-                                    {day}
                                 </div>
-                            ))}
-                        </div>
 
-                        {/* Calendar Days */}
-                        <div className="grid grid-cols-7 gap-1">
-                            {generateCalendarDays.map((dayObj, index) => {
-                                if (!dayObj) {
-                                    return (
-                                        <div key={index} className="py-2"></div>
-                                    );
-                                }
-
-                                const { day, dateStr } = dayObj;
-                                const isSelected = isDateSelected(dateStr);
-                                const isInRange = isDateInRange(dateStr);
-
-                                // Use Morocco timezone for validation
-                                const minBookingDateTime =
-                                    getMinBookingDateTime();
-                                const currentDate = new Date(dateStr);
-                                currentDate.setHours(23, 59, 59, 999); // End of selected day
-
-                                // Date is in the past if it's before 24 hours from now in Morocco time
-                                let isPast = currentDate < minBookingDateTime;
-
-                                // For dropoff date, check if it's before pickup date + 3 days
-                                if (
-                                    categoryId === 2 &&
-                                    showCalendar === "end" &&
-                                    startDate
-                                ) {
-                                    const pickupDate = new Date(startDate);
-                                    const minDropoffDate = new Date(pickupDate);
-                                    minDropoffDate.setDate(
-                                        minDropoffDate.getDate() + 3
-                                    );
-                                    minDropoffDate.setHours(0, 0, 0, 0);
-                                    if (currentDate < minDropoffDate) {
-                                        isPast = true;
-                                    }
-                                }
-
-                                return (
+                                {/* Month Navigation */}
+                                <div className="flex items-center justify-between mb-4">
                                     <button
                                         type="button"
-                                        key={dateStr}
-                                        onClick={() =>
-                                            !isPast && handleDateSelect(dateStr)
-                                        }
-                                        disabled={isPast}
-                                        className={`
-                                        py-2 px-1 text-sm rounded-lg transition-all duration-200 relative
-                                        ${
-                                            isPast
-                                                ? "text-gray-300 cursor-not-allowed bg-gray-50"
-                                                : "hover:bg-[#048667]/10 cursor-pointer"
-                                        }
-                                        ${
-                                            isSelected
-                                                ? "bg-[#048667] text-white hover:bg-[#037056]"
-                                                : ""
-                                        }
-                                        ${
-                                            isInRange && !isSelected
-                                                ? "bg-[#048667]/15 text-[#048667]"
-                                                : ""
-                                        }
-                                      `}
+                                        onClick={() => navigateMonth("prev")}
+                                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                                     >
-                                        {day}
+                                        <ChevronDown className="w-5 h-5 transform rotate-90" />
                                     </button>
-                                );
-                            })}
-                        </div>
+                                    <div className="text-lg font-semibold text-gray-900">
+                                        {getMonthYearDisplay()}
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => navigateMonth("next")}
+                                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                    >
+                                        <ChevronDown className="w-5 h-5 transform -rotate-90" />
+                                    </button>
+                                </div>
 
-                        {/* Calendar Footer */}
-                        <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between">
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    if (categoryId === 2) {
-                                        if (showCalendar === "start") {
-                                            setStartDate("");
-                                        } else if (showCalendar === "end") {
-                                            setEndDate("");
+                                {/* Calendar Header */}
+                                <div className="grid grid-cols-7 gap-1 mb-2">
+                                    {[
+                                        "Sun",
+                                        "Mon",
+                                        "Tue",
+                                        "Wed",
+                                        "Thu",
+                                        "Fri",
+                                        "Sat",
+                                    ].map((day) => (
+                                        <div
+                                            key={day}
+                                            className="text-center text-xs font-medium text-gray-500 py-2"
+                                        >
+                                            {day}
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Calendar Days */}
+                                <div className="grid grid-cols-7 gap-1">
+                                    {generateCalendarDays.map((dayObj, index) => {
+                                        if (!dayObj) {
+                                            return (
+                                                <div key={index} className="py-2"></div>
+                                            );
                                         }
-                                    } else {
-                                        setStartDate("");
-                                    }
-                                }}
-                                className="text-sm text-gray-600 hover:text-gray-800"
-                            >
-                                {t("booking.clear")}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setShowCalendar(false)}
-                                className="text-sm bg-[#048667] text-white px-4 py-1 rounded-lg hover:bg-[#037056]"
-                            >
-                                {t("booking.done")}
-                            </button>
-                        </div>
+
+                                        const { day, dateStr } = dayObj;
+                                        const isSelected = isDateSelected(dateStr);
+                                        const isInRange = isDateInRange(dateStr);
+
+                                        // Use Morocco timezone for validation
+                                        const minBookingDateTime =
+                                            getMinBookingDateTime();
+                                        const currentDate = new Date(dateStr);
+                                        currentDate.setHours(23, 59, 59, 999); // End of selected day
+
+                                        // Date is in the past if it's before 24 hours from now in Morocco time
+                                        let isPast = currentDate < minBookingDateTime;
+
+                                        return (
+                                            <button
+                                                type="button"
+                                                key={dateStr}
+                                                onClick={() =>
+                                                    !isPast && handleDateSelect(dateStr)
+                                                }
+                                                disabled={isPast}
+                                                className={`
+                                                py-2 px-1 text-sm rounded-lg transition-all duration-200 relative
+                                                ${
+                                                    isPast
+                                                        ? "text-gray-300 cursor-not-allowed bg-gray-50"
+                                                        : "hover:bg-[#048667]/10 cursor-pointer"
+                                                }
+                                                ${
+                                                    isSelected
+                                                        ? "bg-[#048667] text-white hover:bg-[#037056]"
+                                                        : ""
+                                                }
+                                                ${
+                                                    isInRange && !isSelected
+                                                        ? "bg-[#048667]/15 text-[#048667]"
+                                                        : ""
+                                                }
+                                              `}
+                                            >
+                                                {day}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Calendar Footer */}
+                                <div className="mt-4 pt-4 border-t border-gray-200 flex justify-between">
+                                    <button
+                                        type="button"
+                                        onClick={() => setStartDate("")}
+                                        className="text-sm text-gray-600 hover:text-gray-800"
+                                    >
+                                        {t("booking.clear")}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowCalendar(false)}
+                                        className="text-sm bg-[#048667] text-white px-4 py-1 rounded-lg hover:bg-[#037056]"
+                                    >
+                                        {t("booking.done")}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
+
+
             </div>
 
             {/* Car Rental specific fields */}

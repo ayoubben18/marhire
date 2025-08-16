@@ -303,10 +303,10 @@ class BookingController extends Controller
             }
         }
 
-        // Calculate total price
+        // Calculate total price (without applying discount - just store it)
         $bookingPrice = $request->booking_price ?? 0;
         $discountOrExtra = $request->discount_or_extra ?? 0;
-        $totalPrice = $bookingPrice + $totalAddons + $discountOrExtra;
+        $totalPrice = $bookingPrice + $totalAddons; // Don't apply discount to total
 
         // Base booking fields
         $bookingFields = [

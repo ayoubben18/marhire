@@ -87,3 +87,4 @@ NEVER FUCKING RESTORE THE FILE STATUS USING GIT JUST REMOVE WHAT YOU WANT TO REM
 - Database column: droppoff_location (has a typo but we can't change it without a migration) so we are not changing it at all just use it as it is
 - for all form on react or blade each time we remove or add or change a field check that it correlates with the backend so we don't get some forms not passing or false-positive validation errors
 - always add hardcodrd string on the client pages, to the translation jsons so we have intl in all strings
+- no need for intl in admin pages

@@ -680,6 +680,7 @@
         "sameAsPickup": "Igual que la recogida",
         "date": "Fecha",
         "pickupLocation": "Lugar de Recogida",
-        "dropoffLocation": "Lugar de Devolución"
+        "dropoffLocation": "Lugar de Devolución",
+        "selectTime": "Seleccionar hora"
     }
 }

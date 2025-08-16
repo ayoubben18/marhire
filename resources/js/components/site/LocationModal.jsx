@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { IoLocationOutline } from "react-icons/io5";
 
-export default function LocationModal({ open, onSelect, onClose }) {
+export default function LocationModal({ open, onSelect, onClose, returnBoth = false }) {
     const [cities, setCities] = useState([]);
 
     useEffect(() => {
@@ -28,7 +28,11 @@ export default function LocationModal({ open, onSelect, onClose }) {
                         className="trending-location cursor-pointer flex items-center gap-2 p-2 hover:bg-blue-50 rounded-lg"
                         key={city.id}
                         onClick={() => {
-                            onSelect(city.city_name);
+                            if (returnBoth) {
+                                onSelect(city.id, city.city_name);
+                            } else {
+                                onSelect(city.city_name);
+                            }
                             onClose();
                         }}
                     >

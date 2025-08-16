@@ -20,8 +20,10 @@ export const fieldMappings = {
     // Location fields
     pickup: 'pickupLocation',
     pickup_location: 'pickupLocation',
+    pickup_city: 'pickupCity',
     dropoff: 'dropoffLocation',
     dropoff_location: 'dropoffLocation',
+    dropoff_city: 'dropoffCity',
     city: 'destination',
     city_a: 'pickupCity',
     city_b: 'dropoffCity',

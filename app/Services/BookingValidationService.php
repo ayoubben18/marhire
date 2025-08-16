@@ -315,12 +315,8 @@ class BookingValidationService
             }
         }
         
+        // Don't apply discount to total - just store it separately
         $calculatedTotal = $basePrice + $addonsTotal;
-        
-        // Apply discount or extra charge if provided
-        if ($request->has('discount_or_extra')) {
-            $calculatedTotal += (float) $request->discount_or_extra;
-        }
         
         // Log price information for monitoring
         if ($request->has('total_price')) {

@@ -176,16 +176,16 @@ const ListingIcons = ({ type, l, classes = "", withoutLocation = false }) => {
     return (
         <div className={`recommendation-features ${classes}`}>
             {features.map((feature, index) => (
-                <>
+                <div key={index}>
                     {withoutLocation && feature.label === "Location" ? (
                         <></>
                     ) : (
                         <div className="recommendation-features__item">
                             <span>{feature.icon}</span>
-                            <span>{feature.value}</span>
+                            <span>{typeof feature.value === 'object' ? feature.value?.label || feature.value?.option || '' : feature.value}</span>
                         </div>
                     )}
-                </>
+                </div>
             ))}
         </div>
     );

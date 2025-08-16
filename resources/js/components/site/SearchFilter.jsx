@@ -265,7 +265,7 @@ const SearchFilter = ({ category, filters, onChange }) => {
                                             }}
                                             color="success"
                                         />
-                                        <span>{opt.option ?? opt}</span>
+                                        <span>{typeof opt === 'object' ? opt.option || opt.label || opt.value || '' : opt}</span>
                                     </div>
                                 </div>
                             )
