@@ -6,8 +6,9 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             color: #333;
+            line-height: 1.2;
         }
         .invoice {
             max-width: 600px;
@@ -16,37 +17,37 @@
         .header {
             background: #225f54;
             color: white;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             border-radius: 5px 5px 0 0;
         }
         .header h1 {
             margin: 0;
-            font-size: 28px;
+            font-size: 24px;
         }
         .header p {
-            margin: 5px 0 0 0;
-            font-size: 14px;
+            margin: 3px 0 0 0;
+            font-size: 12px;
         }
         .content {
-            padding: 20px;
+            padding: 15px;
             border: 1px solid #ddd;
             border-top: none;
             border-radius: 0 0 5px 5px;
         }
         .section {
-            margin-bottom: 25px;
+            margin-bottom: 12px;
         }
         .section-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             color: #225f54;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
             border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
+            padding-bottom: 3px;
         }
         .row {
-            margin: 8px 0;
+            margin: 4px 0;
             display: table;
             width: 100%;
         }
@@ -61,31 +62,31 @@
             width: 60%;
         }
         .total-section {
-            margin-top: 30px;
-            padding-top: 20px;
+            margin-top: 15px;
+            padding-top: 10px;
             border-top: 2px solid #225f54;
             text-align: right;
         }
         .total {
-            font-size: 24px;
+            font-size: 20px;
             color: #225f54;
             font-weight: bold;
         }
         .footer {
-            margin-top: 30px;
-            padding-top: 20px;
+            margin-top: 15px;
+            padding-top: 10px;
             border-top: 1px solid #ddd;
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
             color: #666;
         }
         .status-badge {
             display: inline-block;
-            padding: 5px 10px;
+            padding: 3px 8px;
             border-radius: 3px;
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 12px;
+            font-size: 10px;
             background: #28a745;
             color: white;
         }

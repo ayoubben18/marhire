@@ -7,14 +7,15 @@
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      padding: 40px;
+      padding: 15px;
       color: #333;
       background: #f7f7f7;
+      line-height: 1.2;
     }
 
     .invoice-box {
       background: #fff;
-      padding: 30px 40px;
+      padding: 15px 20px;
       max-width: 800px;
       margin: auto;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -23,7 +24,8 @@
 
     h1 {
       color: #225f54;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
+      font-size: 22px;
     }
 
     .top-section {
@@ -39,40 +41,42 @@
     }
 
     .top-section div {
-      font-size: 14px;
+      font-size: 12px;
     }
 
     .section-title {
-      margin-top: 30px;
-      font-size: 18px;
+      margin-top: 12px;
+      font-size: 14px;
       color: #225f54;
       border-bottom: 1px solid #ddd;
-      padding-bottom: 5px;
+      padding-bottom: 3px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 15px;
+      margin-top: 8px;
     }
 
     table th, table td {
       text-align: left;
-      padding: 8px 10px;
+      padding: 4px 6px;
       border-bottom: 1px solid #eee;
+      font-size: 12px;
     }
 
     .footer {
-      margin-top: 30px;
+      margin-top: 15px;
       text-align: center;
-      font-size: 12px;
+      font-size: 11px;
       color: #aaa;
     }
 
     .terms {
-      font-size: 13px;
-      margin-top: 20px;
+      font-size: 11px;
+      margin-top: 10px;
       color: #666;
+      line-height: 1.3;
     }
 
     .status-confirmed {
@@ -124,32 +128,36 @@
     </div>
 
     <div class="section-title">Client Information</div>
-    <p>
-      <strong>Name:</strong> {{ $invoiceData['client_name'] }}<br />
-      <strong>Email:</strong> {{ $invoiceData['client_email'] }}<br />
-      <strong>Phone:</strong> {{ $invoiceData['client_phone'] }}<br />
-      @if(isset($invoiceData['client_country']) && $invoiceData['client_country'])
-      <strong>Country:</strong> {{ $invoiceData['client_country'] }}<br />
-      @endif
-      @if(isset($invoiceData['client_note']) && $invoiceData['client_note'] && $invoiceData['client_note'] !== 'N/A')
-      <strong>Note:</strong> {{ $invoiceData['client_note'] }}<br />
-      @endif
-    </p>
+    <div style="display: flex; justify-content: space-between; font-size: 12px;">
+      <div>
+        <strong>Name:</strong> {{ $invoiceData['client_name'] }}<br />
+        <strong>Email:</strong> {{ $invoiceData['client_email'] }}<br />
+        <strong>Phone:</strong> {{ $invoiceData['client_phone'] }}
+      </div>
+      <div>
+        @if(isset($invoiceData['client_country']) && $invoiceData['client_country'])
+        <strong>Country:</strong> {{ $invoiceData['client_country'] }}<br />
+        @endif
+        @if(isset($invoiceData['client_note']) && $invoiceData['client_note'] && $invoiceData['client_note'] !== 'N/A')
+        <strong>Note:</strong> {{ $invoiceData['client_note'] }}
+        @endif
+      </div>
+    </div>
 
     <div class="section-title">Booking Details</div>
-    <p>
-      <strong>Activity:</strong> {{ $invoiceData['service_name'] }}<br />
+    <div style="font-size: 12px;">
+      <strong>Activity:</strong> {{ $invoiceData['service_name'] }}
       @if(isset($invoiceData['activity_duration']))
-      <strong>Duration:</strong> {{ $invoiceData['activity_duration'] }}<br />
+      | <strong>Duration:</strong> {{ $invoiceData['activity_duration'] }}
       @endif
-      <strong>Date:</strong> {{ $invoiceData['activity_date'] ?? $invoiceData['check_in'] }} at {{ $invoiceData['activity_time'] ?? '10:00' }}<br />
       @if(isset($invoiceData['activity_type']))
-      <strong>Type:</strong> {{ $invoiceData['activity_type'] }}<br />
-      @endif
+      | <strong>Type:</strong> {{ $invoiceData['activity_type'] }}
+      @endif<br />
+      <strong>Date:</strong> {{ $invoiceData['activity_date'] ?? $invoiceData['check_in'] }} at {{ $invoiceData['activity_time'] ?? '10:00' }}
       @if(isset($invoiceData['number_of_people']) && $invoiceData['number_of_people'] > 0)
-      <strong>Number of People:</strong> {{ $invoiceData['number_of_people'] }}<br />
+      | <strong>People:</strong> {{ $invoiceData['number_of_people'] }}
       @endif
-    </p>
+    </div>
 
     <div class="section-title">Charges</div>
     <table>
@@ -195,11 +203,11 @@
       - For full terms, see our <a href="https://www.marhire.com/terms" target="_blank">Terms & Conditions</a> and <a href="https://www.marhire.com/cancellation-policy" target="_blank">Cancellation Policy</a>
     </div>
 
-    <div class="footer" style="border-top: 1px solid #ddd; padding-top: 20px; margin-top: 40px;">
+    <div class="footer" style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 15px;">
       <p style="font-size: 14px; color: #444;">
-        📞 <a href="tel:{{ str_replace(' ', '', $invoiceData['company_phone']) }}" style="color: #225f54; text-decoration: none; margin-right: 15px;">{{ $invoiceData['company_phone'] }}</a>
-        📧 <a href="mailto:{{ $invoiceData['company_email'] }}" style="color: #225f54; text-decoration: none; margin-right: 15px;">{{ $invoiceData['company_email'] }}</a>
-        🌐 <a href="https://www.marhire.com" target="_blank" style="color: #225f54; text-decoration: none;">www.marhire.com</a>
+        <strong>Phone:</strong> <a href="tel:{{ str_replace(' ', '', $invoiceData['company_phone']) }}" style="color: #225f54; text-decoration: none; margin-right: 15px;">{{ $invoiceData['company_phone'] }}</a>
+        <strong>Email:</strong> <a href="mailto:{{ $invoiceData['company_email'] }}" style="color: #225f54; text-decoration: none; margin-right: 15px;">{{ $invoiceData['company_email'] }}</a>
+        <strong>Web:</strong> <a href="https://www.marhire.com" target="_blank" style="color: #225f54; text-decoration: none;">www.marhire.com</a>
       </p>
       <p style="margin-top: 10px; font-size: 13px; color: #888;">
         Thank you for booking with <strong style="color: #225f54;">MarHire</strong>. We hope you enjoy your activity experience!
