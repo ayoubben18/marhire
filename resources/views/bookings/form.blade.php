@@ -707,6 +707,7 @@ $(document).ready(function() {
                     airport_round="${pricing.airport_round || 0}"
                     intercity_one="${pricing.intercity_one || 0}"
                     intercity_round="${pricing.intercity_round || 0}"
+                    data-city-id="${listing.city_id || ''}"
                     >${listing.title}</option>`;
             } else {
                 // Regular listings with price data
@@ -719,6 +720,7 @@ $(document).ready(function() {
                     data-durations="${listing.duration_options || ''}"
                     data-proposes="${listing.purpose_tags || ''}"
                     data-private-or-group="${listing.private_or_group || 'Group'}"
+                    data-city-id="${listing.city_id || ''}"
                     >${listing.title}</option>`;
             }
         });
@@ -729,6 +731,11 @@ $(document).ready(function() {
         // But only if we don't already have addon rows (to preserve initial server-side values)
         if (booking && booking.listing_id) {
             setTimeout(() => {
+                // For private driver editing, disable departure city field
+                if (parseInt(booking.category_id) === 3) {
+                    $('#city_a_id').prop('disabled', true);
+                }
+                
                 // Check if we already have addon rows from server
                 const hasExistingAddons = $('#addons-table tbody tr').length > 0;
                 if (!hasExistingAddons) {
@@ -1049,6 +1056,11 @@ $(document).ready(function() {
             $(`[data-categories*="${categoryId}"]`).show();
             $('#listing_id').html('<option value="" disabled selected>--Choose Option--</option>');
             
+            // Re-enable departure city field when changing categories
+            if ($('#city_a_id').prop('disabled')) {
+                $('#city_a_id').prop('disabled', false);
+            }
+            
             // Load listings for all categories
             if (categoryId == 2 || categoryId == 4 || categoryId == 5) {
                 loadCategoryListings(categoryId);
@@ -1071,6 +1083,20 @@ $(document).ready(function() {
             const categoryId = parseInt($('#category_id').val());
             
             if (listingId) {
+                // For private driver, auto-set departure city and disable field
+                if (categoryId === 3) {
+                    const $selectedListing = $(this).find('option:selected');
+                    const listingCityId = $selectedListing.data('city-id');
+                    
+                    if (listingCityId) {
+                        $('#city_a_id').val(listingCityId).trigger('change');
+                        // Use setTimeout to ensure select2 is updated before disabling
+                        setTimeout(() => {
+                            $('#city_a_id').prop('disabled', true);
+                        }, 100);
+                    }
+                }
+                
                 loadAddons(listingId);
                 
                 // Load boat options for boat rentals
@@ -1120,6 +1146,11 @@ $(document).ready(function() {
         
         // Form submit
         $('#submit-form-btn').click(function() {
+            // Ensure disabled departure city field is included in submission
+            if ($('#city_a_id').prop('disabled')) {
+                $('#city_a_id').prop('disabled', false);
+            }
+            
             // Calculate and set price values before submitting
             calculateAndSetPrices();
             $('#bookingFrm').submit();
