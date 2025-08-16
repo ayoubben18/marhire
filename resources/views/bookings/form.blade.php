@@ -632,16 +632,8 @@ $(document).ready(function() {
         if (!booking) return;
         const categoryId = parseInt(booking.category_id);
         
-        if (categoryId === 3) {
-            // Private Driver - special handling
-            loadPrivateDriverListings();
-        } else if (categoryId === 5) {
-            // Activities
-            loadCategoryListings(5);
-        } else {
-            // All other categories
-            loadCategoryListings(categoryId);
-        }
+        // Load listings for all categories the same way
+        loadCategoryListings(categoryId);
     }
     
     function loadCategoryListings(categoryId) {
@@ -654,7 +646,7 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(resp) {
-                populateListingDropdown(resp.listings, 'category');
+                populateListingDropdown(resp.listings);
             },
             error: function() {
                 console.error('Failed to load category listings');
@@ -662,44 +654,17 @@ $(document).ready(function() {
         });
     }
     
-    function loadPrivateDriverListings() {
-        // Check if we have all required fields
-        const cityA = (booking && booking.city_a_id) || $('#city_a_id').val();
-        const cityB = (booking && booking.city_b_id) || $('#city_b_id').val();
-        
-        if (!cityA || !cityB) {
-            // Fall back to category listings if missing data
-            loadCategoryListings(3);
-            return;
-        }
-        
-        $.ajax({
-            type: 'post',
-            url: "{{ route('bookings.getListings') }}",
-            data: {
-                city_a_id: cityA,
-                city_b_id: cityB,
-                _token: $('meta[name="csrf-token"]').attr('content')
-            },
-            dataType: 'json',
-            success: function(resp) {
-                populateListingDropdown(resp.listings, 'private_driver');
-            },
-            error: function() {
-                console.error('Failed to load private driver listings');
-                loadCategoryListings(3);
-            }
-        });
-    }
     
     
-    function populateListingDropdown(listings, type) {
+    function populateListingDropdown(listings) {
         let options = '<option value="" disabled>--Choose Option--</option>';
         
         listings.forEach(function(listing) {
             const isSelected = booking && listing.id == booking.listing_id ? 'selected' : '';
             
-            if (type === 'private_driver') {
+            // Check if it's a private driver listing (category 3)
+            const categoryId = parseInt($('#category_id').val());
+            if (categoryId === 3) {
                 // Private driver specific attributes
                 const pricing = listing.pricings && listing.pricings[0] ? listing.pricings[0] : {};
                 options += `<option value="${listing.id}" ${isSelected}
@@ -1061,20 +1026,8 @@ $(document).ready(function() {
                 $('#city_a_id').prop('disabled', false);
             }
             
-            // Load listings for all categories
-            if (categoryId == 2 || categoryId == 4 || categoryId == 5) {
-                loadCategoryListings(categoryId);
-            } else if (categoryId == 3) {
-                // For private driver, check if cities are already selected
-                const cityA = $('#city_a_id').val();
-                const cityB = $('#city_b_id').val();
-                if (cityA && cityB) {
-                    loadPrivateDriverListings();
-                } else {
-                    // Load all private driver listings as fallback
-                    loadCategoryListings(3);
-                }
-            }
+            // Load listings for all categories including private driver
+            loadCategoryListings(categoryId);
         });
         
         // Listing change
@@ -1111,12 +1064,8 @@ $(document).ready(function() {
             }
         });
         
-        // Private driver fields change
-        $('#city_a_id, #city_b_id').change(function() {
-            if (parseInt($('#category_id').val()) === 3) {
-                loadPrivateDriverListings();
-            }
-        });
+        // Remove the city change handlers - listings should only load when category is selected
+        // Not when cities change
         
         
         // Price recalculation triggers removed - price will be calculated on save
