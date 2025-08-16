@@ -44,7 +44,7 @@
                 <p><strong>Property:</strong> {{ $booking->listing->title ?? 'N/A' }}</p>
                 <p><strong>Check-in Date:</strong> {{ $booking->check_in }}</p>
                 <p><strong>Check-out Date:</strong> {{ $booking->check_out }}</p>
-                <p><strong>Total Amount:</strong> ${{ number_format($booking->total_amount, 2) }}</p>
+                <p><strong>Total Amount:</strong> €{{ number_format($booking->booking_price + $booking->total_addons + $booking->discount_or_extra, 2) }}</p>
                 <p><strong>Status:</strong> {{ ucfirst($booking->status ?? 'pending') }}</p>
             </div>
             

@@ -137,7 +137,6 @@ class BookingController extends Controller
             case 4:
                 $bookingFields += [
                     'duration' => $request->duration,
-                    'propose' => $request->propose,
                     'prefered_date' => $request->prefered_date,
                     'number_of_people' => $request->number_of_people
                 ];
@@ -362,7 +361,6 @@ class BookingController extends Controller
             case 4:
                 $bookingFields += [
                     'duration' => $request->duration,
-                    'propose' => $request->propose,
                     'prefered_date' => $request->prefered_date,
                     'number_of_people' => $request->number_of_people,
                     'pickup_time' => $request->pickup_time

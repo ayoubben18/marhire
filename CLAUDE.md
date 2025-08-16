@@ -88,3 +88,5 @@ NEVER FUCKING RESTORE THE FILE STATUS USING GIT JUST REMOVE WHAT YOU WANT TO REM
 - for all form on react or blade each time we remove or add or change a field check that it correlates with the backend so we don't get some forms not passing or false-positive validation errors
 - always add hardcodrd string on the client pages, to the translation jsons so we have intl in all strings
 - no need for intl in admin pages
+- never apply discount on the booking price just store it
+- in the booking form the update and add forms should have the same fields for categories

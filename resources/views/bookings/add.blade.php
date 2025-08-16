@@ -237,12 +237,9 @@
                                 </div>
                                 <div class="col-md-6" data-categories="4">
                                     <div class="form-group">
-                                        <label class="form-label" for="propose">Propose <span class="lbl-obligatoire">*</span></label>
+                                        <label class="form-label" for="pickup_time_boat">Pickup Time</label>
                                         <div class="form-control-wrap">
-                                            <select class="form-control select2-single" name="propose" id="propose">
-                                                <option value="" selected disabled>--Choose Option--</option>
-                                            </select>
-                                            <small class="error d-none">Required field.</small>
+                                            <input type="time" class="form-control" name="pickup_time" id="pickup_time_boat" />
                                         </div>
                                     </div>
                                 </div>
@@ -461,7 +458,7 @@
         const categoryRequiredMap = {
             2: ['age', 'pickup_date', 'dropoff_date', 'pickup_time', 'dropoff_time', 'pickup_location', 'droppoff_location']
             , 3: ['prefered_date', 'number_of_people', 'city_a_id', 'city_b_id', 'car_type', 'airport_or_intercity']
-            , 4: ['duration', 'prefered_date', 'propose', 'number_of_people']
+            , 4: ['duration', 'prefered_date', 'number_of_people']
             , 5: ['pricing_option_id', 'prefered_date', 'number_of_people']
         , };
 
@@ -646,9 +643,9 @@
         function calculatePrice() {
             const category_id = parseInt($('#category_id').val());
             const startDate = $('#pickup_date').val();
-            const startTime = $('#pickup_time').val() || '00:00';
+            const startTime = $('#pickup_time').val() || '10:00';
             const endDate = $('#dropoff_date').val();
-            const endTime = $('#dropoff_time').val() || '00:00';
+            const endTime = $('#dropoff_time').val() || '10:00';
             const groupOrPrivate = $('#listing_id > option:selected').data('private-or-group') || 'Group';
             const numPeople = parseInt($('#number_of_people').val()) || 1;
             const discountOrExtra = parseFloat($('#discount_or_extra').val()) || 0;
@@ -657,8 +654,8 @@
             const pricePerHour = parseFloat($selectedOption.data('price-per-hour')) || 0;
             const pricePerHalfDay = parseFloat($selectedOption.data('price-per-half-day')) || 0;
             const pricePerDay = parseFloat($selectedOption.data('price-per-day')) || 0;
-            const pricePerWeek = parseFloat($selectedOption.data('price-per-week')) || 0;
-            const pricePerMonth = parseFloat($selectedOption.data('price-per-month')) || 0;
+            const pricePerWeek = parseFloat($selectedOption.data('price-per-week')) || null;
+            const pricePerMonth = parseFloat($selectedOption.data('price-per-month')) || null;
             const airportOne = parseFloat($selectedOption.attr('airport_one')) || 0;
             const airportRound = parseFloat($selectedOption.attr('airport_round')) || 0;
             const intercityOne = parseFloat($selectedOption.attr('intercity_one')) || 0;
@@ -667,11 +664,13 @@
             let totalPrice = 0;
             let addonsTotal = 0;
 
+            // Calculate add-ons - only multiply by people for category 5 private activities
             $('select.addon').each(function() {
                 let selectedOption = $(this).find(':selected');
                 let addonPrice = parseFloat(selectedOption.data('price')) || 0;
 
-                if (groupOrPrivate === 'Private') {
+                // Only multiply by number of people for category 5 private activities
+                if (category_id === 5 && groupOrPrivate === 'Private') {
                     addonPrice *= numPeople;
                 }
 
@@ -679,20 +678,28 @@
             });
 
             if (category_id === 2) {
+                // Car Rental - matches PricingService::calculateCarRentalPrice()
                 if (startDate && endDate) {
                     const start = new Date(startDate + 'T' + startTime);
                     const end = new Date(endDate + 'T' + endTime);
 
                     const diffMs = end - start;
-                    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+                    const totalMinutes = diffMs / (1000 * 60);
+                    // Every 24h = 1 day, any excess = +1 day
+                    const diffDays = Math.ceil(totalMinutes / 1440);
 
                     let effectivePricePerDay = 0;
                     if (diffDays < 7) {
-                        effectivePricePerDay = pricePerDay;
+                        // Daily rate for less than 7 days
+                        effectivePricePerDay = pricePerDay || 0;
                     } else if (diffDays < 30) {
-                        effectivePricePerDay = pricePerWeek / 7;
+                        // Weekly rate for 7-29 days (with fallback)
+                        const weeklyPrice = pricePerWeek || (pricePerDay * 7);
+                        effectivePricePerDay = weeklyPrice / 7;
                     } else {
-                        effectivePricePerDay = pricePerMonth / 30;
+                        // Monthly rate for 30+ days (with fallback)
+                        const monthlyPrice = pricePerMonth || (pricePerDay * 30);
+                        effectivePricePerDay = monthlyPrice / 30;
                     }
 
                     totalPrice = effectivePricePerDay * diffDays;
@@ -701,64 +708,99 @@
                     $('#summary_per_day').text(effectivePricePerDay.toFixed(2) + '€');
                 }
             } else if (category_id === 4) {
-                let duration = $('#duration').val() || '-';
-
+                // Boat Rental - matches PricingService::calculateBoatRentalPrice()
+                let duration = $('#duration').val();
+                
+                // Convert duration to numeric hours to match server logic
+                let hours = 0;
                 switch (duration) {
+                    case '30min':
+                        hours = 0.5;
+                        break;
                     case '1h':
-                        totalPrice = pricePerHour;
+                        hours = 1;
                         break;
                     case '2h':
-                        totalPrice = pricePerHour * 2;
+                        hours = 2;
                         break;
                     case '3h':
-                        totalPrice = pricePerHour * 3;
+                        hours = 3;
+                        break;
+                    case '4h':
+                        hours = 4;
                         break;
                     case 'Half-Day':
-                        totalPrice = pricePerHalfDay;
+                        hours = 4; // Treat as 4 hours for half-day
                         break;
                     case 'Full-Day':
-                        totalPrice = pricePerDay;
+                        hours = 8; // Treat as 8 hours for full-day
                         break;
                     default:
-                        totalPrice = 0;
+                        hours = parseFloat(duration) || 0;
                         break;
+                }
+
+                // Apply pricing based on hour ranges (matching server logic)
+                if (hours >= 0.5 && hours <= 1.5) {
+                    // 30min to 1.5 hours: price_per_hour * hours
+                    totalPrice = pricePerHour * hours;
+                } else if (hours >= 2 && hours <= 4) {
+                    // 2 to 4 hours: FLAT half-day rate
+                    totalPrice = pricePerHalfDay || (pricePerHour * 4);
+                } else if (hours >= 4.5 && hours <= 8) {
+                    // 4.5 to 8 hours: FLAT full-day rate
+                    totalPrice = pricePerDay || (pricePerHour * 8);
+                } else {
+                    // Invalid duration - use hourly rate as fallback
+                    totalPrice = pricePerHour * hours;
                 }
 
                 $('#summary_duration').text(duration);
             } else if (category_id === 3) {
-                console.log('calculate');
-                console.log(airportOrIntercity);
-                switch(airportOrIntercity)
-                {
-                    case 'Airport (Round Way)': totalPrice = parseFloat(airportRound);
-                    break;
-                    case 'Intercity (One Way)': totalPrice = parseFloat(intercityOne);
-                    break;
-                    case 'Intercity (Round Way)': totalPrice = parseFloat(intercityRound);
-                    break;
-                    default: totalPrice = parseFloat(airportOne);
-                    break;
-                }
-
-                console.log(airportOne,airportRound, intercityOne, intercityRound);
-
-
+                // Private Driver - simplified but more accurate
+                // Parse the airport_or_intercity value to determine service and road type
+                let isAirportTransfer = airportOrIntercity.includes('Airport');
+                let isRoundTrip = airportOrIntercity.includes('Round');
                 
+                if (isAirportTransfer) {
+                    if (isRoundTrip) {
+                        // Airport Round Trip - with fallback to intercity round
+                        totalPrice = airportRound || intercityRound || 0;
+                    } else {
+                        // Airport One Way - with fallback to intercity one
+                        totalPrice = airportOne || intercityOne || 0;
+                    }
+                } else {
+                    // Intercity
+                    if (isRoundTrip) {
+                        totalPrice = intercityRound || 0;
+                    } else {
+                        totalPrice = intercityOne || 0;
+                    }
+                }
             } else if (category_id === 5) {
+                // Activities - matches PricingService::calculateActivityPrice()
                 let optionPrice = $('#pricing_option_id > option:selected').data('price') || 0;
                 totalPrice = groupOrPrivate == 'Group' ?
                     parseFloat(optionPrice) :
                     parseFloat(optionPrice) * numPeople;
             }
 
-            // Add addons total (except if category 5)
-            totalPrice += addonsTotal + discountOrExtra;
+            // IMPORTANT: According to documentation:
+            // booking_price = base price only (NO addons, NO discount)
+            // total_price = base price + addons + discount
+            let basePrice = totalPrice;  // This is the base price before addons
+            let finalTotal = basePrice + addonsTotal + discountOrExtra;
 
-            $('#summary_booking_price').text((totalPrice - addonsTotal).toFixed(2) + '€');
-            $('#summary_total').text(totalPrice.toFixed(2) + '€');
-            $('#booking_price').val(totalPrice - addonsTotal);
-            $('#total_price').val(totalPrice);
-            $('#total_addons').val(addonsTotal);
+            // Update summary fields
+            $('#summary_booking_price').text(basePrice.toFixed(2) + '€');
+            $('#summary_total').text(finalTotal.toFixed(2) + '€');
+            
+            // Set hidden form fields according to server documentation:
+            $('#booking_price').val(basePrice);  // Base price only
+            $('#total_addons').val(addonsTotal); // Sum of addon prices
+            $('#total_price').val(finalTotal);   // Base + addons + discount
+            
             $('#summary_total_addons').text(addonsTotal.toFixed(2) + '€');
         }
 
@@ -800,7 +842,6 @@
                         pricePerMonth = parseFloat(listing.price_per_month) || 0;
                         options += `<option value="${listing.id}" 
                                             data-durations="${listing.duration_options}"
-                                            data-proposes="${listing.purpose_tags}"
                                             data-price-per-hour="${pricePerHour}"
                                             data-price-per-half-day="${pricePerHalfDay}"
                                             data-price-per-day="${pricePerDay}"
@@ -821,7 +862,6 @@
             const $selectedOption = $('#listing_id option:selected');
 
             let durations = $selectedOption.data('durations');
-            let proposes = $selectedOption.data('proposes');
 
             $('#addons-table > tbody').html('');
 
@@ -829,12 +869,6 @@
                 let durationsArr = durations.split(',');
 
                 generateOptions('duration', durationsArr);
-            }
-
-            if (proposes) {
-                let proposesArr = proposes.split(',');
-
-                generateOptions('propose', proposesArr);
             }
 
             if (category_id == 3 || category_id == 5) {

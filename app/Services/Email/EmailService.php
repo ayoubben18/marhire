@@ -367,6 +367,9 @@ class EmailService implements EmailServiceInterface
         // Format currency
         $currency = 'EUR';
         
+        // Calculate correct total including discount/extra
+        $totalAmount = $booking->booking_price + $booking->total_addons + $booking->discount_or_extra;
+        
         $replacements = [
             '{{client_name}}' => $booking->name,
             '{{client_email}}' => $booking->email,
@@ -379,8 +382,11 @@ class EmailService implements EmailServiceInterface
             '{{booking_id}}' => $booking->id,
             '{{listing_title}}' => $booking->listing->title ?? 'N/A',
             '{{service}}' => $booking->listing->title ?? 'N/A',
-            '{{total_amount}}' => number_format($booking->total_amount, 2),
-            '{{total}}' => number_format($booking->total_amount, 2),
+            '{{total_amount}}' => number_format($totalAmount, 2),
+            '{{total}}' => number_format($totalAmount, 2),
+            '{{booking_price}}' => number_format($booking->booking_price, 2),
+            '{{total_addons}}' => number_format($booking->total_addons, 2),
+            '{{discount_or_extra}}' => number_format($booking->discount_or_extra, 2),
             '{{currency}}' => $currency,
             '{{admin_email}}' => EmailSetting::getAdminEmail(),
             '{{check_in_date}}' => $checkInDateFormatted,
@@ -537,7 +543,7 @@ class EmailService implements EmailServiceInterface
             'total_addons' => $booking->total_addons,
             'discount_or_extra' => $booking->discount_or_extra,
             'discount_label' => $booking->discount_or_extra < 0 ? 'Discount' : 'Extra Charge',
-            'grand_total' => $booking->total_price,
+            'grand_total' => $booking->booking_price + $booking->total_addons + $booking->discount_or_extra,
             
             // Company info
             'company_email' => 'info@marhire.com',
