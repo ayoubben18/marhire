@@ -173,6 +173,19 @@ const Listing = ({ slug }) => {
                                 listing={listing}
                             />
                         )}
+                        <div className="lg:hidden">
+                        <div className="listing-section-separator"></div>
+                        </div>
+                        {/* Mobile Booking Form - Shows below gallery on small devices */}
+                        <div className="mobile-booking-form lg:hidden">
+                            <BookingFrm
+                                loading={loading}
+                                listingId={listing?.id}
+                                categoryId={listing?.category_id}
+                                listing={listing}
+                                searchParams={searchParams}
+                            />
+                        </div>
                         <div className="listing-section-separator"></div>
 
                         {/* 4. Specifications with Icons */}
@@ -248,11 +261,11 @@ const Listing = ({ slug }) => {
                         />
                     </div>
                     <div
-                        className={`listing-container__right ${
+                        className={`listing-container__right hidden lg:block ${
                             enableSticky ? "sticky-enabled" : ""
                         }`}
                     >
-                        {/* 16. Sticky Booking Form */}
+                        {/* 16. Sticky Booking Form - Desktop only */}
                         <BookingFrm
                             loading={loading}
                             listingId={listing?.id}

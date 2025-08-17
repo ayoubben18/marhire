@@ -20,6 +20,7 @@ import {
     clearFieldError,
     prepareSubmissionData
 } from "../../utils/bookingHelpers";
+import Skeleton from "react-loading-skeleton";
 import { mapSearchParams, isDateValid, getMinValidDate } from "../../utils/searchParamsMapping";
 
 const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) => {
@@ -1223,8 +1224,51 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         });
     }, [numericCategoryId, listing, startDate, endDate, duration, numberOfPeople, selectedAddons, boatDuration, selectedDurationOption, serviceTypes, roadTypes, pickupCity, dropoffCity, pickupTime, dropoffTime]);
 
+    if (loading) {
+        return (
+            <div className="singlelisting-booking">
+                {/* Header Skeleton */}
+                <div className="mb-4 flex items-center gap-3">
+                    <Skeleton width={24} height={24} />
+                    <Skeleton height={24} width={180} />
+                </div>
+                
+                {/* Stepper Skeleton */}
+                <div className="mb-4">
+                    <Skeleton height={40} />
+                </div>
+                
+                {/* Form Fields Skeleton */}
+                <div className="space-y-4">
+                    <div>
+                        <Skeleton height={14} width={100} className="mb-2" />
+                        <Skeleton height={48} />
+                    </div>
+                    <div>
+                        <Skeleton height={14} width={120} className="mb-2" />
+                        <Skeleton height={48} />
+                    </div>
+                    <div>
+                        <Skeleton height={14} width={80} className="mb-2" />
+                        <Skeleton height={48} />
+                    </div>
+                </div>
+                
+                {/* Price Skeleton */}
+                <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                    <Skeleton height={20} width={100} className="mb-2" />
+                    <Skeleton height={32} width={120} />
+                </div>
+                
+                {/* Button Skeleton */}
+                <div className="mt-6">
+                    <Skeleton height={48} />
+                </div>
+            </div>
+        );
+    }
+
     return (
-        !loading && (
             <form onSubmit={handleSubmit} className="singlelisting-booking" id="singlelistingBooking">
                 {/* Category Header */}
                 <div className="mb-4 flex items-center">
@@ -1635,8 +1679,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     </DialogActions>
                 </Dialog>
             </form>
-        )
-    );
+        );
 };
 
 export default BookingFrm;
