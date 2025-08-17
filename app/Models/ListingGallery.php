@@ -17,6 +17,21 @@ class ListingGallery extends Model
     ];
 
     /**
+     * Mutator to ensure file_path always starts with /
+     * This prevents production issues where relative paths don't resolve correctly
+     *
+     * @param string $value
+     * @return void
+     */
+    public function setFilePathAttribute($value)
+    {
+        if (!empty($value) && !str_starts_with($value, '/') && !str_starts_with($value, 'http')) {
+            $value = '/' . ltrim($value, '/');
+        }
+        $this->attributes['file_path'] = $value;
+    }
+
+    /**
      * Check if the image is WebP format
      *
      * @return bool
