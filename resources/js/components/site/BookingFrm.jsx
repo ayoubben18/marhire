@@ -1548,38 +1548,21 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                 </div>
                 
                 {/* Navigation Buttons */}
-                <div className="flex justify-between gap-4">
-                    {currentStep > 0 && (
-                        <Button
-                            type="button"
-                            onClick={handleBack}
-                            variant="outlined"
-                            size="large"
-                            className="px-6"
-                            sx={{
-                                borderColor: '#048667',
-                                color: '#048667',
-                                '&:hover': {
-                                    borderColor: '#037056',
-                                    backgroundColor: 'rgba(4, 134, 103, 0.04)',
-                                },
-                            }}
-                        >
-                            {t('common.back', 'Back')}
-                        </Button>
-                    )}
+                <div className="flex flex-col gap-4">
                     {currentStep === 0 ? (
                         <>
                             <Button
                                 type="button"
                                 onClick={handleNext}
-                                variant="contained"
+                                variant="outlined"
                                 size="large"
-                                className="ml-auto px-6"
+                                className="w-full px-6"
                                 sx={{
-                                    backgroundColor: '#048667',
+                                    borderColor: '#048667',
+                                    color: '#048667',
                                     '&:hover': {
-                                        backgroundColor: '#037056',
+                                        borderColor: '#037056',
+                                        backgroundColor: 'rgba(4, 134, 103, 0.04)',
                                     },
                                 }}
                             >
@@ -1589,7 +1572,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                                 href={getWtspUrl(listing)}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center justify-center gap-2 px-4 py-3 bg-green-400 hover:bg-green-500 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg ml-2"
+                                className="flex items-center justify-center gap-2 px-4 py-3 bg-green-400 hover:bg-green-500 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg w-full"
                                 title="WhatsApp"
                             >
                                 <FaWhatsapp size={20} />
@@ -1598,10 +1581,27 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                         </>
                     ) : (
                         <>
+                            <Button
+                                type="button"
+                                onClick={handleBack}
+                                variant="outlined"
+                                size="large"
+                                className="w-full px-6"
+                                sx={{
+                                    borderColor: '#048667',
+                                    color: '#048667',
+                                    '&:hover': {
+                                        borderColor: '#037056',
+                                        backgroundColor: 'rgba(4, 134, 103, 0.04)',
+                                    },
+                                }}
+                            >
+                                {t('common.back', 'Back')}
+                            </Button>
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="ml-auto text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                className="w-full text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                                 style={{ backgroundColor: '#048667' }}
                             >
                                 {isSubmitting ? (
@@ -1613,16 +1613,6 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                                     t("common.bookNow")
                                 )}
                             </button>
-                            <a
-                                href={getWtspUrl(listing)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center justify-center gap-2 px-4 py-3 bg-green-400 hover:bg-green-500 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg ml-2"
-                                title="WhatsApp"
-                            >
-                                <FaWhatsapp size={20} />
-                                <span className="font-medium">WhatsApp</span>
-                            </a>
                         </>
                     )}
                 </div>
