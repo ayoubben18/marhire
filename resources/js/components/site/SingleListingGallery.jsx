@@ -103,23 +103,8 @@ const SingleListingGallery = ({ listing, loading }) => {
                                     src={getImageUrl(img.file_path)}
                                     fallbackSrcs={getFallbackImageUrl(img.file_path)}
                                     alt={`${getTranslatedField(listing, 'title', currentLocale)} - Image ${idx + 1}`}
-                                    onError={() => handleImageError(img.file_path, idx)}
                                     loading="lazy"
-                                    style={{ display: hasError ? 'none' : 'block' }}
                                 />
-                                {hasError && (
-                                    <div className="image-error-placeholder" style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        background: '#f5f5f5',
-                                        color: '#666',
-                                        minHeight: '200px',
-                                        fontSize: '14px'
-                                    }}>
-                                        {t('common.image_not_available', 'Image not available')}
-                                    </div>
-                                )}
                             </div>
                         );
                     })}

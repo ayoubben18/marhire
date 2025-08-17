@@ -98,16 +98,13 @@ const SearchItem = ({ item, type }) => {
                     {item.galleries && item.galleries.length > 0 && !imageError ? (
                         <SmartImage
                             src={getImageUrl(item.galleries[0].file_path)}
-                            fallbackSrcs={[
-                                ...getFallbackImageUrl(item.galleries[0].file_path) || [],
-                                '/images/default-marhire.png'
-                            ]}
+                            fallbackSrcs={getFallbackImageUrl(item.galleries[0].file_path) || []}
                             alt={getTranslatedField(item, 'title', currentLocale)}
                             onError={() => setImageError(true)}
                         />
                     ) : (
                         <img
-                            src="/images/default-marhire.png"
+                            src="/images/not-found.png"
                             alt={getTranslatedField(item, 'title', currentLocale)}
                         />
                     )}

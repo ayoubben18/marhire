@@ -151,16 +151,13 @@ const RelatedProducts = ({ category = 2, loading }) => {
                                             {listing.galleries && listing.galleries.length > 0 ? (
                                                 <SmartImage
                                                     src={getImageUrl(listing.galleries[0].file_path)}
-                                                    fallbackSrcs={[
-                                                        ...getFallbackImageUrl(listing.galleries[0].file_path) || [],
-                                                        '/images/default-marhire.png'
-                                                    ]}
+                                                    fallbackSrcs={getFallbackImageUrl(listing.galleries[0].file_path) || []}
                                                     alt={getTranslatedField(listing, 'title', currentLocale)}
                                                     className="recommendation-image"
                                                 />
                                             ) : (
                                                 <img
-                                                    src="/images/default-marhire.png"
+                                                    src="/images/not-found.png"
                                                     alt={getTranslatedField(listing, 'title', currentLocale)}
                                                     className="recommendation-image"
                                                 />

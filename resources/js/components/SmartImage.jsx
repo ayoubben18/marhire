@@ -8,6 +8,7 @@ const SmartImage = ({
     loading = 'lazy', 
     style = {}, 
     className = '',
+    useNotFoundFallback = true,
     ...props 
 }) => {
     const [currentSrc, setCurrentSrc] = useState(src);
@@ -30,6 +31,11 @@ const SmartImage = ({
             setFallbackIndex(nextIndex);
             setCurrentSrc(fallbackSrcs[nextIndex]);
             console.log(`Trying fallback image: ${fallbackSrcs[nextIndex]}`);
+        } else if (useNotFoundFallback && currentSrc !== '/images/not-found.png') {
+            // Try the not-found.png as final fallback
+            console.log('Using not-found.png as final fallback');
+            setCurrentSrc('/images/not-found.png');
+            setFallbackIndex(fallbackSrcs.length); // Mark as beyond fallbacks
         } else {
             // No more fallbacks available
             setHasError(true);
