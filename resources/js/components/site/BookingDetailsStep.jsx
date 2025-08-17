@@ -1461,7 +1461,7 @@ const BookingDetailsStep = ({
                                             availableCities.forEach((pricing) => {
                                                 // Don't add the main city again
                                                 if (pricing.city_id !== listing?.city_id) {
-                                                    const city = cities.find(c => c.id === pricing.city_id);
+                                                    const city = cities.find(c => parseInt(c.id) === parseInt(pricing.city_id));
                                                     const isRoundTrip = selectedRoadType === "road_trip";
                                                     // For airport transfer dropdown, prefer airport price if available, otherwise use intercity price
                                                     const price = isRoundTrip ? 
@@ -1575,7 +1575,7 @@ const BookingDetailsStep = ({
                                                     }
                                                 })
                                                 .map((pricing) => {
-                                                    const city = cities.find(c => c.id === pricing.city_id);
+                                                    const city = cities.find(c => parseInt(c.id) === parseInt(pricing.city_id));
                                                     const isRoundTrip = roadTypes.includes("road_trip");
                                                     const price = isRoundTrip ? pricing.intercity_round : pricing.intercity_one;
                                                     

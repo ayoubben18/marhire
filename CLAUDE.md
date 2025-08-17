@@ -90,3 +90,4 @@ NEVER FUCKING RESTORE THE FILE STATUS USING GIT JUST REMOVE WHAT YOU WANT TO REM
 - no need for intl in admin pages
 - never apply discount on the booking price just store it
 - in the booking form the update and add forms should have the same fields for categories
+- remember to always parse the ints when comparing something like this just in case because I have db on my prod server diff than dev
