@@ -192,11 +192,13 @@ export const calculatePrice = (categoryId, basePrice, params = {}) => {
                 // 30min to 1.5 hours: price_per_hour * hours
                 price = (listing.price_per_hour || basePrice) * hours;
             } else if (hours >= 2 && hours <= 4) {
-                // 2 to 4 hours: use flat half-day rate
-                price = listing.price_per_half_day || listing.price_per_hour * 4;
+                // 2 to 4 hours: proportional half-day rate (price_per_half_day / 4 * hours)
+                const halfDayRate = listing.price_per_half_day || listing.price_per_hour * 4;
+                price = (halfDayRate / 4) * hours;
             } else if (hours >= 4.5 && hours <= 8) {
-                // 4.5 to 8 hours: use flat full-day rate
-                price = listing.price_per_day || listing.price_per_hour * 8;
+                // 4.5 to 8 hours: proportional full-day rate (price_per_day / 8 * hours)
+                const fullDayRate = listing.price_per_day || listing.price_per_hour * 8;
+                price = (fullDayRate / 8) * hours;
             } else {
                 // Invalid duration - use hourly rate as fallback
                 price = (listing.price_per_hour || basePrice) * hours;

@@ -206,11 +206,10 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
         setTimeout(() => {
             const formElement = document.getElementById('singlelistingBooking');
             if (formElement) {
-                // Add offset for sticky header if needed (adjust value as necessary)
                 const headerOffset = 80;
                 const elementPosition = formElement.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                
+
                 window.scrollTo({
                     top: offsetPosition,
                     behavior: 'smooth'
@@ -1659,7 +1658,10 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     </DialogContent>
                     <DialogActions className="justify-center pb-4">
                         <Button 
-                            onClick={() => setShowSuccess(false)}
+                            onClick={() => {
+                                setShowSuccess(false);
+                                window.location.href = '/';
+                            }}
                             variant="contained"
                             color="primary"
                             size="large"

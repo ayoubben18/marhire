@@ -343,7 +343,7 @@ class BookingController extends Controller
                     'pickup_time' => $request->pickup_time,
                     'dropoff_time' => $request->dropoff_time,
                     'pickup_location' => $request->pickup_location,
-                    'droppoff_location' => $request->dropoff_location  // Database column has typo: droppoff_location
+                    'droppoff_location' => $request->droppoff_location  // Database column has typo: droppoff_location
                 ];
                 break;
 
@@ -724,7 +724,7 @@ class BookingController extends Controller
                     'pickup_time' => $request->pickupTime ?? $request->pickup_time,
                     'dropoff_time' => $request->dropoffTime ?? $request->dropoff_time,
                     'pickup_location' => $request->pickupLocation ?? $request->pickup_location,
-                    'droppoff_location' => $request->dropoffLocation ?? $request->dropoff_location  // Database column has typo
+                    'droppoff_location' => $request->dropoffLocation ?? $request->droppoff_location  // Database column has typo
                 ];
                 break;
                 
@@ -841,7 +841,7 @@ class BookingController extends Controller
                     'dropoff_date' => 'required|date|after_or_equal:pickup_date',
                     'dropoff_time' => 'required|date_format:H:i',
                     'pickup_location' => 'required|string',
-                    'dropoff_location' => 'required|string'
+                    'droppoff_location' => 'required|string'
                 ];
                 break;
             case 3: // Private driver
@@ -1347,7 +1347,7 @@ class BookingController extends Controller
         ];
 
         // Drop-off fee notification
-        if ($request->pickup_location != $request->dropoff_location) {
+        if ($request->pickup_location != $request->droppoff_location) {
             $result['pricing_details']['car']['drop_off_fee_notice'] = 'Drop-off fee will be added';
             $result['notifications'][] = 'Drop-off fee will be added for different pickup/dropoff locations';
         }
@@ -1372,17 +1372,19 @@ class BookingController extends Controller
             $rateType = 'hourly';
             $calculation = $listing->price_per_hour . ' * ' . $hours;
         } elseif ($hours >= 2 && $hours <= 4) {
-            // 2 to 4 hours: use flat half-day rate (NO FRACTIONAL MULTIPLIER)
+            // 2 to 4 hours: proportional half-day rate (price_per_half_day / 4 * hours)
             // This matches the frontend logic exactly
-            $price = $listing->price_per_half_day ?: $listing->price_per_hour * 4;
+            $halfDayRate = $listing->price_per_half_day ?: $listing->price_per_hour * 4;
+            $price = ($halfDayRate / 4) * $hours;
             $rateType = 'half_day';
-            $calculation = 'Half-day rate: ' . ($listing->price_per_half_day ?: $listing->price_per_hour * 4);
+            $calculation = 'Half-day rate: (' . $halfDayRate . ' / 4) * ' . $hours;
         } elseif ($hours >= 4.5 && $hours <= 8) {
-            // 4.5 to 8 hours: use flat full-day rate (NO FRACTIONAL MULTIPLIER)
+            // 4.5 to 8 hours: proportional full-day rate (price_per_day / 8 * hours)
             // This matches the frontend logic exactly
-            $price = $listing->price_per_day ?: $listing->price_per_hour * 8;
+            $fullDayRate = $listing->price_per_day ?: $listing->price_per_hour * 8;
+            $price = ($fullDayRate / 8) * $hours;
             $rateType = 'full_day';
-            $calculation = 'Full-day rate: ' . ($listing->price_per_day ?: $listing->price_per_hour * 8);
+            $calculation = 'Full-day rate: (' . $fullDayRate . ' / 8) * ' . $hours;
         } else {
             // Invalid duration - use hourly rate as fallback (matching frontend)
             $price = ($listing->price_per_hour ?: 0) * $hours;

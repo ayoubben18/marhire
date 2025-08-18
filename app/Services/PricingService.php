@@ -195,11 +195,13 @@ class PricingService
             // 30min to 1.5 hours: price_per_hour * hours
             $price = ($listing->price_per_hour ?: 0) * $hours;
         } elseif ($hours >= 2 && $hours <= 4) {
-            // 2 to 4 hours: use FLAT half-day rate (NO FRACTIONAL MULTIPLIER)
-            $price = $listing->price_per_half_day ?: $listing->price_per_hour * 4;
+            // 2 to 4 hours: proportional half-day rate (price_per_half_day / 4 * hours)
+            $halfDayRate = $listing->price_per_half_day ?: $listing->price_per_hour * 4;
+            $price = ($halfDayRate / 4) * $hours;
         } elseif ($hours >= 4.5 && $hours <= 8) {
-            // 4.5 to 8 hours: use FLAT full-day rate (NO FRACTIONAL MULTIPLIER)
-            $price = $listing->price_per_day ?: $listing->price_per_hour * 8;
+            // 4.5 to 8 hours: proportional full-day rate (price_per_day / 8 * hours)
+            $fullDayRate = $listing->price_per_day ?: $listing->price_per_hour * 8;
+            $price = ($fullDayRate / 8) * $hours;
         } else {
             // Invalid duration - use hourly rate as fallback
             $price = ($listing->price_per_hour ?: 0) * $hours;
