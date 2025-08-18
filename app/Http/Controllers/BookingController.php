@@ -105,6 +105,7 @@ class BookingController extends Controller
             'email' => $request->email,
             'whatsapp' => $request->whatsapp,
             'country' => $request->country,
+            'date_of_birth' => $request->date_of_birth,  // Date of birth for all categories
             'flight_number' => $request->flight_number,  // Flight number for all categories
             'notes' => $request->notes,
             'booking_price' => $priceData['base_price'],  // Use server-calculated price
@@ -119,7 +120,6 @@ class BookingController extends Controller
         switch ((int) $request->category_id) {
             case 2:
                 $bookingFields += [
-                    'date_of_birth' => $request->date_of_birth,  // Changed from age to date_of_birth
                     'pickup_date' => $request->pickup_date,
                     'dropoff_date' => $request->dropoff_date,
                     'pickup_time' => $request->pickup_time,
