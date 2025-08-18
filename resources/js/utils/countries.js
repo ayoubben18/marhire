@@ -257,29 +257,42 @@ export const countryCodes = [
 ];
 
 /**
- * Returns an array of { code, name } country options localized for the given locale.
+ * Returns an array of { code, englishName, localizedName } country options.
+ * The englishName is used as the value (for database consistency),
+ * while localizedName is displayed to the user in their language.
  * Falls back gracefully if Intl.DisplayNames is unavailable.
  */
 export function getCountryOptions(locale = "en") {
     try {
-        // Some environments might not support Intl.DisplayNames
-        const displayNames =
+        // Get English names for values (database consistency)
+        const englishDisplayNames =
+            typeof Intl !== "undefined" && Intl.DisplayNames
+                ? new Intl.DisplayNames(["en"], { type: "region" })
+                : null;
+        
+        // Get localized names for display
+        const localizedDisplayNames =
             typeof Intl !== "undefined" && Intl.DisplayNames
                 ? new Intl.DisplayNames([locale], { type: "region" })
                 : null;
 
         const options = countryCodes.map((code) => {
-            const name = displayNames ? displayNames.of(code) : code;
-            return { code, name: name || code };
+            const englishName = englishDisplayNames ? englishDisplayNames.of(code) : code;
+            const localizedName = localizedDisplayNames ? localizedDisplayNames.of(code) : englishName;
+            return { 
+                code, 
+                name: englishName || code,  // This will be the value
+                displayName: localizedName || englishName || code  // This will be shown to user
+            };
         });
 
-        // Filter out any that didn't resolve to a readable name and sort alphabetically
+        // Filter out any that didn't resolve to a readable name and sort alphabetically by display name
         return options
             .filter((opt) => typeof opt.name === "string" && opt.name.trim())
-            .sort((a, b) => optCompare(a.name, b.name));
+            .sort((a, b) => optCompare(a.displayName, b.displayName));
     } catch (e) {
         // Fallback: return codes as names if anything goes wrong
-        return countryCodes.map((code) => ({ code, name: code }));
+        return countryCodes.map((code) => ({ code, name: code, displayName: code }));
     }
 }
 

@@ -243,9 +243,9 @@ const ClientInfoStep = ({
                                 "Select your country"
                             )}
                         </option>
-                        {countryOptions.map(({ code, name }) => (
+                        {countryOptions.map(({ code, name, displayName }) => (
                             <option key={code} value={name}>
-                                {name}
+                                {displayName || name}
                             </option>
                         ))}
                     </select>

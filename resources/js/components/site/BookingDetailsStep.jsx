@@ -171,9 +171,9 @@ const BookingDetailsStep = ({
         }
     }, [listing?.pricings, categoryId]);
     
-    // Set pickup city for airport transfer
+    // Set pickup city for airport transfer and intercity
     useEffect(() => {
-        if (categoryId === 3 && serviceTypes.includes("airport_transfer") && listing?.city_id) {
+        if (categoryId === 3 && (serviceTypes.includes("airport_transfer") || serviceTypes.includes("intercity")) && listing?.city_id) {
             setPickupCity(listing.city_id);
         }
     }, [categoryId, serviceTypes, listing?.city_id]);
@@ -1605,6 +1605,22 @@ const BookingDetailsStep = ({
                                     )}
                                 </div>
                             </div>
+                            
+                            {/* Pickup Address field - Only for intercity */}
+                            <div className="mb-3">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    {t("booking.pickupAddress", "Pickup Address")}
+                                    <RequiredAsterisk />
+                                </label>
+                                <TextField
+                                    value={pickupAirport}
+                                    onChange={(e) => setPickupAirport(e.target.value)}
+                                    placeholder={t("booking.enterPickupAddress", "Enter your pickup address")}
+                                    variant="outlined"
+                                    fullWidth
+                                    error={!!errors.pickup_airport || !!errors.pickup_address}
+                                />
+                            </div>
                         </>
                     )}
 
@@ -1622,7 +1638,6 @@ const BookingDetailsStep = ({
                                 variant="outlined"
                                 fullWidth
                                 error={!!errors.dropoff_hotel || !!errors.droppoff_location}
-                                helperText={errors.dropoff_hotel?.[0] || errors.droppoff_location?.[0]}
                             />
                         </div>
                     )}

@@ -35,9 +35,42 @@ const SingleListingBottom = ({ listing }) => {
                     >
                         <FaWhatsapp size={22} /> WhatsApp
                     </a>
-                    <a href="#singlelistingBooking" className="cta-book-now">
+                    <button 
+                        onClick={() => {
+                            // Determine which form to scroll to based on viewport
+                            const isMobile = window.innerWidth < 1025;
+                            const formId = isMobile ? 'mobile-booking-form' : 'desktop-booking-form';
+                            const formElement = document.getElementById(formId);
+                            const scrollContainer = document.querySelector('.listing-container__right');
+                            
+                            if (formElement) {
+                                if (!isMobile && scrollContainer) {
+                                    // Desktop: Scroll within the container
+                                    const containerRect = scrollContainer.getBoundingClientRect();
+                                    const formRect = formElement.getBoundingClientRect();
+                                    const scrollTop = formRect.top - containerRect.top + scrollContainer.scrollTop;
+                                    
+                                    scrollContainer.scrollTo({
+                                        top: Math.max(0, scrollTop - 20),
+                                        behavior: 'smooth'
+                                    });
+                                } else {
+                                    // Mobile: Scroll the page
+                                    const headerOffset = 80;
+                                    const elementPosition = formElement.getBoundingClientRect().top;
+                                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                                    
+                                    window.scrollTo({
+                                        top: offsetPosition,
+                                        behavior: 'smooth'
+                                    });
+                                }
+                            }
+                        }}
+                        className="cta-book-now"
+                    >
                         <FaRegCalendarAlt size={22} /> {t("common.bookNow")}
-                    </a>
+                    </button>
                 </div>
             </div>
         )

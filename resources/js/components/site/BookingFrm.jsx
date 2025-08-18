@@ -23,7 +23,7 @@ import {
 import Skeleton from "react-loading-skeleton";
 import { mapSearchParams, isDateValid, getMinValidDate } from "../../utils/searchParamsMapping";
 
-const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) => {
+const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams, formId = 'singlelistingBooking' }) => {
     const { t } = useTranslation();
     const { currentLanguage } = useLanguage();
     // Convert categoryId to number to ensure proper comparison
@@ -139,10 +139,10 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     return false;
                 }
                 // Check conditional fields
-                if (serviceTypes.includes('airport_transfer') && (!pickupAirport || !dropoffHotel)) {
+                if (serviceTypes.includes('airport_transfer') && (!dropoffHotel || dropoffHotel.trim() === '')) {
                     return false;
                 }
-                if (serviceTypes.includes('intercity') && (!pickupCity || !dropoffCity)) {
+                if (serviceTypes.includes('intercity') && (!pickupCity || !dropoffCity || !pickupAirport || pickupAirport.trim() === '' || !dropoffHotel || dropoffHotel.trim() === '')) {
                     return false;
                 }
                 break;
@@ -204,16 +204,32 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
     // Helper function to scroll to form top
     const scrollToFormTop = () => {
         setTimeout(() => {
-            const formElement = document.getElementById('singlelistingBooking');
+            const formElement = document.getElementById(formId);
+            const scrollContainer = document.querySelector('.listing-container__right');
+            
             if (formElement) {
-                const headerOffset = 80;
-                const elementPosition = formElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
+                // Check if we're on desktop and if the desktop container exists
+                if (window.innerWidth >= 1025 && scrollContainer && formId === 'desktop-booking-form') {
+                    // Desktop: Scroll within the right container
+                    const containerRect = scrollContainer.getBoundingClientRect();
+                    const formRect = formElement.getBoundingClientRect();
+                    const scrollTop = formRect.top - containerRect.top + scrollContainer.scrollTop;
+                    
+                    scrollContainer.scrollTo({
+                        top: Math.max(0, scrollTop - 20), // Small offset for visual comfort
+                        behavior: 'smooth'
+                    });
+                } else {
+                    // Mobile or fallback: Scroll the entire page
+                    const headerOffset = 80;
+                    const elementPosition = formElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
             }
         }, 100);
     };
@@ -237,14 +253,15 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                 if (!roadTypes || roadTypes.length === 0) newErrors.roadTypes = t('booking.errors.selectRoadType');
                 
                 // For airport transfer, pickup city is automatic (listing city)
-                // For intercity, we need both cities
+                // For intercity, we need both cities and pickup address
                 if (serviceTypes && serviceTypes.includes('intercity')) {
                     if (!pickupCity) newErrors.pickupCity = t('booking.errors.selectPickupCity');
                     if (!dropoffCity) newErrors.dropoffCity = t('booking.errors.selectDestinationCity');
+                    if (!pickupAirport || pickupAirport.trim() === '') newErrors.pickup_address = t('booking.errors.pickupAddressRequired', 'Pickup address is required');
+                    if (!dropoffHotel || dropoffHotel.trim() === '') newErrors.dropoff_hotel = t('booking.errors.dropoffAddressRequired', 'Dropoff address is required');
                 } else if (serviceTypes && serviceTypes.includes('airport_transfer')) {
-                    // For airport transfer to other cities, we need dropoff city
-                    // For same city, it's optional
-                    // We can make this validation more flexible
+                    // For airport transfer, dropoff address is required
+                    if (!dropoffHotel || dropoffHotel.trim() === '') newErrors.dropoff_hotel = t('booking.errors.dropoffAddressRequired', 'Dropoff address is required');
                 }
                 
                 if (!numberOfPassengers || numberOfPassengers < 1) newErrors.numberOfPassengers = t('booking.errors.numberOfPassengersRequired');
@@ -272,7 +289,8 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
             const cleaned = { ...prev };
             ['startDate', 'endDate', 'pickupLocation', 'dropoffLocation', 'pickupTime', 
              'cityA', 'cityB', 'pickupCity', 'dropoffCity', 'serviceTypes', 'roadTypes',
-             'numberOfPassengers', 'numberOfLuggage', 'boatPickupTime', 'timePreference'].forEach(key => delete cleaned[key]);
+             'numberOfPassengers', 'numberOfLuggage', 'boatPickupTime', 'timePreference',
+             'pickup_address', 'pickup_airport', 'dropoff_hotel'].forEach(key => delete cleaned[key]);
             return cleaned;
         });
         
@@ -317,20 +335,16 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
             // Don't validate, just navigate to next step
             setCurrentStep(1);
             
-            // Scroll to top of form on mobile devices
-            if (window.innerWidth < 768) {
-                scrollToFormTop();
-            }
+            // Scroll to top of form
+            scrollToFormTop();
         }
     };
     
     const handleBack = () => {
         setCurrentStep(0);
         
-        // Scroll to top of form on mobile devices
-        if (window.innerWidth < 768) {
-            scrollToFormTop();
-        }
+        // Scroll to top of form
+        scrollToFormTop();
     };
 
     // Handle stepper click navigation
@@ -674,9 +688,12 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                     
                     // Add conditional fields
                     if (serviceTypes && serviceTypes.includes('airport_transfer')) {
-                        formData.pickup_airport = pickupAirport || '';
+                        // Set pickup address as "{cityname} airport"
+                        const cityName = listing?.city?.city_name || 'City';
+                        formData.pickup_airport = `${cityName} airport`;
+                        formData.pickup_address = `${cityName} airport`; // Explicitly set pickup_address
                         formData.dropoff_hotel = dropoffHotel || '';
-                        formData.address = dropoffHotel || pickupAirport || ''; // Backend expects 'address' field
+                        formData.address = `${cityName} airport`; // Backend also uses 'address' for pickup_address
                         formData.dropoff_city = dropoffCity; // Add dropoff city for airport transfers too
                         formData.dropoffCity = dropoffCity; // CamelCase version
                     }
@@ -685,7 +702,9 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
                         formData.pickupCity = pickupCity || listing?.city_id || 1; // CamelCase version
                         formData.dropoff_city = dropoffCity;
                         formData.dropoffCity = dropoffCity; // CamelCase version
-                        formData.address = ''; // Intercity doesn't need address
+                        formData.pickup_airport = pickupAirport || ''; // Send pickup_airport for backend to save to pickup_address
+                        formData.dropoff_hotel = dropoffHotel || ''; // Send dropoff_hotel for backend to save to dropoff_address
+                        formData.address = pickupAirport || ''; // Keep address field for backward compatibility with pickup_address
                     }
                     // Legacy compatibility
                     formData.number_of_people = numberOfPassengers;
@@ -1268,7 +1287,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams }) =
     }
 
     return (
-            <form onSubmit={handleSubmit} className="singlelisting-booking" id="singlelistingBooking">
+            <form onSubmit={handleSubmit} className="singlelisting-booking" id={formId}>
                 {/* Category Header */}
                 <div className="mb-4 flex items-center">
                     {getCategoryIcon()}

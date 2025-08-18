@@ -184,6 +184,7 @@ const Listing = ({ slug }) => {
                                 categoryId={listing?.category_id}
                                 listing={listing}
                                 searchParams={searchParams}
+                                formId="mobile-booking-form"
                             />
                         </div>
                         <div className="listing-section-separator"></div>
@@ -272,6 +273,7 @@ const Listing = ({ slug }) => {
                             categoryId={listing?.category_id}
                             listing={listing}
                             searchParams={searchParams}
+                            formId="desktop-booking-form"
                         />
                     </div>
                 </div>
