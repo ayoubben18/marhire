@@ -210,6 +210,10 @@ Route::name('articles.')->middleware(['auth'])->prefix('articles')->group(functi
     Route::get('/edit/{id}', [ArticleController::class, 'edit'])->name('edit');
     Route::post('/update', [ArticleController::class, 'update'])->name('update');
     Route::post('/delete', [ArticleController::class, 'delete'])->name('delete');
+    
+    // Translation routes
+    Route::post('/translate-preview', [ArticleController::class, 'translatePreview'])->name('translatePreview');
+    Route::post('/{id}/translate', [ArticleController::class, 'translate'])->name('translate');
 });
 
 // Agencies Management

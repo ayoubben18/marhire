@@ -363,21 +363,33 @@ class EntereController extends Controller
         $take = 6;
 
         if ($skip == 0) {
-            $latest = Article::orderBy('created_at', 'desc')->first();
-            $rest = Article::orderBy('created_at', 'desc')
+            $latest = Article::withCurrentTranslations()->with('category')->orderBy('created_at', 'desc')->first();
+            $rest = Article::withCurrentTranslations()->with('category')->orderBy('created_at', 'desc')
                 ->skip(1)
                 ->take($take)
                 ->get();
+
+            // Add translated fields for easy frontend consumption
+            $latest['translated_fields'] = $latest ? $latest->getCurrentTranslatedData() : [];
+            
+            foreach ($rest as $article) {
+                $article['translated_fields'] = $article->getCurrentTranslatedData();
+            }
 
             return response()->json([
                 'latest' => $latest,
                 'articles' => $rest,
             ]);
         } else {
-            $rest = Article::orderBy('created_at', 'desc')
+            $rest = Article::withCurrentTranslations()->with('category')->orderBy('created_at', 'desc')
                 ->skip($skip)
                 ->take($take)
                 ->get();
+
+            // Add translated fields for easy frontend consumption
+            foreach ($rest as $article) {
+                $article['translated_fields'] = $article->getCurrentTranslatedData();
+            }
 
             return response()->json([
                 'articles' => $rest,
@@ -387,7 +399,12 @@ class EntereController extends Controller
 
     public function get_article_api(Request $request)
     {
-        $article = Article::where('slug', $request->slug)->first();
+        $article = Article::withCurrentTranslations()->with('category')->where('slug', $request->slug)->first();
+        
+        if ($article) {
+            // Add translated fields for easy frontend consumption
+            $article['translated_fields'] = $article->getCurrentTranslatedData();
+        }
 
         return response()->json(['article' => $article]);
     }

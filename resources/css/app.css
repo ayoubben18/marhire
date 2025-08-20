@@ -1818,6 +1818,17 @@ span.verified {
     font-size: 14pt;
     font-weight: 700;
 }
+.category-badge {
+    display: inline-block;
+    background-color: #048667;
+    color: #ffffff;
+    font-size: 10pt;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 .load-more__sect {
     display: flex;
     justify-content: center;

@@ -1,10 +1,27 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import Footer from "../components/site/Footer";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import axios from "axios";
 
+// Helper function to get translated field
+const getTranslatedField = (item, field, locale) => {
+    console.log(`Getting translated field: ${field} for locale: ${locale}`, item?.translated_fields?.[field]);
+    if (item?.translated_fields && item.translated_fields[field]) {
+        if (item.translated_fields[field][locale]) {
+            return item.translated_fields[field][locale];
+        }
+        if (item.translated_fields[field]['en']) {
+            return item.translated_fields[field]['en'];
+        }
+    }
+    return item?.[field] || '';
+};
+
 const Blog = () => {
+    const { t, i18n } = useTranslation();
+    const currentLocale = i18n.language;
     const [loadingMore, setLoadingMore] = useState(false);
     const [loading, setLoading] = useState(true);
     const [hasMore, setHasMore] = useState(false);
@@ -16,7 +33,9 @@ const Blog = () => {
         setTimeout(() => {
             const fetchArticles = async () => {
                 try {
+                    console.log('Fetching articles with locale:', currentLocale);
                     const response = await axios.get("/api/get_articles_api");
+                    console.log('Articles response:', response.data);
                     setLastBlog(response.data.latest);
                     setArticles(response.data.articles);
                     setSkip(response.data.articles.length + 1);
@@ -67,19 +86,24 @@ const Blog = () => {
                     ) : (
                         lastBlog && (
                             <div className="last-blog">
-                                <a href={`/article/${lastBlog.slug}`}>
+                                <a href={`/${currentLocale}/article/${lastBlog.slug}`}>
                                     <div className="blog-img">
                                         <img
                                             src={"/" + lastBlog.featured_img}
-                                            alt={lastBlog.title}
+                                            alt={getTranslatedField(lastBlog, 'title', currentLocale)}
                                         />
                                     </div>
                                     <div className="blog-bottom">
+                                        {lastBlog.category && (
+                                            <span className="category-badge">
+                                                {lastBlog.category.category}
+                                            </span>
+                                        )}
                                         <h2 className="blog__title">
-                                            {lastBlog.title}
+                                            {getTranslatedField(lastBlog, 'title', currentLocale)}
                                         </h2>
                                         <p className="blog__desc">
-                                            {lastBlog.short_description}
+                                            {getTranslatedField(lastBlog, 'short_description', currentLocale)}
                                         </p>
                                     </div>
                                 </a>
@@ -112,19 +136,24 @@ const Blog = () => {
                                     <div className="blog__img">
                                         <img
                                             src={"/" + article.featured_img}
-                                            alt={article.title}
+                                            alt={getTranslatedField(article, 'title', currentLocale)}
                                         />
                                     </div>
                                     <div className="blog__content">
+                                        {article.category && (
+                                            <span className="category-badge">
+                                                {article.category.category}
+                                            </span>
+                                        )}
                                         <h2 className="blog__title">
                                             <a
-                                                href={`/article/${article.slug}`}
+                                                href={`/${currentLocale}/article/${article.slug}`}
                                             >
-                                                {article.title}
+                                                {getTranslatedField(article, 'title', currentLocale)}
                                             </a>
                                         </h2>
                                         <p className="blog__desc">
-                                            {article.short_description}
+                                            {getTranslatedField(article, 'short_description', currentLocale)}
                                         </p>
                                     </div>
                                 </div>
@@ -149,7 +178,7 @@ const Blog = () => {
                                     className="load-more"
                                     onClick={loadMore}
                                 >
-                                    Load More
+                                    {t('blog.loadMore')}
                                 </button>
                             </div>
                         )}

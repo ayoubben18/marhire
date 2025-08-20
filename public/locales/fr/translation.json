@@ -694,5 +694,17 @@
         "pickupLocation": "Lieu de Prise en Charge",
         "dropoffLocation": "Lieu de Retour",
         "selectTime": "Sélectionner l'heure"
+    },
+    "blog": {
+        "loadMore": "Charger plus",
+        "noArticles": "Aucun article trouvé",
+        "readMore": "Lire la suite",
+        "backToBlog": "Retour au blog",
+        "relatedArticles": "Articles connexes",
+        "category": "Catégorie",
+        "publishedOn": "Publié le",
+        "minRead": "min de lecture",
+        "share": "Partager",
+        "loading": "Chargement des articles..."
     }
 }

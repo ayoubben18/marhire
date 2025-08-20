@@ -42,6 +42,9 @@ class TranslationService
             } elseif ($model instanceof \App\Models\ListingAddon) {
                 $translation->listing_addon_id = $model->id;
                 $translation->addon = $model->addon ?? '';
+            } elseif ($model instanceof \App\Models\Article) {
+                $translation->article_id = $model->id;
+                $translation->title = $model->title ?? '';
             }
             
             $translation->save();
@@ -65,14 +68,45 @@ class TranslationService
             foreach ($data as $locale => $fields) {
                 $translation = $this->getOrCreateTranslation($model, $locale);
                 
+                // Debug logging for article translations
+                if ($model instanceof \App\Models\Article) {
+                    Log::info('Updating article translation', [
+                        'article_id' => $model->id,
+                        'locale' => $locale,
+                        'fields_received' => array_keys($fields),
+                        'content_length' => isset($fields['content']) ? strlen($fields['content']) : 0,
+                        'fillable' => $translation->getFillable()
+                    ]);
+                }
+                
                 // Filter out non-fillable fields
                 $fillableFields = array_intersect_key(
                     $fields,
                     array_flip($translation->getFillable())
                 );
                 
+                // More debug logging
+                if ($model instanceof \App\Models\Article) {
+                    Log::info('Fillable fields after filtering', [
+                        'article_id' => $model->id,
+                        'locale' => $locale,
+                        'fillable_fields' => array_keys($fillableFields),
+                        'content_in_fillable' => isset($fillableFields['content']),
+                        'content_length_after' => isset($fillableFields['content']) ? strlen($fillableFields['content']) : 0
+                    ]);
+                }
+                
                 $translation->fill($fillableFields);
                 $translation->save();
+                
+                // Log what was actually saved
+                if ($model instanceof \App\Models\Article) {
+                    Log::info('Article translation saved', [
+                        'article_id' => $model->id,
+                        'locale' => $locale,
+                        'saved_content_length' => strlen($translation->content ?? '')
+                    ]);
+                }
             }
 
             DB::commit();

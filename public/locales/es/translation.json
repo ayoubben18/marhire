@@ -694,5 +694,17 @@
         "pickupLocation": "Lugar de Recogida",
         "dropoffLocation": "Lugar de Devolución",
         "selectTime": "Seleccionar hora"
+    },
+    "blog": {
+        "loadMore": "Cargar más",
+        "noArticles": "No se encontraron artículos",
+        "readMore": "Leer más",
+        "backToBlog": "Volver al blog",
+        "relatedArticles": "Artículos relacionados",
+        "category": "Categoría",
+        "publishedOn": "Publicado el",
+        "minRead": "min de lectura",
+        "share": "Compartir",
+        "loading": "Cargando artículos..."
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Listing;
+use App\Models\Article;
 use Exception;
 
 class GeminiTranslationService
@@ -58,6 +59,43 @@ class GeminiTranslationService
     }
 
     /**
+     * Translate an article to target locales
+     *
+     * @param Article $article
+     * @param array $targetLocales
+     * @return array
+     * @throws Exception
+     */
+    public function translateArticle(Article $article, array $targetLocales = ['fr', 'es'])
+    {
+        if (!$this->apiKey) {
+            throw new Exception('Gemini API key not configured');
+        }
+
+        // Check rate limiting
+        if (!$this->checkRateLimit()) {
+            throw new Exception('Rate limit exceeded. Please try again later.');
+        }
+
+        // Build the structured prompt
+        $prompt = $this->buildArticleTranslationPrompt($article, $targetLocales);
+        
+        // Make API request with retries
+        $response = $this->makeApiRequest($prompt);
+        
+        // Parse response
+        $translations = $this->parseTranslationResponse($response, $targetLocales);
+        
+        Log::info('Article translation completed', [
+            'article_id' => $article->id,
+            'locales' => $targetLocales,
+            'translations_count' => count($translations)
+        ]);
+
+        return $translations;
+    }
+
+    /**
      * Build structured prompt for Gemini
      *
      * @param Listing $listing
@@ -104,6 +142,72 @@ class GeminiTranslationService
         $prompt .= "Maintain a professional, inviting tone suitable for tourists. ";
         $prompt .= "Preserve any specific location names, property names, and contact information exactly as they appear. ";
         $prompt .= "For SEO fields (meta_title, meta_description), ensure they are optimized for search engines in the target language. ";
+        $prompt .= "Return ONLY a valid JSON object with the following structure (no markdown, no explanations):\n";
+        $prompt .= "{\n";
+        
+        foreach ($targetLocales as $locale) {
+            $prompt .= "  \"$locale\": {\n";
+            foreach (array_keys($translatableFields) as $field) {
+                $prompt .= "    \"$field\": \"translated text\",\n";
+            }
+            $prompt = rtrim($prompt, ",\n") . "\n";
+            $prompt .= "  },\n";
+        }
+        $prompt = rtrim($prompt, ",\n") . "\n";
+        $prompt .= "}\n\n";
+        
+        $prompt .= "Content to translate:\n";
+        $prompt .= json_encode($translatableFields, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+        return $prompt;
+    }
+
+    /**
+     * Build structured prompt for article translation
+     *
+     * @param Article $article
+     * @param array $targetLocales
+     * @return string
+     */
+    protected function buildArticleTranslationPrompt(Article $article, array $targetLocales)
+    {
+        $translatableFields = [
+            'title' => $article->title,
+            'short_description' => $article->short_description,
+            'content' => $article->content,
+            'meta_title' => $article->meta_title,
+            'meta_description' => $article->meta_description,
+        ];
+
+        // Remove null/empty fields
+        $translatableFields = array_filter($translatableFields, function($value) {
+            return !is_null($value) && $value !== '';
+        });
+
+        $localeNames = [
+            'fr' => 'French',
+            'es' => 'Spanish',
+            'ar' => 'Arabic',
+            'de' => 'German',
+            'it' => 'Italian',
+            'pt' => 'Portuguese',
+            'ru' => 'Russian',
+            'zh' => 'Chinese',
+            'ja' => 'Japanese'
+        ];
+
+        $targetLanguages = array_map(function($locale) use ($localeNames) {
+            return $localeNames[$locale] ?? $locale;
+        }, $targetLocales);
+
+        $prompt = "You are a professional translator specializing in article and blog content. ";
+        $prompt .= "Translate the following article content from English to " . implode(' and ', $targetLanguages) . ". ";
+        $prompt .= "Maintain a professional, engaging tone suitable for readers interested in the topic. ";
+        $prompt .= "Preserve any specific names, locations, and technical terms as appropriate. ";
+        $prompt .= "For SEO fields (meta_title, meta_description), ensure they are optimized for search engines in the target language. ";
+        $prompt .= "CRITICAL: For the content field containing HTML, you must preserve ALL HTML tags, attributes, and structure exactly as they appear. ";
+        $prompt .= "Only translate the text content between HTML tags, never modify, remove, or alter any HTML markup. ";
+        $prompt .= "Example: '<p>Hello <strong>world</strong></p>' becomes '<p>Bonjour <strong>monde</strong></p>' in French. ";
         $prompt .= "Return ONLY a valid JSON object with the following structure (no markdown, no explanations):\n";
         $prompt .= "{\n";
         
@@ -263,6 +367,18 @@ class GeminiTranslationService
                 throw new Exception("Invalid translation format for locale: $locale");
             }
         }
+
+        // Log parsed translations for debugging
+        Log::info('Parsed translations from Gemini', [
+            'locales' => array_keys($translations),
+            'translations_data' => array_map(function($trans) {
+                return [
+                    'fields' => array_keys($trans),
+                    'content_length' => isset($trans['content']) ? strlen($trans['content']) : 0,
+                    'content_preview' => isset($trans['content']) ? substr($trans['content'], 0, 100) : null
+                ];
+            }, $translations)
+        ]);
 
         return $translations;
     }

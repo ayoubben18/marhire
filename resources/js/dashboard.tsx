@@ -1,3 +1,4 @@
+import "./bootstrap"; // Import axios configuration
 import ReactDOM from "react-dom/client";
 import React, { Suspense } from "react";
 import { I18nextProvider } from "react-i18next";

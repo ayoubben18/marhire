@@ -50,6 +50,19 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
+                            <label class="form-label" for="category_id">Category</label>
+                            <div class="form-control-wrap">
+                                <select class="form-control" name="category_id" id="category_id">
+                                    <option value="">--Choose Category--</option>
+                                    @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->category }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
                             <label class="form-label" for="featured_img">Featured Image</label>
                             <div class="form-control-wrap">
                                 <input type="file" class="form-control" name="featured_img" id="featured_img" placeholder="Image" accept="image/png, image/webp, image/jpeg" />
@@ -103,14 +116,37 @@
             </div>
         </div>
     </div>
+    
+    {{-- Translation UI Components --}}
+    @include('articles.partials.ai-translation-generator')
+    @include('articles.partials.translation-viewer')
 </form>
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <script>
+    // Initialize global editor instances storage
+    window.editorInstances = {};
+    
     document.querySelectorAll('.editor').forEach((element) => {
         ClassicEditor
             .create(element)
+            .then(editor => {
+                // Store the editor instance with the field name as key
+                const fieldName = element.getAttribute('name');
+                if (fieldName) {
+                    window.editorInstances[fieldName] = editor;
+                }
+                
+                // Also store on the editable element (CKEditor 5 standard)
+                const editable = editor.editing.view.document.getRoot();
+                const editableElement = editor.sourceElement.nextElementSibling.querySelector('.ck-editor__editable');
+                if (editableElement) {
+                    editableElement.ckeditorInstance = editor;
+                }
+                
+                console.log('Editor initialized for field:', fieldName);
+            })
             .catch(error => {
-                console.error(error);
+                console.error('Error initializing editor:', error);
             });
     });
 

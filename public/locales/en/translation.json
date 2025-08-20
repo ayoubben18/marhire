@@ -727,5 +727,17 @@
         "pickupLocation": "Pick-up Location",
         "dropoffLocation": "Dropoff Location",
         "selectTime": "Select time"
+    },
+    "blog": {
+        "loadMore": "Load More",
+        "noArticles": "No articles found",
+        "readMore": "Read More",
+        "backToBlog": "Back to Blog",
+        "relatedArticles": "Related Articles",
+        "category": "Category",
+        "publishedOn": "Published on",
+        "minRead": "min read",
+        "share": "Share",
+        "loading": "Loading articles..."
     }
 }
