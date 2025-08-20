@@ -269,7 +269,7 @@ class ListingController extends Controller
                 
                 try {
                     $baseFileName = 'listing_' . uniqid();
-                    $destination = public_path('images/listings');
+                    $destination = $this->getImagesDestination();
                     
                     // Process image with WebP conversion
                     $processedImage = $imageProcessingService->processImage($file, $destination, $baseFileName);
@@ -633,7 +633,7 @@ class ListingController extends Controller
                 
                 try {
                     $baseFileName = 'listing_' . uniqid();
-                    $destination = public_path('images/listings');
+                    $destination = $this->getImagesDestination();
                     
                     // Process image with WebP conversion
                     $processedImage = $imageProcessingService->processImage($file, $destination, $baseFileName);
@@ -1966,12 +1966,15 @@ class ListingController extends Controller
                 ], 404);
             }
             
-            // Get the file path
+            // Get the file path - try both possible locations
             $filePath = public_path($image->file_path);
+            $cPanelFilePath = str_replace('/public/', '/public_html/', $filePath);
             
-            // Delete the physical file if it exists
+            // Delete the physical file if it exists in either location
             if (file_exists($filePath)) {
                 unlink($filePath);
+            } elseif (file_exists($cPanelFilePath)) {
+                unlink($cPanelFilePath);
             }
             
             // Delete the database record
@@ -1990,5 +1993,39 @@ class ListingController extends Controller
                 'message' => 'Failed to remove image: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Get the correct destination path for image uploads
+     * Handles both local development and cPanel deployment
+     *
+     * @return string
+     */
+    private function getImagesDestination(): string
+    {
+        // Use environment variable or app environment to determine if we're on cPanel
+        // You can set CPANEL_ENV=true in your cPanel .env file
+        if (env('CPANEL_ENV', false) === true || env('CPANEL_ENV', false) === 'true') {
+            // cPanel: Use public_html/images/listings for web-accessible storage
+            $basePath = base_path();
+            $publicHtmlPath = dirname($basePath) . '/public_html/images/listings';
+            
+            // Create directory if it doesn't exist
+            if (!file_exists($publicHtmlPath)) {
+                mkdir($publicHtmlPath, 0755, true);
+                
+                // Copy .htaccess file if it exists in the Laravel public directory
+                $sourceHtaccess = public_path('images/listings/.htaccess');
+                $targetHtaccess = $publicHtmlPath . '/.htaccess';
+                if (file_exists($sourceHtaccess) && !file_exists($targetHtaccess)) {
+                    copy($sourceHtaccess, $targetHtaccess);
+                }
+            }
+            
+            return $publicHtmlPath;
+        }
+        
+        // Local development or standard deployment: use Laravel's public path
+        return public_path('images/listings');
     }
 }
