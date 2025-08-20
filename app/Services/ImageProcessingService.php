@@ -93,16 +93,9 @@ class ImageProcessingService
             }
 
             // Return file information with proper path formatting
-            $originalRelativePath = str_replace(public_path(), '', $originalPath);
-            $webpRelativePath = str_replace(public_path(), '', $webpPath);
-            
-            // Ensure paths start with / for proper web access
-            if (!str_starts_with($originalRelativePath, '/')) {
-                $originalRelativePath = '/' . ltrim($originalRelativePath, '/');
-            }
-            if (!str_starts_with($webpRelativePath, '/')) {
-                $webpRelativePath = '/' . ltrim($webpRelativePath, '/');
-            }
+            // Handle both standard public path and cPanel public_html path
+            $originalRelativePath = $this->convertToWebPath($originalPath);
+            $webpRelativePath = $this->convertToWebPath($webpPath);
             
             return [
                 'original_path' => $originalRelativePath,
@@ -315,5 +308,41 @@ class ImageProcessingService
             'width' => self::RECOMMENDED_WIDTH,
             'height' => self::RECOMMENDED_HEIGHT
         ];
+    }
+
+    /**
+     * Convert absolute file path to web-accessible relative path
+     * Handles both standard Laravel public and cPanel public_html paths
+     *
+     * @param string $absolutePath
+     * @return string
+     */
+    private function convertToWebPath(string $absolutePath): string
+    {
+        // Remove various possible base paths to get the web-accessible path
+        $webPath = $absolutePath;
+        
+        // Try removing public_html path (cPanel)
+        if (str_contains($webPath, '/public_html/')) {
+            $parts = explode('/public_html/', $webPath);
+            $webPath = '/' . end($parts);
+        }
+        // Try removing standard Laravel public path
+        elseif (str_contains($webPath, '/public/')) {
+            $parts = explode('/public/', $webPath);
+            $webPath = '/' . end($parts);
+        }
+        // If neither worked, try to extract just the /images/listings/ part
+        elseif (str_contains($webPath, '/images/listings/')) {
+            $parts = explode('/images/listings/', $webPath);
+            $webPath = '/images/listings/' . end($parts);
+        }
+        
+        // Ensure path starts with /
+        if (!str_starts_with($webPath, '/')) {
+            $webPath = '/' . ltrim($webPath, '/');
+        }
+        
+        return $webPath;
     }
 }
