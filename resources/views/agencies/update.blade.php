@@ -82,14 +82,6 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label class="form-label" for="logo">Logo</label>
-                            <div class="form-control-wrap">
-                                <input type="file" class="form-control" name="logo" id="logo" placeholder="Logo" accept="image/png, image/webp, image/jpeg" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
                             <label class="form-label" for="contact_name">Contact Name</label>
                             <div class="form-control-wrap">
                                 <input type="text" class="form-control" name="contact_name" id="contact_name" value="{{ old('contact_name') ?? $agency->contact_name }}" placeholder="Contact Name" />
@@ -125,6 +117,22 @@
                             <label class="form-label" for="notes">Notes</label>
                             <div class="form-control-wrap">
                                 <input type="text" class="form-control" name="notes" id="notes" value="{{ old('notes') ?? $agency->notes }}" placeholder="Notes" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="ice_number">ICE Number</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control" name="ice_number" id="ice_number" value="{{ old('ice_number') ?? $agency->ice_number }}" placeholder="ICE Number" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="rc_number">RC Number</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control" name="rc_number" id="rc_number" value="{{ old('rc_number') ?? $agency->rc_number }}" placeholder="RC Number" />
                             </div>
                         </div>
                     </div>
@@ -196,6 +204,35 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="form-label" for="logo">Agency Logo</label>
+                            <div class="form-control-wrap">
+                                <div class="alert alert-info mb-2" style="padding: 8px 12px; font-size: 13px;">
+                                    <i class="fa fa-info-circle"></i> <strong>Recommended:</strong> Square image (1:1 ratio)
+                                    <br><small>Example: 500x500px, 800x800px, 1000x1000px</small>
+                                </div>
+                                @if($agency->agency_logo)
+                                <div class="current-logo mb-2" id="current-logo-container">
+                                    <img src="{{ asset($agency->agency_logo) }}" alt="Current Logo" style="max-height: 100px; max-width: 200px; display: block; margin-bottom: 10px; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
+                                    <button type="button" class="btn btn-sm btn-danger" id="delete-logo-btn">
+                                        <i class="fa fa-trash"></i> Delete Logo
+                                    </button>
+                                    <input type="hidden" name="delete_logo" id="delete_logo" value="0">
+                                </div>
+                                @endif
+                                <div id="new-logo-preview" style="display: none; margin-bottom: 10px;">
+                                    <img id="new-preview-image" src="" alt="New Logo Preview" style="max-height: 100px; max-width: 200px; display: block; border: 1px solid #28a745; padding: 5px; border-radius: 4px;">
+                                    <small class="text-success">New logo to be uploaded</small>
+                                    <div id="aspect-ratio-warning" class="text-warning mt-1" style="display: none; font-size: 12px;">
+                                        <i class="fa fa-warning"></i> Image is not square (1:1 ratio)
+                                    </div>
+                                </div>
+                                <input type="file" class="form-control" name="logo" id="logo" placeholder="Logo" accept="image/png, image/webp, image/jpeg" onchange="previewNewLogo(this)" />
+                                <small class="text-muted">Upload new logo to replace existing one</small>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
@@ -337,7 +374,46 @@
         $('body').on('click', '.remove-subcategory', function(){
             $(this).closest('tr').remove();
         });
+
+        // Handle logo deletion
+        $('#delete-logo-btn').click(function() {
+            if(confirm('Are you sure you want to delete the logo?')) {
+                $('#delete_logo').val('1');
+                $('#current-logo-container').hide();
+                $(this).after('<div class="alert alert-warning mt-2">Logo will be deleted when you save.</div>');
+            }
+        });
     });
+    
+    // Preview new logo function
+    function previewNewLogo(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#new-preview-image').attr('src', e.target.result);
+                $('#new-logo-preview').show();
+                // Hide current logo if exists
+                $('#current-logo-container').css('opacity', '0.5');
+                
+                // Check aspect ratio
+                var img = new Image();
+                img.onload = function() {
+                    var width = this.width;
+                    var height = this.height;
+                    var ratio = width / height;
+                    
+                    // Check if image is square (1:1 ratio with 5% tolerance)
+                    if (ratio < 0.95 || ratio > 1.05) {
+                        $('#aspect-ratio-warning').show();
+                    } else {
+                        $('#aspect-ratio-warning').hide();
+                    }
+                };
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
     document.querySelectorAll('.editor').forEach((element) => {
         ClassicEditor
             .create(element)

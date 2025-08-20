@@ -81,14 +81,6 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label class="form-label" for="logo">Logo</label>
-                            <div class="form-control-wrap">
-                                <input type="file" class="form-control" name="logo" id="logo" placeholder="Logo" accept="image/png, image/webp, image/jpeg" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
                             <label class="form-label" for="contact_name">Contact Name</label>
                             <div class="form-control-wrap">
                                 <input type="text" class="form-control" name="contact_name" id="contact_name" value="{{ old('contact_name') }}" placeholder="Contact Name" />
@@ -127,6 +119,22 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="ice_number">ICE Number</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control" name="ice_number" id="ice_number" value="{{ old('ice_number') }}" placeholder="ICE Number" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="rc_number">RC Number</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control" name="rc_number" id="rc_number" value="{{ old('rc_number') }}" placeholder="RC Number" />
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-12">
                         <h5>Subcategories</h5>
                         <table class="table table-bordered" id="subcategories-table">
@@ -156,6 +164,24 @@
 
                             </tbody>
                         </table>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="form-label" for="logo">Agency Logo</label>
+                            <div class="form-control-wrap">
+                                <div class="alert alert-info mb-2" style="padding: 8px 12px; font-size: 13px;">
+                                    <i class="fa fa-info-circle"></i> <strong>Recommended:</strong> Square image (1:1 ratio)
+                                    <br><small>Example: 500x500px, 800x800px, 1000x1000px</small>
+                                </div>
+                                <div id="logo-preview" style="display: none; margin-bottom: 10px;">
+                                    <img id="preview-image" src="" alt="Logo Preview" style="max-height: 100px; max-width: 200px; display: block; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
+                                    <div id="aspect-ratio-warning" class="text-warning mt-1" style="display: none; font-size: 12px;">
+                                        <i class="fa fa-warning"></i> Image is not square (1:1 ratio)
+                                    </div>
+                                </div>
+                                <input type="file" class="form-control" name="logo" id="logo" placeholder="Logo" accept="image/png, image/webp, image/jpeg" onchange="previewLogo(this)" />
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
@@ -273,6 +299,35 @@
             $(this).closest('tr').remove();
         });
     });
+    
+    // Preview logo function
+    function previewLogo(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#preview-image').attr('src', e.target.result);
+                $('#logo-preview').show();
+                
+                // Check aspect ratio
+                var img = new Image();
+                img.onload = function() {
+                    var width = this.width;
+                    var height = this.height;
+                    var ratio = width / height;
+                    
+                    // Check if image is square (1:1 ratio with 5% tolerance)
+                    if (ratio < 0.95 || ratio > 1.05) {
+                        $('#aspect-ratio-warning').show();
+                    } else {
+                        $('#aspect-ratio-warning').hide();
+                    }
+                };
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
     document.querySelectorAll('.editor').forEach((element) => {
         ClassicEditor
             .create(element)

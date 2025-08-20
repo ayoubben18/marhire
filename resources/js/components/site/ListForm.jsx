@@ -9,6 +9,8 @@ const ListForm = () => {
         email: "",
         phone: "",
         whatsapp: "",
+        iceNumber: "",
+        rcNumber: "",
         city: "",
         category: "",
         description: "",
@@ -272,6 +274,38 @@ const ListForm = () => {
                                         This field is required
                                     </span>
                                 )}
+                            </div>
+                        </div>
+
+                        <div className="form-row">
+                            <div className="form-group col-md-6">
+                                <label htmlFor="iceNumber">
+                                    ICE Number
+                                </label>
+                                <input
+                                    type="text"
+                                    id="iceNumber"
+                                    name="iceNumber"
+                                    className="form-control"
+                                    value={formData.iceNumber}
+                                    onChange={handleChange}
+                                    placeholder="Your ICE number"
+                                />
+                            </div>
+
+                            <div className="form-group col-md-6">
+                                <label htmlFor="rcNumber">
+                                    RC Number
+                                </label>
+                                <input
+                                    type="text"
+                                    id="rcNumber"
+                                    name="rcNumber"
+                                    className="form-control"
+                                    value={formData.rcNumber}
+                                    onChange={handleChange}
+                                    placeholder="Your RC number"
+                                />
                             </div>
                         </div>
 

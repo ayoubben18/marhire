@@ -66,6 +66,8 @@ class AgencyController extends Controller
             'category_id' => $request->category_id,
             'contact_name' => $request->contact_name,
             'phone_number' => $request->phone_number,
+            'ice_number' => $request->ice_number,
+            'rc_number' => $request->rc_number,
             'whatsapp' => $request->whatsapp,
             'email' => $request->email,
             'notes' => $request->notes,
@@ -145,8 +147,22 @@ class AgencyController extends Controller
         $agency = Agency::findOrFail($request->id);
         $logo = $agency->agency_logo;
 		
+        // Handle logo deletion
+        if($request->has('delete_logo') && $request->delete_logo == '1') {
+            // Delete the physical file if it exists
+            if($agency->agency_logo && file_exists(public_path($agency->agency_logo))) {
+                unlink(public_path($agency->agency_logo));
+            }
+            $logo = null;
+        }
+        
 		if($request->hasFile('logo'))
 		{
+			// Delete old logo if exists
+			if($agency->agency_logo && file_exists(public_path($agency->agency_logo))) {
+				unlink(public_path($agency->agency_logo));
+			}
+			
 			$logo = 'agency_' . uniqid() . '.' . $request->logo->extension();  
      
         	$request->logo->move(public_path('images') . '/agencies', $logo);
@@ -160,6 +176,8 @@ class AgencyController extends Controller
             'category_id' => $request->category_id,
             'contact_name' => $request->contact_name,
             'phone_number' => $request->phone_number,
+            'ice_number' => $request->ice_number,
+            'rc_number' => $request->rc_number,
             'whatsapp' => $request->whatsapp,
             'email' => $request->email,
             'notes' => $request->notes,
@@ -221,6 +239,8 @@ class AgencyController extends Controller
             'category_id' => $request->category,
             'contact_name' => $request->ownerName,
             'phone_number' => $request->phone,
+            'ice_number' => $request->iceNumber,
+            'rc_number' => $request->rcNumber,
             'whatsapp' => $request->whatsapp,
             'email' => $request->email,
             'notes' => $request->description,

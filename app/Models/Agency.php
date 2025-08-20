@@ -21,6 +21,8 @@ class Agency extends Model
         'id_city',
         'contact_name',
         'phone_number',
+        'ice_number',
+        'rc_number',
         'whatsapp',
         'notes',
         'email',
