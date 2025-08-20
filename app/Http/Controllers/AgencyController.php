@@ -52,11 +52,14 @@ class AgencyController extends Controller
 		$slug = $SEOService->generateSlug('agency', $request->agency_name);
 		if($request->hasFile('logo'))
 		{
-			$logo = 'agency_' . uniqid() . '.' . $request->logo->extension();  
+			$logoFileName = 'agency_' . uniqid() . '.' . $request->logo->extension();  
+			$destination = $this->getImagesDestination();
      
-        	$request->logo->move(public_path('images') . '/agencies', $logo);
+        	$request->logo->move($destination, $logoFileName);
 			
-			$logo = 'images/agencies/' . $logo;
+			// Convert to web-accessible path for storage
+			$fullPath = $destination . '/' . $logoFileName;
+			$logo = $this->convertToWebPath($fullPath);
 		}
 
         $agency = Agency::create([
@@ -149,25 +152,42 @@ class AgencyController extends Controller
 		
         // Handle logo deletion
         if($request->has('delete_logo') && $request->delete_logo == '1') {
-            // Delete the physical file if it exists
-            if($agency->agency_logo && file_exists(public_path($agency->agency_logo))) {
-                unlink(public_path($agency->agency_logo));
+            // Delete the physical file if it exists - check both possible paths
+            if($agency->agency_logo) {
+                $publicPath = public_path($agency->agency_logo);
+                $cPanelPath = str_replace('/public/', '/public_html/', $publicPath);
+                
+                if (file_exists($publicPath)) {
+                    unlink($publicPath);
+                } elseif (file_exists($cPanelPath)) {
+                    unlink($cPanelPath);
+                }
             }
             $logo = null;
         }
         
 		if($request->hasFile('logo'))
 		{
-			// Delete old logo if exists
-			if($agency->agency_logo && file_exists(public_path($agency->agency_logo))) {
-				unlink(public_path($agency->agency_logo));
+			// Delete old logo if exists - check both possible paths
+			if($agency->agency_logo) {
+				$publicPath = public_path($agency->agency_logo);
+				$cPanelPath = str_replace('/public/', '/public_html/', $publicPath);
+				
+				if (file_exists($publicPath)) {
+					unlink($publicPath);
+				} elseif (file_exists($cPanelPath)) {
+					unlink($cPanelPath);
+				}
 			}
 			
-			$logo = 'agency_' . uniqid() . '.' . $request->logo->extension();  
+			$logoFileName = 'agency_' . uniqid() . '.' . $request->logo->extension();  
+			$destination = $this->getImagesDestination();
      
-        	$request->logo->move(public_path('images') . '/agencies', $logo);
+        	$request->logo->move($destination, $logoFileName);
 			
-			$logo = 'images/agencies/' . $logo;
+			// Convert to web-accessible path for storage
+			$fullPath = $destination . '/' . $logoFileName;
+			$logo = $this->convertToWebPath($fullPath);
 		}
 
         $agency->update([
@@ -226,6 +246,73 @@ class AgencyController extends Controller
                         ->firstOrFail();
 
         return response()->json(['agency' => $agency]);
+    }
+
+    /**
+     * Get the correct destination path for image uploads
+     * Handles both local development and cPanel deployment
+     *
+     * @return string
+     */
+    private function getImagesDestination(): string
+    {
+        // Use environment variable to determine if we're on cPanel
+        if (env('CPANEL_ENV', false) === true || env('CPANEL_ENV', false) === 'true') {
+            // cPanel: Use public_html/images/agencies for web-accessible storage
+            $basePath = base_path();
+            $publicHtmlPath = dirname($basePath) . '/public_html/images/agencies';
+            
+            // Create directory if it doesn't exist
+            if (!file_exists($publicHtmlPath)) {
+                mkdir($publicHtmlPath, 0755, true);
+            }
+            
+            return $publicHtmlPath;
+        }
+        
+        // Local development or standard deployment: use Laravel's public path
+        $publicPath = public_path('images/agencies');
+        
+        // Create directory if it doesn't exist
+        if (!file_exists($publicPath)) {
+            mkdir($publicPath, 0755, true);
+        }
+        
+        return $publicPath;
+    }
+
+    /**
+     * Convert absolute file path to web-accessible relative path
+     * Handles both standard Laravel public and cPanel public_html paths
+     *
+     * @param string $absolutePath
+     * @return string
+     */
+    private function convertToWebPath(string $absolutePath): string
+    {
+        // Remove various possible base paths to get the web-accessible path
+        $webPath = $absolutePath;
+        
+        // Try removing public_html path (cPanel)
+        if (str_contains($webPath, '/public_html/')) {
+            $parts = explode('/public_html/', $webPath);
+            $webPath = end($parts);
+        }
+        // Try removing standard Laravel public path
+        elseif (str_contains($webPath, '/public/')) {
+            $parts = explode('/public/', $webPath);
+            $webPath = end($parts);
+        }
+        // If neither worked, try to extract just the /images/agencies/ part
+        elseif (str_contains($webPath, '/images/agencies/')) {
+            $parts = explode('/images/agencies/', $webPath);
+            $webPath = 'images/agencies/' . end($parts);
+        }
+        
+        // Remove leading slash if present (we want relative path for storage)
+        $webPath = ltrim($webPath, '/');
+        
+        return $webPath;
     }
 
     public function agency_request(Request $request, SEOService $SEOService)
