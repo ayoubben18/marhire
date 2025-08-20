@@ -305,6 +305,60 @@ class GeminiTranslationService
     }
 
     /**
+     * Translate a single text string to a target locale
+     *
+     * @param string $text
+     * @param string $targetLocale
+     * @param string $sourceLocale
+     * @return string
+     * @throws Exception
+     */
+    public function translateText($text, $targetLocale, $sourceLocale = 'en')
+    {
+        if (!$this->apiKey) {
+            throw new Exception('Gemini API key not configured');
+        }
+
+        if (empty($text)) {
+            return '';
+        }
+
+        // Check rate limiting
+        if (!$this->checkRateLimit()) {
+            throw new Exception('Rate limit exceeded. Please try again later.');
+        }
+
+        $languageMap = [
+            'en' => 'English',
+            'fr' => 'French',
+            'es' => 'Spanish'
+        ];
+
+        $sourceLanguage = $languageMap[$sourceLocale] ?? 'English';
+        $targetLanguage = $languageMap[$targetLocale] ?? 'French';
+
+        $prompt = "Translate the following text from {$sourceLanguage} to {$targetLanguage}. Return ONLY the translated text, nothing else:\n\n{$text}";
+
+        try {
+            $response = $this->makeApiRequest($prompt);
+            
+            // Extract the translated text from response
+            if (isset($response['candidates'][0]['content']['parts'][0]['text'])) {
+                return trim($response['candidates'][0]['content']['parts'][0]['text']);
+            }
+            
+            throw new Exception('Invalid response format from Gemini API');
+        } catch (Exception $e) {
+            Log::error('Gemini translation failed for text', [
+                'error' => $e->getMessage(),
+                'text' => $text,
+                'target_locale' => $targetLocale
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
      * Get API usage statistics
      *
      * @return array

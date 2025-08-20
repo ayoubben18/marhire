@@ -196,10 +196,10 @@
                                     </a>
                                     <ul class="nk-menu-sub">
                                         <li class="nk-menu-item">
-                                            <a href="{{ route('listing_addons.list') }}" class="nk-menu-link"><span class="nk-menu-text">List</span></a>
+                                            <a href="{{ route('listingaddons.list') }}" class="nk-menu-link"><span class="nk-menu-text">List</span></a>
                                         </li>
                                         <li class="nk-menu-item">
-                                            <a href="{{ route('listing_addons.add') }}" class="nk-menu-link"><span class="nk-menu-text">New addon</span></a>
+                                            <a href="{{ route('listingaddons.new') }}" class="nk-menu-link"><span class="nk-menu-text">New addon</span></a>
                                         </li>
                                     </ul>
                                 </li>

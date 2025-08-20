@@ -141,28 +141,26 @@ Route::name('listings.')->middleware(['auth'])->prefix('listings')->group(functi
     Route::delete('/{id}/translations', [ListingController::class, 'deleteTranslations'])->name('deleteTranslations');
 });
 
-// Listing Addons Management - both naming conventions for compatibility
+// Listing Addons Management
 Route::middleware(['auth'])->prefix('listing_addons')->group(function () {
-    // Routes with underscore naming (for dashboard_admin.blade.php navigation)
-    Route::name('listing_addons.')->group(function () {
-        Route::get('/', [ListingAddonController::class, 'list'])->name('list');
-        Route::get('/add', [ListingAddonController::class, 'new'])->name('add');
-        Route::get('/new', [ListingAddonController::class, 'new'])->name('new');
-        Route::post('/insert', [ListingAddonController::class, 'insert'])->name('insert');
-        Route::get('/edit/{id}', [ListingAddonController::class, 'edit'])->name('edit');
-        Route::post('/update', [ListingAddonController::class, 'update'])->name('update');
-        Route::post('/delete', [ListingAddonController::class, 'delete'])->name('delete');
-    });
-});
-
-// Add alias routes for blade templates that use 'listingaddons' without underscore
-Route::middleware(['auth'])->prefix('listing_addons')->group(function () {
-    Route::name('listingaddons.')->group(function () {
-        Route::get('/new', [ListingAddonController::class, 'new'])->name('new');
-        Route::get('/edit/{id}', [ListingAddonController::class, 'edit'])->name('edit');
-        Route::post('/delete', [ListingAddonController::class, 'delete'])->name('delete');
-        Route::post('/update', [ListingAddonController::class, 'update'])->name('update');
-    });
+    // Use consistent naming without underscore to match blade templates
+    Route::get('/', [ListingAddonController::class, 'list'])->name('listingaddons.list');
+    Route::get('/new', [ListingAddonController::class, 'new'])->name('listingaddons.new');
+    Route::get('/edit/{id}', [ListingAddonController::class, 'edit'])->name('listingaddons.edit');
+    Route::post('/insert', [ListingAddonController::class, 'insert'])->name('listingaddons.insert');
+    Route::post('/update', [ListingAddonController::class, 'update'])->name('listingaddons.update');
+    Route::post('/delete', [ListingAddonController::class, 'delete'])->name('listingaddons.delete');
+    
+    // Translation routes
+    Route::get('/{id}/translations', [ListingAddonController::class, 'getTranslations'])->name('listingaddons.getTranslations');
+    Route::put('/{id}/translations', [ListingAddonController::class, 'updateTranslations'])->name('listingaddons.updateTranslations');
+    Route::delete('/{id}/translations', [ListingAddonController::class, 'deleteTranslations'])->name('listingaddons.deleteTranslations');
+    Route::post('/{id}/generate-translations', [ListingAddonController::class, 'generateTranslations'])->name('listingaddons.generateTranslations');
+    Route::post('/translate-text', [ListingAddonController::class, 'translateText'])->name('listingaddons.translateText');
+    
+    // Add routes with underscore for backwards compatibility (dashboard navigation)
+    Route::get('/add', [ListingAddonController::class, 'new'])->name('listing_addons.add');
+    Route::post('/insert-alt', [ListingAddonController::class, 'insert'])->name('listing_addons.insert');
 });
 
 // Coupons Management

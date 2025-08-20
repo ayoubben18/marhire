@@ -26,6 +26,7 @@
                             <th class="sorting">Addon</th>
                             <th class="sorting">Category</th>
                             <th class="sorting">Price</th>
+                            <th class="sorting">Translations</th>
                             <th class="sorting">Actions</th>
                         </tr>
                     </thead>
@@ -36,6 +37,14 @@
                             <td>{{ $listingAddon->addon }}</td>
                             <td>{{ $listingAddon->category ? $listingAddon->category->category : '' }}</td>
                             <td>{{ number_format($listingAddon->price, 2) }}</td>
+                            <td>
+                                @php
+                                    $frTranslation = $listingAddon->translations()->where('locale', 'fr')->exists();
+                                    $esTranslation = $listingAddon->translations()->where('locale', 'es')->exists();
+                                @endphp
+                                <span class="badge badge-sm badge-{{ $frTranslation ? 'success' : 'secondary' }}">FR</span>
+                                <span class="badge badge-sm badge-{{ $esTranslation ? 'success' : 'secondary' }}">ES</span>
+                            </td>
                             <td>
                                 <a href="{{ route('listingaddons.edit', $listingAddon->id) }}">
                                     <i class="icon ni ni-edit action-link"></i>

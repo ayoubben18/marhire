@@ -1375,7 +1375,7 @@ class ListingController extends Controller
             ->with([
                 'provider',
                 'city',
-                'addons.addon',
+                'addons.addon.translations',
                 'serviceTypeObj',
                 'activityTypeObj',
                 'carTypeObj',
@@ -1411,6 +1411,20 @@ class ListingController extends Controller
         
         // Add translated data to the response (optimized for current locale only)
         $listing->translated_fields = $listing->getCurrentTranslatedData();
+        
+        // Apply translations to addons
+        $currentLocale = app()->getLocale();
+        if ($listing->addons) {
+            foreach ($listing->addons as $listingAddon) {
+                if ($listingAddon->addon) {
+                    // Apply translation to the addon name
+                    $translatedName = $listingAddon->addon->getTranslation('addon', $currentLocale);
+                    if ($translatedName) {
+                        $listingAddon->addon->addon = $translatedName;
+                    }
+                }
+            }
+        }
         
         // Add SEO meta data for React frontend
         $seoService = app(SEOService::class);
