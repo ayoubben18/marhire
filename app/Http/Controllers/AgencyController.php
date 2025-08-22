@@ -192,6 +192,7 @@ class AgencyController extends Controller
 
         $agency->update([
             'agency_name' => $request->agency_name,
+            'slug' => $request->slug ?: $agency->slug,
             'id_city' => $request->id_city,
             'category_id' => $request->category_id,
             'contact_name' => $request->contact_name,
@@ -246,6 +247,16 @@ class AgencyController extends Controller
                         ->firstOrFail();
 
         return response()->json(['agency' => $agency]);
+    }
+
+    public function get_active_agencies(Request $request){
+        $agencies = Agency::where('status', 'Active')
+                        ->with('city')
+                        ->with('category')
+                        ->orderBy('agency_name')
+                        ->get();
+
+        return response()->json(['agencies' => $agencies]);
     }
 
     /**
@@ -317,7 +328,7 @@ class AgencyController extends Controller
 
     public function agency_request(Request $request, SEOService $SEOService)
     {
-        $slug = $SEOService->generateSlug('agency', $request->agency_name);
+        $slug = $SEOService->generateSlug('agency', $request->companyName);
 		
         $agency = Agency::create([
             'slug' => $slug,
@@ -330,7 +341,8 @@ class AgencyController extends Controller
             'rc_number' => $request->rcNumber,
             'whatsapp' => $request->whatsapp,
             'email' => $request->email,
-            'notes' => $request->description,
+            'description' => $request->description,
+            'notes' => $request->notes,
             'status' => 'Need Approval'
         ]);
 

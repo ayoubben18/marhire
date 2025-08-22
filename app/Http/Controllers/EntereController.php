@@ -57,6 +57,12 @@ class EntereController extends Controller
         return view('site.faq')->with('page', $page);
     }
 
+    public function partners(Request $request)
+    {
+        $page = $this->SEOservice->getPage('partners');
+        return view('site.partners')->with('page', $page);
+    }
+
     public function category(Request $request, $locale = null, string $slug = null)
     {
         // Handle the case where locale is optional in routes

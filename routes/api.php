@@ -29,6 +29,7 @@ Route::get('get_article_api', [EntereController::class, 'get_article_api']);
 Route::get('get_recommended_listings', [ListingController::class, 'get_recommended_listings']);
 Route::get('get_dynamic_filter_options', [ListingController::class, 'get_dynamic_filter_options']);
 Route::get('get_agency', [AgencyController::class, 'get_agency']);
+Route::get('get_active_agencies', [AgencyController::class, 'get_active_agencies']);
 Route::get('get_cities', [CityController::class, 'get_cities']);
 Route::get('get_categories', [CategoryController::class, 'get_categories']);
 Route::get('get_search_results', [ListingController::class, 'get_search_results']);

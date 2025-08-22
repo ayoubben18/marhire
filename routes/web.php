@@ -405,6 +405,7 @@ Route::group(['prefix' => '{locale?}'], function () {
     Route::get('/support', [EntereController::class, 'support'])->name('support');
     Route::get('/how-we-work', [EntereController::class, 'how_we_work'])->name('how_we_work');
     Route::get('/faq', [EntereController::class, 'faq'])->name('faq');
+    Route::get('/partners', [EntereController::class, 'partners'])->name('partners');
     Route::get('/terms', [EntereController::class, 'terms'])->name('terms');
     Route::get('/city/{city}', action: [EntereController::class, 'city'])->name('city');
     Route::get('/category/{slug}', [EntereController::class, 'category'])->name('category');

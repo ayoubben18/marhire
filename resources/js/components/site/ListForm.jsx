@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { MdVerified } from "react-icons/md";
+import RequiredAsterisk from "./RequiredAsterisk";
 
 const ListForm = () => {
     const [formData, setFormData] = useState({
@@ -14,6 +15,8 @@ const ListForm = () => {
         city: "",
         category: "",
         description: "",
+        confirmOwner: false,
+        confirmTerms: false,
     });
     const [cities, setCities] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -39,6 +42,8 @@ const ListForm = () => {
         if (!formData.phone) newErrors.phone = true;
         if (!formData.category) newErrors.category = true;
         if (!formData.city) newErrors.city = true;
+        if (!formData.confirmOwner) newErrors.confirmOwner = true;
+        if (!formData.confirmTerms) newErrors.confirmTerms = true;
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -103,6 +108,7 @@ const ListForm = () => {
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit} className="application-form">
+                        {/* Row 1: Company Name | Owner's Full Name */}
                         <div className="form-row">
                             <div
                                 className={`form-group col-md-6 ${
@@ -110,7 +116,7 @@ const ListForm = () => {
                                 }`}
                             >
                                 <label htmlFor="companyName">
-                                    Company Name
+                                    Company Name<RequiredAsterisk />
                                 </label>
                                 <input
                                     type="text"
@@ -119,7 +125,7 @@ const ListForm = () => {
                                     name="companyName"
                                     value={formData.companyName}
                                     onChange={handleChange}
-                                    placeholder="Your company name"
+                                    placeholder="Your Company S.A.R.L"
                                 />
                                 {errors.companyName && (
                                     <span className="error-message">
@@ -134,7 +140,7 @@ const ListForm = () => {
                                 }`}
                             >
                                 <label htmlFor="ownerName">
-                                    Owner's Full Name
+                                    Owner's Full Name<RequiredAsterisk />
                                 </label>
                                 <input
                                     type="text"
@@ -143,7 +149,7 @@ const ListForm = () => {
                                     className="form-control"
                                     value={formData.ownerName}
                                     onChange={handleChange}
-                                    placeholder="Your full name"
+                                    placeholder="e.g., Mohamed Alami"
                                 />
                                 {errors.ownerName && (
                                     <span className="error-message">
@@ -153,59 +159,47 @@ const ListForm = () => {
                             </div>
                         </div>
 
+                        {/* Row 2: ICE Number | RC Number */}
                         <div className="form-row">
-                            <div
-                                className={`form-group col-md-6 ${
-                                    errors.email ? "error" : ""
-                                }`}
-                            >
-                                <label htmlFor="email">Email</label>
+                            <div className="form-group col-md-6">
+                                <label htmlFor="iceNumber">
+                                    ICE Number<RequiredAsterisk />
+                                </label>
                                 <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
+                                    type="text"
+                                    id="iceNumber"
+                                    name="iceNumber"
                                     className="form-control"
-                                    value={formData.email}
+                                    value={formData.iceNumber}
                                     onChange={handleChange}
-                                    placeholder="Your business email"
+                                    placeholder="Identifiant Commun de l'Entreprise"
                                 />
-                                {errors.email && (
-                                    <span className="error-message">
-                                        This field is required
-                                    </span>
-                                )}
                             </div>
 
-                            <div
-                                className={`form-group col-md-6 ${
-                                    errors.phone ? "error" : ""
-                                }`}
-                            >
-                                <label htmlFor="phone">Phone Number</label>
+                            <div className="form-group col-md-6">
+                                <label htmlFor="rcNumber">
+                                    RC Number<RequiredAsterisk />
+                                </label>
                                 <input
-                                    type="tel"
-                                    id="phone"
-                                    name="phone"
+                                    type="text"
+                                    id="rcNumber"
+                                    name="rcNumber"
                                     className="form-control"
-                                    value={formData.phone}
+                                    value={formData.rcNumber}
                                     onChange={handleChange}
-                                    placeholder="Your business phone number"
+                                    placeholder="Registre du Commerce"
                                 />
-                                {errors.phone && (
-                                    <span className="error-message">
-                                        This field is required
-                                    </span>
-                                )}
                             </div>
                         </div>
 
+                        {/* Row 3: Category | Primary City */}
                         <div className="form-row">
                             <div
-                                className={`form-group col-md-12 ${
+                                className={`form-group col-md-6 ${
                                     errors.category ? "error" : ""
                                 }`}
                             >
-                                <label htmlFor="category">Category</label>
+                                <label htmlFor="category">Category<RequiredAsterisk /></label>
                                 <select
                                     id="category"
                                     name="category"
@@ -214,7 +208,7 @@ const ListForm = () => {
                                     onChange={handleChange}
                                 >
                                     <option value="">
-                                        Select your category
+                                        Select service category
                                     </option>
                                     {categories.map((category) => (
                                         <option
@@ -231,30 +225,13 @@ const ListForm = () => {
                                     </span>
                                 )}
                             </div>
-                        </div>
-
-                        <div className="form-row">
-                            <div className="form-group col-md-6">
-                                <label htmlFor="whatsapp">
-                                    WhatsApp Number
-                                </label>
-                                <input
-                                    type="tel"
-                                    id="whatsapp"
-                                    name="whatsapp"
-                                    className="form-control"
-                                    value={formData.whatsapp}
-                                    onChange={handleChange}
-                                    placeholder="Your WhatsApp number"
-                                />
-                            </div>
 
                             <div
                                 className={`form-group col-md-6 ${
                                     errors.city ? "error" : ""
                                 }`}
                             >
-                                <label htmlFor="city">City</label>
+                                <label htmlFor="city">Primary City<RequiredAsterisk /></label>
                                 <select
                                     id="city"
                                     name="city"
@@ -277,41 +254,75 @@ const ListForm = () => {
                             </div>
                         </div>
 
+                        {/* Row 4: Email | Phone */}
                         <div className="form-row">
-                            <div className="form-group col-md-6">
-                                <label htmlFor="iceNumber">
-                                    ICE Number
-                                </label>
+                            <div
+                                className={`form-group col-md-6 ${
+                                    errors.email ? "error" : ""
+                                }`}
+                            >
+                                <label htmlFor="email">Email<RequiredAsterisk /></label>
                                 <input
-                                    type="text"
-                                    id="iceNumber"
-                                    name="iceNumber"
+                                    type="email"
+                                    id="email"
+                                    name="email"
                                     className="form-control"
-                                    value={formData.iceNumber}
+                                    value={formData.email}
                                     onChange={handleChange}
-                                    placeholder="Your ICE number"
+                                    placeholder="your@company.com"
                                 />
+                                {errors.email && (
+                                    <span className="error-message">
+                                        This field is required
+                                    </span>
+                                )}
                             </div>
 
-                            <div className="form-group col-md-6">
-                                <label htmlFor="rcNumber">
-                                    RC Number
+                            <div
+                                className={`form-group col-md-6 ${
+                                    errors.phone ? "error" : ""
+                                }`}
+                            >
+                                <label htmlFor="phone">Phone<RequiredAsterisk /></label>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    className="form-control"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                    placeholder="e.g., +212 6 00 00 00 00"
+                                />
+                                {errors.phone && (
+                                    <span className="error-message">
+                                        This field is required
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Row 5: WhatsApp Number */}
+                        <div className="form-row">
+                            <div className="form-group col-md-12">
+                                <label htmlFor="whatsapp">
+                                    WhatsApp Number<RequiredAsterisk />
                                 </label>
                                 <input
-                                    type="text"
-                                    id="rcNumber"
-                                    name="rcNumber"
+                                    type="tel"
+                                    id="whatsapp"
+                                    name="whatsapp"
                                     className="form-control"
-                                    value={formData.rcNumber}
+                                    value={formData.whatsapp}
                                     onChange={handleChange}
-                                    placeholder="Your RC number"
+                                    placeholder="Number for customer communication"
                                 />
                             </div>
                         </div>
 
+                        {/* Row 6: Service Description */}
                         <div className="form-group">
                             <label htmlFor="description">
-                                Service Description
+                                Service Description<RequiredAsterisk />
                             </label>
                             <textarea
                                 id="description"
@@ -319,9 +330,52 @@ const ListForm = () => {
                                 className="form-control"
                                 value={formData.description}
                                 onChange={handleChange}
-                                placeholder="What do you offer, what's included, terms, etc."
+                                placeholder="Briefly describe your main services, what makes your company special, and your typical customer (100-800 characters)"
                                 rows="5"
                             ></textarea>
+                        </div>
+
+                        {/* Confirmation Checkboxes */}
+                        <div className="form-group">
+                            <div className={`custom-control custom-checkbox ${errors.confirmOwner ? "error" : ""}`}>
+                                <input
+                                    type="checkbox"
+                                    className="custom-control-input"
+                                    id="confirmOwner"
+                                    name="confirmOwner"
+                                    checked={formData.confirmOwner}
+                                    onChange={handleChange}
+                                />
+                                <label className="custom-control-label" htmlFor="confirmOwner">
+                                    I confirm that I am the owner or an authorized representative of this company.
+                                </label>
+                                {errors.confirmOwner && (
+                                    <span className="error-message d-block">
+                                        You must confirm this to proceed
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <div className={`custom-control custom-checkbox ${errors.confirmTerms ? "error" : ""}`}>
+                                <input
+                                    type="checkbox"
+                                    className="custom-control-input"
+                                    id="confirmTerms"
+                                    name="confirmTerms"
+                                    checked={formData.confirmTerms}
+                                    onChange={handleChange}
+                                />
+                                <label className="custom-control-label" htmlFor="confirmTerms">
+                                    I have read and agree to the MarHire <a href="/terms-conditions" target="_blank" rel="noopener noreferrer" style={{ color: '#048667', textDecoration: 'underline' }}>Terms of Service</a> and <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" style={{ color: '#048667', textDecoration: 'underline' }}>Privacy Policy</a>.
+                                </label>
+                                {errors.confirmTerms && (
+                                    <span className="error-message d-block">
+                                        You must accept the terms to proceed
+                                    </span>
+                                )}
+                            </div>
                         </div>
 
                         <button
@@ -329,7 +383,7 @@ const ListForm = () => {
                             className="submit-button btn-search-v2"
                             disabled={submittingFrm}
                         >
-                            {submittingFrm ? "Submitting..." : "Submit Application"}
+                            {submittingFrm ? "Submitting..." : "Apply Now"}
                         </button>
                     </form>
                 )}

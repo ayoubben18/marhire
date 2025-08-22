@@ -706,5 +706,15 @@
         "minRead": "min de lecture",
         "share": "Partager",
         "loading": "Chargement des articles..."
+    },
+    "partners": {
+        "title": "Nos Partenaires de Confiance",
+        "description": "MarHire s'associe aux meilleures agences locales et marques mondiales pour vous offrir la meilleure expérience de voyage au Maroc.",
+        "noPartners": "Aucun partenaire disponible pour le moment.",
+        "becomePartner": "Devenez Partenaire MarHire",
+        "becomePartnerDesc": "Êtes-vous une agence locale, un tour-opérateur ou une entreprise de voyage au Maroc?",
+        "becomePartnerCta": "Rejoignez MarHire et touchez des milliers de voyageurs internationaux.",
+        "applyButton": "Postuler pour Devenir Partenaire",
+        "defaultDescription": "Partenaire de confiance au Maroc"
     }
 }

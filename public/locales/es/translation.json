@@ -706,5 +706,15 @@
         "minRead": "min de lectura",
         "share": "Compartir",
         "loading": "Cargando artículos..."
+    },
+    "partners": {
+        "title": "Nuestros Socios de Confianza",
+        "description": "MarHire se asocia con las mejores agencias locales y marcas mundiales para brindarle la mejor experiencia de viaje en Marruecos.",
+        "noPartners": "No hay socios disponibles en este momento.",
+        "becomePartner": "Conviértase en Socio de MarHire",
+        "becomePartnerDesc": "¿Es usted una agencia local, operador turístico o empresa de viajes en Marruecos?",
+        "becomePartnerCta": "Únase a MarHire y llegue a miles de viajeros internacionales.",
+        "applyButton": "Solicitar ser Socio",
+        "defaultDescription": "Socio de confianza en Marruecos"
     }
 }

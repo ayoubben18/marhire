@@ -49,6 +49,14 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
+                            <label class="form-label" for="slug">Slug (auto-generated)</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control" name="slug" id="slug" value="{{ old('slug') }}" placeholder="Slug will be auto-generated" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
                             <label class="form-label" for="id_city">City <span class="lbl-obligatoire">*</span></label>
                             <div class="form-control-wrap">
                                 <select class="form-control select2-single" name="id_city" id="id_city">

@@ -739,5 +739,15 @@
         "minRead": "min read",
         "share": "Share",
         "loading": "Loading articles..."
+    },
+    "partners": {
+        "title": "Our Trusted Partners",
+        "description": "MarHire partners with top local agencies and world brands to provide you with the best, most reliable travel experience in Morocco.",
+        "noPartners": "No partners available at the moment.",
+        "becomePartner": "Become a MarHire Partner",
+        "becomePartnerDesc": "Are you a local agency, tour operator, or travel business in Morocco?",
+        "becomePartnerCta": "Join MarHire and reach thousands of international travelers.",
+        "applyButton": "Apply to Partner with Us",
+        "defaultDescription": "Trusted partner in Morocco"
     }
 }
