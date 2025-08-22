@@ -1,5 +1,4 @@
 import StoryVision from "../components/site/StoryVision";
-import HeroSection2 from "../components/site/HeroSection2";
 import React from "react";
 import WhyChooseUs from "../components/site/WhyChooseUs";
 import OurServices from "../components/site/OurServices";
@@ -45,7 +44,6 @@ const AboutUs = () => {
 
     return (
         <div className="page-aboutus">
-            <HeroSection2 bgImg="https://marhire.bytech.ma/images/banner2.png" />
             <section className="first-sect">
                 <h1>About MarHire</h1>
                 <p>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import HeroSection2 from "../components/site/HeroSection2";
 import Footer from "../components/site/Footer";
 import axios from "axios";
 
@@ -26,7 +25,6 @@ const Partners = () => {
 
     return (
     <>
-        <HeroSection2 bgImg="https://marhire.bytech.ma/images/banner2.png" />
         <div className="container mx-auto px-4 py-12 max-w-4xl">
             <h1 className="text-3xl font-bold mb-4 text-center">
                 {t("partners.title", "Our Trusted Partners")}

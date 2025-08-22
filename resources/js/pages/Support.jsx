@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import HeroSection2 from "../components/site/HeroSection2";
 import Footer from "../components/site/Footer";
 import { FaWhatsapp, FaEnvelope, FaPhone } from "react-icons/fa6";
 import axios from "axios";
@@ -94,7 +93,6 @@ const Support = () => {
 
     return (
         <>
-            <HeroSection2 bgImg="https://marhire.bytech.ma/images/banner2.png" />
 
             <div className="container mx-auto px-4 py-12 max-w-3xl">
                 <h1 className="text-3xl font-bold mb-6 text-center">

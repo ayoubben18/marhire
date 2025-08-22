@@ -34,7 +34,17 @@ request()->is('*/cancellation-policy') ||
 request()->is('insurance-conditions') ||
 request()->is('*/insurance-conditions') ||
 request()->is('article/*') ||
-request()->is('*/article/*')
+request()->is('*/article/*') ||
+request()->is('about-us') ||
+request()->is('*/about-us') ||
+request()->is('list-your-property') ||
+request()->is('*/list-your-property') ||
+request()->is('support') ||
+request()->is('*/support') ||
+request()->is('how-we-work') ||
+request()->is('*/how-we-work') ||
+request()->is('partners') ||
+request()->is('*/partners')
 );
 @endphp
 <!doctype html>

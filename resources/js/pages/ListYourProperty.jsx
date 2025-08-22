@@ -6,7 +6,6 @@ import FAQSectionCustom from "../components/site/FAQSectionCustom";
 import Footer from "../components/site/Footer";
 import HeroSection3 from "../components/site/HeroSection3";
 import ListForm from "../components/site/ListForm";
-import HeroSection2 from "../components/site/HeroSection2";
 import FreeTexts from "../components/site/FreeTexts";
 
 const ListYourProperty = () => {
@@ -85,7 +84,6 @@ const ListYourProperty = () => {
 
     return (
         <>
-            <HeroSection2 bgImg="https://marhire.bytech.ma/images/banner2.png" />
             <section className="first-sect">
                 <h1>List Your Property or Service on MarHire</h1>
                 <p>

@@ -2,7 +2,6 @@ import React from "react";
 import HeroSection3 from "../components/site/HeroSection3";
 import Footer from "../components/site/Footer";
 import "../../css/how-we-work.css";
-import HeroSection2 from "../components/site/HeroSection2";
 import FAQSection from "../components/site/FAQSection";
 import FreeTexts from "../components/site/FreeTexts";
 
@@ -37,7 +36,6 @@ const HowWeWork = () => {
     return (
         <>
             <div className="how-it-works">
-                <HeroSection2 bgImg="https://marhire.bytech.ma/images/banner2.png" />
                 <section className="first-sect">
                     <h1>How MarHire Works</h1>
                     <p>
