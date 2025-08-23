@@ -87,26 +87,37 @@ const Footer = () => {
                 <FooterSection title={t('footer.company')}>
                     <ul>
                         <li>
-                            <a href={getLocalizedUrl('/about-us')}>{t('navigation.about')}</a>
+                            <a href={getLocalizedUrl('/partners')}>{t('partners.breadcrumb', 'Our Partners')}</a>
                         </li>
                         <li>
                             <a href={getLocalizedUrl('/support')}>{t('navigation.support')}</a>
                         </li>
                         <li>
-                            <a href={getLocalizedUrl('/how-we-work')}>{t('navigation.howWeWork')}</a>
-                        </li>
-                        <li>
-                            <a href={getLocalizedUrl('/list-your-property')}>{t('navigation.listProperty')}</a>
+                            <a href={getLocalizedUrl('/list-your-property')}>{t('joinUs.breadcrumb', 'Become a Partner')}</a>
                         </li>
                         <li>
                             <a href={getLocalizedUrl('/faq')}>{t('navigation.faqs')}</a>
                         </li>
                         <li>
-                            <a href={getLocalizedUrl('/blog')}>{t('navigation.travelArticles')}</a>
+                            <a href={getLocalizedUrl('/blog')}>{t('navigation.travelBlog', 'Travel Blog')}</a>
                         </li>
-                        <li>
-                            <a href="/sitemap.xml">{t('navigation.sitemap')}</a>
-                        </li>
+                    </ul>
+                </FooterSection>
+                <FooterSection title={t('footer.topDestinations', 'Top Destinations')}>
+                    <ul>
+                        {[
+                            { key: 'agadir', label: t('cities.agadir', 'Agadir') },
+                            { key: 'marrakech', label: t('cities.marrakech', 'Marrakech') },
+                            { key: 'casablanca', label: t('cities.casablanca', 'Casablanca') },
+                            { key: 'fes', label: t('cities.fes', 'Fes') },
+                            { key: 'tangier', label: t('cities.tangier', 'Tangier') },
+                            { key: 'essaouira', label: t('cities.essaouira', 'Essaouira') },
+                            { key: 'rabat', label: t('cities.rabat', 'Rabat') },
+                        ].map((city) => (
+                            <li key={city.key}>
+                                <a href={getLocalizedUrl(`/city/${city.key}`)}>{city.label}</a>
+                            </li>
+                        ))}
                     </ul>
                 </FooterSection>
                 <FooterSection title={t('footer.legalPolicy')}>
