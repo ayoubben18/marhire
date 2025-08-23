@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
-import { FaCalendarAlt, FaWhatsapp } from "react-icons/fa";
+import { FaCalendarAlt, FaWhatsapp, FaCheckCircle, FaRegCircle } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import { BsFillFuelPumpDieselFill } from "react-icons/bs";
 import { GiCarDoor } from "react-icons/gi";
@@ -10,6 +10,7 @@ import axios from "axios";
 import ListingIcons from "./ListingIcons";
 import { useTranslation } from "react-i18next";
 import { getLocalizedUrl } from "../../utils/localeManager";
+import { FaLocationDot } from "react-icons/fa6";
 import SmartImage from "../SmartImage";
 
 // Helper function to get translated field with fallback
@@ -101,6 +102,24 @@ const Recommended = ({
     };
 
     const currentConfig = config[type] || config["cars"];
+
+    // Agency page variant (used in Agency.jsx via classes="agency-listings")
+    const isAgencyVariant = (classes || "").split(" ").includes("agency-listings");
+
+    const getTypeLabel = () => {
+        switch (type) {
+            case "cars":
+                return t("categories.carRental", "Car Rental");
+            case "drivers":
+                return t("categories.privateDriver", "Private Driver");
+            case "boats":
+                return t("categories.boatRental", "Boat Rental");
+            case "activities":
+                return t("categories.activity", "Activity");
+            default:
+                return "";
+        }
+    };
 
     const [activeListings, setActiveListings] = useState([]);
 
@@ -267,9 +286,13 @@ const Recommended = ({
                                   className="recommendation-listing-card"
                               >
                                   <div className="recommendation-image-container">
-                                      <span className="annonce-price-badge">
-                                          {generatePrice(listing)}
-                                      </span>
+                                      {isAgencyVariant ? (
+                                          <span className="agency-type-badge">{getTypeLabel()}</span>
+                                      ) : (
+                                          <span className="annonce-price-badge">
+                                              {generatePrice(listing)}
+                                          </span>
+                                      )}
                                       <a href={getLocalizedUrl(`details/${listing.slug}`)}>
                                           {listing.galleries && listing.galleries.length > 0 ? (
                                               <SmartImage
@@ -293,32 +316,59 @@ const Recommended = ({
                                               {getTranslatedField(listing, 'title', currentLocale)}
                                           </h3>
                                           <p className="recommendation-location">
-                                              📍{" "}
-                                              {listing.city
-                                                  ? listing.city.city_name
-                                                  : t("common.morocco")}
+                                              <span className="loc-ico"><FaLocationDot size={12} /></span>
+                                              {listing.city ? listing.city.city_name : t("common.morocco")}
                                           </p>
                                       </div>
-                                      <ListingIcons type={type} l={listing} />
+                                      <ListingIcons type={type} l={listing} classes={isAgencyVariant ? 'compact' : ''} />
+                                      {isAgencyVariant && (
+                                          <div className="agency-badges">
+                                              <span className="agency-badge green"><span className="ico"><FaCheckCircle size={12} /></span>{t('listing.trustNotes.cancellation', 'Free Cancellation')}</span>
+                                              <span className="agency-badge blue"><span className="ico"><FaRegCircle size={12} /></span>{t('listing.specs.noDeposit', 'No Deposit')}</span>
+                                              <span className="agency-badge outline"><span className="ico"><MdVerified size={12} /></span>{t('listing.badges.verifiedPartner', 'Verified Partner')}</span>
+                                          </div>
+                                      )}
                                   </div>
-                                  <div className="recommendation-footer">
-                                      <a
-                                          href={getLocalizedUrl(`details/${listing.slug}`)}
-                                          className="recommendation-button"
-                                      >
-                                          <span>
-                                              <FaCalendarAlt />
-                                          </span>{" "}
-                                          {t("common.bookNow")}
-                                      </a>
-                                      <a
-                                          href={getWtspUrl(listing)}
-                                          target="_blank"
-                                          className="recommendation-wtsp"
-                                      >
-                                          <FaWhatsapp />
-                                      </a>
-                                  </div>
+                                  {isAgencyVariant ? (
+                                      <div className="agency-footer">
+                                          <div className="agency-price">{generatePrice(listing)}</div>
+                                          <div className="agency-actions">
+                                              <a
+                                                  href={getWtspUrl(listing)}
+                                                  target="_blank"
+                                                  className="agency-chat"
+                                                  aria-label="WhatsApp"
+                                              >
+                                                  <FaWhatsapp />
+                                              </a>
+                                              <a
+                                                  href={getLocalizedUrl(`details/${listing.slug}`)}
+                                                  className="agency-book"
+                                              >
+                                                  <span><FaCalendarAlt /></span> {t("common.bookNow")}
+                                              </a>
+                                          </div>
+                                      </div>
+                                  ) : (
+                                      <div className="recommendation-footer">
+                                          <a
+                                              href={getLocalizedUrl(`details/${listing.slug}`)}
+                                              className="recommendation-button"
+                                          >
+                                              <span>
+                                                  <FaCalendarAlt />
+                                              </span>{" "}
+                                              {t("common.bookNow")}
+                                          </a>
+                                          <a
+                                              href={getWtspUrl(listing)}
+                                              target="_blank"
+                                              className="recommendation-wtsp"
+                                          >
+                                              <FaWhatsapp />
+                                          </a>
+                                      </div>
+                                  )}
                               </div>
                           </>
                       ))}

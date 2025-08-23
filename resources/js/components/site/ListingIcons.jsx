@@ -48,6 +48,8 @@ const getStandarType = (type) => {
 
 const ListingIcons = ({ type, l, classes = "", withoutLocation = false }) => {
     const { t } = useTranslation();
+    const isCompact = (classes || "").includes("compact");
+    const normalizedType = getStandarType(type);
     const config = {
         cars: [
             {
@@ -171,7 +173,27 @@ const ListingIcons = ({ type, l, classes = "", withoutLocation = false }) => {
         ],
     };
 
-    const features = config[getStandarType(type)] || config.cars;
+    // Build compact layout for agency cards (2x3 grid) matching screenshot
+    let features;
+    if (isCompact && normalizedType === "cars") {
+        const seatsValue = (l.seats ? `${l.seats} ${t('listing.specs.seats')}` : "");
+        const transmissionValue = (l.transmission || "");
+        const fuelTypeValue = (l.fuel_type || t('listing.specs.fuel'));
+        const acValue = l.ac === "Yes" ? t('listing.specs.ac') : t('listing.specs.noAc');
+        const fuelPolicyValue = l.fuel_policy || "";
+        const mileageValue = (l.mileage_policy || "");
+
+        features = [
+            { icon: <FaUsers />, label: 'Seats', value: seatsValue },
+            { icon: <FaCogs />, label: 'Transmission', value: transmissionValue },
+            { icon: <FaGasPump />, label: 'Fuel', value: fuelTypeValue },
+            { icon: <PiSnowflakeFill />, label: 'A/C', value: acValue },
+            { icon: <FaExchangeAlt />, label: 'Fuel Policy', value: fuelPolicyValue },
+            { icon: <FaInfinity />, label: 'Km', value: mileageValue },
+        ];
+    } else {
+        features = config[normalizedType] || config.cars;
+    }
 
     return (
         <div className={`recommendation-features ${classes}`}>

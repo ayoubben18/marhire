@@ -715,7 +715,13 @@
         "becomePartnerDesc": "Êtes-vous une agence locale, un tour-opérateur ou une entreprise de voyage au Maroc?",
         "becomePartnerCta": "Rejoignez MarHire et touchez des milliers de voyageurs internationaux.",
         "applyButton": "Postuler pour Devenir Partenaire",
-        "defaultDescription": "Partenaire de confiance au Maroc"
+        "defaultDescription": "Partenaire de confiance au Maroc",
+        "breadcrumb": "Nos Partenaires",
+        "hero": {
+            "title": "Nos Partenaires de Confiance",
+            "subtitle": "Nous travaillons avec les meilleures agences locales à travers le Maroc pour vous proposer une sélection soignée de services fiables et de haute qualité. Chaque partenaire est vérifié afin de garantir une expérience de voyage sûre et mémorable."
+        },
+        "otherCategory": "Autre"
     },
     "joinUs": {
         "breadcrumb": "Devenir Partenaire",
@@ -999,6 +1005,137 @@
                     "description": "Nous travaillons avec vous pour maximiser vos réservations, en fournissant des informations et un soutien pour aider votre entreprise à prospérer dans des villes comme Agadir et Marrakech."
                 }
             }
+        }
+    },
+    "agencyPage": {
+        "heroBadge": {
+            "cars": "Partenaire location de voiture vérifié sur MarHire",
+            "boats": "Partenaire location de bateau vérifié sur MarHire",
+            "drivers": "Partenaire chauffeur privé vérifié sur MarHire",
+            "activities": "Partenaire activités vérifié sur MarHire"
+        },
+        "breadcrumb": {
+            "ourPartners": "Nos Partenaires"
+        },
+        "verified": "Partenaire local vérifié sur MarHire",
+        "actions": {
+            "whatsapp": "Contacter sur WhatsApp",
+            "email": "Envoyer un Email"
+        },
+        "features": {
+            "noDeposit": "Options sans dépôt",
+            "airportDelivery": "Livraison à l'aéroport",
+            "sameFuel": "Carburant identique",
+            "roadSupport": "Assistance routière 24/7"
+        },
+        "featuresByCategory": {
+            "cars": {
+                "noDeposit": "Options sans dépôt",
+                "airportDelivery": "Livraison à l'aéroport",
+                "sameFuel": "Carburant identique",
+                "roadSupport": "Assistance routière 24/7"
+            },
+            "boats": {
+                "captainCrew": "Capitaine & Équipage Inclus",
+                "safetyEquipment": "Tout l'Équipement de Sécurité",
+                "flexibleHours": "Horaires de Location Flexibles",
+                "weatherGuarantee": "Garantie Météo"
+            },
+            "drivers": {
+                "meetGreet": "Accueil Aéroport",
+                "transparentPricing": "Tarifs Fixes et Transparents",
+                "multilingual": "Chauffeurs Multilingues",
+                "support": "Support 24/7 via MarHire"
+            },
+            "activities": {
+                "licensedGuides": "Guides Officiels Agréés",
+                "smallGroup": "Petit Groupe ou Privé",
+                "topRated": "Expériences Très Bien Notées",
+                "instantConfirmation": "Confirmation Instantanée"
+            }
+        },
+        "about": {
+            "title": "À propos de notre partenaire",
+            "default": "Votre choix fiable pour la location de voitures au Maroc. Nous proposons une flotte moderne et un service professionnel."
+        },
+        "policies": {
+            "title": "Politiques de l'agence",
+            "depositPayment": {
+                "title": "Dépôt & Paiement",
+                "text": "Le sans dépôt est disponible sur de nombreuses voitures économiques. Un dépôt de garantie standard remboursable sur carte peut être requis pour les véhicules premium, comme indiqué sur l'annonce."
+            },
+            "fuelPolicy": {
+                "title": "Politique de Carburant",
+                "text": "La politique standard est 'même niveau'. Vous recevez la voiture avec un certain niveau de carburant et vous devez la retourner avec le même pour éviter des frais de ravitaillement."
+            },
+            "kmPolicy": {
+                "title": "Politique de Kilométrage",
+                "text": "Les kilomètres illimités sont généralement inclus pour les locations de 3 jours ou plus. Les locations plus courtes peuvent avoir une limite quotidienne (ex. 250 km/jour), précisée sur l'annonce."
+            },
+            "documents": {
+                "title": "Documents Requis",
+                "text": "Permis de conduire valide (depuis au moins un an), passeport/ID et bon de réservation MarHire. Un permis de conduire international (PCI) est fortement recommandé."
+            },
+            "changes": {
+                "title": "Modifications & Annulations",
+                "text": "Toutes les modifications et annulations doivent être gérées via le support central MarHire. Contactez‑nous par WhatsApp ou email avec votre référence de réservation. Les politiques d'annulation sont affichées sur la page de l'annonce."
+            }
+        },
+        "policiesByCategory": {
+            "cars": [
+                { "title": "Dépôt & Paiement", "text": "Le sans dépôt est disponible sur de nombreuses voitures économiques. Un dépôt de garantie remboursable peut être requis pour les véhicules premium, comme indiqué sur l'annonce." },
+                { "title": "Politique de Carburant", "text": "Politique standard 'même niveau' : rendre le véhicule avec le même niveau de carburant." },
+                { "title": "Politique de Kilométrage", "text": "Kilométrage illimité généralement inclus pour 3+ jours. Les locations plus courtes peuvent être limitées (ex. 250 km/jour)." },
+                { "title": "Documents Requis", "text": "Permis valide (1+ an), passeport/ID et bon MarHire. PCI recommandé." },
+                { "title": "Modifications & Annulations", "text": "À gérer via le support MarHire (WhatsApp/email). Les règles d'annulation sont affichées sur l'annonce." }
+            ],
+            "boats": [
+                { "title": "Capitaine & Équipage", "text": "La plupart des locations incluent un skipper professionnel et un équipage. Ceci est précisé sur l'annonce." },
+                { "title": "Mauvais Temps", "text": "La sécurité avant tout. Si la mer est jugée dangereuse, vous pourrez reprogrammer sans frais ou être remboursé." },
+                { "title": "Carburant Inclus", "text": "Pour les demi‑journées/journées complètes, une allocation de base est incluse. Pour les chartes privées, le carburant peut être facturé à la consommation." },
+                { "title": "Nourriture & Boissons", "text": "Vous pouvez apporter snacks/boissons. Certaines chartes proposent un service traiteur en option. Voir l'annonce." },
+                { "title": "Modifications & Annulations", "text": "À gérer via le support MarHire (WhatsApp/email). Règles d'annulation visibles sur l'annonce." }
+            ],
+            "drivers": [
+                { "title": "Modèle de Tarification", "text": "Prix par véhicule pour le service convenu (transfert aéroport, excursion, etc.), incluant chauffeur, véhicule et carburant." },
+                { "title": "Transferts Aéroport", "text": "Suivi de vol inclus. Accueil dans le hall des arrivées avec pancarte nominative, même en cas de retard." },
+                { "title": "Capacité Bagages", "text": "Chaque véhicule a une capacité bagages définie. Prévenez le support MarHire en cas de bagages volumineux." },
+                { "title": "Circuits sur Plusieurs Jours", "text": "Pour les circuits, le prix inclut généralement l'hébergement et les repas du chauffeur. Les détails sont confirmés avant réservation." },
+                { "title": "Modifications & Annulations", "text": "À gérer via le support MarHire (WhatsApp/email). Règles d'annulation sur l'annonce." }
+            ],
+            "activities": [
+                { "title": "Guides & Instructeurs", "text": "Activités encadrées par des guides locaux officiels ou instructeurs certifiés, priorisant votre sécurité." },
+                { "title": "Prise en Charge à l'Hôtel", "text": "Beaucoup de tours incluent une prise en charge d'hôtels centraux. Vérifiez la disponibilité et fournissez les détails lors du paiement." },
+                { "title": "Sécurité & Équipement", "text": "Tout l'équipement nécessaire (casques, gilets) est fourni et conforme aux normes locales." },
+                { "title": "À Prévoir", "text": "Vêtements confortables adaptés à l'activité. Chaussures fermées recommandées pour le désert. Détails sur votre bon de réservation." },
+                { "title": "Modifications & Annulations", "text": "À gérer via le support MarHire (WhatsApp/email). Règles d'annulation sur l'annonce." }
+            ]
+        },
+        "moreDetails": {
+            "title": "Plus de détails",
+            "default": "Nous pratiquons des prix transparents sans frais cachés et proposons des options flexibles comme le sans dépôt sur de nombreux véhicules économiques. Notre équipe fournit une assistance 24/7."
+        },
+        "availableListings": {
+            "title": "Annonces Disponibles"
+        },
+        "contactCta": {
+            "title": "Prêt à réserver ou avez‑vous une question ?",
+            "subtitle": "Contactez le support MarHire pour toute assistance liée à une annonce de ce partenaire.",
+            "whatsapp": "Discuter sur WhatsApp",
+            "email": "Contacter le Support par Email"
+        },
+        "faq": {
+            "title": "Questions Fréquemment Posées",
+            "answerFallback": "Contactez notre support si vous avez besoin de plus de détails sur cette question.",
+            "items": [
+                "Proposez‑vous des locations sans dépôt ?",
+                "Les kilomètres illimités sont‑ils inclus ?",
+                "Quels documents dois‑je fournir pour récupérer le véhicule ?",
+                "Pouvez‑vous livrer la voiture à l'aéroport ou à mon hôtel ?",
+                "Comment modifier ou annuler ma réservation ?",
+                "Puis‑je louer dans une ville et retourner dans une autre ?",
+                "Prêt à réserver ou une question ?"
+            ]
         }
     }
 }

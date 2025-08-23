@@ -715,7 +715,13 @@
         "becomePartnerDesc": "¿Es usted una agencia local, operador turístico o empresa de viajes en Marruecos?",
         "becomePartnerCta": "Únase a MarHire y llegue a miles de viajeros internacionales.",
         "applyButton": "Solicitar ser Socio",
-        "defaultDescription": "Socio de confianza en Marruecos"
+        "defaultDescription": "Socio de confianza en Marruecos",
+        "breadcrumb": "Nuestros Socios",
+        "hero": {
+            "title": "Nuestros Socios de Confianza",
+            "subtitle": "Trabajamos con las mejores agencias locales en todo Marruecos para ofrecerle una selección cuidadosamente curada de servicios confiables y de alta calidad. Cada socio está verificado para garantizar que su experiencia de viaje sea segura y memorable."
+        },
+        "otherCategory": "Otro"
     },
     "joinUs": {
         "breadcrumb": "Convertirse en Socio",
@@ -981,6 +987,137 @@
                     "description": "Trabajamos con usted para maximizar sus reservas, brindando información y apoyo para ayudar a que su negocio prospere en ciudades como Agadir y Marrakech."
                 }
             }
+        }
+    },
+    "agencyPage": {
+        "heroBadge": {
+            "cars": "Socio de alquiler de coche verificado en MarHire",
+            "boats": "Socio de alquiler de barco verificado en MarHire",
+            "drivers": "Socio de conductor privado verificado en MarHire",
+            "activities": "Socio de actividades verificado en MarHire"
+        },
+        "breadcrumb": {
+            "ourPartners": "Nuestros Socios"
+        },
+        "verified": "Socio local verificado en MarHire",
+        "actions": {
+            "whatsapp": "Contactar por WhatsApp",
+            "email": "Enviar un Email"
+        },
+        "features": {
+            "noDeposit": "Opciones sin depósito",
+            "airportDelivery": "Entrega en aeropuerto",
+            "sameFuel": "Combustible igual",
+            "roadSupport": "Asistencia vial 24/7"
+        },
+        "featuresByCategory": {
+            "cars": {
+                "noDeposit": "Opciones sin depósito",
+                "airportDelivery": "Entrega en aeropuerto",
+                "sameFuel": "Combustible igual",
+                "roadSupport": "Asistencia vial 24/7"
+            },
+            "boats": {
+                "captainCrew": "Capitán y Tripulación Incluidos",
+                "safetyEquipment": "Todo el Equipo de Seguridad",
+                "flexibleHours": "Horarios de Alquiler Flexibles",
+                "weatherGuarantee": "Garantía por Clima"
+            },
+            "drivers": {
+                "meetGreet": "Recepción en Aeropuerto",
+                "transparentPricing": "Precios Fijos y Transparentes",
+                "multilingual": "Conductores Multilingües",
+                "support": "Soporte 24/7 vía MarHire"
+            },
+            "activities": {
+                "licensedGuides": "Guías Oficiales con Licencia",
+                "smallGroup": "Grupo Pequeño o Privado",
+                "topRated": "Experiencias Mejor Valoradas",
+                "instantConfirmation": "Confirmación Instantánea"
+            }
+        },
+        "about": {
+            "title": "Acerca de nuestro socio",
+            "default": "Su opción confiable para alquiler de coches en Marruecos. Ofrecemos una flota moderna y un servicio profesional."
+        },
+        "policies": {
+            "title": "Políticas de la agencia",
+            "depositPayment": {
+                "title": "Depósito y Pago",
+                "text": "El sin depósito está disponible en muchos coches económicos. Para vehículos premium puede requerirse un depósito de seguridad reembolsable con tarjeta, según se indique en el anuncio."
+            },
+            "fuelPolicy": {
+                "title": "Política de Combustible",
+                "text": "La política estándar es 'mismo nivel'. Recibe el coche con cierto nivel de combustible y debe devolverlo con el mismo para evitar cargos de repostaje."
+            },
+            "kmPolicy": {
+                "title": "Política de Kilometraje",
+                "text": "Normalmente se incluyen kilómetros ilimitados para alquileres de 3 días o más. Los alquileres más cortos pueden tener un límite diario (p. ej., 250 km/día), que se especificará en el anuncio."
+            },
+            "documents": {
+                "title": "Documentos Requeridos",
+                "text": "Licencia de conducir válida (por al menos un año), pasaporte/ID y el comprobante de reserva de MarHire. Se recomienda encarecidamente un Permiso Internacional de Conducir (PIC)."
+            },
+            "changes": {
+                "title": "Cambios y Cancelaciones",
+                "text": "Todos los cambios y cancelaciones se gestionan a través del soporte central de MarHire. Contáctenos por WhatsApp o email con su referencia de reserva. Las políticas de cancelación se muestran en la página del anuncio."
+            }
+        },
+        "policiesByCategory": {
+            "cars": [
+                { "title": "Depósito y Pago", "text": "Sin depósito disponible en muchos coches económicos. Para vehículos premium puede requerirse un depósito reembolsable, según el anuncio." },
+                { "title": "Política de Combustible", "text": "Política estándar 'mismo nivel': devolver el vehículo con el mismo nivel de combustible." },
+                { "title": "Política de Kilometraje", "text": "Kilometraje ilimitado usualmente incluido para 3+ días; alquileres cortos pueden estar limitados (p. ej., 250 km/día)." },
+                { "title": "Documentos Requeridos", "text": "Licencia válida (1+ año), pasaporte/ID y comprobante MarHire. PIC recomendado." },
+                { "title": "Cambios y Cancelaciones", "text": "Gestionados por el soporte de MarHire (WhatsApp/email). Reglas visibles en el anuncio." }
+            ],
+            "boats": [
+                { "title": "Capitán y Tripulación", "text": "La mayoría de alquileres incluyen un patrón profesional y tripulación. Esto se indica en el anuncio." },
+                { "title": "Mal Tiempo", "text": "La seguridad es prioridad. Si el mar no es seguro, podrá reprogramar sin costo o recibir reembolso completo." },
+                { "title": "Combustible Incluido", "text": "Para medio día/día completo se incluye una asignación básica. En charters privados puede cobrarse según consumo." },
+                { "title": "Comida y Bebidas", "text": "Puede traer snacks/bebidas. Algunos charters de lujo ofrecen catering opcional. Revise el anuncio." },
+                { "title": "Cambios y Cancelaciones", "text": "Gestionados por el soporte de MarHire (WhatsApp/email). Políticas visibles en el anuncio." }
+            ],
+            "drivers": [
+                { "title": "Modelo de Precios", "text": "Precio por vehículo para el servicio acordado (traslado, excursión, etc.), incluye conductor, vehículo y combustible." },
+                { "title": "Traslados Aeropuerto", "text": "Seguimiento de vuelos incluido. Recepción en sala de llegadas con cartel con su nombre, incluso si hay retraso." },
+                { "title": "Capacidad de Equipaje", "text": "Cada vehículo tiene capacidad de equipaje definida. Informe al soporte de MarHire si lleva equipaje extra/voluminoso." },
+                { "title": "Tours de Varios Días", "text": "Para tours, el precio suele incluir alojamiento y comidas del conductor. Detalles confirmados antes de reservar." },
+                { "title": "Cambios y Cancelaciones", "text": "Gestionados por el soporte de MarHire (WhatsApp/email). Políticas en el anuncio." }
+            ],
+            "activities": [
+                { "title": "Guías e Instructores", "text": "Actividades dirigidas por guías locales oficiales o instructores certificados, priorizando su seguridad." },
+                { "title": "Recogida en Hotel", "text": "Muchos tours incluyen recogida en hoteles céntricos. Verifique disponibilidad y proporcione detalles durante el pago." },
+                { "title": "Seguridad y Equipo", "text": "Se proporciona todo el equipo necesario (cascos, chalecos) conforme a normas locales." },
+                { "title": "Qué Vestir", "text": "Ropa cómoda adecuada a la actividad. Para desierto, se requieren zapatos cerrados. Recomendaciones en su voucher." },
+                { "title": "Cambios y Cancelaciones", "text": "Gestionados por el soporte de MarHire (WhatsApp/email). Políticas en el anuncio." }
+            ]
+        },
+        "moreDetails": {
+            "title": "Más detalles",
+            "default": "Precios transparentes sin cargos ocultos y opciones flexibles como alquileres sin depósito en muchos coches económicos. Nuestro equipo brinda soporte 24/7."
+        },
+        "availableListings": {
+            "title": "Anuncios Disponibles"
+        },
+        "contactCta": {
+            "title": "¿Listo para reservar o tiene una pregunta?",
+            "subtitle": "Contacte al soporte de MarHire para asistencia con cualquier anuncio de este socio.",
+            "whatsapp": "Chatear en WhatsApp",
+            "email": "Soporte por Email"
+        },
+        "faq": {
+            "title": "Preguntas Frecuentes",
+            "answerFallback": "Contacte a nuestro soporte si necesita más detalles sobre esta pregunta.",
+            "items": [
+                "¿Ofrecen alquileres sin depósito?",
+                "¿Se incluyen kilómetros ilimitados?",
+                "¿Qué documentos necesito para retirar el vehículo?",
+                "¿Pueden entregar el coche en el aeropuerto o mi hotel?",
+                "¿Cómo cambio o cancelo mi reserva?",
+                "¿Puedo alquilar en una ciudad y devolver en otra?",
+                "¿Listo para reservar o tiene una pregunta?"
+            ]
         }
     }
 }
