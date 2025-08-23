@@ -716,5 +716,271 @@
         "becomePartnerCta": "Únase a MarHire y llegue a miles de viajeros internacionales.",
         "applyButton": "Solicitar ser Socio",
         "defaultDescription": "Socio de confianza en Marruecos"
+    },
+    "joinUs": {
+        "breadcrumb": "Convertirse en Socio",
+        "hero": {
+            "title": "Asociarse con MarHire — Liste Coches, Conductores, Barcos y Actividades en Marruecos",
+            "subtitle": "Únase al mercado de confianza de Marruecos para conectar sus alquileres de coches, servicios de conductor privado, tours en barco o actividades locales con miles de viajeros. Nosotros manejamos el marketing y las reservas, para que usted pueda concentrarse en brindar un servicio excepcional.",
+            "cta": "Solicitar Ahora",
+            "whatsapp": "Chatear en WhatsApp"
+        },
+        "benefits": {
+            "reach": {
+                "title": "Alcance Más Clientes",
+                "desc": "Acceda a miles de viajeros internacionales que buscan experiencias marroquíes auténticas"
+            },
+            "costs": {
+                "title": "Cero Costos Iniciales",
+                "desc": "Sin tarifas de listado, sin cargos mensuales. Solo pague una pequeña comisión cuando gane"
+            },
+            "support": {
+                "title": "Soporte Dedicado",
+                "desc": "Obtenga soporte multilingüe en árabe, francés e inglés de nuestro equipo dedicado al éxito de socios"
+            }
+        },
+        "valueProps": {
+            "title": "¿Por Qué Asociarse con MarHire?",
+            "subtitle": "Únase a más de 200 socios de confianza en todo Marruecos"
+        },
+        "steps": {
+            "apply": {
+                "title": "Solicitar",
+                "desc": "Envíe los detalles de su empresa a través de nuestro formulario simple"
+            },
+            "verified": {
+                "title": "Sea Verificado",
+                "desc": "Revisamos su solicitud y verificamos su empresa en solo 48 horas"
+            },
+            "list": {
+                "title": "Liste Sus Servicios",
+                "desc": "Agregue sus ofertas a nuestra plataforma con ayuda de nuestro equipo de incorporación"
+            },
+            "earn": {
+                "title": "Comience a Ganar",
+                "desc": "Reciba reservas de viajeros y haga crecer su negocio con MarHire"
+            }
+        },
+        "howItWorks": {
+            "title": "Comenzar es Simple",
+            "subtitle": "Únase a nuestro mercado en 4 pasos fáciles",
+            "stepsExact": {
+                "one": {
+                    "number": "1",
+                    "title": "Envíe su solicitud",
+                    "desc": "Complete nuestro sencillo formulario en línea con los datos de su empresa y servicios. Solo toma unos minutos."
+                },
+                "two": {
+                    "number": "2",
+                    "title": "Verificación y revisión",
+                    "desc": "Nuestro equipo revisa su solicitud y documentos en 24–48h para asegurar que cumple nuestros estándares de calidad."
+                },
+                "three": {
+                    "number": "3",
+                    "title": "Creamos sus anuncios",
+                    "desc": "Una vez aprobado, trabajamos con usted para crear anuncios profesionales y de alto rendimiento, con fotos y detalles claros."
+                },
+                "four": {
+                    "number": "4",
+                    "title": "Publique y reciba reservas",
+                    "desc": "Sus anuncios se publican en MarHire, visibles para viajeros que buscan servicios en Agadir, Marrakech y todo Marruecos."
+                }
+            }
+        },
+        "services": {
+            "cars": {
+                "title": "Alquiler de Coches",
+                "desc": "Vehículos económicos, compactos, de lujo, SUV y vehículos especializados para todas las necesidades de viaje"
+            },
+            "drivers": {
+                "title": "Conductores Privados",
+                "desc": "Servicios profesionales de chófer, traslados al aeropuerto y tours guiados por la ciudad"
+            },
+            "boats": {
+                "title": "Alquiler de Barcos",
+                "desc": "Alquiler de yates, barcos de pesca, lanchas rápidas y equipo de deportes acuáticos"
+            },
+            "activities": {
+                "title": "Tours y Actividades",
+                "desc": "Tours por el desierto, experiencias culturales, actividades de aventura y atracciones locales"
+            }
+        },
+        "servicesAccept": {
+            "title": "¿Qué Puede Listar?",
+            "subtitle": "Damos la bienvenida a proveedores de servicios de calidad en todas las principales categorías de viaje",
+            "cta": "¿No ve su categoría de servicio? Contáctenos - ¡siempre estamos expandiendo!"
+        },
+        "requirements": {
+            "title": "Requisitos de Asociación",
+            "subtitle": "Mantenemos altos estándares para garantizar la mejor experiencia para viajeros y socios",
+            "registration": {
+                "title": "Registro Comercial Válido",
+                "desc": "Su empresa debe estar legalmente registrada en Marruecos con documentación válida"
+            },
+            "standards": {
+                "title": "Estándares de Servicio Profesional",
+                "desc": "Mantenga servicios de alta calidad, vehículos/equipos limpios y personal profesional"
+            },
+            "communication": {
+                "title": "Comunicación Receptiva",
+                "desc": "Responda a las solicitudes de reserva dentro de 4 horas y mantenga una comunicación clara con el cliente"
+            },
+            "pricing": {
+                "title": "Precios Competitivos",
+                "desc": "Ofrezca precios justos y transparentes que proporcionen valor a los viajeros"
+            },
+            "insurance": {
+                "title": "Cobertura de Seguro Válida",
+                "desc": "Mantenga un seguro apropiado para sus servicios y operaciones comerciales"
+            },
+            "commitment": {
+                "title": "Compromiso con la Excelencia",
+                "desc": "Dedicación a brindar experiencias excepcionales y construir asociaciones a largo plazo"
+            },
+            "note": {
+                "title": "¿Listo para Cumplir Nuestros Estándares?",
+                "text": "Si cumple con estos requisitos y se compromete a brindar un servicio excepcional, nos encantaría tenerlo en nuestra red de socios."
+            }
+        },
+        "form": {
+            "title": "¿Listo para Unirse? Solicite Ahora",
+            "subtitle": "Complete el formulario a continuación y nos pondremos en contacto con usted en 24 horas"
+        },
+        "contactHelp": {
+            "title": "¿Preguntas antes de unirse?",
+            "subtitle": "Nuestro equipo de incorporación de socios está listo para ayudar. Contáctenos directamente para cualquier consulta.",
+            "whatsapp": "Escríbenos por WhatsApp",
+            "email": "Envíanos un Email",
+            "review": "Revise nuestras",
+            "terms": "Términos y Condiciones",
+            "privacy": "Política de Privacidad"
+        },
+        "whoCanPartner": {
+            "title": "¿Quién puede asociarse con nosotros?",
+            "subtitle": "Trabajamos con empresas profesionales, licenciadas y enfocadas en el cliente del sector turístico en Marruecos. Si ofrece un servicio excelente, queremos saber de usted.",
+            "cards": {
+                "cars": { "title": "Agencias de Alquiler de Coches", "desc": "Agencias licenciadas con flota de vehículos, desde coches económicos hasta SUVs de lujo." },
+                "drivers": { "title": "Conductores Privados", "desc": "Conductores y empresas que ofrecen traslados al aeropuerto, tours por la ciudad y viajes interurbanos." },
+                "boats": { "title": "Operadores de Barcos y Yates", "desc": "Empresas que ofrecen paseos en barco, pesca, alquiler de yates y deportes acuáticos." },
+                "activities": { "title": "Proveedores de Tours y Actividades", "desc": "Guías y empresas licenciadas con experiencias como quad, paseos en camello y city tours." }
+            },
+            "footnote": "Buscamos activamente socios en las principales ciudades de Marruecos, incluidas Agadir, Marrakech, Casablanca, Fez, Tánger y más."
+        },
+        "requirementsDocs": {
+            "title": "Requisitos y Documentos",
+            "subtitle": "Para garantizar una marketplace segura y confiable, nuestros socios deben estar licenciados y cumplir con las regulaciones locales. Antes de aplicar, tenga listos los siguientes documentos:",
+            "items": {
+                "companyRegistration": { "title": "Registro de la Empresa", "desc": "Números ICE (Identifiant Commun de l'Entreprise) y RC (Registre du Commerce) válidos." },
+                "businessLicense": { "title": "Licencia Comercial", "desc": "Prueba de su licencia específica (p. ej., transporte turístico, alquiler de coches)." },
+                "ownerId": { "title": "Identificación del Propietario", "desc": "Copia del DNI nacional (CNIE) o pasaporte del propietario." },
+                "serviceDetails": { "title": "Detalles del Servicio", "desc": "Información clara sobre sus servicios, incluyendo precios, políticas de cancelación y seguros." }
+            },
+            "footnote": "Enviar estos documentos acelera la verificación y refuerza la confianza. Para más detalles, revise nuestros términos para socios."
+        },
+        "commissions": {
+            "title": "Comisiones Justas y Pagos Rápidos",
+            "subtitle": "Nuestro modelo es simple: crecemos juntos. Un sistema financiero transparente, justo y beneficioso para nuestros socios.",
+            "cards": {
+                "transparentCommission": { "title": "Comisión Transparente", "desc": "Solo paga una comisión fija y competitiva en reservas confirmadas. Sin costos ocultos." },
+                "monthlyPayouts": { "title": "Pagos Mensuales Confiables", "desc": "Reciba sus ganancias automáticamente cada mes por transferencia bancaria segura." },
+                "performanceDashboard": { "title": "Panel de Rendimiento", "desc": "Controle sus reservas, vea informes de ingresos y obtenga insights para optimizar sus anuncios." }
+            }
+        },
+        "partnerFaq": {
+            "title": "Preguntas Frecuentes",
+            "items": [
+                { "q": "¿Cuánto tarda la aprobación?", "a": "La mayoría de solicitudes se revisan en 24–48h. Si se requieren documentos adicionales, le contactaremos y finalizaremos poco después de recibirlos." },
+                { "q": "¿Cuáles son las comisiones?", "a": "Paga una comisión fija y competitiva solo en reservas confirmadas. Sin cuotas de listado ni mensuales." },
+                { "q": "¿Cómo y cuándo me pagan?", "a": "Los ingresos se pagan automáticamente cada mes por transferencia bancaria segura." },
+                { "q": "¿Puedo editar precios y disponibilidad?", "a": "Sí, desde el panel de socios puede actualizar precios, disponibilidad, fotos e información del servicio." },
+                { "q": "¿Cómo pauso mis anuncios?", "a": "Desde el panel, marque fechas como no disponibles o pause temporalmente el anuncio." },
+                { "q": "¿Horario de soporte?", "a": "Soporte 24/7 por WhatsApp y email, con respuestas más rápidas en horario laboral." },
+                { "q": "¿Hay contrato a largo plazo?", "a": "No hay compromiso a largo plazo. Puede listar con flexibilidad y dejar cuando quiera." },
+                { "q": "¿Cómo gestionan los datos?", "a": "Seguimos prácticas estrictas de privacidad y seguridad. Los datos se usan solo para procesar reservas y soporte." },
+                { "q": "¿Puedo listar en varias ciudades?", "a": "Sí, se admiten listados multi-ciudad. Indique sus ciudades de operación." },
+                { "q": "Ya estoy en otras plataformas, ¿es fácil listar aquí?", "a": "Sí. Envíe su información y le ayudamos a crear listados optimizados rápidamente." }
+            ]
+        },
+        "applicationForm": {
+            "title": "Conviértase en Socio de MarHire",
+            "subtitle": "Complete el formulario a continuación para comenzar. Nuestro equipo está entusiasmado por conocer su empresa y se comunicará con usted poco después de revisar su solicitud.",
+            "companyName": { "label": "Nombre de la Empresa", "placeholder": "Su Empresa S.A.R.L" },
+            "ownerName": { "label": "Nombre Completo del Propietario", "placeholder": "ej., Mohamed Alami" },
+            "iceNumber": { "label": "Número ICE", "placeholder": "Identifiant Commun de l'Entreprise" },
+            "rcNumber": { "label": "Número RC", "placeholder": "Registre du Commerce" },
+            "category": { "label": "Categoría", "placeholder": "Seleccionar categoría de servicio" },
+            "city": { "label": "Ciudad Principal", "placeholder": "Seleccione su ciudad" },
+            "email": { "label": "Email", "placeholder": "su@empresa.com" },
+            "phone": { "label": "Teléfono", "placeholder": "ej., +212 6 00 00 00 00" },
+            "whatsapp": { "label": "Número de WhatsApp", "placeholder": "Número para comunicación con clientes" },
+            "description": { "label": "Descripción del Servicio", "placeholder": "Describa brevemente sus servicios principales, qué hace especial a su empresa y su cliente típico (100-800 caracteres)" },
+            "confirmOwner": "Confirmo que soy el propietario o un representante autorizado de esta empresa.",
+            "agreePrefix": "He leído y acepto las",
+            "apply": "Solicitar Ahora",
+            "submitting": "Enviando..."
+        },
+        "faq": {
+            "title": "Preguntas Frecuentes",
+            "cost": {
+                "question": "¿Cuánto cuesta unirse a MarHire?",
+                "answer": "Unirse a MarHire es completamente gratis. No hay tarifas de listado por adelantado, cargos mensuales o costos ocultos. Solo ganamos una pequeña comisión cuando recibe reservas confirmadas."
+            },
+            "approval": {
+                "question": "¿Cuánto tiempo toma el proceso de aprobación?",
+                "answer": "La mayoría de las solicitudes son revisadas y aprobadas dentro de 48 horas. Podemos solicitar documentación adicional para verificar su empresa, lo que podría extender el proceso por 1-2 días hábiles."
+            },
+            "commission": {
+                "question": "¿Qué comisión cobran?",
+                "answer": "Nuestra comisión varía según la categoría de servicio y solo se cobra en reservas confirmadas. Discutiremos las tarifas exactas durante su proceso de solicitud - nuestras tarifas son siempre transparentes y competitivas."
+            },
+            "bookings": {
+                "question": "¿Cómo recibo las solicitudes de reserva?",
+                "answer": "Recibirá notificaciones de reserva por email y WhatsApp con todos los detalles del cliente. Puede responder directamente o usar nuestro panel de socios para gestionar solicitudes."
+            },
+            "updates": {
+                "question": "¿Puedo actualizar mis listados después de ser aprobados?",
+                "answer": "¡Sí! Tendrá acceso a un panel de socios donde puede actualizar sus listados, precios, disponibilidad, fotos e información comercial en cualquier momento."
+            },
+            "support": {
+                "question": "¿Qué tipo de soporte proporcionan a los socios?",
+                "answer": "Proporcionamos soporte dedicado a socios en árabe, francés e inglés. Esto incluye asistencia de incorporación, optimización de listados, orientación de marketing y soporte técnico continuo."
+            }
+        },
+        "footerCta": {
+            "title": "¿Listo para Comenzar Su Viaje con MarHire?",
+            "text": "Únase a cientos de socios exitosos y comience a hacer crecer su negocio hoy.",
+            "apply": "Solicitar Ahora",
+            "contact": "Contactar Soporte"
+        },
+        "businessPotential": {
+            "title": "Desbloquee todo el potencial de su negocio",
+            "subtitle": "MarHire no es solo un sitio de anuncios; somos su socio de crecimiento. Ofrecemos las herramientas, la tecnología y el soporte para conectarlo con una audiencia global de viajeros que buscan experiencias de calidad en Marruecos.",
+            "features": {
+                "seo": {
+                    "title": "SEO y alcance sin esfuerzo",
+                    "description": "Sea descubierto por viajeros que buscan servicios en Marruecos. Invertimos en marketing para que sus anuncios se posicionen mejor."
+                },
+                "zeroCost": {
+                    "title": "Crezca sin costo inicial",
+                    "description": "Nuestro modelo basado en comisiones significa que solo tenemos éxito cuando usted lo tiene. Sin tarifas de instalación ni suscripciones mensuales."
+                },
+                "support": {
+                    "title": "Soporte humano 24/7",
+                    "description": "Nuestro equipo local y multilingüe está disponible en WhatsApp y por correo electrónico para ayudarlo a usted y a sus clientes en cualquier momento."
+                },
+                "onboarding": {
+                    "title": "Incorporación rápida y fácil",
+                    "description": "Nuestro equipo lo ayuda a crear anuncios optimizados. Nos encargamos de la tecnología, usted solo proporciona los detalles del servicio."
+                },
+                "profile": {
+                    "title": "Perfil de socio dedicado",
+                    "description": "Muestre su marca con un perfil profesional que presente sus servicios, políticas y reseñas de clientes."
+                },
+                "partnership": {
+                    "title": "Una verdadera asociación",
+                    "description": "Trabajamos con usted para maximizar sus reservas, brindando información y apoyo para ayudar a que su negocio prospere en ciudades como Agadir y Marrakech."
+                }
+            }
+        }
     }
 }

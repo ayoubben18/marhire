@@ -716,5 +716,289 @@
         "becomePartnerCta": "Rejoignez MarHire et touchez des milliers de voyageurs internationaux.",
         "applyButton": "Postuler pour Devenir Partenaire",
         "defaultDescription": "Partenaire de confiance au Maroc"
+    },
+    "joinUs": {
+        "breadcrumb": "Devenir Partenaire",
+        "hero": {
+            "title": "Partenariat avec MarHire — Listez Voitures, Chauffeurs, Bateaux et Activités au Maroc",
+            "subtitle": "Rejoignez la place de marché de confiance du Maroc pour connecter vos locations de voitures, services de chauffeur privé, excursions en bateau ou activités locales avec des milliers de voyageurs. Nous gérons le marketing et les réservations, pour que vous puissiez vous concentrer sur un service exceptionnel.",
+            "cta": "Postuler Maintenant",
+            "whatsapp": "Discuter sur WhatsApp"
+        },
+        "benefits": {
+            "reach": {
+                "title": "Touchez Plus de Clients",
+                "desc": "Accédez à des milliers de voyageurs internationaux à la recherche d'expériences marocaines authentiques"
+            },
+            "costs": {
+                "title": "Zéro Coût Initial",
+                "desc": "Aucun frais d'inscription, aucun frais mensuel. Payez seulement une petite commission quand vous gagnez"
+            },
+            "support": {
+                "title": "Support Dédié",
+                "desc": "Bénéficiez d'un support multilingue en arabe, français et anglais de notre équipe dédiée au succès des partenaires"
+            }
+        },
+        "valueProps": {
+            "title": "Pourquoi S'Associer avec MarHire?",
+            "subtitle": "Rejoignez plus de 200 partenaires de confiance à travers le Maroc"
+        },
+        "steps": {
+            "apply": {
+                "title": "Postuler",
+                "desc": "Soumettez les détails de votre entreprise via notre formulaire simple"
+            },
+            "verified": {
+                "title": "Être Vérifié",
+                "desc": "Nous examinons votre candidature et vérifions votre entreprise en seulement 48 heures"
+            },
+            "list": {
+                "title": "Listez Vos Services",
+                "desc": "Ajoutez vos offres à notre plateforme avec l'aide de notre équipe d'intégration"
+            },
+            "earn": {
+                "title": "Commencez à Gagner",
+                "desc": "Recevez des réservations de voyageurs et développez votre entreprise avec MarHire"
+            }
+        },
+        "howItWorks": {
+            "title": "Commencer est Simple",
+            "subtitle": "Rejoignez notre marketplace en 4 étapes faciles",
+            "stepsExact": {
+                "one": {
+                    "number": "1",
+                    "title": "Soumettez votre candidature",
+                    "desc": "Remplissez notre formulaire en ligne avec les informations de votre entreprise et vos services. Cela ne prend que quelques minutes."
+                },
+                "two": {
+                    "number": "2",
+                    "title": "Vérification & examen",
+                    "desc": "Notre équipe examine votre candidature et vos documents sous 24–48h afin de s'assurer que vous répondez à nos standards de qualité."
+                },
+                "three": {
+                    "number": "3",
+                    "title": "Nous créons vos annonces",
+                    "desc": "Une fois approuvé, nous travaillons avec vous pour créer des annonces professionnelles et performantes, avec photos et détails clairs."
+                },
+                "four": {
+                    "number": "4",
+                    "title": "Mise en ligne & réservations",
+                    "desc": "Vos annonces sont publiées sur MarHire, visibles par les voyageurs recherchant des services à Agadir, Marrakech et partout au Maroc."
+                }
+            }
+        },
+        "services": {
+            "cars": {
+                "title": "Location de Voitures",
+                "desc": "Véhicules économiques, compacts, de luxe, SUV et véhicules spécialisés pour tous les besoins de voyage"
+            },
+            "drivers": {
+                "title": "Chauffeurs Privés",
+                "desc": "Services de chauffeur professionnel, transferts aéroport et visites guidées de la ville"
+            },
+            "boats": {
+                "title": "Location de Bateaux",
+                "desc": "Location de yachts, bateaux de pêche, hors-bords et équipement de sports nautiques"
+            },
+            "activities": {
+                "title": "Tours et Activités",
+                "desc": "Tours dans le désert, expériences culturelles, activités d'aventure et attractions locales"
+            }
+        },
+        "servicesAccept": {
+            "title": "Que Pouvez-Vous Lister?",
+            "subtitle": "Nous accueillons les fournisseurs de services de qualité dans toutes les principales catégories de voyage",
+            "cta": "Vous ne voyez pas votre catégorie de service? Contactez-nous - nous étendons toujours!"
+        },
+        "requirements": {
+            "title": "Exigences de Partenariat",
+            "subtitle": "Nous maintenons des normes élevées pour assurer la meilleure expérience aux voyageurs et partenaires",
+            "registration": {
+                "title": "Enregistrement Commercial Valide",
+                "desc": "Votre entreprise doit être légalement enregistrée au Maroc avec une documentation valide"
+            },
+            "standards": {
+                "title": "Normes de Service Professionnelles",
+                "desc": "Maintenez des services de haute qualité, des véhicules/équipements propres et un personnel professionnel"
+            },
+            "communication": {
+                "title": "Communication Réactive",
+                "desc": "Répondez aux demandes de réservation dans les 4 heures et maintenez une communication claire avec les clients"
+            },
+            "pricing": {
+                "title": "Prix Compétitifs",
+                "desc": "Offrez des prix équitables et transparents qui apportent de la valeur aux voyageurs"
+            },
+            "insurance": {
+                "title": "Couverture d'Assurance Valide",
+                "desc": "Maintenez une assurance appropriée pour vos services et opérations commerciales"
+            },
+            "commitment": {
+                "title": "Engagement vers l'Excellence",
+                "desc": "Dévouement à fournir des expériences exceptionnelles et à construire des partenariats à long terme"
+            },
+            "note": {
+                "title": "Prêt à Respecter Nos Normes?",
+                "text": "Si vous respectez ces exigences et vous engagez à fournir un service exceptionnel, nous serions ravis de vous avoir dans notre réseau de partenaires."
+            }
+        },
+        "form": {
+            "title": "Prêt à Rejoindre? Postulez Maintenant",
+            "subtitle": "Remplissez le formulaire ci-dessous et nous vous contacterons dans les 24 heures"
+        },
+        "contactHelp": {
+            "title": "Des questions avant de nous rejoindre ?",
+            "subtitle": "Notre équipe d'onboarding partenaires est prête à vous aider. Contactez-nous directement pour toute question.",
+            "whatsapp": "Nous écrire sur WhatsApp",
+            "email": "Nous envoyer un email",
+            "review": "Consultez nos",
+            "terms": "Conditions Générales",
+            "privacy": "Politique de Confidentialité"
+        },
+        "applicationForm": {
+            "title": "Devenir Partenaire MarHire",
+            "subtitle": "Remplissez le formulaire ci-dessous pour commencer. Notre équipe est ravie d'en savoir plus sur votre entreprise et vous contactera rapidement après examen de votre candidature.",
+            "companyName": { "label": "Nom de l'Entreprise", "placeholder": "Votre Société S.A.R.L" },
+            "ownerName": { "label": "Nom Complet du Propriétaire", "placeholder": "ex.: Mohamed Alami" },
+            "iceNumber": { "label": "Numéro ICE", "placeholder": "Identifiant Commun de l'Entreprise" },
+            "rcNumber": { "label": "Numéro RC", "placeholder": "Registre du Commerce" },
+            "category": { "label": "Catégorie", "placeholder": "Sélectionner la catégorie de service" },
+            "city": { "label": "Ville Principale", "placeholder": "Sélectionnez votre ville" },
+            "email": { "label": "Email", "placeholder": "votre@entreprise.com" },
+            "phone": { "label": "Téléphone", "placeholder": "ex.: +212 6 00 00 00 00" },
+            "whatsapp": { "label": "Numéro WhatsApp", "placeholder": "Numéro pour la communication client" },
+            "description": { "label": "Description du Service", "placeholder": "Décrivez brièvement vos services, ce qui rend votre entreprise spéciale et votre clientèle type (100-800 caractères)" },
+            "confirmOwner": "Je confirme être le propriétaire ou un représentant autorisé de cette entreprise.",
+            "agreePrefix": "J'ai lu et j'accepte les",
+            "apply": "Postuler Maintenant",
+            "submitting": "Envoi..."
+        },
+        "whoCanPartner": {
+            "title": "Qui peut s'associer avec nous ?",
+            "subtitle": "Nous collaborons avec des entreprises professionnelles, licenciées et orientées client dans le secteur du tourisme au Maroc. Si vous offrez un service remarquable, contactez-nous.",
+            "cards": {
+                "cars": { "title": "Agences de Location de Voitures", "desc": "Agences licenciées proposant une flotte de véhicules, des voitures économiques aux SUV de luxe." },
+                "drivers": { "title": "Chauffeurs Privés", "desc": "Chauffeurs professionnels et sociétés assurant transferts aéroport, visites de ville et trajets interurbains." },
+                "boats": { "title": "Opérateurs Bateaux & Yachts", "desc": "Entreprises proposant des balades en bateau, des sorties pêche, des locations de yachts et des sports nautiques." },
+                "activities": { "title": "Fournisseurs de Tours & Activités", "desc": "Guides et sociétés licenciés proposant des activités comme quad, balades à dos de chameau et city tours." }
+            },
+            "footnote": "Nous recherchons activement des partenaires dans toutes les grandes villes marocaines, notamment Agadir, Marrakech, Casablanca, Fès, Tanger, et plus encore."
+        },
+        "requirementsDocs": {
+            "title": "Exigences & Documents",
+            "subtitle": "Pour garantir une marketplace sûre et fiable, tous nos partenaires doivent être licenciés et conformes aux réglementations locales. Avant de postuler, préparez les documents suivants :",
+            "items": {
+                "companyRegistration": { "title": "Enregistrement de l'Entreprise", "desc": "Numéros ICE (Identifiant Commun de l'Entreprise) et RC (Registre du Commerce) valides." },
+                "businessLicense": { "title": "Licence d'Exploitation", "desc": "Preuve de votre licence spécifique (ex. transport touristique, location de voitures)." },
+                "ownerId": { "title": "Pièce d'Identité du Propriétaire", "desc": "Copie de la carte nationale (CNIE) ou du passeport du propriétaire." },
+                "serviceDetails": { "title": "Détails du Service", "desc": "Informations claires sur vos services, y compris tarification, politique d'annulation et assurances." }
+            },
+            "footnote": "La soumission de ces documents accélère la vérification et renforce la confiance. Pour plus de détails, consultez nos conditions partenaires."
+        },
+        "commissions": {
+            "title": "Commissions Équitables & Paiements Rapides",
+            "subtitle": "Notre modèle est simple : nous grandissons ensemble. Un système financier transparent, juste et avantageux pour nos partenaires.",
+            "cards": {
+                "transparentCommission": { "title": "Commission Transparente", "desc": "Vous ne payez qu'une commission fixe et compétitive sur les réservations confirmées. Aucun coût caché." },
+                "monthlyPayouts": { "title": "Paiements Mensuels Fiables", "desc": "Recevez vos gains automatiquement chaque mois par virement bancaire sécurisé." },
+                "performanceDashboard": { "title": "Tableau de Bord de Performance", "desc": "Suivez vos réservations, consultez vos revenus et obtenez des insights pour optimiser vos annonces." }
+            }
+        },
+        "partnerFaq": {
+            "title": "Questions Fréquemment Posées",
+            "items": [
+                { "q": "Combien de temps dure l'approbation ?", "a": "La plupart des dossiers sont examinés en 24–48h. Si des documents sont requis, nous vous contacterons et finaliserons rapidement après réception." },
+                { "q": "Quelles sont les commissions ?", "a": "Vous payez une commission fixe et compétitive uniquement sur les réservations confirmées. Aucun frais d'inscription ni mensuel." },
+                { "q": "Comment et quand suis‑je payé ?", "a": "Les gains sont versés automatiquement chaque mois par virement bancaire sécurisé." },
+                { "q": "Puis‑je modifier mes tarifs et disponibilités ?", "a": "Oui, via le tableau de bord partenaire vous pouvez mettre à jour tarifs, disponibilités, photos et informations." },
+                { "q": "Comment mettre mes annonces en pause ?", "a": "Depuis le tableau de bord, définissez des périodes d'indisponibilité ou mettez l'annonce en pause temporairement." },
+                { "q": "Vos horaires de support ?", "a": "Support 24/7 par WhatsApp et email, avec des réponses plus rapides pendant les heures ouvrables." },
+                { "q": "Contrat longue durée ?", "a": "Aucun engagement long terme. Vous listez en toute flexibilité." },
+                { "q": "Comment gérez‑vous les données ?", "a": "Nous appliquons des pratiques strictes de confidentialité et de sécurité. Les données servent uniquement aux réservations et au support." },
+                { "q": "Peut‑on lister dans plusieurs villes ?", "a": "Oui, les annonces multi‑villes sont prises en charge. Indiquez simplement vos villes d'opération." },
+                { "q": "Je suis déjà sur d'autres plateformes — est‑ce simple ?", "a": "Oui. Donnez‑nous vos informations et nous vous aidons à créer rapidement des annonces optimisées." }
+            ]
+        },
+        "applicationForm": {
+            "title": "Devenir Partenaire MarHire",
+            "subtitle": "Remplissez le formulaire ci-dessous pour commencer. Notre équipe est ravie d'en savoir plus sur votre entreprise et vous contactera rapidement après examen de votre candidature.",
+            "companyName": { "label": "Nom de l'Entreprise", "placeholder": "Votre Société S.A.R.L" },
+            "ownerName": { "label": "Nom Complet du Propriétaire", "placeholder": "ex.: Mohamed Alami" },
+            "iceNumber": { "label": "Numéro ICE", "placeholder": "Identifiant Commun de l'Entreprise" },
+            "rcNumber": { "label": "Numéro RC", "placeholder": "Registre du Commerce" },
+            "category": { "label": "Catégorie", "placeholder": "Sélectionner la catégorie de service" },
+            "city": { "label": "Ville Principale", "placeholder": "Sélectionnez votre ville" },
+            "email": { "label": "Email", "placeholder": "votre@entreprise.com" },
+            "phone": { "label": "Téléphone", "placeholder": "ex.: +212 6 00 00 00 00" },
+            "whatsapp": { "label": "Numéro WhatsApp", "placeholder": "Numéro pour la communication client" },
+            "description": { "label": "Description du Service", "placeholder": "Décrivez brièvement vos services, ce qui rend votre entreprise spéciale et votre clientèle type (100-800 caractères)" },
+            "confirmOwner": "Je confirme être le propriétaire ou un représentant autorisé de cette entreprise.",
+            "agreePrefix": "J'ai lu et j'accepte les",
+            "apply": "Postuler Maintenant",
+            "submitting": "Envoi..."
+        },
+        "faq": {
+            "title": "Questions Fréquemment Posées",
+            "cost": {
+                "question": "Combien coûte rejoindre MarHire?",
+                "answer": "Rejoindre MarHire est complètement gratuit. Il n'y a pas de frais d'inscription, de charges mensuelles ou de coûts cachés. Nous ne gagnons qu'une petite commission lorsque vous recevez des réservations confirmées."
+            },
+            "approval": {
+                "question": "Combien de temps prend le processus d'approbation?",
+                "answer": "La plupart des candidatures sont examinées et approuvées dans les 48 heures. Nous pourrions demander de la documentation supplémentaire pour vérifier votre entreprise, ce qui pourrait prolonger le processus de 1-2 jours ouvrables."
+            },
+            "commission": {
+                "question": "Quelle commission facturez-vous?",
+                "answer": "Notre commission varie selon la catégorie de service et n'est facturée que sur les réservations confirmées. Nous discuterons des tarifs exacts pendant votre processus de candidature - nos frais sont toujours transparents et compétitifs."
+            },
+            "bookings": {
+                "question": "Comment est-ce que je reçois les demandes de réservation?",
+                "answer": "Vous recevrez des notifications de réservation par email et WhatsApp avec tous les détails du client. Vous pouvez répondre directement ou utiliser notre tableau de bord partenaire pour gérer les demandes."
+            },
+            "updates": {
+                "question": "Puis-je mettre à jour mes annonces après leur approbation?",
+                "answer": "Oui! Vous aurez accès à un tableau de bord partenaire où vous pouvez mettre à jour vos annonces, tarifs, disponibilité, photos et informations commerciales à tout moment."
+            },
+            "support": {
+                "question": "Quel type de support fournissez-vous aux partenaires?",
+                "answer": "Nous fournissons un support partenaire dédié en arabe, français et anglais. Cela inclut l'assistance à l'intégration, l'optimisation des annonces, les conseils marketing et le support technique continu."
+            }
+        },
+        "footerCta": {
+            "title": "Prêt à Commencer Votre Voyage avec MarHire?",
+            "text": "Rejoignez des centaines de partenaires prospères et commencez à développer votre entreprise aujourd'hui.",
+            "apply": "Postuler Maintenant",
+            "contact": "Contacter le Support"
+        },
+        "businessPotential": {
+            "title": "Libérez le plein potentiel de votre entreprise",
+            "subtitle": "MarHire n'est pas seulement un site d'annonces ; nous sommes votre partenaire de croissance. Nous fournissons les outils, la technologie et le soutien pour vous connecter à un public mondial de voyageurs recherchant des expériences de qualité au Maroc.",
+            "features": {
+                "seo": {
+                    "title": "SEO et portée sans effort",
+                    "description": "Soyez découvert par les voyageurs recherchant des services au Maroc. Nous investissons dans le marketing pour que vos annonces soient mieux classées."
+                },
+                "zeroCost": {
+                    "title": "Croissance sans frais initiaux",
+                    "description": "Notre modèle basé sur la commission signifie que nous ne réussissons que lorsque vous réussissez. Pas de frais d'installation, pas d'abonnements mensuels."
+                },
+                "support": {
+                    "title": "Support humain 24/7",
+                    "description": "Notre équipe locale et multilingue est disponible sur WhatsApp et par e-mail pour vous aider, vous et vos clients, à tout moment."
+                },
+                "onboarding": {
+                    "title": "Intégration rapide et facile",
+                    "description": "Notre équipe vous aide à créer des annonces optimisées. Nous nous occupons de la technologie, vous ne fournissez que les détails du service."
+                },
+                "profile": {
+                    "title": "Profil partenaire dédié",
+                    "description": "Mettez en valeur votre marque avec un profil professionnel présentant vos services, vos politiques et les avis de vos clients."
+                },
+                "partnership": {
+                    "title": "Un véritable partenariat",
+                    "description": "Nous travaillons avec vous pour maximiser vos réservations, en fournissant des informations et un soutien pour aider votre entreprise à prospérer dans des villes comme Agadir et Marrakech."
+                }
+            }
+        }
     }
 }

@@ -749,5 +749,304 @@
         "becomePartnerCta": "Join MarHire and reach thousands of international travelers.",
         "applyButton": "Apply to Partner with Us",
         "defaultDescription": "Trusted partner in Morocco"
+    },
+    "joinUs": {
+        "breadcrumb": "Become a Partner",
+        "hero": {
+            "title": "Partner with MarHire — List Cars, Drivers, Boats & Activities in Morocco",
+            "subtitle": "Join Morocco's trusted marketplace to connect your car rentals, private driver services, boat tours, or local activities with thousands of travelers. We handle the marketing and bookings, so you can focus on providing exceptional service.",
+            "cta": "Apply Now",
+            "whatsapp": "Chat on WhatsApp"
+        },
+        "benefits": {
+            "reach": {
+                "title": "Reach More Customers",
+                "desc": "Access thousands of international travelers looking for authentic Moroccan experiences"
+            },
+            "costs": {
+                "title": "Zero Upfront Costs",
+                "desc": "No listing fees, no monthly charges. Only pay a small commission when you earn"
+            },
+            "support": {
+                "title": "Dedicated Support",
+                "desc": "Get multilingual support in Arabic, French & English from our dedicated partner success team"
+            }
+        },
+        "valueProps": {
+            "title": "Why Partner with MarHire?",
+            "subtitle": "Join over 200+ trusted partners across Morocco"
+        },
+        "steps": {
+            "apply": {
+                "title": "Apply",
+                "desc": "Submit your business details through our simple application form"
+            },
+            "verified": {
+                "title": "Get Verified",
+                "desc": "We review your application and verify your business in just 48 hours"
+            },
+            "list": {
+                "title": "List Your Services",
+                "desc": "Add your offerings to our platform with help from our onboarding team"
+            },
+            "earn": {
+                "title": "Start Earning",
+                "desc": "Receive bookings from travelers and grow your business with MarHire"
+            }
+        },
+        "howItWorks": {
+            "title": "Getting Started is Simple",
+            "subtitle": "Our streamlined process is designed to get your business online and ready for bookings as quickly as possible.",
+            "stepsExact": {
+                "one": {
+                    "number": "1",
+                    "title": "Submit Your Application",
+                    "desc": "Fill out our simple online form with your company details and services. It only takes a few minutes."
+                },
+                "two": {
+                    "number": "2",
+                    "title": "Verification & Review",
+                    "desc": "Our team reviews your application and documents within 24-48 hours to ensure you meet our quality standards."
+                },
+                "three": {
+                    "number": "3",
+                    "title": "We Build Your Listings",
+                    "desc": "Once approved, we work with you to create professional, high-converting listings for your services, complete with photos and clear details."
+                },
+                "four": {
+                    "number": "4",
+                    "title": "Go Live & Get Bookings",
+                    "desc": "Your listings are published across MarHire, instantly visible to travelers looking for services in Agadir, Marrakech, and all over Morocco."
+                }
+            }
+        },
+        "services": {
+            "cars": {
+                "title": "Car Rentals",
+                "desc": "Economy, compact, luxury, SUVs, and specialty vehicles for all travel needs"
+            },
+            "drivers": {
+                "title": "Private Drivers",
+                "desc": "Professional chauffeur services, airport transfers, and guided city tours"
+            },
+            "boats": {
+                "title": "Boat Rentals",
+                "desc": "Yacht charters, fishing boats, speedboats, and water sports equipment"
+            },
+            "activities": {
+                "title": "Tours & Activities",
+                "desc": "Desert tours, cultural experiences, adventure activities, and local attractions"
+            }
+        },
+        "servicesAccept": {
+            "title": "What Can You List?",
+            "subtitle": "We welcome quality service providers across all major travel categories",
+            "cta": "Don't see your service category? Contact us - we're always expanding!"
+        },
+        "whoCanPartner": {
+            "title": "Who Can Partner with Us?",
+            "subtitle": "We partner with professional, licensed, and customer-focused businesses in Morocco's tourism sector. If you provide outstanding service, we want to hear from you.",
+            "cards": {
+                "cars": {
+                    "title": "Car Rental Agencies",
+                    "desc": "Licensed agencies offering a fleet of vehicles, from economy cars to luxury SUVs."
+                },
+                "drivers": {
+                    "title": "Private Drivers & Chauffeurs",
+                    "desc": "Professional drivers and companies providing airport transfers, city tours, and intercity travel."
+                },
+                "boats": {
+                    "title": "Boat & Yacht Operators",
+                    "desc": "Businesses offering boat tours, fishing charters, yacht rentals, and water sports."
+                },
+                "activities": {
+                    "title": "Tour & Activity Providers",
+                    "desc": "Licensed guides and companies offering experiences like quad biking, camel rides, and city tours."
+                }
+            },
+            "footnote": "We are actively seeking partners in all major Moroccan cities, including Agadir, Marrakech, Casablanca, Fes, Tangier, and more."
+        },
+        "requirementsDocs": {
+            "title": "Requirements & Documents",
+            "subtitle": "To ensure a safe and trustworthy marketplace for travelers, we require all our partners to be licensed and fully compliant with local regulations. Before applying, please have the following documents ready:",
+            "items": {
+                "companyRegistration": {
+                    "title": "Company Registration",
+                    "desc": "Valid ICE (Identifiant Commun de l'Entreprise) and RC (Registre du Commerce) numbers."
+                },
+                "businessLicense": {
+                    "title": "Business License",
+                    "desc": "Proof of your specific business license (e.g., transport touristique, location de voitures)."
+                },
+                "ownerId": {
+                    "title": "Owner's Identification",
+                    "desc": "A copy of the owner's national ID card (CNIE) or passport."
+                },
+                "serviceDetails": {
+                    "title": "Service Details",
+                    "desc": "Clear information about your services, including pricing, cancellation policies, and insurance details."
+                }
+            },
+            "footnote": "Submitting these helps us speed up the verification process and build a foundation of trust. For more details, review our partner terms."
+        },
+        "commissions": {
+            "title": "Fair Commissions & Fast Payouts",
+            "subtitle": "Our business model is simple: we grow together. We've designed our financial system to be transparent, fair, and beneficial for our partners.",
+            "cards": {
+                "transparentCommission": {
+                    "title": "Transparent Commission",
+                    "desc": "You only pay a competitive, fixed commission on confirmed bookings. No hidden costs, ever."
+                },
+                "monthlyPayouts": {
+                    "title": "Reliable Monthly Payouts",
+                    "desc": "Receive your earnings automatically every month via secure bank transfer."
+                },
+                "performanceDashboard": {
+                    "title": "Performance Dashboard",
+                    "desc": "Track your bookings, view earnings reports, and get insights to optimize your listings."
+                }
+            }
+        },
+        "partnerFaq": {
+            "title": "Frequently Asked Questions",
+            "items": [
+                { "q": "How long does the approval process take?", "a": "Most applications are reviewed within 24–48 hours. If additional documents are needed, we’ll contact you and finalize approval shortly after we receive them." },
+                { "q": "What are the fees or commission rates?", "a": "You pay a competitive, fixed commission only on confirmed bookings. There are no listing fees or monthly charges." },
+                { "q": "How and when do I get paid?", "a": "Earnings are paid automatically every month via secure bank transfer to your designated account." },
+                { "q": "Can I edit my pricing and availability?", "a": "Yes. You can update pricing, availability, photos, and service details anytime from your partner dashboard." },
+                { "q": "How can I pause my listings if I'm fully booked?", "a": "From the dashboard, set your listing to ‘Unavailable’ for the dates you’re fully booked or temporarily pause the listing." },
+                { "q": "What are your support hours for partners?", "a": "Our team offers 24/7 support via WhatsApp and email, with fastest responses during business hours." },
+                { "q": "Is there a long-term contract?", "a": "No long-term commitment is required. You can list with us flexibly and stop anytime." },
+                { "q": "How is my business and customer data handled?", "a": "We follow strict privacy and security practices. Data is used only to process bookings and support your operations." },
+                { "q": "Can I list my services in multiple cities like Agadir and Marrakech?", "a": "Yes, multi-city listings are supported. Just specify your operating cities in the service details." },
+                { "q": "I'm already on other platforms. Is it easy to list with MarHire?", "a": "Absolutely. Provide your service info and we’ll help you create optimized listings quickly." }
+            ]
+        },
+        "requirements": {
+            "title": "Partnership Requirements",
+            "subtitle": "We maintain high standards to ensure the best experience for travelers and partners",
+            "registration": {
+                "title": "Valid Business Registration",
+                "desc": "Your business must be legally registered in Morocco with valid documentation"
+            },
+            "standards": {
+                "title": "Professional Service Standards",
+                "desc": "Maintain high-quality services, clean vehicles/equipment, and professional staff"
+            },
+            "communication": {
+                "title": "Responsive Communication",
+                "desc": "Respond to booking requests within 4 hours and maintain clear customer communication"
+            },
+            "pricing": {
+                "title": "Competitive Pricing",
+                "desc": "Offer fair, transparent pricing that provides value to travelers"
+            },
+            "insurance": {
+                "title": "Valid Insurance Coverage",
+                "desc": "Maintain appropriate insurance for your services and business operations"
+            },
+            "commitment": {
+                "title": "Commitment to Excellence",
+                "desc": "Dedication to providing exceptional experiences and building long-term partnerships"
+            },
+            "note": {
+                "title": "Ready to Meet Our Standards?",
+                "text": "If you meet these requirements and are committed to providing exceptional service, we'd love to have you join our partner network."
+            }
+        },
+        "businessPotential": {
+            "title": "Unlock Your Business’s Full Potential",
+            "subtitle": "MarHire isn't just a listing site; we're your growth partner. We provide the tools, technology, and support to connect you with a global audience of travelers seeking quality experiences in Morocco.",
+            "features": {
+                "seo": {
+                    "title": "Effortless SEO & Reach",
+                    "description": "Get discovered by travelers searching for services in Morocco. We invest in marketing so your listings rank higher."
+                },
+                "zeroCost": {
+                    "title": "Grow with Zero Upfront Cost",
+                    "description": "Our commission-based model means we only succeed when you do. No setup fees, no monthly subscriptions."
+                },
+                "support": {
+                    "title": "24/7 Human Support",
+                    "description": "Our local, multilingual team is available on WhatsApp and email to help you and your customers, anytime."
+                },
+                "onboarding": {
+                    "title": "Fast & Easy Onboarding",
+                    "description": "Our team helps you create optimized listings. We handle the tech, you just provide the service details."
+                },
+                "profile": {
+                    "title": "Dedicated Partner Profile",
+                    "description": "Showcase your brand with a professional profile featuring your services, policies, and customer reviews."
+                },
+                "partnership": {
+                    "title": "A True Partnership",
+                    "description": "We work with you to maximize your bookings, providing insights and support to help your business thrive in cities like Agadir and Marrakech."
+                }
+            }
+        },
+        "form": {
+            "title": "Ready to Join? Apply Now",
+            "subtitle": "Fill out the form below and we'll get back to you within 24 hours"
+        },
+        "applicationForm": {
+            "title": "Become a MarHire Partner",
+            "subtitle": "Fill out the form below to start the process. Our team is excited to learn about your business and will contact you shortly after reviewing your application.",
+            "companyName": { "label": "Company Name", "placeholder": "Your Company S.A.R.L" },
+            "ownerName": { "label": "Owner's Full Name", "placeholder": "e.g., Mohamed Alami" },
+            "iceNumber": { "label": "ICE Number", "placeholder": "Identifiant Commun de l'Entreprise" },
+            "rcNumber": { "label": "RC Number", "placeholder": "Registre du Commerce" },
+            "category": { "label": "Category", "placeholder": "Select service category" },
+            "city": { "label": "Primary City", "placeholder": "Select your city" },
+            "email": { "label": "Email", "placeholder": "your@company.com" },
+            "phone": { "label": "Phone", "placeholder": "e.g., +212 6 00 00 00 00" },
+            "whatsapp": { "label": "WhatsApp Number", "placeholder": "Number for customer communication" },
+            "description": { "label": "Service Description", "placeholder": "Briefly describe your main services, what makes your company special, and your typical customer (100-800 characters)" },
+            "confirmOwner": "I confirm that I am the owner or an authorized representative of this company.",
+            "agreePrefix": "I have read and agree to the MarHire",
+            "apply": "Apply Now",
+            "submitting": "Submitting..."
+        },
+        "contactHelp": {
+            "title": "Have Questions Before You Join?",
+            "subtitle": "Our partner onboarding team is ready to help. Reach out to us directly for any inquiries.",
+            "whatsapp": "WhatsApp Us",
+            "email": "Email Us",
+            "review": "Review our",
+            "terms": "Terms & Conditions",
+            "privacy": "Privacy Policy"
+        },
+        "faq": {
+            "title": "Frequently Asked Questions",
+            "cost": {
+                "question": "How much does it cost to join MarHire?",
+                "answer": "Joining MarHire is completely free. There are no upfront listing fees, monthly charges, or hidden costs. We only earn a small commission when you receive confirmed bookings."
+            },
+            "approval": {
+                "question": "How long does the approval process take?",
+                "answer": "Most applications are reviewed and approved within 48 hours. We may request additional documentation to verify your business, which could extend the process by 1-2 business days."
+            },
+            "commission": {
+                "question": "What commission do you charge?",
+                "answer": "Our commission varies by service category and is only charged on confirmed bookings. We'll discuss the exact rates during your application process - our fees are always transparent and competitive."
+            },
+            "bookings": {
+                "question": "How do I receive booking requests?",
+                "answer": "You'll receive booking notifications via email and WhatsApp with full customer details. You can respond directly or use our partner dashboard to manage requests."
+            },
+            "updates": {
+                "question": "Can I update my listings after they're approved?",
+                "answer": "Yes! You'll have access to a partner dashboard where you can update your listings, pricing, availability, photos, and business information anytime."
+            },
+            "support": {
+                "question": "What kind of support do you provide to partners?",
+                "answer": "We provide dedicated partner support in Arabic, French, and English. This includes onboarding assistance, listing optimization, marketing guidance, and ongoing technical support."
+            }
+        },
+        "footerCta": {
+            "title": "Ready to Start Your Journey with MarHire?",
+            "text": "Join hundreds of successful partners and start growing your business today.",
+            "apply": "Apply Now",
+            "contact": "Contact Support"
+        }
     }
 }
