@@ -87,6 +87,9 @@ const Footer = () => {
                 <FooterSection title={t('footer.company')}>
                     <ul>
                         <li>
+                            <a href={getLocalizedUrl('/about-us')}>{t('navigation.aboutUs', 'About Us')}</a>
+                        </li>
+                        <li>
                             <a href={getLocalizedUrl('/partners')}>{t('partners.breadcrumb', 'Our Partners')}</a>
                         </li>
                         <li>
@@ -97,6 +100,9 @@ const Footer = () => {
                         </li>
                         <li>
                             <a href={getLocalizedUrl('/faq')}>{t('navigation.faqs')}</a>
+                        </li>
+                        <li>
+                            <a href={getLocalizedUrl('/sitemap')}>{t('navigation.sitemap', 'Sitemap')}</a>
                         </li>
                         <li>
                             <a href={getLocalizedUrl('/blog')}>{t('navigation.travelBlog', 'Travel Blog')}</a>

@@ -309,6 +309,59 @@
         "fuelCrewSnacks": "Fuel, Crew & Snacks Included",
         "fishingSunsetParty": "Fishing, Sunset & Private Party Options"
     },
+    "aboutPage": {
+        "breadcrumb": "About Us",
+        "hero": {
+            "title": "About MarHire",
+            "subtitle": "Welcome to MarHire, your all-in-one travel companion in Morocco from the vibrant streets of Marrakech to the beaches of Agadir, the historic alleys of Fes, and beyond. We are more than just a travel platform. We are a bridge between curious travelers and the finest local experiences Morocco has to offer."
+        },
+        "story": {
+            "title": "Our Story & Vision",
+            "lead": "MarHire was founded by two engineers with a passion for travel who saw how hard it was to plan Morocco the right way: scattered providers, hidden fees, and uneven quality. We built MarHire to fix that — one reliable place to book trusted local services at fair prices, with clear policies and real human support.",
+            "visionLead": "Their vision was simple yet powerful:",
+            "quote": "Morocco's best local experiences should be easily accessible to everyone without middlemen, confusion, or guesswork.",
+            "details": "That vision guides everything we do. We verify every partner, standardize policies, and surface real availability across cars, private drivers, boats, and activities so you can compare options, book in minutes, and focus on your trip. Many rentals require no deposit, pricing is transparent, and support is multilingual (English/French/Arabic) and truly 24/7 via WhatsApp, phone, or email."
+        },
+        "why": { "title": "Why Choose MarHire?" },
+        "where": { "title": "Where We Operate" },
+        "journey": {
+            "title": "Our Journey",
+            "2023": { "title": "Launched in Agadir, Morocco" },
+            "2024": { "title": "Expanded nationwide" },
+            "2025": { "title": "Introduced boats, tours & more" }
+        },
+        "safety": {
+            "title": "Our Safety & Trust Policies",
+            "items": [
+                "Centralized Booking & Support",
+                "Verified & Trusted Agencies",
+                "Refund and Cancellation Policies",
+                "No Deposit Options",
+                "24/7 WhatsApp Support",
+                "Airport Pickup Guarantee"
+            ]
+        },
+        "resources": {
+            "title": "Resources",
+            "items": [
+                { "q": "Entry & Visa Basics", "a": "Many travelers can enter Morocco visa-free or with an eVisa for short stays. Always check the latest requirements with the Moroccan consulate and ensure your passport is valid for the duration of your trip." },
+                { "q": "Money & Payments in Morocco", "a": "The local currency is MAD (dirham). ATMs are common in cities; cards work at larger hotels and shops, but cash is preferred in markets and taxis. Keep small bills for tips and avoid dynamic currency conversion—pay in MAD." },
+                { "q": "Car Rental Essentials (Morocco)", "a": "Your home-country license is usually accepted; an International Driving Permit is recommended. Confirm insurance and roadside assistance, and check deposit vs. no-deposit options." },
+                { "q": "Getting Around & Airport Transfers", "a": "Pre-book a private driver for fixed pricing and meet-and-greet at arrivals, or use official taxi stands. Trains and intercity buses connect major cities; plan extra time during peak seasons." },
+                { "q": "Safety, Etiquette & Common Scams", "a": "Morocco is generally safe; use licensed guides/drivers and be cautious with unsolicited helpers. Dress modestly near religious sites, ask before photographing people, and keep valuables secure." }
+            ]
+        },
+        "features": {
+            "verifiedDesc": "All agencies are screened and approved.",
+            "transparentDesc": "No hidden fees, clear policies.",
+            "multilingualDesc": "English, French, Arabic service.",
+            "digitalDesc": "Book online in minutes.",
+            "noDeposit": "No Deposit on Most Rentals",
+            "noDepositDesc": "Especially for economy vehicles.",
+            "allInOne": "All-in-One Platform",
+            "allInOneDesc": "Cars, drivers, boats, tours & more."
+        }
+    },
     "units": {
         "day": "day",
         "hour": "hour",

@@ -1,4 +1,4 @@
-import ExplorePopular from "../components/site/ExplorePopular";
+import ExploreCategory from "../components/site/ExploreCategory";
 import HeroSection from "../components/site/HeroSection";
 import Recommended from "../components/site/Recommended";
 import WhyChooseUs from "../components/site/WhyChooseUs";
@@ -55,7 +55,15 @@ const Home = () => {
     return (
         <>
             {isMobile ? <BannerMobile />:<HeroSection withBar={true}/>}
-            <ExplorePopular />
+            <ExploreCategory
+                items={[
+                    { name: t('cities.agadir'), image: 'https://marhire.bytech.ma/images/agadir.webp', listings: 40 },
+                    { name: t('cities.marrakech'), image: 'https://marhire.bytech.ma/images/marrakech.webp', listings: 40 },
+                    { name: t('cities.casablanca'), image: 'https://marhire.bytech.ma/images/casablanca2.webp', listings: 40 },
+                    { name: t('cities.fes'), image: 'https://marhire.bytech.ma/images/fez.webp', listings: 40 },
+                    { name: t('cities.tangier'), image: 'https://marhire.bytech.ma/images/tangier.webp', listings: 40 },
+                ]}
+            />
             <Recommended type="cars" classes="bg-blue"/>
             <Recommended type="drivers" classes="bg-green" />
             <Recommended type="boats" classes="bg-yellow"/>

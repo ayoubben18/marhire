@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
-import { FaCalendarAlt, FaWhatsapp, FaCheckCircle, FaRegCircle } from "react-icons/fa";
+import { FaCalendarAlt, FaWhatsapp, FaCheckCircle, FaMoneyBillWave } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import { BsFillFuelPumpDieselFill } from "react-icons/bs";
 import { GiCarDoor } from "react-icons/gi";
@@ -105,6 +105,18 @@ const Recommended = ({
 
     // Agency page variant (used in Agency.jsx via classes="agency-listings")
     const isAgencyVariant = (classes || "").split(" ").includes("agency-listings");
+
+    // Helper to normalize deposit-required field coming from backend ("Yes"/"No"/1/0/true/false)
+    const isDepositRequired = (value) => {
+        if (value === undefined || value === null) return false;
+        if (typeof value === 'number') return value === 1;
+        if (typeof value === 'boolean') return value === true;
+        if (typeof value === 'string') {
+            const v = value.trim().toLowerCase();
+            return v === '1' || v === 'yes' || v === 'true';
+        }
+        return false;
+    };
 
     const getTypeLabel = () => {
         switch (type) {
@@ -324,7 +336,9 @@ const Recommended = ({
                                       {isAgencyVariant && (
                                           <div className="agency-badges">
                                               <span className="agency-badge green"><span className="ico"><FaCheckCircle size={12} /></span>{t('listing.trustNotes.cancellation', 'Free Cancellation')}</span>
-                                              <span className="agency-badge blue"><span className="ico"><FaRegCircle size={12} /></span>{t('listing.specs.noDeposit', 'No Deposit')}</span>
+                                              {!isDepositRequired(listing.deposit_required) && (
+                                                  <span className="agency-badge blue"><span className="ico"><FaMoneyBillWave size={12} /></span>{t('listing.specs.noDeposit', 'No Deposit')}</span>
+                                              )}
                                               <span className="agency-badge outline"><span className="ico"><MdVerified size={12} /></span>{t('listing.badges.verifiedPartner', 'Verified Partner')}</span>
                                           </div>
                                       )}

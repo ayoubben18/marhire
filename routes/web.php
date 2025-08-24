@@ -173,6 +173,16 @@ Route::get('/support', function (\Illuminate\Http\Request $request) {
     return redirect("/$locale/support");
 });
 
+Route::get('/sitemap', function (\Illuminate\Http\Request $request) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    return redirect("/$locale/sitemap");
+});
+
 Route::get('/how-we-work', function (\Illuminate\Http\Request $request) {
     $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
     $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
@@ -405,6 +415,7 @@ Route::group(['prefix' => '{locale?}'], function () {
     Route::get('/support', [EntereController::class, 'support'])->name('support');
     Route::get('/how-we-work', [EntereController::class, 'how_we_work'])->name('how_we_work');
     Route::get('/faq', [EntereController::class, 'faq'])->name('faq');
+    Route::get('/sitemap', function(){ return view('site.sitemap'); })->name('sitemap');
     Route::get('/partners', [EntereController::class, 'partners'])->name('partners');
     Route::get('/terms', [EntereController::class, 'terms'])->name('terms');
     Route::get('/city/{city}', action: [EntereController::class, 'city'])->name('city');

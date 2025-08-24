@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MdVerified } from "react-icons/md";
-import { FaRegCalendarAlt, FaWhatsapp, FaEnvelope, FaHome, FaInfoCircle, FaCheckCircle, FaShieldAlt, FaPlaneDeparture, FaGasPump, FaHeadset, FaChevronDown, FaChevronUp, FaAnchor, FaClock, FaCloudSun, FaTags, FaLanguage, FaUsers, FaStar, FaCheckSquare } from "react-icons/fa";
+import { FaRegCalendarAlt, FaWhatsapp, FaEnvelope, FaHome, FaInfoCircle, FaCheckCircle, FaShieldAlt, FaPlaneDeparture, FaGasPump, FaHeadset, FaChevronDown, FaChevronUp, FaAnchor, FaClock, FaCloudSun, FaTags, FaLanguage, FaUsers, FaStar, FaCheckSquare, FaListUl } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import SearchItem from "../components/site/SearchItem";
 import Footer from "../components/site/Footer";
@@ -366,7 +366,7 @@ const Agency = ({ slug }) => {
 
                                 <section className="agency-listings-section">
                                     <div className="agency__listings">
-                                        <h2 className="section-title_borderd">{t('agencyPage.availableListings.title', 'Available Listings')}</h2>
+                                        <h2 className="section-title_borderd listings-title"><span className="ico"><FaListUl size={16} /></span>{t('agencyPage.availableListings.title', 'Available Listings')}</h2>
                                         <Recommended
                                             type={categoryKey}
                                             classes="agency-listings"
@@ -377,6 +377,10 @@ const Agency = ({ slug }) => {
                                     <style>{`
                                         .agency-listings-section { padding: 12px 0 0 0; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); margin-top: 18px; border-top: 1px solid #e6efe9; }
                                         .agency-listings-section .agency__listings { width: 100%; margin: 0; padding: 0 10px; }
+                                    `}</style>
+                                    <style>{`
+                                        .agency-listings-section .listings-title { font-weight: 800; font-size: 22px; color:#0f1f1b; margin: 0 0 8px 0; display:flex; align-items:center; gap:8px; }
+                                        .agency-listings-section .listings-title .ico { display:inline-flex; color:#048667; }
                                     `}</style>
                                 </section>
 

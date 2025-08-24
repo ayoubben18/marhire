@@ -163,7 +163,7 @@ section {
 }
 
 .city-card {
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
@@ -178,6 +178,8 @@ section {
     position: relative;
     height: 230px;
     width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
 }
 
 .city-image {
@@ -564,7 +566,8 @@ a.recommendation-wtsp:hover {
     color: var(--txt-muted);
 }
 
-@media (min-width: 1200px) {
+/* Columns: default 1, 2≥768px, 3≥1280px, 4≥1420px */
+@media (min-width: 1420px) {
     .recommendation-listings {
         grid-template-columns: repeat(4, 1fr);
     }
@@ -573,22 +576,19 @@ a.recommendation-wtsp:hover {
     }
 }
 
-/* 3 items per row on medium screens */
-@media (min-width: 900px) and (max-width: 1199px) {
+@media (min-width: 1054px) and (max-width: 1419.98px) {
     .recommendation-listings {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-/* 2 items per row on small screens */
-@media (min-width: 600px) and (max-width: 899px) {
+@media (min-width: 768px) and (max-width: 1053.98px) {
     .recommendation-listings {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-/* 1 item per row on mobile */
-@media (max-width: 599px) {
+@media (max-width: 767.98px) {
     .recommendation-listings {
         grid-template-columns: 1fr;
     }

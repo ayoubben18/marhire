@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import Footer from "../components/site/Footer";
 import HeroSectionPartners from "../components/site/HeroSectionPartners";
 import axios from "axios";
+import { FaArrowRight } from "react-icons/fa";
+import { getLocalizedUrl } from "../utils/localeManager";
 
 const Partners = () => {
     const { t } = useTranslation();
@@ -71,93 +73,47 @@ const Partners = () => {
                     <p className="text-gray-600">{t("partners.noPartners", "No partners available at the moment.")}</p>
                 </div>
             ) : (
-                <div className="space-y-12">
+                <div className="space-y-10">
                     {CATEGORY_ORDER.filter((catId) => grouped[catId] && grouped[catId].length > 0).map((catId) => (
                         <section key={catId}>
-                            <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center justify-between mb-3">
                                 <h2 className="text-2xl font-semibold">{categoryLabel(catId)}</h2>
                                 <span className="text-sm text-gray-500">{grouped[catId].length}</span>
                             </div>
-                            <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                            <ul className="partners-grid">
                                 {grouped[catId].map((partner) => (
-                                    <a
-                                        key={partner.id}
-                                        href={`/agency/${partner.slug}`}
-                                        className="flex flex-col items-center p-6 rounded-lg bg-gray-50 shadow-sm hover:shadow-md transition"
-                                    >
-                                        <img
-                                            src={partner.agency_logo ? `/${partner.agency_logo}` : "/images/not-found.png"}
-                                            alt={partner.agency_name}
-                                            className="mb-4 h-16 object-contain"
-                                            style={{ maxWidth: 120 }}
-                                            onError={(e) => {
-                                                e.target.src = "/images/not-found.png";
-                                            }}
-                                        />
-                                        <h3 className="text-lg font-semibold mb-2 text-center">
-                                            {partner.agency_name}
-                                        </h3>
-                                        <div
-                                            className="text-sm text-gray-600 text-center"
-                                            dangerouslySetInnerHTML={{
-                                                __html: partner.short_description || t("partners.defaultDescription", "Trusted partner in Morocco")
-                                            }}
-                                        />
-                                        {partner.city && (
-                                            <p className="text-xs text-gray-500 mt-2">
-                                                {partner.city.city_name}
-                                            </p>
-                                        )}
-                                    </a>
+                                    <li key={partner.id}>
+                                        <a href={getLocalizedUrl(`/agency/${partner.slug}`)} className="partner-link">
+                                            <FaArrowRight size={12} className="arrow" />
+                                            <span className="label">{partner.agency_name}{partner.city?.city_name ? ` (${partner.city.city_name})` : ''}</span>
+                                        </a>
+                                    </li>
                                 ))}
-                            </div>
+                            </ul>
                         </section>
                     ))}
 
-                    {/* Render any uncategorized partners under 'Other' */}
                     {grouped[-1] && grouped[-1].length > 0 && (
                         <section>
-                            <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center justify-between mb-3">
                                 <h2 className="text-2xl font-semibold">{categoryLabel(-1)}</h2>
                                 <span className="text-sm text-gray-500">{grouped[-1].length}</span>
                             </div>
-                            <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                            <ul className="partners-grid">
                                 {grouped[-1].map((partner) => (
-                                    <a
-                                        key={partner.id}
-                                        href={`/agency/${partner.slug}`}
-                                        className="flex flex-col items-center p-6 rounded-lg bg-gray-50 shadow-sm hover:shadow-md transition"
-                                    >
-                                        <img
-                                            src={partner.agency_logo ? `/${partner.agency_logo}` : "/images/not-found.png"}
-                                            alt={partner.agency_name}
-                                            className="mb-4 h-16 object-contain"
-                                            style={{ maxWidth: 120 }}
-                                            onError={(e) => {
-                                                e.target.src = "/images/not-found.png";
-                                            }}
-                                        />
-                                        <h3 className="text-lg font-semibold mb-2 text-center">
-                                            {partner.agency_name}
-                                        </h3>
-                                        <div
-                                            className="text-sm text-gray-600 text-center"
-                                            dangerouslySetInnerHTML={{
-                                                __html: partner.short_description || t("partners.defaultDescription", "Trusted partner in Morocco")
-                                            }}
-                                        />
-                                        {partner.city && (
-                                            <p className="text-xs text-gray-500 mt-2">
-                                                {partner.city.city_name}
-                                            </p>
-                                        )}
-                                    </a>
+                                    <li key={partner.id}>
+                                        <a href={getLocalizedUrl(`/agency/${partner.slug}`)} className="partner-link">
+                                            <FaArrowRight size={12} className="arrow" />
+                                            <span className="label">{partner.agency_name}{partner.city?.city_name ? ` (${partner.city.city_name})` : ''}</span>
+                                        </a>
+                                    </li>
                                 ))}
-                            </div>
+                            </ul>
                         </section>
                     )}
                 </div>
             )}
+
             <div className="text-center my-10">
                 <h2 className="text-lg font-semibold mb-2">
                     {t("partners.becomePartner", "Become a MarHire Partner")}
@@ -167,12 +123,23 @@ const Partners = () => {
                     {t("partners.becomePartnerCta", "Join MarHire and reach thousands of international travelers.")}
                 </p>
                 <a
-                    href="/list-your-property"
-                    className="inline-block px-6 py-2 text-white rounded-full font-medium hover:bg-teal-700 transition btn-style1"
+                    href={getLocalizedUrl('/list-your-property')}
+                    className="inline-block px-6 py-2 text-white rounded-full font-medium hover:opacity-90 transition btn-style1"
                 >
                     {t("partners.applyButton", "Apply to Partner with Us")}
                 </a>
             </div>
+
+            <style>{`
+                .partners-grid { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 8px 16px; }
+                @media (min-width: 640px){ .partners-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+                @media (min-width: 768px){ .partners-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }}
+                @media (min-width: 1024px){ .partners-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }}
+                .partner-link { display:flex; align-items:center; gap:8px; color:#5f6b6d; text-decoration:none; padding:8px 6px; border-radius:10px; }
+                .partner-link:hover { color:#048667; background:#f2faf8; }
+                .arrow { color:#048667; }
+                .label { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+            `}</style>
         </div>
         <Footer />
     </>

@@ -24,6 +24,7 @@ import Blog from "./pages/Blog";
 import Legal from "./pages/Legal";
 import Article from "./pages/Article";
 import SubCategory from "./pages/SubCategory";
+import Sitemap from "./pages/Sitemap";
 import { initBookingEmailManager } from "./components/BookingEmailManager";
 
 // Check if we're on an admin route
@@ -94,6 +95,7 @@ const agencyRoot = document.getElementById("agency_root");
 const blogRoot = document.getElementById("blog_root");
 const legalRoot = document.getElementById("legal_root");
 const articleRoot = document.getElementById("article_root");
+const sitemapRoot = document.getElementById("sitemap_root");
 
 // Only render if not redirecting
 if (shouldRenderApp) {
@@ -250,6 +252,15 @@ if (blogRoot) {
     root.render(
         <AppWrapper>
             <Blog />
+        </AppWrapper>
+    );
+}
+if (sitemapRoot) {
+    const root = ReactDOM.createRoot(sitemapRoot);
+
+    root.render(
+        <AppWrapper>
+            <Sitemap />
         </AppWrapper>
     );
 }

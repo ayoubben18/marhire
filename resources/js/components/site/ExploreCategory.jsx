@@ -4,13 +4,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
+import { getLocalizedUrl } from "../../utils/localeManager";
 
-const ExploreCategory = ({ title, subtitle, items }) => {
+const ExploreCategory = ({ title, subtitle, items, centered = false }) => {
     const { t } = useTranslation();
 
     return (
         <section id="explore-popular">
-            <div className="section-head">
+            <div className="section-head" style={centered ? { textAlign: 'center' } : undefined}>
                 <h2 className="section-title">
                     {title ? title : t("home.popular.title")}
                 </h2>
@@ -32,33 +33,29 @@ const ExploreCategory = ({ title, subtitle, items }) => {
                         slidesPerView: 3,
                     },
                     1024: {
-                        slidesPerView: 5,
+                        slidesPerView: 4,
                     },
                 }}
             >
                 {items.map((city, index) => (
                     <SwiperSlide key={index}>
-                        <div className="city-card v2">
+                        <a href={getLocalizedUrl(`/city/${(city.slug || city.name || '').toString().toLowerCase()}`)} className="city-card">
                             <div className="city-image-container">
                                 <img
                                     src={city.image}
                                     alt={city.name}
                                     className="city-image"
                                     onError={(e) => {
-                                        e.target.src =
-                                            "https://marhire.bytech.ma/images/casablanca2.webp";
+                                        e.target.src = "https://placehold.co/1200x800";
                                     }}
                                 />
                                 <div className="city-overlay"></div>
                             </div>
                             <div className="city-info">
                                 <h3 className="city-name">{city.name}</h3>
-                                <p className="city-properties">
-                                    {city.listings.toLocaleString()}+{" "}
-                                    {t("home.popular.listings")}
-                                </p>
+                                <p className="city-properties">{city.listings}+ {t("home.popular.listings")}</p>
                             </div>
-                        </div>
+                        </a>
                     </SwiperSlide>
                 ))}
             </Swiper>
