@@ -210,7 +210,7 @@ const Agency = ({ slug }) => {
                                 .hero-card { display:flex; flex-direction:column; align-items:center; text-align:center; }
                                 .logo-wrap { width:100px; height:100px; border-radius:16px; overflow:hidden; background:#fff; box-shadow: 0 6px 18px rgba(0,0,0,.08); display:flex; align-items:center; justify-content:center; }
                                 .logo-wrap img { width:100%; height:100%; object-fit:contain; }
-                                .verified { margin-top:14px; display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #a7d7cd; color:#048667; background:#f2faf8; border-radius:999px; font-size:12px; }
+                                .verified { margin-top:14px; display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border:1px solid #048667; color:#048667; background:#e6f3f0; border-radius:999px; font-size:11px; }
                                 .verified .icon { display:inline-flex; }
                                 .title { font-size: 32px; font-weight:800; margin:10px 0 6px 0; color:#122521; }
                                 .location { margin: 0 0 8px 0; color:#607773; }
@@ -379,7 +379,7 @@ const Agency = ({ slug }) => {
                                         .agency-listings-section .agency__listings { width: 100%; margin: 0; padding: 0 10px; }
                                     `}</style>
                                     <style>{`
-                                        .agency-listings-section .listings-title { font-weight: 800; font-size: 22px; color:#0f1f1b; margin: 0 0 8px 0; display:flex; align-items:center; gap:8px; }
+                                        .agency-listings-section .listings-title { font-weight: 800; font-size: 22px; color:#0f1f1b; margin: 0 0 8px 0; display:flex; align-items:center; gap:8px; text-transform: none; }
                                         .agency-listings-section .listings-title .ico { display:inline-flex; color:#048667; }
                                     `}</style>
                                 </section>

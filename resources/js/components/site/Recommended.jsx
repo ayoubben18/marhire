@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
-import { FaCalendarAlt, FaWhatsapp, FaCheckCircle, FaMoneyBillWave } from "react-icons/fa";
+import { FaWhatsapp, FaCheckCircle, FaMoneyBillWave } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import { BsFillFuelPumpDieselFill } from "react-icons/bs";
 import { GiCarDoor } from "react-icons/gi";
@@ -217,21 +217,17 @@ const Recommended = ({
         return tabsHtml;
     };
 
-    const generatePrice = (listing) => {
+    const generatePriceParts = (listing) => {
         if (type === "cars") {
-            return `${t("common.from")} ${listing.price_per_day}€ / ${t(
-                "units.day"
-            )}`;
+            return { prefix: t("common.from"), value: listing.price_per_day, suffix: `/ ${t("units.day")}` };
         } else if (type === "drivers") {
             const driverPrice = listing.pricings[0].airport_one || 0;
-            return `${t("common.from")} ${driverPrice}€ / ${t("units.day")}`;
+            return { prefix: t("common.from"), value: driverPrice, suffix: `/ ${t("units.day")}` };
         } else if (type === "boats") {
-            return `${t("common.from")} ${listing.price_per_hour}€ / ${t(
-                "units.hour"
-            )}`;
+            return { prefix: t("common.from"), value: listing.price_per_hour, suffix: `/ ${t("units.hour")}` };
         } else {
             const price = listing.act_pricings[0].price || 0;
-            return `${t("common.from")} ${price}€ / ${t("units.person")}`;
+            return { prefix: t("common.from"), value: price, suffix: `/ ${t("units.person")}` };
         }
     };
 
@@ -302,7 +298,7 @@ const Recommended = ({
                                           <span className="agency-type-badge">{getTypeLabel()}</span>
                                       ) : (
                                           <span className="annonce-price-badge">
-                                              {generatePrice(listing)}
+                                              {(() => { const p = generatePriceParts(listing); return (<><span className="price-prefix">{p.prefix}&nbsp;</span><span className="price-value">{p.value}€</span>&nbsp;<span className="price-suffix">{p.suffix.replace(/^\s*\/\s*/, '/ ')}</span></>); })()}
                                           </span>
                                       )}
                                       <a href={getLocalizedUrl(`details/${listing.slug}`)}>
@@ -345,7 +341,7 @@ const Recommended = ({
                                   </div>
                                   {isAgencyVariant ? (
                                       <div className="agency-footer">
-                                          <div className="agency-price">{generatePrice(listing)}</div>
+                                          <div className="agency-price">{(() => { const p = generatePriceParts(listing); return (<><span className="price-prefix">{p.prefix}&nbsp;</span><span className="price-value">{p.value}€</span>&nbsp;<span className="price-suffix">{p.suffix.replace(/^\s*\/\s*/, '/ ')}</span></>); })()}</div>
                                           <div className="agency-actions">
                                               <a
                                                   href={getWtspUrl(listing)}
@@ -353,13 +349,13 @@ const Recommended = ({
                                                   className="agency-chat"
                                                   aria-label="WhatsApp"
                                               >
-                                                  <FaWhatsapp />
+                                                  <FaWhatsapp size={20} />
                                               </a>
                                               <a
                                                   href={getLocalizedUrl(`details/${listing.slug}`)}
                                                   className="agency-book"
                                               >
-                                                  <span><FaCalendarAlt /></span> {t("common.bookNow")}
+                                                  {t("common.bookNow")}
                                               </a>
                                           </div>
                                       </div>
@@ -369,9 +365,6 @@ const Recommended = ({
                                               href={getLocalizedUrl(`details/${listing.slug}`)}
                                               className="recommendation-button"
                                           >
-                                              <span>
-                                                  <FaCalendarAlt />
-                                              </span>{" "}
                                               {t("common.bookNow")}
                                           </a>
                                           <a
@@ -379,7 +372,7 @@ const Recommended = ({
                                               target="_blank"
                                               className="recommendation-wtsp"
                                           >
-                                              <FaWhatsapp />
+                                              <FaWhatsapp size={24} />
                                           </a>
                                       </div>
                                   )}

@@ -39,7 +39,8 @@
         "sending": "Envoi...",
         "sendMessage": "Envoyer Message",
         "home": "Accueil",
-        "compareSimilarListings": "Comparer les Annonces Similaires"
+        "compareSimilarListings": "Comparer les Annonces Similaires",
+        "readMore": "Lire la suite"
     },
     "messages": {
         "whatsappInterest": "Bonjour, je suis intéressé par la réservation de cette location.\n\nTitre: {{title}}\n\nURL: {{url}}\n\nPourriez-vous me fournir plus de détails sur la disponibilité, les prix et le processus de réservation?\n\nMerci!"
@@ -698,6 +699,11 @@
         "selectTime": "Sélectionner l'heure"
     },
     "blog": {
+        "title": "Blog",
+        "hero": {
+            "title": "Blog de voyage MarHire",
+            "subtitle": "Votre guide expert pour voyager au Maroc. Conseils sur la location de voiture, visites privées et perles cachées à découvrir."
+        },
         "loadMore": "Charger plus",
         "noArticles": "Aucun article trouvé",
         "readMore": "Lire la suite",

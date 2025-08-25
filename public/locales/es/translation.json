@@ -39,7 +39,8 @@
         "sending": "Enviando...",
         "sendMessage": "Enviar Mensaje",
         "home": "Inicio",
-        "compareSimilarListings": "Comparar Anuncios Similares"
+        "compareSimilarListings": "Comparar Anuncios Similares",
+        "readMore": "Leer más"
     },
     "messages": {
         "whatsappInterest": "Hola, estoy interesado en reservar este alquiler.\n\nTítulo: {{title}}\n\nURL: {{url}}\n\n¿Podría proporcionar más detalles sobre disponibilidad, precios y el proceso de reserva?\n\n¡Gracias!"
@@ -698,6 +699,11 @@
         "selectTime": "Seleccionar hora"
     },
     "blog": {
+        "title": "Blog",
+        "hero": {
+            "title": "Blog de Viajes de MarHire",
+            "subtitle": "Tu guía experta para viajar en Marruecos. Consejos sobre alquiler de coches, tours privados y joyas ocultas por descubrir."
+        },
         "loadMore": "Cargar más",
         "noArticles": "No se encontraron artículos",
         "readMore": "Leer más",
