@@ -128,6 +128,32 @@ class EntereController extends Controller
         ]);
     }
 
+    public function subcategoryCity(Request $request, $locale = null, string $category = null, string $subcategory = null, string $city = null)
+    {
+        // Handle the case where locale is optional in routes
+        // If three parameters are passed, they are category, subcategory and city, not locale, category and subcategory
+        if ($city === null && $subcategory !== null && $category !== null && $locale !== null) {
+            $city = $subcategory;
+            $subcategory = $category;
+            $category = $locale;
+            $locale = app()->getLocale();
+        }
+        
+        $categories = ['car-rental', 'private-driver', 'boats', 'things-to-do'];
+
+        if (!in_array($category, $categories) || !$this->checkSubCategoryExists($category, $subcategory))
+            return abort(404);
+
+        $page = $this->SEOservice->getPage('category/' . $category . '/subcategory/' . $subcategory . '/' . $city);
+
+        return view('site.subcategory')->with([
+            'category' => $category,
+            'subcategory' => $subcategory,
+            'city' => $city,
+            'page' => $page
+        ]);
+    }
+
     public function checkSubCategoryExists($category, $subcategory)
     {
         // Define your category ID and subcategory NAME map

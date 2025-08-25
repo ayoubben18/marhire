@@ -16,24 +16,23 @@ import PrivateSubCategory from "../components/site/PrivateSubCategory";
 import BoatSubCategory from "../components/site/BoatSubCategory";
 import ThingsToDoSubCategory from "../components/site/ThingsToDoSubCategory";
 
-const SubCategory = ({ category, subcategory }) => {
+const SubCategory = ({ category, subcategory, city }) => {
     const fetchContent = () => {
-        // try {
-        //     switch (category) {
-        //         case "private-driver":
-        //             return <PrivateSubCategory subcategory={subcategory} />;
-        //         case "boats":
-        //             return <BoatSubCategory subcategory={subcategory} />;
-        //         case "things-to-do":
-        //             return <ThingsToDoSubCategory subcategory={subcategory} />;
-        //         default:
-        //             return <CarSubCategory subcategory={subcategory} />;
-        //     }
-        // } catch (err) {
-        //     console.error(err);
-        // }
-
-        return <h1>test</h1>;
+        try {
+            switch (category) {
+                case "private-driver":
+                    return <PrivateSubCategory subcategory={subcategory} city={city} />;
+                case "boats":
+                    return <BoatSubCategory subcategory={subcategory} city={city} />;
+                case "things-to-do":
+                    return <ThingsToDoSubCategory subcategory={subcategory} city={city} />;
+                default:
+                    return <CarSubCategory subcategory={subcategory} city={city} />;
+            }
+        } catch (err) {
+            console.error(err);
+            return <h1>Error loading content</h1>;
+        }
     };
 
     return <>{fetchContent()}</>;

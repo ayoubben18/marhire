@@ -386,7 +386,7 @@ Route::get('/category/{category}/subcategory/{subcat}', function (\Illuminate\Ht
     return redirect($redirectUrl);
 })->where(['category' => '.*', 'subcat' => '.*']);
 
-Route::get('/category/{slug}/{city}', function (\Illuminate\Http\Request $request, $slug, $city) {
+Route::get('/category/{category}/subcategory/{subcat}/city/{city}', function (\Illuminate\Http\Request $request, $category, $subcat, $city) {
     $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
     $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
     $locale = $cookieValue ?: $request->session()->get('locale', 'en');
@@ -394,7 +394,22 @@ Route::get('/category/{slug}/{city}', function (\Illuminate\Http\Request $reques
         $locale = 'en';
     }
     $queryString = $request->getQueryString();
-    $redirectUrl = "/$locale/category/$slug/$city";
+    $redirectUrl = "/$locale/category/$category/subcategory/$subcat/city/$city";
+    if ($queryString) {
+        $redirectUrl .= '?' . $queryString;
+    }
+    return redirect($redirectUrl);
+})->where(['category' => '.*', 'subcat' => '.*', 'city' => '.*']);
+
+Route::get('/category/{slug}/city/{city}', function (\Illuminate\Http\Request $request, $slug, $city) {
+    $supportedLocales = config('app.supported_locales', ['en', 'fr', 'es']);
+    $cookieValue = $request->cookie('i18nextLng') ?: $_COOKIE['i18nextLng'] ?? null;
+    $locale = $cookieValue ?: $request->session()->get('locale', 'en');
+    if (!in_array($locale, $supportedLocales)) {
+        $locale = 'en';
+    }
+    $queryString = $request->getQueryString();
+    $redirectUrl = "/$locale/category/$slug/city/$city";
     if ($queryString) {
         $redirectUrl .= '?' . $queryString;
     }
@@ -420,8 +435,9 @@ Route::group(['prefix' => '{locale?}'], function () {
     Route::get('/terms', [EntereController::class, 'terms'])->name('terms');
     Route::get('/city/{city}', action: [EntereController::class, 'city'])->name('city');
     Route::get('/category/{slug}', [EntereController::class, 'category'])->name('category');
+    Route::get('/category/{slug}/city/{city}', [EntereController::class, 'categoryCity'])->name('categoryCity');
     Route::get('/category/{category}/subcategory/{subcat}', [EntereController::class, 'subcategory'])->name('subcategory');
-    Route::get('/category/{slug}/{city}', [EntereController::class, 'categoryCity'])->name('categoryCity');
+    Route::get('/category/{category}/subcategory/{subcat}/city/{city}', [EntereController::class, 'subcategoryCity'])->name('subcategoryCity');
     Route::get('/details/{slug}', [EntereController::class, 'listing'])->name('listing');
     Route::get('/car-search', [EntereController::class, 'carsearch'])->name('carsearch');
     Route::get('/private-search', [EntereController::class, 'privatesearch'])->name('privatesearch');

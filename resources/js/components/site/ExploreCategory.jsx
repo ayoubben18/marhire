@@ -39,7 +39,7 @@ const ExploreCategory = ({ title, subtitle, items, centered = false }) => {
             >
                 {items.map((city, index) => (
                     <SwiperSlide key={index}>
-                        <a href={getLocalizedUrl(`/city/${(city.slug || city.name || '').toString().toLowerCase()}`)} className="city-card">
+                        <a href={city.link ? city.link : getLocalizedUrl(`/city/${(city.slug || city.name || '').toString().toLowerCase()}`)} className="city-card">
                             <div className="city-image-container">
                                 <img
                                     src={city.image}

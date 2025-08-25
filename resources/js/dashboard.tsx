@@ -186,10 +186,11 @@ if (subcategoryRoot) {
     const root = ReactDOM.createRoot(subcategoryRoot);
     const category = subcategoryRoot.dataset.category;
     const subcategory = subcategoryRoot.dataset.subcategory;
+    const city = subcategoryRoot.dataset.city;
 
     root.render(
         <AppWrapper>
-            <SubCategory category={category} subcategory={subcategory} />
+            <SubCategory category={category} subcategory={subcategory} city={city} />
         </AppWrapper>
     );
 }
