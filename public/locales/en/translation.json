@@ -1247,5 +1247,20 @@
                 "Ready to book or have a question?"
             ]
         }
+    },
+    "notFound": {
+        "title": "404 - Page Not Found",
+        "description": "Oops! The page you are looking for does not exist. It might have been moved or deleted.",
+        "returnHome": "Return to Homepage",
+        "popularLinks": "Or, try one of these popular links:",
+        "needHelp": "Need help?",
+        "contactUs": "Contact our support team",
+        "links": {
+            "carMarrakech": "Car Rentals in Marrakech",
+            "activitiesAgadir": "Activities in Agadir",
+            "driverssCasablanca": "Private Drivers in Casablanca",
+            "boatsAgadir": "Boat Rentals in Agadir",
+            "explore": "Explore All Destinations"
+        }
     }
 }

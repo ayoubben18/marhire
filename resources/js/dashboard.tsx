@@ -25,6 +25,7 @@ import Legal from "./pages/Legal";
 import Article from "./pages/Article";
 import SubCategory from "./pages/SubCategory";
 import Sitemap from "./pages/Sitemap";
+import NotFound from "./pages/NotFound";
 import { initBookingEmailManager } from "./components/BookingEmailManager";
 
 // Check if we're on an admin route
@@ -96,6 +97,7 @@ const blogRoot = document.getElementById("blog_root");
 const legalRoot = document.getElementById("legal_root");
 const articleRoot = document.getElementById("article_root");
 const sitemapRoot = document.getElementById("sitemap_root");
+const notfoundRoot = document.getElementById("notfound_root");
 
 // Only render if not redirecting
 if (shouldRenderApp) {
@@ -273,6 +275,15 @@ if (articleRoot) {
     root.render(
         <AppWrapper>
             <Article slug={slug} />
+        </AppWrapper>
+    );
+}
+if (notfoundRoot) {
+    const root = ReactDOM.createRoot(notfoundRoot);
+
+    root.render(
+        <AppWrapper>
+            <NotFound />
         </AppWrapper>
     );
 }
