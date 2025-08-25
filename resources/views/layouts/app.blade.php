@@ -44,7 +44,9 @@ request()->is('*/support') ||
 request()->is('how-we-work') ||
 request()->is('*/how-we-work') ||
 request()->is('partners') ||
-request()->is('*/partners')
+request()->is('*/partners') ||
+request()->is('sitemap') ||
+request()->is('*/sitemap')
 );
 @endphp
 <!doctype html>
