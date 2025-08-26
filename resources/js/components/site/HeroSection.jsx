@@ -19,7 +19,7 @@ function getTabs(t) {
     ];
 }
 
-const HeroSection = ({ withBar, text, isFull, tab }) => {
+const HeroSection = ({ withBar, text, subtitle, isFull, tab }) => {
     const { t, i18n } = useTranslation();
     
     const [activeTab, setActiveTab] = useState(tab ? tab : "cars");
@@ -51,6 +51,9 @@ const HeroSection = ({ withBar, text, isFull, tab }) => {
                         <h1 className="slogan-title">
                             {text ? text : t("home.hero.title")}
                         </h1>
+                        {subtitle ? (
+                            <p className="slogan-subtitle">{subtitle}</p>
+                        ) : null}
                         {withBar && (
                             <div className="features-icons">
                                 {features.map((item, index) => (
@@ -93,6 +96,9 @@ const HeroSection = ({ withBar, text, isFull, tab }) => {
                     </div>
                 </div>
             </div>
+            <style>{`
+                .slogan-subtitle { margin: 8px auto 0; color: #e5f1ee; font-size: 14px; line-height: 1.6; max-width: 1000px; text-align: center; padding: 0 16px; }
+            `}</style>
         </div>
     );
 };

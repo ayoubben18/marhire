@@ -13,7 +13,11 @@ const WhyChooseUs = ({ title, subtitle, features }) => {
                     <div key={index} className="card">
                         {feature.icon ? (
                             <div className="ico">
-                                <img src={feature.icon} alt={feature.title} />
+                                {typeof feature.icon === 'string' ? (
+                                    <img src={feature.icon} alt={feature.title} />
+                                ) : (
+                                    feature.icon
+                                )}
                             </div>
                         ) : null}
                         <h3 className="card-title">{feature.title}</h3>
@@ -32,6 +36,7 @@ const WhyChooseUs = ({ title, subtitle, features }) => {
                 .card { background: #ffffff; border: 1px solid #e6efe9; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; align-items: center; text-align: center; }
                 .ico { width: 56px; height: 56px; border-radius: 50%; background: #f2faf8; border: 1px solid #a7d7cd; display: inline-flex; align-items: center; justify-content: center; margin: 6px 0 10px; }
                 .ico img { width: 26px; height: 26px; object-fit: contain; }
+                .ico svg { width: 26px; height: 26px; color: #048667; }
                 .card-title { margin: 0 0 6px 0; font-size: 17px; font-weight: 800; color: #0f1f1b; }
                 .card-desc { margin: 0; color: #6b7280; font-size: 14px; line-height: 1.6; }
 

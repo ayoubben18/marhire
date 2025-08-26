@@ -1,6 +1,7 @@
 import HeroSection from "./HeroSection";
 import Recommended from "./Recommended";
 import WhyChooseUs from "./WhyChooseUs";
+import CategoryWhy from "./CategoryWhy";
 import FAQSection from "./FAQSection";
 import Footer from "./Footer";
 import { FaMapMarkedAlt } from "react-icons/fa";
@@ -14,38 +15,42 @@ import ExploreCategory from "./ExploreCategory";
 import { useEffect } from "react";
 import FAQSectionCustom from "./FAQSectionCustom";
 import FreeTexts from "./FreeTexts";
+import { useTranslation } from "react-i18next";
+import { Shield, Plane, Fuel, LifeBuoy, Check, BarChart } from "lucide-react";
 
 const CarCategory = ({ city }) => {
-    const features = [
+    const { t } = useTranslation();
+    // Why section (below hero) — translated with English fallbacks
+    const whyFeatures = [
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
-            title: "No Deposit on Economy Cars",
-            desc: "Many cars require no deposit — ideal for tourists and short-term renters.",
+            icon: <Shield />,
+            title: t('category.cars.why.noDeposit.title', 'No-Deposit Options'),
+            desc: t('category.cars.why.noDeposit.desc', 'Rent with ease. Many of our partners offer no-deposit car rental in Morocco on economy and compact cars.'),
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon10.webp",
-            title: "Full Insurance Included",
-            desc: "All rentals include insurance. Optional low-excess upgrades available.",
+            icon: <BarChart />,
+            title: t('category.cars.why.unlimitedKm.title', 'Unlimited Kilometers'),
+            desc: t('category.cars.why.unlimitedKm.desc', 'Explore Morocco without limits. Most rentals of 3+ days include unlimited mileage.'),
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon5.webp",
-            title: "Unlimited Kilometers",
-            desc: "Explore Morocco without distance limits — no extra charges.",
+            icon: <Plane />,
+            title: t('category.cars.why.airportHire.title', 'Airport Car Hire'),
+            desc: t('category.cars.why.airportHire.desc', 'Start your trip right away. We offer convenient car hire at all major Moroccan airports.'),
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon3.webp",
-            title: "Airport & Hotel Pickup",
-            desc: "Choose free delivery at any major city or airport (Marrakech, Agadir, Fes…).",
+            icon: <LifeBuoy />,
+            title: t('category.cars.why.roadside.title', '24/7 Roadside Assistance'),
+            desc: t('category.cars.why.roadside.desc', 'Your safety is our priority. Every rental includes 24/7 support for any on-road issues.'),
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon1.svg",
-            title: "24/7 Customer Support",
-            desc: "Local support team available on WhatsApp to assist you anytime.",
+            icon: <Fuel />,
+            title: t('category.cars.why.fuelPolicy.title', 'Transparent Fuel Policies'),
+            desc: t('category.cars.why.fuelPolicy.desc', 'No surprises. Our partners offer clear fuel policies, typically "Same-to-Same".'),
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon9.webp",
-            title: "Transparent Pricing",
-            desc: "The price you see is the price you pay. No surprises on arrival.",
+            icon: <Check />,
+            title: t('category.cars.why.instantConfirm.title', 'Instant Booking Confirmation'),
+            desc: t('category.cars.why.instantConfirm.desc', 'Book your car rental in minutes and receive your confirmation instantly.'),
         },
     ];
 
@@ -186,19 +191,7 @@ const CarCategory = ({ city }) => {
                 isFull={true}
                 tab="cars"
             />
-            <WhyChooseUs
-                title={
-                    city
-                        ? `Why Choose MarHire for Car Hire in ${city}?`
-                        : `Find Cheap & Reliable Car Rentals Across Morocco`
-                }
-                subtitle={
-                    city
-                        ? `Why Rent a Car in ${city} with MarHire - Local Deals & Reliable Service`
-                        : ``
-                }
-                features={city ? cityFeatures : features}
-            />
+            <CategoryWhy categoryKey="cars" />
             {!city && (
                 <>
                     <ExploreCategory

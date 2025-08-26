@@ -1,6 +1,7 @@
 import HeroSection from "./HeroSection";
 import Recommended from "./Recommended";
 import WhyChooseUs from "./WhyChooseUs";
+import CategoryWhy from "./CategoryWhy";
 import FAQSection from "./FAQSection";
 import Footer from "./Footer";
 import { FaMapMarkedAlt } from "react-icons/fa";
@@ -173,19 +174,7 @@ const ThingsToDoCategory = ({ city }) => {
                 isFull={true}
                 tab="activity"
             />
-            <WhyChooseUs
-                title={
-                    city
-                        ? `Why Choose MarHire for Activities in ${city}?`
-                        : `Discover the Best Experiences in Morocco`
-                }
-                subtitle={
-                    city
-                        ? `Explore ${city} Like a Local - Safe, Affordable & Verified Experiences`
-                        : ``
-                }
-                features={city ? cityFeatures : features}
-            />
+            <CategoryWhy categoryKey="activities" />
             {!city && (
                 <>
                     <ExploreCategory
@@ -193,12 +182,12 @@ const ThingsToDoCategory = ({ city }) => {
                         subtitle="Find activities in Morocco's most exciting destinations."
                         items={items}
                     />
-                    <Recommended type="activities" classes="bg-blue" />
+                    <Recommended type="activities" classes="agency-listings" />
                 </>
             )}
             <Recommended
                 type="activities"
-                classes="bg-green"
+                classes="agency-listings"
                 tabs={tabs}
                 city={city}
                 title={
@@ -219,7 +208,7 @@ const ThingsToDoCategory = ({ city }) => {
                     tabs={false}
                     title={`Best Experiences in ${city} - Updated Daily`}
                     subtitle={`Featured Tours & Activities in ${city} - Compare Prices & Highlights`}
-                    classes="bg-blue"
+                    classes="agency-listings"
                 />
             )}
             <FreeTexts slug="category/things-to-do" />

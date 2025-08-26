@@ -163,7 +163,7 @@ export default function PrivateDriverForm() {
     return (
         <div className="flex items-center justify-center">
             <div className="w-full">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-visible relative">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-visible relative mh-search">
                     <div className="flex flex-col lg:flex-row">
                         {/* Pick-up Location */}
                         <div className="w-full lg:flex-1 relative p-6 border-r border-gray-200">
@@ -181,7 +181,7 @@ export default function PrivateDriverForm() {
                                     setPickupLocation(e.target.value)
                                 }
                                 placeholder="Airport, city, station, region, district..."
-                                className="w-full text-lg font-semibold text-gray-900 placeholder-gray-400 border-none outline-none bg-transparent"
+                                className="w-full text-lg font-semibold text-gray-900 placeholder-gray-400 border-none outline-none bg-transparent mh-input"
                             />
                             <LocationModal
                                 open={showPickupModal}
@@ -200,7 +200,7 @@ export default function PrivateDriverForm() {
                             </label>
                             <button
                                 onClick={() => setShowDropOffModal(true)}
-                                className="text-lg font-bold text-gray-900 hvr-text-green transition-colors"
+                                className="text-lg font-bold text-gray-900 hvr-text-green transition-colors mh-input"
                             >
                                 {dropoffLocation}
                             </button>
@@ -218,7 +218,7 @@ export default function PrivateDriverForm() {
                             </label>
                             <button
                                 type="button"
-                                className="text-lg font-semibold text-gray-900 hvr-text-green transition w-fit"
+                                className="text-lg font-semibold text-gray-900 hvr-text-green transition w-fit mh-input"
                                 onClick={() => setShowGuestsModal(true)}
                             >
                                 {guests} {guests === 1 ? "person" : "persons"}
@@ -240,7 +240,7 @@ export default function PrivateDriverForm() {
                                                     : "pickup"
                                             )
                                         }
-                                        className="text-lg font-bold text-gray-900 hvr-text-green transition-colors"
+                                        className="text-lg font-bold text-gray-900 hvr-text-green transition-colors mh-input"
                                     >
                                         {formatDate(pickupDate)}
                                     </button>
@@ -456,12 +456,13 @@ export default function PrivateDriverForm() {
 
                         {/* Search Button */}
                         {!isMobile ? (
-                            <div className="flex-shrink-0">
+                            <div className="flex-shrink-0 flex items-center px-4">
                                 <button
-                                    className="h-full px-8 btn-search text-white transition-colors flex items-center justify-center"
+                                    className="btn-search text-white transition-colors flex items-center justify-center"
                                     onClick={(e) => handleSearch(e)}
                                 >
                                     <Search className="w-6 h-6" />
+                                    <span className="ml-2 hidden md:inline">{t("common.search","Search")}</span>
                                 </button>
                             </div>
                         ) : (

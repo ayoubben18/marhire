@@ -1,6 +1,7 @@
 import HeroSection from "./HeroSection";
 import Recommended from "./Recommended";
 import WhyChooseUs from "./WhyChooseUs";
+import CategoryWhy from "./CategoryWhy";
 import FAQSection from "./FAQSection";
 import Footer from "./Footer";
 import { FaMapMarkedAlt } from "react-icons/fa";
@@ -188,19 +189,7 @@ const PrivateCategory = ({ city }) => {
                 isFull={true}
                 tab="drivers"
             />
-            <WhyChooseUs
-                title={
-                    city
-                        ? `Why Choose MarHire for Chauffeur Services in ${city}?`
-                        : `Hire a Private Driver in Morocco - Airport & Intercity Services`
-                }
-                subtitle={
-                    city
-                        ? `Why Hire a Private Driver in ${city} with MarHire - Comfort, Safety & Local Expertise`
-                        : ``
-                }
-                features={city ? cityFeatures : features}
-            />
+            <CategoryWhy categoryKey="drivers" />
             {!city && (
                 <ExploreCategory
                     title="Private Driver Services in Morocco by City"
@@ -208,7 +197,7 @@ const PrivateCategory = ({ city }) => {
                     items={items}
                 />
             )}
-            {!city && <Recommended type="drivers" classes="bg-blue" />}
+            {!city && <Recommended type="drivers" classes="agency-listings" />}
             <Recommended
                 type="drivers"
                 tabs={tabs}
@@ -223,7 +212,7 @@ const PrivateCategory = ({ city }) => {
                         ? `Hire the Right Driver & Vehicle in ${city} - Daily, Airport & Multi-Day Trips`
                         : "Multilingual | Airport Transfers | Business Trips"
                 }
-                classes="bg-green"
+                classes="agency-listings"
             />
             {city && (
                 <Recommended
@@ -232,7 +221,7 @@ const PrivateCategory = ({ city }) => {
                     tabs={false}
                     title={`Best Private Driver Deals in ${city} With MarHire`}
                     subtitle={`Featured Private Chauffeurs in ${city} - Compare Options & Rates`}
-                    classes="bg-blue"
+                    classes="agency-listings"
                 />
             )}
             <FreeTexts slug="category/private-driver" />

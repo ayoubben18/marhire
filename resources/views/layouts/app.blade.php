@@ -46,6 +46,8 @@ request()->is('how-we-work') ||
 request()->is('*/how-we-work') ||
 request()->is('partners') ||
 request()->is('*/partners') ||
+request()->is('category/*') ||
+request()->is('*/category/*') ||
 request()->is('sitemap') ||
 request()->is('*/sitemap')
 ) || $forceNotSticky;

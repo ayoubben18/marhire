@@ -1,19 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-    MapPin,
-    Calendar,
-    Search,
-    ChevronDown,
-    Clock,
-    Users,
-    Info,
-    ChevronLeft,
-    ChevronRight,
-} from "lucide-react";
+import { Calendar, Search, ChevronDown, Clock, Users, Info } from "lucide-react";
 import { useMediaQuery } from "react-responsive";
 import LocationModal from "./LocationModal";
 import TimeModal from "./TimeModal";
 import { useTranslation } from "react-i18next";
+import CalendarPopover from "./CalendarPopover";
 
 const BoatForm = () => {
     const [destination, setDestination] = useState("");
@@ -187,7 +178,7 @@ const BoatForm = () => {
     return (
         <div className="flex items-center justify-center">
             <div className="w-full">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-visible relative">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-visible relative mh-search">
                     <div
                         className={`flex ${isMobile ? "flex-col" : "flex-row"}`}
                     >
@@ -198,7 +189,7 @@ const BoatForm = () => {
                             </label>
                             <button
                                 onClick={handleBoatTypeClick}
-                                className="text-lg font-bold text-gray-900 hvr-text-green transition-colors w-full text-left"
+                                className="text-lg font-bold text-gray-900 hvr-text-green transition-colors w-full text-left mh-input"
                             >
                                 {selectedBoatType}
                             </button>
@@ -261,9 +252,8 @@ const BoatForm = () => {
                                 onChange={(e) => setDestination(e.target.value)}
                                 onFocus={() => setShowDestinationModal(true)}
                                 placeholder={t("homeSearch.whereAreYouGoing")}
-                                className="w-full text-lg font-semibold text-gray-900 placeholder-gray-400 border-none outline-none bg-transparent pr-8"
+                                className="w-full text-lg font-semibold text-gray-900 placeholder-gray-400 border-none outline-none bg-transparent pr-8 mh-input"
                             />
-                            <MapPin className="absolute right-6 top-[52px] -translate-y-1/2 text-gray-400 w-5 h-5" />
                             <LocationModal
                                 open={showDestinationModal}
                                 onSelect={(city) => setDestination(city)}
@@ -280,7 +270,7 @@ const BoatForm = () => {
                                 <div className="flex items-center justify-between">
                                     <button
                                         onClick={handleDateClick}
-                                        className="text-lg font-bold text-gray-900 hvr-text-green transition-colors"
+                                        className="text-lg font-bold text-gray-900 hvr-text-green transition-colors mh-input"
                                     >
                                         {getDateRangeText()}
                                     </button>
@@ -288,151 +278,12 @@ const BoatForm = () => {
                             </div>
                             {showCalendar && (
                                 <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl p-4 z-[100] w-80">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                navigateMonth(-1);
-                                            }}
-                                            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
-                                        >
-                                            <ChevronLeft className="w-5 h-5 text-gray-600" />
-                                        </button>
-                                        <h3 className="font-semibold text-gray-900">
-                                            {(() => {
-                                                const monthNames = [
-                                                    "January",
-                                                    "February",
-                                                    "March",
-                                                    "April",
-                                                    "May",
-                                                    "June",
-                                                    "July",
-                                                    "August",
-                                                    "September",
-                                                    "October",
-                                                    "November",
-                                                    "December",
-                                                ];
-                                                return `${
-                                                    monthNames[
-                                                        currentDate.getMonth()
-                                                    ]
-                                                } ${currentDate.getFullYear()}`;
-                                            })()}
-                                        </h3>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                navigateMonth(1);
-                                            }}
-                                            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
-                                        >
-                                            <ChevronRight className="w-5 h-5 text-gray-600" />
-                                        </button>
-                                    </div>
-
-                                    <div className="grid grid-cols-7 gap-1 mb-2">
-                                        {[
-                                            "Sun",
-                                            "Mon",
-                                            "Tue",
-                                            "Wed",
-                                            "Thu",
-                                            "Fri",
-                                            "Sat",
-                                        ].map((day) => (
-                                            <div
-                                                key={day}
-                                                className="text-center text-xs font-medium text-gray-500 py-2"
-                                            >
-                                                {day}
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <div className="grid grid-cols-7 gap-1">
-                                        {generateCalendarDays().map(
-                                            (dayObj, index) => {
-                                                if (!dayObj) {
-                                                    return (
-                                                        <div
-                                                            key={index}
-                                                            className="py-2"
-                                                        ></div>
-                                                    );
-                                                }
-                                                const { day, dateStr } = dayObj;
-                                                const isSelected =
-                                                    isDateSelected(dateStr);
-                                                const isInRange =
-                                                    isDateInRange(dateStr);
-                                                const twoDaysAhead = new Date();
-                                                twoDaysAhead.setDate(
-                                                    twoDaysAhead.getDate() + 2
-                                                );
-                                                twoDaysAhead.setHours(
-                                                    0,
-                                                    0,
-                                                    0,
-                                                    0
-                                                );
-                                                const dayStart = new Date(
-                                                    dateStr
-                                                );
-                                                dayStart.setHours(0, 0, 0, 0);
-                                                const isPast =
-                                                    dayStart < twoDaysAhead;
-                                                return (
-                                                    <button
-                                                        key={dateStr}
-                                                        onClick={() =>
-                                                            !isPast &&
-                                                            handleDateSelect(
-                                                                dateStr
-                                                            )
-                                                        }
-                                                        disabled={isPast}
-                                                        className={`p-2 text-sm rounded-md transition-colors ${
-                                                            isPast
-                                                                ? "text-gray-300 cursor-not-allowed"
-                                                                : "hover:bg-blue-50 cursor-pointer"
-                                                        } ${
-                                                            isSelected
-                                                                ? "bg-blue-500 text-white hvr-bg-green"
-                                                                : ""
-                                                        } ${
-                                                            isInRange &&
-                                                            !isSelected
-                                                                ? "bg-blue-100 text-blue-800"
-                                                                : ""
-                                                        }`}
-                                                    >
-                                                        {day}
-                                                    </button>
-                                                );
-                                            }
-                                        )}
-                                    </div>
-
-                                    <div className="mt-3 p-2 bg-blue-50 rounded-lg">
-                                        <div className="flex items-start gap-2">
-                                            <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                                            <div className="text-xs text-blue-700">
-                                                <p className="font-medium">
-                                                    {t(
-                                                        "homeSearch.bookingRequirements"
-                                                    )}
-                                                </p>
-                                                <p>
-                                                    •{" "}
-                                                    {t(
-                                                        "homeSearch.advanceBooking48h"
-                                                    )}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <CalendarPopover
+                                        selectedDate={startDate}
+                                        minDate={(() => { const t=new Date(); t.setDate(t.getDate()+2); t.setHours(0,0,0,0); return t; })()}
+                                        onSelect={(d) => handleDateSelect(d)}
+                                        onClose={() => setShowCalendar(false)}
+                                    />
                                 </div>
                             )}
                         </div>
@@ -444,7 +295,7 @@ const BoatForm = () => {
                             </label>
                             <button
                                 onClick={() => setShowTimeModal(true)}
-                                className="text-lg font-bold text-gray-900 hvr-text-green transition-colors w-full text-left"
+                                className="text-lg font-bold text-gray-900 hvr-text-green transition-colors w-full text-left mh-input"
                             >
                                 {time || t("homeSearch.selectTime", "Select time")}
                             </button>
@@ -467,21 +318,21 @@ const BoatForm = () => {
                             </label>
                             <button
                                 onClick={() => setShowPeopleModal(true)}
-                                className="text-lg font-bold text-gray-900 hvr-text-green transition-colors w-full text-left"
+                                className="text-lg font-bold text-gray-900 hvr-text-green transition-colors w-full text-left mh-input"
                             >
-                                {peopleCount}{" "}
-                                {peopleCount === 1 ? "person" : "people"}
+                                {peopleCount} {peopleCount === 1 ? "person" : "people"}
                             </button>
                         </div>
 
                         {/* Search Button */}
                         {!isMobile ? (
-                            <div className="flex-shrink-0">
+                            <div className="flex-shrink-0 flex items-center px-4">
                                 <button
                                     onClick={(e) => handleSearch(e)}
-                                    className="h-full px-8 btn-search text-white transition-colors flex items-center justify-center"
+                                    className="btn-search text-white transition-colors flex items-center justify-center"
                                 >
                                     <Search className="w-6 h-6" />
+                                    <span className="ml-2 hidden md:inline">{t("common.search","Search")}</span>
                                 </button>
                             </div>
                         ) : (

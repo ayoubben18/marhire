@@ -1,6 +1,7 @@
 import HeroSection from "./HeroSection";
 import Recommended from "./Recommended";
 import WhyChooseUs from "./WhyChooseUs";
+import CategoryWhy from "./CategoryWhy";
 import FAQSection from "./FAQSection";
 import Footer from "./Footer";
 import { FaMapMarkedAlt } from "react-icons/fa";
@@ -183,19 +184,7 @@ const BoatCategory = ({ city }) => {
                 isFull={true}
                 tab="boats"
             />
-            <WhyChooseUs
-                title={
-                    city
-                        ? `Why Choose MarHire for Boat Hire in ${city}?`
-                        : `Book a Boat or Yacht in Morocco - Easy Booking`
-                }
-                subtitle={
-                    city
-                        ? `Why Rent a Boat in ${city} with MarHire - Trusted, Local & Transparent`
-                        : ``
-                }
-                features={city ? cityFeatures : features}
-            />
+            <CategoryWhy categoryKey="boats" />
             {!city && (
                 <>
                     <ExploreCategory
@@ -203,7 +192,7 @@ const BoatCategory = ({ city }) => {
                         subtitle="Find available boats in Morocco's top coastal cities."
                         items={items}
                     />
-                    <Recommended type="boats" classes="bg-blue" />
+                    <Recommended type="boats" classes="agency-listings" />
                 </>
             )}
             <Recommended
@@ -220,7 +209,7 @@ const BoatCategory = ({ city }) => {
                         ? `Choose the Perfect Experience - Yachts, Fishing Boats & More`
                         : `Choose your perfect experience on the water.`
                 }
-                classes="bg-green"
+                classes="agency-listings"
             />
             {city && (
                 <Recommended
@@ -229,7 +218,7 @@ const BoatCategory = ({ city }) => {
                     tabs={false}
                     title={`Best Boat Rental Deals in ${city} - Updated Daily`}
                     subtitle={`Featured Boat Listings in ${city} - Compare Prices & Services`}
-                    classes="bg-blue"
+                    classes="agency-listings"
                 />
             )}
             <FreeTexts slug="category/boats" />
