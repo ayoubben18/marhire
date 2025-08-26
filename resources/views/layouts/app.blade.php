@@ -1,4 +1,5 @@
 @php
+$forceNotSticky = View::hasSection('force_not_sticky');
 $isNotSticky = (
 request()->is('/') ||
 request()->is('en') ||
@@ -47,7 +48,7 @@ request()->is('partners') ||
 request()->is('*/partners') ||
 request()->is('sitemap') ||
 request()->is('*/sitemap')
-);
+) || $forceNotSticky;
 @endphp
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">

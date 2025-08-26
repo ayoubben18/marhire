@@ -16,6 +16,10 @@ import {
     FaStripe,
     FaEnvelope,
     FaChevronDown,
+    FaCar,
+    FaUserTie,
+    FaShip,
+    FaMountain,
 } from "react-icons/fa";
 
 const socialLinks = [
@@ -80,9 +84,164 @@ const FooterSection = ({ title, children }) => {
 
 const Footer = () => {
     const { t } = useTranslation();
+    const [activeTab, setActiveTab] = useState('cars');
+
+    const CITIES = [
+        { key: 'agadir', label: t('cities.agadir', 'Agadir') },
+        { key: 'marrakech', label: t('cities.marrakech', 'Marrakech') },
+        { key: 'casablanca', label: t('cities.casablanca', 'Casablanca') },
+        { key: 'fes', label: t('cities.fes', 'Fes') },
+        { key: 'tangier', label: t('cities.tangier', 'Tangier') },
+        { key: 'essaouira', label: t('cities.essaouira', 'Essaouira') },
+        { key: 'rabat', label: t('cities.rabat', 'Rabat') },
+    ];
+
+    const CATEGORY_CONFIGS = {
+        cars: {
+            icon: <FaCar className="mr-2" />,
+            title: t('footerTabs.cars', 'Cars'),
+            slug: 'car-rental',
+            subcategories: [
+                { key: 'suv', label: t('footerTabs.cars.suv', 'SUV Rental') },
+                { key: 'mpv', label: t('footerTabs.cars.mpv', 'MPV & Van Rental') },
+                { key: 'sedan', label: t('footerTabs.cars.sedan', 'Sedan Rental') },
+                { key: 'hatchback', label: t('footerTabs.cars.hatchback', 'Hatchback Rental') },
+                { key: 'dacia', label: t('footerTabs.cars.dacia', 'Dacia Rentals') },
+                { key: 'audi', label: t('footerTabs.cars.audi', 'Audi Rentals') },
+            ],
+            cityLabel: (city) => t('footerTabs.cars.city', `Car Rental ${city}`),
+            subcatCityLabel: (sub, city) => t('footerTabs.cars.subCity', `${sub} in ${city}`),
+        },
+        drivers: {
+            icon: <FaUserTie className="mr-2" />,
+            title: t('footerTabs.drivers', 'Private Drivers'),
+            slug: 'private-driver',
+            subcategories: [
+                { key: 'airport-transfer', label: t('footerTabs.drivers.airport', 'Airport Transfers') },
+                { key: 'intercity', label: t('footerTabs.drivers.intercity', 'Intercity Transfers') },
+                { key: 'suv', label: t('footerTabs.drivers.suv', 'SUV with Driver') },
+                { key: 'van', label: t('footerTabs.drivers.van', 'Van with Driver') },
+                { key: 'minivan', label: t('footerTabs.drivers.minivan', 'Minivan with Driver') },
+                { key: 'sedan', label: t('footerTabs.drivers.sedan', 'Sedan with Driver') },
+            ],
+            cityLabel: (city) => t('footerTabs.drivers.city', `Private Driver ${city}`),
+            subcatCityLabel: (sub, city) => t('footerTabs.drivers.subCity', `${sub} ${t('footerTabs.drivers.in','in')} ${city}`),
+        },
+        boats: {
+            icon: <FaShip className="mr-2" />,
+            title: t('footerTabs.boats', 'Boats'),
+            slug: 'boats',
+            subcategories: [
+                { key: 'yacht', label: t('footerTabs.boats.yacht', 'Yacht Charters') },
+                { key: 'luxury-yacht', label: t('footerTabs.boats.luxuryYacht', 'Luxury Yacht Charters') },
+                { key: 'speedboat', label: t('footerTabs.boats.speedboat', 'Speedboat Rentals') },
+                { key: 'fishing-boat', label: t('footerTabs.boats.fishing', 'Fishing Boat Charters') },
+                { key: 'party-boat', label: t('footerTabs.boats.party', 'Party Boat Rentals') },
+            ],
+            cityLabel: (city) => t('footerTabs.boats.city', `Boat Rental ${city}`),
+            subcatCityLabel: (sub, city) => t('footerTabs.boats.subCity', `${sub} ${t('footerTabs.boats.in','in')} ${city}`),
+        },
+        activities: {
+            icon: <FaMountain className="mr-2" />,
+            title: t('footerTabs.activities', 'Activities'),
+            slug: 'things-to-do',
+            subcategories: [
+                { key: 'camel-ride', label: t('footerTabs.activities.camel', 'Camel Ride Tours') },
+                { key: 'desert-tour', label: t('footerTabs.activities.desert', 'Desert Tours') },
+                { key: 'quad', label: t('footerTabs.activities.quad', 'Quad Biking') },
+                { key: 'horse-ride', label: t('footerTabs.activities.horse', 'Horse Riding') },
+                { key: 'jetski', label: t('footerTabs.activities.jetski', 'Jet Ski') },
+                { key: 'private-activities', label: t('footerTabs.activities.private', 'Private Activities') },
+            ],
+            cityLabel: (city) => t('footerTabs.activities.city', `Activities in ${city}`),
+            subcatCityLabel: (sub, city) => t('footerTabs.activities.subCity', `${sub} ${t('footerTabs.activities.in','in')} ${city}`),
+        },
+    };
+
+    const renderTabContent = () => {
+        const cfg = CATEGORY_CONFIGS[activeTab];
+        if (!cfg) return null;
+        const cityLinks = CITIES.slice(0, 6).map((c) => ({
+            href: getLocalizedUrl(`/category/${cfg.slug}/city/${c.key}`),
+            label: cfg.cityLabel(c.label),
+        }));
+        const subcatLinks = cfg.subcategories.map((s) => ({
+            href: getLocalizedUrl(`/category/${cfg.slug}/subcategory/${s.key}`),
+            label: s.label,
+        }));
+        const subcatCityCombos = [];
+        cfg.subcategories.slice(0, 3).forEach((s) => {
+            CITIES.slice(0, 3).forEach((c) => {
+                subcatCityCombos.push({
+                    href: getLocalizedUrl(`/category/${cfg.slug}/subcategory/${s.key}/city/${c.key}`),
+                    label: cfg.subcatCityLabel(s.label, c.label),
+                });
+            });
+        });
+
+        const allLinks = [
+            { href: getLocalizedUrl(`/category/${cfg.slug}`), label: t('footerTabs.browseAll', `Explore ${cfg.title}`) },
+            ...cityLinks,
+            ...subcatLinks,
+            ...subcatCityCombos,
+        ];
+
+        return (
+            <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-3 mt-2">
+                {allLinks.map((l, idx) => (
+                    <li key={idx}>
+                        <a href={l.href} className="d-inline-block footer-tab-link">
+                            {l.label}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        );
+    };
     
     return (
         <footer style={{ color: "#203233" }} className="footer">
+            <div className="footer-tabs-wrap" style={{ maxWidth: 1140, margin: '0 auto', paddingLeft: 12, paddingRight: 12 }}>
+                <style>{`
+                    .footer-tab-link { color:#627577; font-weight:500; text-decoration:none; transition: color .15s ease; }
+                    .footer-tab-link:hover { color:#048667; text-decoration:none; }
+                `}</style>
+                <div className="border rounded-lg p-2 md:p-3 mb-3" style={{ background: '#f8fbfa', borderColor: '#e7eeec' }}>
+                    <h3 className="text-center font-weight-bold mb-2" style={{ color: '#203233', fontSize: '1.05rem' }}>
+                        {t('footerTabs.title', 'Browse Our Services by Category')}
+                    </h3>
+                    <div className="mb-2" style={{ background: '#f3f4f4', borderRadius: 10, padding: '6px 6px' }}>
+                        <div className="d-flex flex-wrap justify-content-center gap-2">
+                            {Object.entries(CATEGORY_CONFIGS).map(([key, cfg]) => (
+                                <button
+                                    key={key}
+                                    type="button"
+                                    onClick={() => setActiveTab(key)}
+                                    aria-pressed={activeTab === key}
+                                    className="btn"
+                                    style={{
+                                        backgroundColor: activeTab === key ? '#ffffff' : 'transparent',
+                                        color: '#627577',
+                                        border: activeTab === key ? '1px solid #e5ebed' : '1px solid transparent',
+                                        borderRadius: 8,
+                                        padding: '6px 10px',
+                                        fontWeight: 600,
+                                        fontSize: '0.95rem',
+                                        lineHeight: 1.2,
+                                        boxShadow: activeTab === key ? '0 1px 2px rgba(16,24,40,.04)' : 'none',
+                                    }}
+                                >
+                                    <span className="d-inline-flex align-items-center">
+                                        <span className="mr-2" style={{ display: 'inline-flex' }}>{cfg.icon}</span>
+                                        {cfg.title}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    {renderTabContent()}
+                </div>
+            </div>
             <div className="footer-container">
                 <FooterSection title={t('footer.company')}>
                     <ul>

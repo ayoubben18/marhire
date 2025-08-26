@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { getLocalizedUrl } from '../utils/localeManager';
 import Footer from '../components/site/Footer';
-import { FaSearch, FaArrowRight, FaExclamationTriangle } from 'react-icons/fa';
+import { FaSearch, FaArrowRight } from 'react-icons/fa';
 
 const NotFound = () => {
     const { t } = useTranslation();
@@ -36,8 +36,8 @@ const NotFound = () => {
                 <main className="flex-1 flex items-center justify-center py-16">
                     <div className="container text-center">
                         <div className="mx-auto flex items-center justify-center mb-6">
-                            <div className="h-24 w-24 rounded-full bg-orange-100 flex items-center justify-center">
-                                <FaExclamationTriangle className="h-12 w-12 text-orange-500" />
+                            <div className="h-20 w-20 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(4, 134, 103, 0.12)', color: '#048667' }}>
+                                <FaSearch className="h-10 w-10" />
                             </div>
                         </div>
                         
@@ -51,7 +51,8 @@ const NotFound = () => {
                         
                         <a 
                             href={getLocalizedUrl('/')} 
-                            className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-lg font-medium"
+                            className="inline-flex items-center justify-center px-6 py-3 rounded-lg transition-colors text-lg font-medium text-white hover:opacity-90"
+                            style={{ backgroundColor: '#048667' }}
                         >
                             {t('notFound.returnHome', 'Return to Homepage')}
                         </a>
@@ -61,17 +62,17 @@ const NotFound = () => {
                                 {t('notFound.popularLinks', 'Or, try one of these popular links:')}
                             </h2>
                             
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
                                 {popularLinks.map((link, index) => (
                                     <a 
                                         key={index}
                                         href={link.href}
-                                        className="flex items-center justify-between px-4 py-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group"
+                                        className="flex items-center justify-between px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
                                     >
-                                        <span className="text-gray-700 group-hover:text-green-600 transition-colors">
+                                        <span className="font-medium" style={{ color: '#048667' }}>
                                             {link.title}
                                         </span>
-                                        <FaArrowRight className="h-4 w-4 text-gray-400 group-hover:text-green-600 transition-colors" />
+                                        <FaArrowRight className="h-4 w-4" style={{ color: '#048667' }} />
                                     </a>
                                 ))}
                             </div>
@@ -82,7 +83,8 @@ const NotFound = () => {
                                 {t('notFound.needHelp', 'Need help?')}{' '}
                                 <a 
                                     href={getLocalizedUrl('/support')} 
-                                    className="text-green-600 hover:underline font-medium"
+                                    className="hover:underline font-medium"
+                                    style={{ color: '#048667' }}
                                 >
                                     {t('notFound.contactUs', 'Contact our support team')}
                                 </a>
