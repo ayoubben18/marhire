@@ -441,6 +441,11 @@ const UnifiedCategory = ({ slug, city }) => {
                 tab={cfg.tab}
                 city={city}
                 cityId={cityId}
+                breadcrumbs={[
+                    { name: 'Home', href: '' },
+                    { name: cfg.categoryKey === 'cars' ? 'Car Rental' : (cfg.categoryKey === 'drivers' ? 'Private Driver' : (cfg.categoryKey === 'boats' ? 'Boat Rental' : 'Things To Do')), href: `/category/${slug}` },
+                    ...(city ? [{ name: city }] : [])
+                ]}
             />
 
             <CategoryWhy categoryKey={cfg.categoryKey} />

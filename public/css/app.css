@@ -46,6 +46,9 @@
     --color-bg-silver: #f4f4f469;
 }
 
+/* Tailwind-compatible font var */
+:root { --font-sans: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+
 html,
 body,
 div,
@@ -68,7 +71,7 @@ td,
 th,
 a,
 * {
-    font-family: "Centra No2", sans-serif !important;
+    font-family: "Poppins", "Centra No2", sans-serif !important;
 }
 
 a.nav-item.nav-link,
@@ -2776,6 +2779,12 @@ a:hover {
 }
 .site.sticky main {
     margin-top: 0px;
+}
+@media (max-width: 767.98px) {
+    .site main {
+        margin-top: 0 !important;
+    }
+    .nav-container { position: relative; }
 }
 .sticky .head-navs-icon {
     color: white;

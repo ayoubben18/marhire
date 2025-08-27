@@ -284,16 +284,6 @@ request()->is('*/sitemap')
                     <img src="{{ $isNotSticky ? asset(config('logo')): asset('images/logo-light.png') }}" alt="Logo">
                 </a>
             </div>
-            <div class="head-center">
-                <div class="nav-searchbar">
-                    <div class="nav-searchbar__content">
-                        <input type="text" placeholder="{{ __('navigation.searchPlaceholder') }}" id="nav_searchbar__txt" />
-                    </div>
-                    <div class="nav-searchbar__btn">
-                        <button id="nav_searchbar__btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    </div>
-                </div>
-            </div>
             <div class="head-navs d-flex align-items-center">
                 <div class="dropdown head-navs-item">
                     <a class="dropdown-toggle d-flex align-items-center" href="#" id="langDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -335,19 +325,6 @@ request()->is('*/sitemap')
             <button class="mobile-menu-btn" id="openTripMenu" type="button"> <i class="fa fa-bars"></i></button>
         </div>
         <div class="trip-mobile-menu" id="tripMenuPanel">
-            <!-- Search bar -->
-            <form class="trip-searchbox" action="/search" method="get">
-                <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="{{ __('navigation.searchPlaceholder') }}" style="
-    padding: 10px;
-    max-height: unset;
-    height: 45px;
-">
-                    <div class="input-group-append">
-                        <button class="btn btn-success" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    </div>
-                </div>
-            </form>
             <!-- Menu links -->
             <a href="/category/car-rental" class="trip-link"><i class="fa fa-car"></i>{{ __('navigation.carRentals') }}</a>
             <a href="/category/private-driver" class="trip-link"><i class="fa fa-user-tie"></i>{{ __('navigation.privateDrivers') }}</a>
