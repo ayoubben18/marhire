@@ -9,6 +9,7 @@ use App\Http\Controllers\PageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\Api\FilteredListingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,7 @@ Route::get('related_products', [ListingController::class, 'related_products']);
 Route::post('agency_request', [AgencyController::class, 'agency_request']);
 Route::post('submit_contact', [EntereController::class, 'submit_contact']);
 Route::get('get_free_texts', [PageController::class, 'get_free_texts']);
+Route::get('get_filtered_listings', [FilteredListingsController::class, 'index']);
 // Add rate limiting to booking endpoints
 Route::middleware(['throttle:60,1'])->group(function () {
     Route::post('bookings/submit', [BookingController::class, 'submitBooking']);

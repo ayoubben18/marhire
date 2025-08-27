@@ -40,7 +40,9 @@
         "sendMessage": "Send Message",
         "home": "Home",
         "compareSimilarListings": "Compare Similar Listings",
-        "readMore": "Read More"
+        "readMore": "Read More",
+        "exploreAll": "Explore All",
+        "noListingsFound": "No listings found"
     },
     "messages": {
         "whatsappInterest": "Hello, I am interested in booking this rental.\n\nTitle: {{title}}\n\nURL: {{url}}\n\nCould you please provide more details about availability, pricing, and the booking process?\n\nThank you!"

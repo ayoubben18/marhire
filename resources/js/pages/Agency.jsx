@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+    import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MdVerified } from "react-icons/md";
 import { FaRegCalendarAlt, FaWhatsapp, FaEnvelope, FaHome, FaInfoCircle, FaCheckCircle, FaShieldAlt, FaPlaneDeparture, FaGasPump, FaHeadset, FaChevronDown, FaChevronUp, FaAnchor, FaClock, FaCloudSun, FaTags, FaLanguage, FaUsers, FaStar, FaCheckSquare, FaListUl } from "react-icons/fa";
@@ -8,7 +8,7 @@ import Footer from "../components/site/Footer";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import axios from "axios";
-import Recommended from "../components/site/Recommended";
+import UnifiedListings from "../components/site/UnifiedListings";
 
 const Agency = ({ slug }) => {
     const { t } = useTranslation();
@@ -367,12 +367,16 @@ const Agency = ({ slug }) => {
                                 <section className="agency-listings-section">
                                     <div className="agency__listings">
                                         <h2 className="section-title_borderd listings-title"><span className="ico"><FaListUl size={16} /></span>{t('agencyPage.availableListings.title', 'Available Listings')}</h2>
-                                        <Recommended
-                                            type={categoryKey}
-                                            classes="agency-listings"
-                                            agency_id={agency.id}
-                                            disableHeading={true}
-                                        />
+                                        {agency?.id && (
+                                            <UnifiedListings
+                                                categories={agency.category_id}
+                                                agencies={[agency.id]}
+                                                perPage={12}
+                                                page={1}
+                                                disableHeading={true}
+                                                classes="agency-listings"
+                                            />
+                                        )}
                                     </div>
                                     <style>{`
                                         .agency-listings-section { padding: 12px 0 0 0; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); margin-top: 18px; border-top: 1px solid #e6efe9; }

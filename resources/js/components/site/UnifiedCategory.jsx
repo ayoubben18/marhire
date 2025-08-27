@@ -7,6 +7,7 @@ import FAQSectionCustom from "./FAQSectionCustom";
 import FreeTexts from "./FreeTexts";
 import FooterRecommendation from "./FooterRecommendation";
 import Footer from "./Footer";
+import UnifiedListings from "./UnifiedListings";
 
 const CITY_IMAGE_MAP = {
     Marrakech: "https://marhire.bytech.ma/images/cities/marrakech.jpg",
@@ -33,12 +34,15 @@ const CATEGORY_CONFIG = {
         tab: "cars",
         type: "cars",
         categoryKey: "cars",
-        heroText: (city) => (city ? `Car Rental in ${city}` : "Car Rental in Morocco"),
-        heroSub: () => "From agile city cars for navigating the medinas to spacious SUVs for your family road trip, find the perfect vehicle. Compare deals from trusted local agencies for cheap car rental with transparent pricing and instant booking.",
+        heroText: (city) =>
+            city ? `Car Rental in ${city}` : "Car Rental in Morocco",
+        heroSub: () =>
+            "From agile city cars for navigating the medinas to spacious SUVs for your family road trip, find the perfect vehicle. Compare deals from trusted local agencies for cheap car rental with transparent pricing and instant booking.",
         explore: {
             show: true,
             title: "Rent a Car in Morocco by City",
-            subtitle: "Choose from hundreds of cars in Morocco's top destinations.",
+            subtitle:
+                "Choose from hundreds of cars in Morocco's top destinations.",
             items: buildItems("Car Rental in", {
                 Marrakech: 120,
                 Agadir: 90,
@@ -73,10 +77,18 @@ const CATEGORY_CONFIG = {
             { id: 7, name: "Mercedes" },
         ],
         titles: {
-            tabsTitle: (city) => (city ? `Browse Car Hire in ${city} by Vehicle Type` : "Cheap, Luxury & SUV Car Rental Morocco"),
-            tabsSubtitle: (city) => (city ? `Rent the Right Vehicle in ${city} - SUVs, Luxury, MPVs & More` : "Find a vehicle that suits your style and budget"),
-            cityOnlyTitle: (city) => `Best Car Rental Deals in ${city} with MarHire`,
-            cityOnlySubtitle: (city) => `Featured Car Hire Listings in ${city} - Compare Prices & Features`,
+            tabsTitle: (city) =>
+                city
+                    ? `Browse Car Hire in ${city} by Vehicle Type`
+                    : "Cheap, Luxury & SUV Car Rental Morocco",
+            tabsSubtitle: (city) =>
+                city
+                    ? `Rent the Right Vehicle in ${city} - SUVs, Luxury, MPVs & More`
+                    : "Find a vehicle that suits your style and budget",
+            cityOnlyTitle: (city) =>
+                `Best Car Rental Deals in ${city} with MarHire`,
+            cityOnlySubtitle: (city) =>
+                `Featured Car Hire Listings in ${city} - Compare Prices & Features`,
             cityBrowseTitle: () => "Car Hire by City",
             brandBrowseTitle: () => "Browse Car Hire by Brand",
         },
@@ -127,8 +139,12 @@ const CATEGORY_CONFIG = {
         tab: "drivers",
         type: "drivers",
         categoryKey: "drivers",
-        heroText: (city) => (city ? `Rent Private Driver in ${city}` : "Private Drivers in Morocco"),
-        heroSub: () => "Travel with comfort, safety, and style. Book a professional, multilingual private driver for your Morocco airport transfer, city tours, business trips, or multi-day excursions with fixed, all-inclusive pricing.",
+        heroText: (city) =>
+            city
+                ? `Rent Private Driver in ${city}`
+                : "Private Drivers in Morocco",
+        heroSub: () =>
+            "Travel with comfort, safety, and style. Book a professional, multilingual private driver for your Morocco airport transfer, city tours, business trips, or multi-day excursions with fixed, all-inclusive pricing.",
         explore: {
             show: true,
             title: "Private Driver Services in Morocco by City",
@@ -153,15 +169,24 @@ const CATEGORY_CONFIG = {
             { id: 2, name: "Intercity Transfers" },
         ],
         titles: {
-            tabsTitle: (city) => (city ? `Browse Driver Services in ${city} by Vehicle Type` : "Choose Your Private Chauffeur Type in Morocco"),
-            tabsSubtitle: (city) => (city ? `Hire the Right Driver & Vehicle in ${city} - Daily, Airport & Multi-Day Trips` : "Multilingual | Airport Transfers | Business Trips"),
-            cityOnlyTitle: (city) => `Best Private Driver Deals in ${city} With MarHire`,
-            cityOnlySubtitle: (city) => `Featured Private Chauffeurs in ${city} - Compare Options & Rates`,
+            tabsTitle: (city) =>
+                city
+                    ? `Browse Driver Services in ${city} by Vehicle Type`
+                    : "Choose Your Private Chauffeur Type in Morocco",
+            tabsSubtitle: (city) =>
+                city
+                    ? `Hire the Right Driver & Vehicle in ${city} - Daily, Airport & Multi-Day Trips`
+                    : "Multilingual | Airport Transfers | Business Trips",
+            cityOnlyTitle: (city) =>
+                `Best Private Driver Deals in ${city} With MarHire`,
+            cityOnlySubtitle: (city) =>
+                `Featured Private Chauffeurs in ${city} - Compare Options & Rates`,
             cityBrowseTitle: () => "Airport Transfer & Private Drivers by City",
         },
         freeTextsSlug: "category/private-driver",
         faq: {
-            title: (city) => `Frequently Asked Questions - Private Driver in ${city}`,
+            title: (city) =>
+                `Frequently Asked Questions - Private Driver in ${city}`,
             items: (city) => [
                 {
                     question: `What is included when I book a private driver in ${city}?`,
@@ -202,12 +227,14 @@ const CATEGORY_CONFIG = {
             ],
         },
     },
-    "boats": {
+    boats: {
         tab: "boats",
         type: "boats",
         categoryKey: "boats",
-        heroText: (city) => (city ? `Boat Rental in ${city}` : "Boat Rental in Morocco"),
-        heroSub: () => "From thrilling jet ski rides in Agadir to luxury yacht charters in Tangier, discover Morocco's stunning coastline and lakes. Book an unforgettable fishing trip, sunset cruise, or private boat tour.",
+        heroText: (city) =>
+            city ? `Boat Rental in ${city}` : "Boat Rental in Morocco",
+        heroSub: () =>
+            "From thrilling jet ski rides in Agadir to luxury yacht charters in Tangier, discover Morocco's stunning coastline and lakes. Book an unforgettable fishing trip, sunset cruise, or private boat tour.",
         explore: {
             show: true,
             title: "Best Boat Rentals in Morocco by City",
@@ -235,14 +262,23 @@ const CATEGORY_CONFIG = {
             { id: 5, name: "Sunset Cruises" },
         ],
         titles: {
-            tabsTitle: (city) => (city ? `Browse Boat Rentals in ${city} by Type` : `Types of Boats & Experiences in Morocco`),
-            tabsSubtitle: (city) => (city ? `Choose the Perfect Experience - Yachts, Fishing Boats & More` : `Choose your perfect experience on the water.`),
-            cityOnlyTitle: (city) => `Best Boat Rental Deals in ${city} - Updated Daily`,
-            cityOnlySubtitle: (city) => `Featured Boat Listings in ${city} - Compare Prices & Services`,
+            tabsTitle: (city) =>
+                city
+                    ? `Browse Boat Rentals in ${city} by Type`
+                    : `Types of Boats & Experiences in Morocco`,
+            tabsSubtitle: (city) =>
+                city
+                    ? `Choose the Perfect Experience - Yachts, Fishing Boats & More`
+                    : `Choose your perfect experience on the water.`,
+            cityOnlyTitle: (city) =>
+                `Best Boat Rental Deals in ${city} - Updated Daily`,
+            cityOnlySubtitle: (city) =>
+                `Featured Boat Listings in ${city} - Compare Prices & Services`,
         },
         freeTextsSlug: "category/boats",
         faq: {
-            title: (city) => `Frequently Asked Questions - Boat Rental in ${city}`,
+            title: (city) =>
+                `Frequently Asked Questions - Boat Rental in ${city}`,
             items: (city) => [
                 {
                     question: `Is the captain included in the boat rental?`,
@@ -283,12 +319,15 @@ const CATEGORY_CONFIG = {
         tab: "activity",
         type: "activities",
         categoryKey: "activities",
-        heroText: (city) => (city ? `Things To Do in ${city}` : "Things To Do in Morocco"),
-        heroSub: () => "Discover and book the best activities Morocco has to offer. From thrilling desert day trips and quad bike tours to authentic guided tours in a Marrakech riad, your next adventure starts here.",
+        heroText: (city) =>
+            city ? `Things To Do in ${city}` : "Things To Do in Morocco",
+        heroSub: () =>
+            "Discover and book the best activities Morocco has to offer. From thrilling desert day trips and quad bike tours to authentic guided tours in a Marrakech riad, your next adventure starts here.",
         explore: {
             show: true,
             title: "Top Things to Do in Morocco by City",
-            subtitle: "Find activities in Morocco's most exciting destinations.",
+            subtitle:
+                "Find activities in Morocco's most exciting destinations.",
             items: buildItems("Things To Do in", {
                 Marrakech: 100,
                 Agadir: 80,
@@ -314,14 +353,23 @@ const CATEGORY_CONFIG = {
             { id: 7, name: "Water Sports & Boat Trips" },
         ],
         titles: {
-            tabsTitle: (city) => (city ? `Browse Top Activities in ${city} by Type` : `Browse Activities in Morocco by Type`),
-            tabsSubtitle: (city) => (city ? `Find the Right Experience - Adventure, Culture, Food & More` : `Choose from the most popular experience categories.`),
-            cityOnlyTitle: (city) => `Best Experiences in ${city} - Updated Daily`,
-            cityOnlySubtitle: (city) => `Featured Tours & Activities in ${city} - Compare Prices & Highlights`,
+            tabsTitle: (city) =>
+                city
+                    ? `Browse Top Activities in ${city} by Type`
+                    : `Browse Activities in Morocco by Type`,
+            tabsSubtitle: (city) =>
+                city
+                    ? `Find the Right Experience - Adventure, Culture, Food & More`
+                    : `Choose from the most popular experience categories.`,
+            cityOnlyTitle: (city) =>
+                `Best Experiences in ${city} - Updated Daily`,
+            cityOnlySubtitle: (city) =>
+                `Featured Tours & Activities in ${city} - Compare Prices & Highlights`,
         },
         freeTextsSlug: "category/things-to-do",
         faq: {
-            title: (city) => `Frequently Asked Questions - Things to Do in ${city}`,
+            title: (city) =>
+                `Frequently Asked Questions - Things to Do in ${city}`,
             items: (city) => [
                 {
                     question: `Are activities in ${city} led by licensed guides?`,
@@ -362,6 +410,15 @@ const CATEGORY_CONFIG = {
 
 const UnifiedCategory = ({ slug, city }) => {
     const cfg = CATEGORY_CONFIG[slug] || CATEGORY_CONFIG["car-rental"];
+    const categoryId = (() => {
+        switch (cfg.categoryKey) {
+            case "cars": return 2;
+            case "drivers": return 3;
+            case "boats": return 4;
+            case "activities": return 5;
+            default: return 2;
+        }
+    })();
 
     return (
         <>
@@ -374,65 +431,29 @@ const UnifiedCategory = ({ slug, city }) => {
             />
 
             <CategoryWhy categoryKey={cfg.categoryKey} />
-
-            {!city && cfg.explore?.show ? (
-                <>
-                    <ExploreCategory
-                        title={(cfg.titles && cfg.titles.cityBrowseTitle ? cfg.titles.cityBrowseTitle() : cfg.explore.title)}
-                        subtitle={cfg.explore.subtitle}
-                        items={cfg.explore.items}
-                    />
-                    <Recommended
-                        type={cfg.type}
-                        classes={`${cfg.recommendedClasses?.firstNonCity || ""} agency-listings`.trim()}
-                        title={cfg.titles && cfg.titles.cityBrowseTitle ? cfg.titles.cityBrowseTitle() : undefined}
-                    />
-                </>
-            ) : null}
-
-            <Recommended
-                type={cfg.type}
-                classes={`${!city ? (cfg.recommendedClasses?.mainNonCity || "") : (cfg.recommendedClasses?.mainCity || "")} agency-listings`.trim()}
-                tabs={cfg.tabs}
-                city={city}
-                title={cfg.titles.tabsTitle(city)}
-                subtitle={cfg.titles.tabsSubtitle(city)}
+            
+            <ExploreCategory
+                title={
+                    cfg.titles && cfg.titles.cityBrowseTitle
+                        ? cfg.titles.cityBrowseTitle()
+                        : cfg.explore.title
+                }
+                subtitle={cfg.explore.subtitle}
+                items={cfg.explore.items}
             />
 
-            {city ? (
-                <Recommended
-                    type={cfg.type}
-                    city={city}
-                    tabs={false}
-                    title={cfg.titles.cityOnlyTitle(city)}
-                    subtitle={cfg.titles.cityOnlySubtitle(city)}
-                    classes={`${cfg.recommendedClasses?.cityOnly || ""} agency-listings`.trim()}
-                />
-            ) : null}
+            <UnifiedListings
+                title={cfg.titles && cfg.titles.cityOnlyTitle ? cfg.titles.cityOnlyTitle(city || "Morocco") : undefined}
+                subtitle={cfg.titles && cfg.titles.cityOnlySubtitle ? cfg.titles.cityOnlySubtitle(city || "Morocco") : undefined}
+                categories={categoryId}
+                cities={city ? [city] : []}
+                perPage={12}
+            />
 
-            {/* Optional brand browse section for cars when not in city */}
-            {!city && slug === "car-rental" && (
-                <Recommended
-                    type={cfg.type}
-                    classes="agency-listings"
-                    tabs={cfg.brandTabs}
-                    title={cfg.titles.brandBrowseTitle()}
-                    subtitle={"Choose from popular car brands available in Morocco"}
-                />
-            )}
-
-            <FreeTexts slug={cfg.freeTextsSlug} />
-
-            {city ? (
-                <FAQSectionCustom title={cfg.faq.title(city)} faqs={cfg.faq.items(city)} />
-            ) : null}
-
-            <FooterRecommendation />
+            
             <Footer />
         </>
     );
 };
 
 export default UnifiedCategory;
-
-

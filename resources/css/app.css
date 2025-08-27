@@ -1,9 +1,47 @@
+/* UnifiedListings (uls-*) isolated namespace */
+.uls-container { position: relative; margin: 0 32px; padding: 24px; }
+.uls-listings { display: block; margin-bottom: 2rem; }
+.uls-listings .swiper { width: 100%; }
+.uls-listings .swiper-wrapper { display: flex !important; }
+.uls-listings .swiper-slide { height: auto; }
+
+.uls-card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; overflow:hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display:flex; flex-direction:column; height:100%; }
+.uls-card__image { position:relative; aspect-ratio: 3/2; width:100%; overflow:hidden; z-index:1; }
+.uls-card__img { width:100%; height:100%; object-fit:cover; transition: transform .3s ease-in-out; }
+.uls-card__img:hover { transform: scale(1.2); }
+/* price badge removed per design - keeping rule commented for future use */
+/* .uls-price-badge { position:absolute; top:13px; left:14px; background:#00000096; color:#fff; border-radius:7px; padding:6px 10px; z-index:10; pointer-events:none; } */
+.uls-type-badge { position:absolute; top:13px; left:14px; background:#ffffffd9; color:#22574d; border:1px solid #e2e8f0; font-weight:600; padding:4px 10px; border-radius:14px; z-index:20; }
+.uls-card__image .annonce-price-badge, .uls-card__image .uls-price-badge { display:none !important; }
+.uls-agency-logo { position:absolute; top:13px; right:14px; width:40px; height:40px; border-radius:12px; overflow:hidden; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,.08); z-index:10; display:inline-flex; align-items:center; justify-content:center; }
+.uls-agency-logo img { width:100%; height:100%; object-fit:contain; }
+.uls-card__content { padding:20px; flex:1; }
+.uls-card__head { margin-bottom: 1rem; }
+.uls-card__title { margin:0; font-size:13pt; font-weight:600; color:#203233; line-height:1.4; }
+.uls-card__location { font-size:.875rem; color:#6b7280; margin-top:.25rem; margin-bottom:.5rem; }
+.uls-card__location .loc-ico { color:#048667; display:inline-flex; margin-right:6px; }
+
+.uls-badges { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+.uls-badge { display:inline-flex; align-items:center; gap:8px; line-height:1; font-size:12px; padding:6px 10px; border-radius:999px; white-space:nowrap; box-shadow:none; }
+.uls-badge__ico { display:inline-flex; background:transparent !important; border:0 !important; padding:0 !important; box-shadow:none; }
+.uls-badge__ico svg { width:14px; height:14px; color:currentColor; fill:currentColor; stroke:none; display:block; }
+.uls-badge--green { background:#e6f3f0; color:#048667; border:1px solid #a7d7cd; }
+.uls-badge--blue { background:#eef5ff; color:#1e40af; border:1px solid #bfdbfe; }
+.uls-badge--outline { background:#fff; color:#048667; border:1px solid #cfe9e1; }
+
+.uls-card__footer { display:flex; justify-content:space-between; align-items:center; gap:10px; border-top:1px dashed #e2e8f0; padding:12px 16px; }
+.uls-card__price { font-weight:400; color:#111827; font-size:12pt; }
+.uls-card__price .price-value { font-weight:700; }
+.uls-card__actions { display:flex; gap:10px; align-items:center; }
+.uls-card__book { background:#048667; color:#fff; border-radius:10px; padding:8px 14px; display:flex; align-items:center; gap:6px; text-decoration:none; }
+.uls-card__chat { display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:999px; background:#22c55e; color:#fff; }
 .mh-calendar { border-radius: 16px; }
 .mh-calendar .day-btn { border-radius: 10px; min-width: 36px; min-height: 36px; }
 .mh-calendar .day-btn:hover { background:#eef7f5; }
 .mh-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; justify-items: center; align-items: center; }
-* {
-    transition: all ease-in-out 0.3s;
+/* Avoid global transitions causing layout jank; scope to interactive elements only */
+button, a, .btn, .recommendation-image, .recommendation-listing-card, .recommandation-city, .ctm-tabs__btn {
+    transition: all 0.3s ease-in-out;
 }
 
 /* City Display in Listing Cards */
@@ -406,11 +444,12 @@ section {
     justify-content: space-between;
     align-items: center;
 }
-.recommendation-listings {
-    display: grid;
-    gap: 2rem;
-    margin-bottom: 2rem;
-}
+/* Default grid layout for non-carousel contexts */
+.recommendation-listings { display: grid; gap: 2rem; margin-bottom: 2rem; }
+/* Force correct layout when used with Swiper */
+.recommendation-listings.swiper-mode { display: block; }
+.recommendation-listings.swiper-mode .swiper { width: 100%; }
+.recommendation-listings.swiper-mode .swiper-wrapper { display: flex !important; }
 
 .recommendation-listing-card {
     background-color: white;
@@ -1147,7 +1186,7 @@ form.application-form {
     background: #00000096;
     color: white;
     border-radius: 7px;
-    padding: 3px 10px;
+    padding: 6px 10px;
     z-index: 10;
     pointer-events: none;
 }
@@ -1258,10 +1297,8 @@ span.verified {
     font-size: 12pt;
     font-weight: 600;
 }
-.recommendation-features {
-    display: flex;
-    justify-content: space-between;
-}
+.recommendation-features { display: flex; justify-content: space-between; }
+.recommendation-features .agency-badges, .recommendation-content .agency-badges { margin-top: 12px; }
 .recommendation-features__item {
     display: flex;
     color: #444;
@@ -1278,6 +1315,9 @@ span.verified {
     color: #64748b;
     font-size: 10.5pt;
 }
+/* Prevent inherited button styles from inflating badge icons */
+.recommendation-container .agency-badge .ico svg { display:block; }
+.recommendation-container .agency-badge .ico { background: none !important; border: 0 !important; }
 .drop-item--active {
     background: var(--color3);
     color: var(--color1);
@@ -1972,6 +2012,11 @@ h2.agency__category {
     padding: 0;
     margin: 0;
 }
+/* In agency listings (carousel variant), the wrapper should not be a CSS grid */
+.agency-listings .recommendation-listings { display: block; }
+/* Ensure Swiper wrapper layout takes control inside our container */
+.agency-listings .recommendation-listings .swiper { width: 100%; }
+.agency-listings .recommendation-listings .swiper-wrapper { display: flex !important; }
 /* Agency card variant for Available Listings */
 .agency-type-badge {
     position: absolute;
@@ -1988,22 +2033,27 @@ h2.agency__category {
 
 .agency-badges {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     flex-wrap: wrap;
-    margin-top: 8px;
+    margin-top: 12px;
 }
 .agency-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 10pt;
-    padding: 4px 10px;
+    gap: 8px;
+    line-height: 1;
+    font-size: 12px;
+    padding: 6px 10px; /* reduced to avoid exaggerated padding */
     border-radius: 999px;
+    white-space: nowrap;
 }
 .agency-badge .ico{display:inline-flex}
+.recommendation-container .agency-badge { box-shadow:none; outline: none; }
+.recommendation-container .agency-badge .ico { background: transparent; border: 0; padding: 0 !important; box-shadow: none; }
+.recommendation-container .agency-badge .ico svg { width: 14px; height: 14px; color: currentColor; fill: currentColor; stroke: none; }
 .agency-badge.green { background: #e6f3f0; color: #048667; border: 1px solid #a7d7cd; }
 .agency-badge.blue { background: #eef5ff; color: #1e40af; border: 1px solid #bfdbfe; }
-.agency-badge.outline { background: transparent; color: #048667; border: 1px solid #cfe9e1; padding: 3px 10px; }
+.agency-badge.outline { background: #ffffff; color: #048667; border: 1px solid #cfe9e1; }
 
 .agency-footer {
     display: flex;
@@ -2802,4 +2852,13 @@ h2.agency__category {
 
 /* utility: line-clamp (simple) */
 .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+.recommendation-container .agency-badge * { box-shadow: none !important; border: 0 !important; background: transparent !important; }
+.recommendation-container .agency-badge span, 
+.recommendation-container .agency-badge button, 
+.recommendation-container .agency-badge a { padding: 0 !important; margin: 0 !important; }
+
+.recommendation-listing-card * { box-sizing: border-box; }
+.recommendation-listing-card .agency-badges { padding: 0 !important; }
+.recommendation-listing-card .agency-badge { padding: 6px 10px !important; }
 
