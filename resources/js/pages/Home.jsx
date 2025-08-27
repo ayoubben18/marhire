@@ -1,6 +1,6 @@
 import ExploreCategory from "../components/site/ExploreCategory";
 import HeroSection from "../components/site/HeroSection";
-import Recommended from "../components/site/Recommended";
+import ListingsByCity from "../components/site/ListingsByCity";
 import WhyChooseUs from "../components/site/WhyChooseUs";
 import FAQSection from "../components/site/FAQSection";
 import Footer from "../components/site/Footer";
@@ -64,10 +64,34 @@ const Home = () => {
                     { name: t('cities.tangier'), image: 'https://marhire.bytech.ma/images/tangier.webp', listings: 40 },
                 ]}
             />
-            <Recommended type="cars" classes="bg-blue"/>
-            <Recommended type="drivers" classes="bg-green" />
-            <Recommended type="boats" classes="bg-yellow"/>
-            <Recommended type="activities" classes="bg-silver"/>
+            <ListingsByCity
+                title={t('home.sections.carRentals', 'Car Rentals by City')}
+                categories={2}
+                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
+                initialCity="Agadir"
+                perPage={8}
+            />
+            <ListingsByCity
+                title={t('home.sections.privateDrivers', 'Private Drivers by City')}
+                categories={3}
+                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
+                initialCity="Agadir"
+                perPage={8}
+            />
+            <ListingsByCity
+                title={t('home.sections.boatRentals', 'Boat Rentals by City')}
+                categories={4}
+                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
+                initialCity="Agadir"
+                perPage={8}
+            />
+            <ListingsByCity
+                title={t('home.sections.activities', 'Activities by City')}
+                categories={5}
+                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
+                initialCity="Agadir"
+                perPage={8}
+            />
             <WhyChooseUs
                 title={t('home.why.title')}
                 subtitle={t('home.why.subtitle')}

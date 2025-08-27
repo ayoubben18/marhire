@@ -1127,5 +1127,123 @@
                 "¿Listo para reservar o tiene una pregunta?"
             ]
         }
+    },
+    "category": {
+        "cars": {
+            "why": {
+                "title": "¿Por Qué Reservar Su Alquiler de Coches en Marruecos con MarHire?",
+                "noDeposit": {
+                    "title": "Opciones Sin Depósito",
+                    "desc": "Alquile con facilidad. Muchos de nuestros socios ofrecen alquiler de coches sin depósito en Marruecos en coches económicos y compactos."
+                },
+                "unlimitedKm": {
+                    "title": "Kilómetros Ilimitados",
+                    "desc": "Explore Marruecos sin límites. La mayoría de alquileres de 3+ días incluyen kilometraje ilimitado."
+                },
+                "airportHire": {
+                    "title": "Alquiler en Aeropuerto",
+                    "desc": "Comience su viaje de inmediato. Ofrecemos alquiler conveniente de coches en todos los principales aeropuertos marroquíes."
+                },
+                "roadside": {
+                    "title": "Asistencia en Carretera 24/7",
+                    "desc": "Su seguridad es nuestra prioridad. Cada alquiler incluye soporte 24/7 para cualquier problema en carretera."
+                },
+                "fuelPolicy": {
+                    "title": "Políticas de Combustible Transparentes",
+                    "desc": "Sin sorpresas. Nuestros socios ofrecen políticas de combustible claras, típicamente \"Mismo-a-Mismo\"."
+                },
+                "instantConfirm": {
+                    "title": "Confirmación de Reserva Instantánea",
+                    "desc": "Reserve su alquiler de coche en minutos y reciba su confirmación al instante."
+                }
+            }
+        },
+        "activities": {
+            "why": {
+                "title": "¿Por Qué Reservar Tours Guiados y Excursiones en Marruecos con MarHire?",
+                "guides": {
+                    "title": "Guías Oficiales con Licencia",
+                    "desc": "Explore con confianza. Todos nuestros tours guiados son dirigidos por guías locales certificados y conocedores."
+                },
+                "instant": {
+                    "title": "Confirmación Instantánea",
+                    "desc": "Reserve su lugar en minutos y reciba su voucher de actividad al instante."
+                },
+                "pickup": {
+                    "title": "Recogida en Hotel Incluida",
+                    "desc": "Muchas de nuestras actividades y excursiones incluyen recogida y regreso convenientes desde su hotel."
+                },
+                "rated": {
+                    "title": "Experiencias Altamente Valoradas",
+                    "desc": "Solo listamos actividades altamente valoradas que son amadas por otros viajeros."
+                },
+                "private": {
+                    "title": "Grupos Pequeños o Tours Privados",
+                    "desc": "Elija entre tours sociables en grupos pequeños o tours privados íntimos."
+                },
+                "cancel": {
+                    "title": "Cancelación Gratuita y Fácil",
+                    "desc": "Reserve con flexibilidad. La mayoría de actividades ofrecen cancelación gratuita hasta 24 horas de anticipación."
+                }
+            }
+        },
+        "boats": {
+            "why": {
+                "title": "¿Por Qué Reservar Su Alquiler de Barco en Marruecos con MarHire?",
+                "operators": {
+                    "title": "Operadores Locales Verificados",
+                    "desc": "Todos los viajes en barco son ofrecidos por profesionales marítimos con licencia y experiencia."
+                },
+                "captain": {
+                    "title": "Capitán y Tripulación Incluidos",
+                    "desc": "Relájese y disfrute de la vista. La mayoría de nuestros alquileres de barcos incluyen un capitán profesional y tripulación."
+                },
+                "safety": {
+                    "title": "Seguridad Primero",
+                    "desc": "Cada embarcación está equipada con todo el equipo de seguridad necesario, incluyendo chalecos salvavidas para todos los pasajeros."
+                },
+                "flexible": {
+                    "title": "Reserva Flexible",
+                    "desc": "Reserve por hora para medio día, o una aventura de día completo en el agua para su tour privado en barco."
+                },
+                "weather": {
+                    "title": "Garantía por Mal Tiempo",
+                    "desc": "Si su viaje es cancelado por el capitán debido al clima, ofrecemos una reprogramación gratuita o reembolso completo."
+                },
+                "pricing": {
+                    "title": "Precios Transparentes",
+                    "desc": "El precio que ve incluye combustible para viajes estándar y todas las tarifas portuarias. Sin costos ocultos para su charter de yate."
+                }
+            }
+        },
+        "drivers": {
+            "why": {
+                "title": "¿Por Qué Reservar un Servicio de Chófer en Marruecos con MarHire?",
+                "vetted": {
+                    "title": "Conductores Profesionales y Verificados",
+                    "desc": "Todos nuestros chóferes tienen licencia, experiencia y están verificados por profesionalismo y conocimiento local."
+                },
+                "pricing": {
+                    "title": "Precios Fijos y Todo Incluido",
+                    "desc": "El precio que ve es el precio que paga. Sin tarifas ocultas por combustible, peajes o tiempo de espera para su conductor privado."
+                },
+                "airport": {
+                    "title": "Traslado Aeropuerto Marruecos",
+                    "desc": "Su conductor monitorea su vuelo y le espera en la sala de llegadas con un cartel con su nombre para una recogida confiable en el aeropuerto."
+                },
+                "comfort": {
+                    "title": "Vehículos Cómodos y Modernos",
+                    "desc": "Viaje con estilo y comodidad en una flota de vehículos limpios, modernos y con aire acondicionado."
+                },
+                "languages": {
+                    "title": "Chóferes Multilingües",
+                    "desc": "Comuníquese con facilidad. Muchos de nuestros conductores hablan inglés, francés, español y árabe."
+                },
+                "flexible": {
+                    "title": "Servicios de Chófer Flexibles",
+                    "desc": "Reserve por hora, para un viaje específico, o para tours de varios días a través de Marruecos."
+                }
+            }
+        }
     }
 }

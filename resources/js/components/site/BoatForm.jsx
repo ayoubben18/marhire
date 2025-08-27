@@ -6,7 +6,7 @@ import TimeModal from "./TimeModal";
 import { useTranslation } from "react-i18next";
 import CalendarPopover from "./CalendarPopover";
 
-const BoatForm = () => {
+const BoatForm = ({ defaultCity, defaultCityId }) => {
     const [destination, setDestination] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
@@ -166,14 +166,14 @@ const BoatForm = () => {
     };
 
     useEffect(() => {
-        console.log("Destination: ", getParam("destination") || "");
+        console.log("Destination: ", getParam("destination") || defaultCity || "");
         setSelectedBoatType(getParam("boat_type") || "Any type");
-        setDestination(getParam("destination") || "");
+        setDestination(getParam("destination") || defaultCity || "");
         setStartDate(getParam("start_date") || "");
         setEndDate(getParam("end_date") || "");
         setTime(getParam("time") || "");
         setPeopleCount(parseInt(getParam("people") || "1"));
-    }, []);
+    }, [defaultCity, defaultCityId]);
 
     return (
         <div className="flex items-center justify-center">

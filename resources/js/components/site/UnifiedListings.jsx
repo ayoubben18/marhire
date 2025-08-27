@@ -272,8 +272,10 @@ const UnifiedListings = (props) => {
     const {
         title = null,
         subtitle = null,
-        tabs = [], // optional list of city names to filter by when clicked
+        tabs = [], // optional list of city names or subcategory objects to filter by when clicked
         disableHeading = false,
+        useSubcategoryFilter = false, // whether to use subcategory filtering
+        subcategoryType = null, // 'type' or 'brand' for cars
         // data props forwarded as-is
         categories,
         subcategories,
@@ -293,12 +295,28 @@ const UnifiedListings = (props) => {
 
     const [activeTab, setActiveTab] = useState(tabs && tabs.length > 0 ? tabs[0].name || tabs[0] : null);
 
-    // Determine effective cities from tabs or prop
-    const effectiveCities = tabs && tabs.length > 0 && activeTab ? [activeTab] : cities;
+    // Determine effective cities and subcategories from tabs
+    let effectiveCities = cities;
+    let effectiveSubcategories = subcategories;
+    
+    if (tabs && tabs.length > 0) {
+        if (useSubcategoryFilter) {
+            // If tabs have IDs, use them for subcategory filtering
+            const activeTabObj = tabs.find(tab => (tab.name || tab) === activeTab);
+            if (activeTabObj && activeTabObj.id) {
+                effectiveSubcategories = [activeTabObj.id];
+            }
+            effectiveCities = cities; // Keep cities as passed
+        } else {
+            // Original behavior for city tabs
+            effectiveCities = activeTab ? [activeTab] : cities;
+            effectiveSubcategories = subcategories;
+        }
+    }
 
     const data = useUnifiedListingsData({
         categories,
-        subcategories,
+        subcategories: effectiveSubcategories,
         cities: effectiveCities,
         agencies,
         perPage,

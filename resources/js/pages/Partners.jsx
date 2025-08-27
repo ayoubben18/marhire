@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import Footer from "../components/site/Footer";
+import FreeTexts from "../components/site/FreeTexts";
 import HeroSectionPartners from "../components/site/HeroSectionPartners";
 import axios from "axios";
 import { FaArrowRight } from "react-icons/fa";
@@ -141,6 +142,7 @@ const Partners = () => {
                 .label { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
             `}</style>
         </div>
+        <FreeTexts slug="partners" />
         <Footer />
     </>
     );

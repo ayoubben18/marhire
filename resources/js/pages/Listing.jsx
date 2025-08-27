@@ -1,5 +1,6 @@
 import { useEffect, useState, Fragment } from "react";
 import Footer from "../components/site/Footer";
+import FreeTexts from "../components/site/FreeTexts";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 
@@ -278,6 +279,7 @@ const Listing = ({ slug }) => {
                     </div>
                 </div>
             </div>
+            <FreeTexts slug="listing" />
             <Footer />
         </>
     );

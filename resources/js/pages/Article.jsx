@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import Footer from "../components/site/Footer";
+import FreeTexts from "../components/site/FreeTexts";
 import axios from "axios";
 import { FaHome, FaRegCalendarAlt, FaUser } from "react-icons/fa";
 import { getLocalizedUrl } from "../utils/localeManager";
@@ -107,6 +108,7 @@ const Article = ({ slug }) => {
                     </>
                 )}
             </div>
+            <FreeTexts slug="article" />
             <Footer />
         </>
     );

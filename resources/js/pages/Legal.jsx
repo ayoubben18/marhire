@@ -1,5 +1,6 @@
 import axios from "axios";
 import Footer from "../components/site/Footer";
+import FreeTexts from "../components/site/FreeTexts";
 import React, { useEffect, useState } from "react";
 
 const Legal = ({ title, type }) => {
@@ -54,6 +55,7 @@ const Legal = ({ title, type }) => {
                     </div>
                 </div>
             </div>
+            <FreeTexts slug="legal" />
             <Footer />
         </>
     );

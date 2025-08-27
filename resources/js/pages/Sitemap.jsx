@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Footer from "../components/site/Footer";
+import FreeTexts from "../components/site/FreeTexts";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { FaHome, FaArrowRight } from "react-icons/fa";
@@ -182,6 +183,7 @@ const Sitemap = () => {
                     <LinkGrid items={legalPages} />
                 </Section>
             </div>
+            <FreeTexts slug="sitemap" />
             <Footer />
         </>
     );

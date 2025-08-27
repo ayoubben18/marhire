@@ -1,13 +1,18 @@
 import React from "react";
 import HeroSection from "./HeroSection";
 import CategoryWhy from "./CategoryWhy";
-import ExploreCategory from "./ExploreCategory";
+// import ExploreCategory from "./ExploreCategory"; // replaced by CityCarousel
 import Recommended from "./Recommended";
 import FAQSectionCustom from "./FAQSectionCustom";
 import FreeTexts from "./FreeTexts";
 import FooterRecommendation from "./FooterRecommendation";
 import Footer from "./Footer";
 import UnifiedListings from "./UnifiedListings";
+import ListingsByCity from "./ListingsByCity";
+import ListingsBySubcategory from "./ListingsBySubcategory";
+import PopularDestinations from "./PopularDestinations";
+import CityCarousel from "./CityCarousel";
+import { useTranslation } from "react-i18next";
 
 const CITY_IMAGE_MAP = {
     Marrakech: "https://marhire.bytech.ma/images/cities/marrakech.jpg",
@@ -60,21 +65,13 @@ const CATEGORY_CONFIG = {
             cityOnly: "bg-blue",
         },
         tabs: [
-            { id: 1, name: "Luxury" },
-            { id: 2, name: "Cheap" },
-            { id: 3, name: "MPV" },
-            { id: 4, name: "SUV" },
-            { id: 5, name: "Hatchback" },
-            { id: 6, name: "Sedan" },
+            { id: 59, name: "SUV" },
+            { id: 60, name: "Hatchback" },
+            { id: 61, name: "MPV" },
         ],
         brandTabs: [
-            { id: 1, name: "Dacia" },
-            { id: 2, name: "Renault" },
-            { id: 3, name: "Hyundai" },
-            { id: 4, name: "Peugeot" },
-            { id: 5, name: "Audi" },
-            { id: 6, name: "BMW" },
-            { id: 7, name: "Mercedes" },
+            { id: 52, name: "Dacia" },
+            { id: 54, name: "Audi" },
         ],
         titles: {
             tabsTitle: (city) =>
@@ -165,14 +162,15 @@ const CATEGORY_CONFIG = {
             cityOnly: "agency-listings",
         },
         tabs: [
-            { id: 1, name: "Airport Transfers" },
-            { id: 2, name: "Intercity Transfers" },
+            { id: 72, name: "SUV" },
+            { id: 73, name: "Sedan" },
+            { id: 74, name: "Van" },
         ],
         titles: {
             tabsTitle: (city) =>
                 city
                     ? `Browse Driver Services in ${city} by Vehicle Type`
-                    : "Choose Your Private Chauffeur Type in Morocco",
+                    : "Book a Chauffeur Service by Vehicle Type",
             tabsSubtitle: (city) =>
                 city
                     ? `Hire the Right Driver & Vehicle in ${city} - Daily, Airport & Multi-Day Trips`
@@ -255,17 +253,15 @@ const CATEGORY_CONFIG = {
             cityOnly: "agency-listings",
         },
         tabs: [
-            { id: 1, name: "Luxury Yacht" },
-            { id: 2, name: "Speedboats" },
-            { id: 3, name: "Fishing Boats" },
-            { id: 4, name: "Party Boats" },
-            { id: 5, name: "Sunset Cruises" },
+            { id: 55, name: "Yacht" },
+            { id: 56, name: "Speedboat" },
+            { id: 67, name: "Custom" },
         ],
         titles: {
             tabsTitle: (city) =>
                 city
                     ? `Browse Boat Rentals in ${city} by Type`
-                    : `Types of Boats & Experiences in Morocco`,
+                    : `Boat, Yacht & Fishing Trip Rentals by Type`,
             tabsSubtitle: (city) =>
                 city
                     ? `Choose the Perfect Experience - Yachts, Fishing Boats & More`
@@ -344,19 +340,16 @@ const CATEGORY_CONFIG = {
             cityOnly: "agency-listings",
         },
         tabs: [
-            { id: 1, name: "Camel Rides" },
-            { id: 2, name: "Quad & Buggy Tours" },
-            { id: 3, name: "Cultural Tours" },
-            { id: 4, name: "Surf Lessons" },
-            { id: 5, name: "Cooking Classes" },
-            { id: 6, name: "Wellness & Retreats" },
-            { id: 7, name: "Water Sports & Boat Trips" },
+            { id: 57, name: "Quad" },
+            { id: 58, name: "Desert" },
+            { id: 78, name: "Camel Ride" },
+            { id: 79, name: "Surf" },
         ],
         titles: {
             tabsTitle: (city) =>
                 city
                     ? `Browse Top Activities in ${city} by Type`
-                    : `Browse Activities in Morocco by Type`,
+                    : `Browse by Activity Type`,
             tabsSubtitle: (city) =>
                 city
                     ? `Find the Right Experience - Adventure, Culture, Food & More`
@@ -420,6 +413,24 @@ const UnifiedCategory = ({ slug, city }) => {
         }
     })();
 
+    // City name to ID mapping (case-insensitive)
+    const getCityId = (cityName) => {
+        if (!cityName) return null;
+        const cityMap = {
+            "marrakech": 5,
+            "agadir": 3,
+            "casablanca": 2,
+            "fez": 6,
+            "tangier": 7,
+            "rabat": 4,
+            "essaouira": 9,
+            "tetouan": 8
+        };
+        return cityMap[cityName.toLowerCase()] || null;
+    };
+
+    const cityId = city ? getCityId(city) : null;
+
     return (
         <>
             <HeroSection
@@ -428,29 +439,79 @@ const UnifiedCategory = ({ slug, city }) => {
                 subtitle={!city && cfg.heroSub ? cfg.heroSub() : undefined}
                 isFull={true}
                 tab={cfg.tab}
+                city={city}
+                cityId={cityId}
             />
 
             <CategoryWhy categoryKey={cfg.categoryKey} />
-            
-            <ExploreCategory
-                title={
-                    cfg.titles && cfg.titles.cityBrowseTitle
-                        ? cfg.titles.cityBrowseTitle()
-                        : cfg.explore.title
-                }
-                subtitle={cfg.explore.subtitle}
-                items={cfg.explore.items}
-            />
 
-            <UnifiedListings
-                title={cfg.titles && cfg.titles.cityOnlyTitle ? cfg.titles.cityOnlyTitle(city || "Morocco") : undefined}
-                subtitle={cfg.titles && cfg.titles.cityOnlySubtitle ? cfg.titles.cityOnlySubtitle(city || "Morocco") : undefined}
-                categories={categoryId}
-                cities={city ? [city] : []}
-                perPage={12}
+            {/* New city carousel replacing old block; CTA on the right */}
+            {!city &&<CityCarousel
+                title={cfg.explore && cfg.explore.title ? cfg.explore.title : "Find Car Rentals in Morocco's Top Cities"}
+                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
+                basePath={`/${cfg.tab}`}
+                exploreHref={`/${cfg.tab}`}
             />
+}
+            {!city &&(() => {
+                // Cities tabs to display for quick switching between top destinations
+                const defaultCityTabs = ["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"];
+                const sectionTitle = (cfg.titles && cfg.titles.cityBrowseTitle) ? cfg.titles.cityBrowseTitle() : "Car Hire by City";
 
-            
+                return (
+                    <ListingsByCity
+                        title={sectionTitle}
+                        categories={categoryId}
+                        cities={defaultCityTabs}
+                        initialCity={city || defaultCityTabs[0]}
+                        perPage={12}
+                    />
+                );
+            })()}
+
+           
+
+            {/* Add subcategory types section for all categories */}
+            {cfg.tabs && (
+                <UnifiedListings
+                    title={cfg.titles.tabsTitle(city)}
+                    tabs={cfg.tabs}
+                    categories={categoryId}
+                    subcategories={[]}
+                    agencies={[]}
+                    cities={city ? [city] : []}
+                    perPage={12}
+                    page={1}
+                    locale={null}
+                    disableHeading={false}
+                    useSubcategoryFilter={true}
+                    subcategoryType="type"
+                />
+            )}
+
+            {/* Add Brands section only for car rentals */}
+            {cfg.categoryKey === "cars" && cfg.brandTabs && (
+                <UnifiedListings
+                    title={cfg.titles.brandBrowseTitle ? cfg.titles.brandBrowseTitle() : "Browse Car Hire by Brand"}
+                    tabs={cfg.brandTabs}
+                    categories={categoryId}
+                    subcategories={[]}
+                    agencies={[]}
+                    cities={city ? [city] : []}
+                    perPage={12}
+                    page={1}
+                    locale={null}
+                    disableHeading={false}
+                    useSubcategoryFilter={true}
+                    subcategoryType="brand"
+                />
+            )}
+
+             {/* Moved popular destinations section below the listings-by-city */}
+             <PopularDestinations
+                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
+            />
+            <FreeTexts slug={`category/${slug}`} />
             <Footer />
         </>
     );

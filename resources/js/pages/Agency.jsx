@@ -1,6 +1,7 @@
     import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MdVerified } from "react-icons/md";
+import FreeTexts from "../components/site/FreeTexts";
 import { FaRegCalendarAlt, FaWhatsapp, FaEnvelope, FaHome, FaInfoCircle, FaCheckCircle, FaShieldAlt, FaPlaneDeparture, FaGasPump, FaHeadset, FaChevronDown, FaChevronUp, FaAnchor, FaClock, FaCloudSun, FaTags, FaLanguage, FaUsers, FaStar, FaCheckSquare, FaListUl } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import SearchItem from "../components/site/SearchItem";
@@ -466,6 +467,7 @@ const Agency = ({ slug }) => {
                     </>
                 )}
             </div>
+            <FreeTexts slug="agency" />
             <Footer />
         </>
     );

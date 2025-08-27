@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import Footer from "../components/site/Footer";
+import FreeTexts from "../components/site/FreeTexts";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import axios from "axios";
@@ -144,6 +145,7 @@ const Blog = () => {
                     <button className="load-more" onClick={loadMore}>{t('blog.loadMore')}</button>
                 </div>
             )}
+            <FreeTexts slug="blog" />
             <Footer />
         </>
     );

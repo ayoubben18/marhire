@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { getLocalizedUrl } from '../utils/localeManager';
 import Footer from '../components/site/Footer';
+import FreeTexts from '../components/site/FreeTexts';
 import { FaSearch, FaArrowRight } from 'react-icons/fa';
 
 const NotFound = () => {
@@ -93,6 +94,7 @@ const NotFound = () => {
                     </div>
                 </main>
             </div>
+            <FreeTexts slug="404" />
             <Footer />
         </>
     );

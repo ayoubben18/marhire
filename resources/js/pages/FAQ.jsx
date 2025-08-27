@@ -1,4 +1,5 @@
 import Footer from "../components/site/Footer";
+import FreeTexts from "../components/site/FreeTexts";
 import {
     Accordion,
     AccordionContent,
@@ -447,6 +448,7 @@ const FAQ = () => (
             </div>
         </div>
     </div>
+    <FreeTexts slug="faq" />
     <Footer />
     </>
     

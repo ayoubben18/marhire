@@ -32,7 +32,7 @@ function Modal({ open, onClose, children }) {
     );
 }
 
-export default function PrivateDriverForm() {
+export default function PrivateDriverForm({ defaultCity, defaultCityId }) {
     const [pickupLocation, setPickupLocation] = useState("");
     const [dropoffLocation, setDropoffLocation] = useState("Same as pickup");
     const [pickupDate, setPickupDate] = useState("");
@@ -153,12 +153,12 @@ export default function PrivateDriverForm() {
     }
 
     useEffect(() => {
-        setPickupLocation(getParam("pickup") || "");
+        setPickupLocation(getParam("pickup") || defaultCity || "");
         setDropoffLocation(getParam("dropoff") || "Same as pickup");
         setPickupDate(getParam("pickup_date") || "");
         setPickupTime(getParam("pickup_time") || "");
         setGuests(getParam("persons") || 1);
-    }, []);
+    }, [defaultCity, defaultCityId]);
 
     return (
         <div className="flex items-center justify-center">

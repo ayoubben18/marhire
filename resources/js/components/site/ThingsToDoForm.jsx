@@ -5,7 +5,7 @@ import LocationModal from "./LocationModal";
 import { useTranslation } from "react-i18next";
 import CalendarPopover from "./CalendarPopover";
 
-const ThingsToDoForm = () => {
+const ThingsToDoForm = ({ defaultCity, defaultCityId }) => {
     const [destination, setDestination] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
@@ -44,12 +44,12 @@ const ThingsToDoForm = () => {
     };
 
     useEffect(() => {
-        setDestination(getParam("destination") || "");
+        setDestination(getParam("destination") || defaultCity || "");
         setStartDate(getParam("start_date") || "");
         setEndDate(getParam("end_date") || "");
         setPeopleCount(parseInt(getParam("people") || "1"));
         setTimePreference(getParam("time_preference") || "morning");
-    }, []);
+    }, [defaultCity, defaultCityId]);
 
     const handleDateClick = () => {
         setShowCalendar(!showCalendar);
@@ -103,6 +103,31 @@ const ThingsToDoForm = () => {
         const start = new Date(startDate);
         const end = new Date(endDate);
         return date >= start && date <= end;
+    };
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        const searchParams = {
+            category: 5, // Activity
+            destination: destination,
+            start_date: startDate,
+            end_date: endDate,
+            people: peopleCount,
+            time_preference: timePreference,
+        };
+
+        // Persist for listing page booking form
+        sessionStorage.setItem("searchParams", JSON.stringify(searchParams));
+
+        const params = new URLSearchParams({
+            destination: destination || "",
+            start_date: startDate || "",
+            end_date: endDate || "",
+            people: String(peopleCount || 1),
+            time_preference: timePreference || "",
+        });
+
+        window.location.href = `/thingstodo-search?${params.toString()}`;
     };
 
     return (

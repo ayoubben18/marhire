@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Calendar, MapPin, Clock, ChevronDown, Search, Users, Car, Anchor, Activity, Info } from "lucide-react";
+import { Calendar, MapPin, Clock, ChevronDown, Search, Users, Info } from "lucide-react";
 import axios from "axios";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, CircularProgress, Typography, Alert, Stepper, Step, StepLabel, Box, FormControlLabel, Checkbox, Chip, Tooltip } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -1095,16 +1095,6 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams, for
         }
     }, [numericCategoryId, searchParams]);
 
-    // Get category icon
-    const getCategoryIcon = () => {
-        switch(numericCategoryId) {
-            case 2: return <Car className="w-5 h-5 mr-2" />;
-            case 3: return <Car className="w-5 h-5 mr-2" />;
-            case 4: return <Anchor className="w-5 h-5 mr-2" />;
-            case 5: return <Activity className="w-5 h-5 mr-2" />;
-            default: return null;
-        }
-    };
 
     // Get category name
     const getCategoryName = () => {
@@ -1289,9 +1279,20 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams, for
     return (
             <form onSubmit={handleSubmit} className="singlelisting-booking" id={formId}>
                 {/* Category Header */}
-                <div className="mb-4 flex items-center">
-                    {getCategoryIcon()}
-                    <h2 className="text-xl font-semibold">{getPricingTitle()}</h2>
+                <div className="mb-4">
+                    <div className="booking-price-header" style={{ fontSize: '18px', fontWeight: '600', color: '#333', marginBottom: '16px' }}>
+                        <span className="price-prefix" style={{ color: '#666' }}>{t('common.from')}&nbsp;</span>
+                        <span className="price-value" style={{ fontWeight: '700', color: '#000' }}>€{getMinimumPrice(numericCategoryId, listing) || 0}</span>
+                        <span className="price-suffix" style={{ color: '#666' }}>&nbsp;{(() => {
+                            switch(numericCategoryId) {
+                                case 2: return `/ ${t('units.day', 'day')}`;
+                                case 3: return `/ ${t('units.day', 'day')}`;
+                                case 4: return `/ ${t('units.hour', 'hour')}`;
+                                case 5: return `/ ${t('units.person', 'person')}`;
+                                default: return `/ ${t('units.day', 'day')}`;
+                            }
+                        })()}</span>
+                    </div>
                 </div>
                 
                 {/* Stepper */}

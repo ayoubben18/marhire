@@ -1,5 +1,6 @@
 import CarRentalForm from "../components/site/CarRentalForm";
 import Footer from "../components/site/Footer";
+import FreeTexts from "../components/site/FreeTexts";
 import React, { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
@@ -312,6 +313,7 @@ const Search = ({ type }) => {
                             </div>
                         </div>
                     )}
+                    <FreeTexts slug="search" />
                     <Footer />
                 </>
             )}

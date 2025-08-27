@@ -635,8 +635,10 @@
         "popular": {
             "title": "Explore Popular Destinations in Morocco",
             "subtitle": "Explore Morocco by City & Service",
+            "subtitleLong": "Explore Morocco by City & Service. Find the best deals on car rentals, private drivers, boats and activities.",
             "listings": "Listings",
-            "explore": "Explore"
+            "explore": "Explore",
+            "exploreAllCities": "Explore All Cities"
         },
         "recommended": {
             "cars": {
@@ -1263,6 +1265,124 @@
             "driverssCasablanca": "Private Drivers in Casablanca",
             "boatsAgadir": "Boat Rentals in Agadir",
             "explore": "Explore All Destinations"
+        }
+    },
+    "category": {
+        "cars": {
+            "why": {
+                "title": "Why Book Your Car Hire in Morocco with MarHire?",
+                "noDeposit": {
+                    "title": "No-Deposit Options",
+                    "desc": "Rent with ease. Many of our partners offer no-deposit car rental in Morocco on economy and compact cars."
+                },
+                "unlimitedKm": {
+                    "title": "Unlimited Kilometers",
+                    "desc": "Explore Morocco without limits. Most rentals of 3+ days include unlimited mileage."
+                },
+                "airportHire": {
+                    "title": "Airport Car Hire",
+                    "desc": "Start your trip right away. We offer convenient car hire at all major Moroccan airports."
+                },
+                "roadside": {
+                    "title": "24/7 Roadside Assistance",
+                    "desc": "Your safety is our priority. Every rental includes 24/7 support for any on-road issues."
+                },
+                "fuelPolicy": {
+                    "title": "Transparent Fuel Policies",
+                    "desc": "No surprises. Our partners offer clear fuel policies, typically \"Same-to-Same\"."
+                },
+                "instantConfirm": {
+                    "title": "Instant Booking Confirmation",
+                    "desc": "Book your car rental in minutes and receive your confirmation instantly."
+                }
+            }
+        },
+        "activities": {
+            "why": {
+                "title": "Why Book Guided Tours & Day Trips in Morocco with MarHire?",
+                "guides": {
+                    "title": "Official Licensed Guides",
+                    "desc": "Explore with confidence. All our guided tours are led by certified, knowledgeable local guides."
+                },
+                "instant": {
+                    "title": "Instant Confirmation",
+                    "desc": "Book your spot in minutes and receive your activity voucher instantly."
+                },
+                "pickup": {
+                    "title": "Hotel Pickup Included",
+                    "desc": "Many of our activities and day trips include convenient pickup and drop-off from your hotel."
+                },
+                "rated": {
+                    "title": "Highly-Rated Experiences",
+                    "desc": "We only list top-rated activities that are loved by fellow travelers."
+                },
+                "private": {
+                    "title": "Small Group or Private Tours",
+                    "desc": "Choose between sociable small group tours or intimate private tours."
+                },
+                "cancel": {
+                    "title": "Free & Easy Cancellation",
+                    "desc": "Book with flexibility. Most activities offer free cancellation up to 24 hours in advance."
+                }
+            }
+        },
+        "boats": {
+            "why": {
+                "title": "Why Book Your Boat Rental in Morocco with MarHire?",
+                "operators": {
+                    "title": "Verified Local Operators",
+                    "desc": "All boat trips are offered by licensed and experienced maritime professionals."
+                },
+                "captain": {
+                    "title": "Captain & Crew Included",
+                    "desc": "Relax and enjoy the view. Most of our boat rentals include a professional captain and crew."
+                },
+                "safety": {
+                    "title": "Safety First",
+                    "desc": "Every vessel is equipped with all necessary safety gear, including life jackets for all passengers."
+                },
+                "flexible": {
+                    "title": "Flexible Booking",
+                    "desc": "Book by the hour for a half-day, or a full-day adventure on the water for your private boat tour."
+                },
+                "weather": {
+                    "title": "Bad Weather Guarantee",
+                    "desc": "If your trip is cancelled by the captain due to weather, we offer a free reschedule or a full refund."
+                },
+                "pricing": {
+                    "title": "Transparent Pricing",
+                    "desc": "The price you see includes fuel for standard trips and all port fees. No hidden costs for your yacht charter."
+                }
+            }
+        },
+        "drivers": {
+            "why": {
+                "title": "Why Book a Chauffeur Service in Morocco with MarHire?",
+                "vetted": {
+                    "title": "Professional & Vetted Drivers",
+                    "desc": "All our chauffeurs are licensed, experienced, and vetted for professionalism and local knowledge."
+                },
+                "pricing": {
+                    "title": "Fixed, All-Inclusive Pricing",
+                    "desc": "The price you see is the price you pay. No hidden fees for fuel, tolls, or waiting time for your private driver."
+                },
+                "airport": {
+                    "title": "Morocco Airport Transfer",
+                    "desc": "Your driver monitors your flight and waits for you in the arrivals hall with a name sign for a reliable airport pickup."
+                },
+                "comfort": {
+                    "title": "Comfortable, Modern Vehicles",
+                    "desc": "Travel in style and comfort in a fleet of clean, modern, and air-conditioned vehicles."
+                },
+                "languages": {
+                    "title": "Multilingual Chauffeurs",
+                    "desc": "Communicate with ease. Many of our drivers speak English, French, Spanish, and Arabic."
+                },
+                "flexible": {
+                    "title": "Flexible Chauffeur Services",
+                    "desc": "Book by the hour, for a specific trip, or for multi-day tours across Morocco."
+                }
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ function getTabs(t) {
     ];
 }
 
-const HeroSection = ({ withBar, text, subtitle, isFull, tab }) => {
+const HeroSection = ({ withBar, text, subtitle, isFull, tab, city, cityId }) => {
     const { t, i18n } = useTranslation();
     
     const [activeTab, setActiveTab] = useState(tab ? tab : "cars");
@@ -88,10 +88,10 @@ const HeroSection = ({ withBar, text, subtitle, isFull, tab }) => {
                             </div>
                         )}
                         <div className="searchbox__frm">
-                            {activeTab === "cars" && <CarRentalForm />}
-                            {activeTab === "drivers" && <PrivateDriverForm />}
-                            {activeTab === "boats" && <BoatForm />}
-                            {activeTab === "activity" && <ThingsToDoForm />}
+                            {activeTab === "cars" && <CarRentalForm defaultCity={city} defaultCityId={cityId} />}
+                            {activeTab === "drivers" && <PrivateDriverForm defaultCity={city} defaultCityId={cityId} />}
+                            {activeTab === "boats" && <BoatForm defaultCity={city} defaultCityId={cityId} />}
+                            {activeTab === "activity" && <ThingsToDoForm defaultCity={city} defaultCityId={cityId} />}
                         </div>
                     </div>
                 </div>

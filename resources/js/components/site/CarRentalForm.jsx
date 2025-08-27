@@ -17,7 +17,7 @@ import TimeModal from "./TimeModal";
 import { useTranslation } from "react-i18next";
 import CalendarPopover from "./CalendarPopover";
 
-export default function CarRentalForm() {
+export default function CarRentalForm({ defaultCity, defaultCityId }) {
     const [pickupLocation, setPickupLocation] = useState("");
     const [pickupLocationId, setPickupLocationId] = useState("");
     const [dropoffLocation, setDropoffLocation] = useState("Same as pickup");
@@ -192,13 +192,17 @@ export default function CarRentalForm() {
     };
 
     useEffect(() => {
-        setPickupLocation(getParam("pickup") || "");
+        const pickupLocationFromUrl = getParam("pickup");
+        
+        setPickupLocation(pickupLocationFromUrl || defaultCity || "");
+        setPickupLocationId(pickupLocationFromUrl ? "" : (defaultCityId || ""));
+        
         setDropoffLocation(getParam("dropoff") || "Same as pickup");
         setPickupDate(getParam("pickup_date") || "");
         setDropoffDate(getParam("dropoff_date") || "");
         setPickupTime(getParam("pickup_time") || "");
         setDropoffTime(getParam("dropoff_time") || "");
-    }, []);
+    }, [defaultCity, defaultCityId]);
 
     return (
         <div className="flex items-center justify-center">

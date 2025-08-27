@@ -1145,5 +1145,123 @@
                 "Prêt à réserver ou une question ?"
             ]
         }
+    },
+    "category": {
+        "cars": {
+            "why": {
+                "title": "Pourquoi Réserver Votre Location de Voiture au Maroc avec MarHire ?",
+                "noDeposit": {
+                    "title": "Options Sans Dépôt",
+                    "desc": "Louez en toute simplicité. Beaucoup de nos partenaires offrent la location de voiture sans dépôt au Maroc sur les voitures économiques et compactes."
+                },
+                "unlimitedKm": {
+                    "title": "Kilométrage Illimité",
+                    "desc": "Explorez le Maroc sans limites. La plupart des locations de 3+ jours incluent un kilométrage illimité."
+                },
+                "airportHire": {
+                    "title": "Location à l'Aéroport",
+                    "desc": "Commencez votre voyage immédiatement. Nous offrons des locations pratiques dans tous les grands aéroports marocains."
+                },
+                "roadside": {
+                    "title": "Assistance Routière 24/7",
+                    "desc": "Votre sécurité est notre priorité. Chaque location inclut un support 24/7 pour tout problème sur la route."
+                },
+                "fuelPolicy": {
+                    "title": "Politiques de Carburant Transparentes",
+                    "desc": "Pas de surprises. Nos partenaires offrent des politiques de carburant claires, typiquement \"Même-à-Même\"."
+                },
+                "instantConfirm": {
+                    "title": "Confirmation de Réservation Instantanée",
+                    "desc": "Réservez votre location de voiture en minutes et recevez votre confirmation instantanément."
+                }
+            }
+        },
+        "activities": {
+            "why": {
+                "title": "Pourquoi Réserver des Tours Guidés et Excursions au Maroc avec MarHire ?",
+                "guides": {
+                    "title": "Guides Officiels Agréés",
+                    "desc": "Explorez en toute confiance. Tous nos tours guidés sont menés par des guides locaux certifiés et compétents."
+                },
+                "instant": {
+                    "title": "Confirmation Instantanée",
+                    "desc": "Réservez votre place en minutes et recevez votre voucher d'activité instantanément."
+                },
+                "pickup": {
+                    "title": "Prise en Charge à l'Hôtel Incluse",
+                    "desc": "Beaucoup de nos activités et excursions incluent une prise en charge et un retour pratiques depuis votre hôtel."
+                },
+                "rated": {
+                    "title": "Expériences Très Bien Notées",
+                    "desc": "Nous ne listons que des activités très bien notées qui sont appréciées par les autres voyageurs."
+                },
+                "private": {
+                    "title": "Petits Groupes ou Tours Privés",
+                    "desc": "Choisissez entre des tours en petits groupes sociables ou des tours privés intimes."
+                },
+                "cancel": {
+                    "title": "Annulation Gratuite et Facile",
+                    "desc": "Réservez avec flexibilité. La plupart des activités offrent une annulation gratuite jusqu'à 24 heures à l'avance."
+                }
+            }
+        },
+        "boats": {
+            "why": {
+                "title": "Pourquoi Réserver Votre Location de Bateau au Maroc avec MarHire ?",
+                "operators": {
+                    "title": "Opérateurs Locaux Vérifiés",
+                    "desc": "Tous les voyages en bateau sont offerts par des professionnels maritimes agréés et expérimentés."
+                },
+                "captain": {
+                    "title": "Capitaine et Équipage Inclus",
+                    "desc": "Détendez-vous et profitez de la vue. La plupart de nos locations de bateaux incluent un capitaine professionnel et un équipage."
+                },
+                "safety": {
+                    "title": "Sécurité Avant Tout",
+                    "desc": "Chaque navire est équipé de tous les équipements de sécurité nécessaires, y compris des gilets de sauvetage pour tous les passagers."
+                },
+                "flexible": {
+                    "title": "Réservation Flexible",
+                    "desc": "Réservez à l'heure pour une demi-journée, ou une aventure d'une journée complète sur l'eau pour votre tour privé en bateau."
+                },
+                "weather": {
+                    "title": "Garantie Mauvais Temps",
+                    "desc": "Si votre voyage est annulé par le capitaine en raison du temps, nous offrons une reprogrammation gratuite ou un remboursement complet."
+                },
+                "pricing": {
+                    "title": "Tarification Transparente",
+                    "desc": "Le prix que vous voyez inclut le carburant pour les voyages standards et tous les frais portuaires. Pas de coûts cachés pour votre charter de yacht."
+                }
+            }
+        },
+        "drivers": {
+            "why": {
+                "title": "Pourquoi Réserver un Service de Chauffeur au Maroc avec MarHire ?",
+                "vetted": {
+                    "title": "Chauffeurs Professionnels et Vérifiés",
+                    "desc": "Tous nos chauffeurs sont agréés, expérimentés, et vérifiés pour leur professionnalisme et leur connaissance locale."
+                },
+                "pricing": {
+                    "title": "Prix Fixe et Tout Inclus",
+                    "desc": "Le prix que vous voyez est le prix que vous payez. Pas de frais cachés pour le carburant, les péages, ou le temps d'attente pour votre chauffeur privé."
+                },
+                "airport": {
+                    "title": "Transfert Aéroport Maroc",
+                    "desc": "Votre chauffeur surveille votre vol et vous attend dans le hall des arrivées avec une pancarte nominative pour une prise en charge fiable à l'aéroport."
+                },
+                "comfort": {
+                    "title": "Véhicules Confortables et Modernes",
+                    "desc": "Voyagez avec style et confort dans une flotte de véhicules propres, modernes et climatisés."
+                },
+                "languages": {
+                    "title": "Chauffeurs Multilingues",
+                    "desc": "Communiquez avec facilité. Beaucoup de nos chauffeurs parlent anglais, français, espagnol et arabe."
+                },
+                "flexible": {
+                    "title": "Services de Chauffeur Flexibles",
+                    "desc": "Réservez à l'heure, pour un voyage spécifique, ou pour des tours de plusieurs jours à travers le Maroc."
+                }
+            }
+        }
     }
 }
