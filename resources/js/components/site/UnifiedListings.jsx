@@ -417,9 +417,9 @@ const UnifiedListings = (props) => {
                         slidesPerView={1}
                         navigation
                         breakpoints={{
-                            640: { slidesPerView: 2 },
-                            1024: { slidesPerView: 3 },
-                            1280: { slidesPerView: 4 },
+                            770: { slidesPerView: 2 },
+                            1100: { slidesPerView: 3 },
+                            1390: { slidesPerView: 4 },
                         }}
                         className="custom-swiper"
                     >
