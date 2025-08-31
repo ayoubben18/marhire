@@ -339,7 +339,7 @@ const UnifiedListings = (props) => {
     };
 
     const getWtspUrl = (listing) => {
-        const url = `https://marhire.bytech.ma/details/${listing.slug}`;
+        const url = `https://marhire.ma/details/${listing.slug}`;
         const titleTxt = getTranslatedField(listing, 'title');
         const text = t('messages.whatsappInterest', { title: titleTxt, url });
         return `https://wa.me/+212660745055?text=${encodeURIComponent(text)}`;

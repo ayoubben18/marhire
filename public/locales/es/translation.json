@@ -78,6 +78,11 @@
         "thingsToDo": "Actividades",
         "browse": "Navegar"
     },
+    "faq": {
+        "breadcrumb": "FAQ",
+        "title": "Preguntas Frecuentes",
+        "subtitle": "Encuentra respuestas rápidas a tus preguntas sobre reservar alquileres de coches, conductores privados, tours y actividades en Marruecos."
+    },
     "footer": {
         "company": "Empresa",
         "legalPolicy": "Legal y Políticas",

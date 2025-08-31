@@ -78,6 +78,11 @@
         "thingsToDo": "Activités",
         "browse": "Parcourir"
     },
+    "faq": {
+        "breadcrumb": "FAQ",
+        "title": "Questions Fréquemment Posées",
+        "subtitle": "Trouvez des réponses rapides à vos questions sur la réservation de locations de voitures, chauffeurs privés, circuits et activités au Maroc."
+    },
     "footer": {
         "company": "Entreprise",
         "legalPolicy": "Légal & Politique",

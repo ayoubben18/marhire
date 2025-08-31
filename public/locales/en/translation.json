@@ -80,6 +80,11 @@
         "thingsToDo": "Things to Do",
         "browse": "Browse"
     },
+    "faq": {
+        "breadcrumb": "FAQ",
+        "title": "Frequently Asked Questions",
+        "subtitle": "Find quick answers to your questions about booking car rentals, private drivers, tours, and activities in Morocco."
+    },
     "footer": {
         "company": "Company",
         "legalPolicy": "Legal & Policy",
