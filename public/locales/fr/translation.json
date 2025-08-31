@@ -602,6 +602,11 @@
                 }
             }
         },
+        "blog": {
+            "title": "Depuis notre blog de voyage",
+            "subtitle": "Trouvez des conseils d'initiés, des guides de voyage et de l'inspiration pour votre prochaine aventure au Maroc.",
+            "readMoreArticles": "Voir plus d'articles"
+        },
         "faq": {
             "title": "Questions Fréquemment Posées",
             "items": [
@@ -628,6 +633,7 @@
             ]
         }
     },
+    
     "languages": {
         "en": "English",
         "fr": "Français",
@@ -921,16 +927,16 @@
         "partnerFaq": {
             "title": "Questions Fréquemment Posées",
             "items": [
-                { "q": "Combien de temps dure l'approbation ?", "a": "La plupart des dossiers sont examinés en 24–48h. Si des documents sont requis, nous vous contacterons et finaliserons rapidement après réception." },
-                { "q": "Quelles sont les commissions ?", "a": "Vous payez une commission fixe et compétitive uniquement sur les réservations confirmées. Aucun frais d'inscription ni mensuel." },
-                { "q": "Comment et quand suis‑je payé ?", "a": "Les gains sont versés automatiquement chaque mois par virement bancaire sécurisé." },
-                { "q": "Puis‑je modifier mes tarifs et disponibilités ?", "a": "Oui, via le tableau de bord partenaire vous pouvez mettre à jour tarifs, disponibilités, photos et informations." },
-                { "q": "Comment mettre mes annonces en pause ?", "a": "Depuis le tableau de bord, définissez des périodes d'indisponibilité ou mettez l'annonce en pause temporairement." },
-                { "q": "Vos horaires de support ?", "a": "Support 24/7 par WhatsApp et email, avec des réponses plus rapides pendant les heures ouvrables." },
-                { "q": "Contrat longue durée ?", "a": "Aucun engagement long terme. Vous listez en toute flexibilité." },
-                { "q": "Comment gérez‑vous les données ?", "a": "Nous appliquons des pratiques strictes de confidentialité et de sécurité. Les données servent uniquement aux réservations et au support." },
-                { "q": "Peut‑on lister dans plusieurs villes ?", "a": "Oui, les annonces multi‑villes sont prises en charge. Indiquez simplement vos villes d'opération." },
-                { "q": "Je suis déjà sur d'autres plateformes — est‑ce simple ?", "a": "Oui. Donnez‑nous vos informations et nous vous aidons à créer rapidement des annonces optimisées." }
+                { "q": "Combien de temps dure le processus d'approbation ?", "a": "Notre objectif est d'examiner et d'approuver les nouvelles candidatures de partenaires dans les 24-48 heures. Une fois vos documents et services vérifiés, nous commencerons immédiatement à créer votre annonce." },
+                { "q": "Quelles sont les frais ou taux de commission ?", "a": "MarHire fonctionne sur un modèle transparent basé sur les commissions. Vous ne payez qu'un petit pourcentage lorsque vous obtenez une réservation confirmée. Il n'y a aucun frais d'inscription ou coûts mensuels. Pour les taux détaillés, veuillez consulter notre page des commissions ou nous contacter." },
+                { "q": "Comment et quand suis-je payé ?", "a": "Nous traitons les paiements des partenaires sur une base mensuelle via virement bancaire sécurisé. Vous pouvez suivre toutes vos réservations, gains et relevés de paiement directement depuis votre tableau de bord partenaire." },
+                { "q": "Puis-je modifier mes tarifs et disponibilités ?", "a": "Oui. Vous avez un contrôle total sur vos annonces. Vous pouvez mettre à jour les tarifs, bloquer des dates et gérer la disponibilité facilement via votre tableau de bord partenaire dédié à tout moment." },
+                { "q": "Comment puis-je mettre en pause mes annonces si je suis complet ?", "a": "Vous pouvez désactiver temporairement ou mettre en pause n'importe laquelle de vos annonces directement depuis votre tableau de bord partenaire d'un simple clic, empêchant ainsi les nouvelles réservations jusqu'à ce que vous soyez prêt à les réactiver." },
+                { "q": "Quels sont vos horaires de support pour les partenaires ?", "a": "Nous fournissons un support partenaire dédié via WhatsApp et email. Notre équipe est basée au Maroc et est disponible pour vous aider avec toutes vos questions ou problèmes urgents 7 jours sur 7." },
+                { "q": "Y a-t-il un contrat à long terme ?", "a": "Non, nous croyons aux partenariats flexibles. Vous pouvez rejoindre MarHire sans aucun engagement à long terme et pouvez choisir de supprimer vos annonces à tout moment, comme indiqué dans notre accord de partenariat." },
+                { "q": "Comment mes données professionnelles et client sont-elles gérées ?", "a": "Nous prenons la confidentialité des données au sérieux. Toutes les données sont gérées conformément à notre Politique de confidentialité. Les informations de votre entreprise sont sécurisées et nous ne partageons que ce qui est nécessaire pour faciliter les réservations." },
+                { "q": "Puis-je lister mes services dans plusieurs villes comme Agadir et Marrakech ?", "a": "Absolument. Si vous opérez dans plusieurs emplacements à travers le Maroc, vous pouvez créer et gérer des annonces pour chaque ville sous un seul compte partenaire." },
+                { "q": "Je suis déjà sur d'autres plateformes. Est-il facile de lister avec MarHire ?", "a": "Oui, notre équipe facilite les choses. Fournissez-nous simplement les détails de votre service et nous nous occuperons de la configuration initiale pour que vos annonces soient en ligne sur MarHire rapidement et efficacement." }
             ]
         },
         "applicationForm": {
@@ -953,29 +959,80 @@
         },
         "faq": {
             "title": "Questions Fréquemment Posées",
-            "cost": {
-                "question": "Combien coûte rejoindre MarHire?",
-                "answer": "Rejoindre MarHire est complètement gratuit. Il n'y a pas de frais d'inscription, de charges mensuelles ou de coûts cachés. Nous ne gagnons qu'une petite commission lorsque vous recevez des réservations confirmées."
+            "sections": {
+                "bookings": {
+                    "title": "Réservations et Paiement",
+                    "items": [
+                        { "q": "Quels modes de paiement acceptez-vous?", "a": "Nous proposons des options de paiement flexibles. Vous pouvez payer en toute sécurité en ligne avec la plupart des cartes de crédit majeures (Visa, Mastercard, etc.). Pour de nombreux services, une option 'Paiement à la livraison' est également disponible, vous permettant de payer en espèces lorsque vous rencontrez votre fournisseur." },
+                        { "q": "Y a-t-il des frais cachés?", "a": "Non. MarHire s'engage à une tarification transparente. Le prix total que vous voyez à la caisse comprend tous les frais et taxes obligatoires. Tout complément optionnel est clairement indiqué." },
+                        { "q": "Dois-je payer un acompte pour ma réservation?", "a": "Cela dépend. De nombreuses locations de voitures sont disponibles avec une option sans dépôt, qui peut inclure un petit supplément. Pour les véhicules de luxe ou certains partenaires spécifiques, un dépôt de garantie remboursable peut être requis sur votre carte de crédit lors du retrait. Vérifiez les détails de chaque annonce." },
+                        { "q": "Comment modifier ou annuler ma réservation?", "a": "Puisque nous n'avons pas encore de comptes utilisateur, toutes les modifications et annulations sont gérées par notre équipe de support. Veuillez nous contacter par email ou WhatsApp avec votre numéro de référence de réservation." },
+                        { "q": "Quand recevrai-je mon remboursement après une annulation?", "a": "Une fois le remboursement approuvé selon la politique de réservation, nous le traitons immédiatement. Il faut généralement 5-10 jours ouvrables pour que les fonds réapparaissent sur votre méthode de paiement originale." },
+                        { "q": "Offrez-vous des remises pour les locations plus longues?", "a": "Oui, de nombreux partenaires offrent des tarifs journaliers réduits pour les périodes de location de voiture plus longues (par exemple, 7+ jours). La remise est automatiquement calculée et reflétée dans le prix total lorsque vous sélectionnez vos dates." },
+                        { "q": "Comment obtenir une facture pour ma réservation?", "a": "Vous recevrez un email de confirmation qui sert de reçu détaillé. Si vous avez besoin d'une facture formelle, veuillez contacter notre équipe de support avec votre numéro de référence de réservation." },
+                        { "q": "Est-il sûr de payer en ligne?", "a": "Absolument. Notre processeur de paiement est entièrement conforme PCI et utilise un cryptage standard de l'industrie. Nous ne stockons jamais vos détails complets de carte de crédit sur nos serveurs." }
+                    ]
+                },
+                "cars": {
+                    "title": "Voitures",
+                    "items": [
+                        { "q": "Qu'est-ce qui est inclus dans ma location de voiture?", "a": "Les locations standard incluent une assurance de base (CDW), la responsabilité civile tierce et les taxes locales. La politique de kilométrage (par exemple, kilomètres illimités) dépend souvent de la durée de location ; vérifiez toujours les détails de l'annonce." },
+                        { "q": "Quelles sont les exigences d'âge et de permis?", "a": "L'âge minimum est généralement de 21 ans, mais peut être de 23 ou 25 ans pour certaines voitures. Vous devez détenir votre permis de conduire valide depuis au moins un an. \n➤ **Astuce:** Nous recommandons fortement de porter un Permis International de Conduite (PID) pour éviter tout problème." },
+                        { "q": "Puis-je me faire livrer la voiture à mon aéroport ou hôtel?", "a": "Oui, la livraison à l'aéroport ou à l'hôtel est un service standard. De nombreux partenaires offrent une livraison gratuite dans les limites de leur ville. Tout frais applicable est indiqué sur l'annonce." },
+                        { "q": "Quelle est la politique de carburant?", "a": "Notre politique standard est 'Même-à-Même.' Vous recevez la voiture avec un certain niveau de carburant et devez la retourner avec le même montant pour éviter des frais supplémentaires." },
+                        { "q": "Puis-je louer une voiture dans une ville et la retourner dans une autre?", "a": "Oui, les locations aller simple entre les principales villes marocaines (par exemple, Marrakech à Fès) sont possibles. Ce service peut entraîner des frais aller simple. Les voyages transfrontaliers en dehors du Maroc ne sont pas autorisés." },
+                        { "q": "Que dois-je faire en cas de panne ou d'accident?", "a": "D'abord, assurez-vous que tout le monde est en sécurité. Pour tout accident, vous devez contacter la police pour obtenir un rapport (*constat*), car il est requis pour l'assurance. Ensuite, appelez le numéro d'assistance routière 24/7 sur votre voucher de location." }
+                    ]
+                },
+                "drivers": {
+                    "title": "Chauffeurs Privés et Transferts",
+                    "items": [
+                        { "q": "Comment fonctionnent les transferts aéroport?", "a": "Votre chauffeur professionnel surveillera votre vol et attendra dans le hall des arrivées avec un panneau portant votre nom. Le prix de votre transfert aéroport est fixe, vous n'avez donc pas à vous soucier du trafic ou des coûts supplémentaires." },
+                        { "q": "Les chauffeurs sont-ils multilingues?", "a": "Oui, nos chauffeurs privés sont des professionnels qui parlent généralement plusieurs langues, y compris le français, l'arabe et l'anglais. Certains parlent également l'espagnol ou l'allemand ; vérifiez le profil du chauffeur pour plus de détails." },
+                        { "q": "Puis-je réserver un chauffeur pour un transfert interurbain?", "a": "Absolument. Nous proposons des transferts interurbains confortables, tels que Marrakech à Agadir ou Casablanca à Rabat. C'est une excellente façon de voyager entre villes sans les tracas des transports en commun." },
+                        { "q": "Qu'en est-il des bagages, des sièges enfant et du temps d'attente?", "a": "Chaque véhicule a une capacité de bagages spécifiée. Les sièges enfant peuvent être demandés à l'avance. Pour les transferts aéroport, un temps d'attente standard (généralement 60 minutes) est inclus gratuitement." },
+                        { "q": "Comment modifier l'heure ou le lieu de prise en charge?", "a": "Pour apporter des modifications à votre réservation de chauffeur privé, veuillez contacter notre équipe de support via WhatsApp ou email dès que possible, et nous coordonnerons avec le chauffeur." },
+                        { "q": "Comment payer pour mon chauffeur privé?", "a": "Comme pour nos autres services, vous pouvez réserver votre chauffeur privé ou transfert aéroport au Maroc en payant en toute sécurité en ligne ou en choisissant une option 'Paiement en Espèces' si disponible." }
+                    ]
+                },
+                "boats": {
+                    "title": "Bateaux et Activités",
+                    "items": [
+                        { "q": "Qu'est-ce qui est inclus dans une location de bateau ou une activité?", "a": "Cela varie, mais comprend généralement l'équipement de sécurité, un guide/skipper et le matériel nécessaire. Pour les locations de bateaux, la politique de carburant sera spécifiée. Vérifiez toujours la section 'Ce qui est inclus' sur la page d'annonce." },
+                        { "q": "Que se passe-t-il s'il y a mauvais temps?", "a": "La sécurité est notre priorité. Si une excursion en bateau ou une activité en extérieur est annulée par le fournisseur en raison du mauvais temps, on vous offrira le choix de reprogrammer ou de recevoir un remboursement complet." },
+                        { "q": "Puis-je réserver une excursion ou visite privée en bateau?", "a": "Oui, de nombreuses annonces pour les locations de bateaux et activités dans des villes comme Marrakech ou Agadir sont disponibles comme expériences privées, vous permettant de personnaliser l'itinéraire avec le fournisseur." },
+                        { "q": "Y a-t-il des limites d'âge ou des mesures de sécurité pour les enfants?", "a": "La plupart des activités sont familiales, mais certaines peuvent avoir des restrictions d'âge ou de taille pour des raisons de sécurité. Des gilets de sauvetage, y compris des tailles enfant, sont fournis pour toutes les excursions en bateau. Veuillez vérifier les détails de l'annonce." },
+                        { "q": "La prise en charge à l'hôtel est-elle disponible pour les activités?", "a": "De nombreuses visites et activités incluent une prise en charge et un dépôt complémentaires depuis les hôtels centraux. Vous pouvez le vérifier sur la page d'annonce et fournir les détails de votre hôtel lors de la caisse." },
+                        { "q": "Comment annuler ou modifier une réservation d'activité?", "a": "Pour annuler ou modifier votre activité, veuillez contacter notre équipe de support. Assurez-vous de vérifier la politique d'annulation sur votre confirmation de réservation, car les délais peuvent varier." }
+                    ]
+                },
+                "policies": {
+                    "title": "Politiques et Juridique",
+                    "items": [
+                        { "q": "Quels documents ai-je besoin lors de la prise en charge?", "a": "Pour les locations de voitures, vous aurez besoin de votre permis de conduire, passeport/carte d'identité et voucher de réservation. Pour tous les services, le responsable de la réservation doit avoir une pièce d'identité. Un Permis International de Conduite (PID) est fortement recommandé pour la conduite." },
+                        { "q": "Qui est responsable des amendes de circulation, péages et stationnement?", "a": "Le locataire est entièrement responsable de toutes les amendes de circulation, péages et frais de stationnement encourus. Les amendes impayées seront facturées par l'agence de location, souvent avec des frais administratifs." },
+                        { "q": "Quelles sont mes options d'assurance?", "a": "Toutes les locations de voitures incluent la responsabilité civile de base et la CDW avec un excédent (franchise). Vous pouvez souvent passer à un package de 'protection complète' au bureau de location pour réduire ou éliminer cet excédent." },
+                        { "q": "Comment mes données personnelles sont-elles gérées?", "a": "Nous ne collectons que les données nécessaires pour finaliser votre réservation. Pour plus de détails, veuillez lire notre Politique de Confidentialité." },
+                        { "q": "Où puis-je trouver les conditions générales complètes?", "a": "Toutes les réservations sont soumises à nos règles de plateforme. Vous pouvez consulter nos Conditions Générales complètes pour plus d'informations." },
+                        { "q": "Que se passe-t-il si j'ai une plainte ou un problème avec un fournisseur?", "a": "Votre satisfaction est notre priorité. Veuillez contacter immédiatement le support MarHire. Nous agirons en tant que médiateur pour aider à résoudre la situation avec le partenaire local de manière équitable et efficace." }
+                    ]
+                },
+                "contact": {
+                    "title": "Contact et Support",
+                    "items": [
+                        { "q": "Quel est le meilleur moyen de vous contacter?", "a": "Pour les problèmes urgents, le moyen le plus rapide est via WhatsApp. Pour les questions générales, modifications ou annulations, vous pouvez nous envoyer un email à info@marhire.com." },
+                        { "q": "Quels sont vos horaires de support?", "a": "Notre équipe de support est disponible 7/7, de 09h00 à 21h00 (heure du Maroc, GMT+1)." },
+                        { "q": "Quelle est la différence entre le support général et d'urgence?", "a": "Le support général gère les réservations et questions pendant les heures de bureau. Le support d'urgence (via le numéro sur votre voucher) concerne les problèmes immédiats sur la route comme les pannes et est disponible 24/7." },
+                        { "q": "Combien de temps faut-il pour obtenir une réponse?", "a": "Nous sommes fiers de nos réponses rapides. Les messages WhatsApp sont généralement répondu en quelques minutes, tandis que les emails sont répondu dans quelques heures pendant notre fenêtre de support." }
+                    ]
+                }
             },
-            "approval": {
-                "question": "Combien de temps prend le processus d'approbation?",
-                "answer": "La plupart des candidatures sont examinées et approuvées dans les 48 heures. Nous pourrions demander de la documentation supplémentaire pour vérifier votre entreprise, ce qui pourrait prolonger le processus de 1-2 jours ouvrables."
-            },
-            "commission": {
-                "question": "Quelle commission facturez-vous?",
-                "answer": "Notre commission varie selon la catégorie de service et n'est facturée que sur les réservations confirmées. Nous discuterons des tarifs exacts pendant votre processus de candidature - nos frais sont toujours transparents et compétitifs."
-            },
-            "bookings": {
-                "question": "Comment est-ce que je reçois les demandes de réservation?",
-                "answer": "Vous recevrez des notifications de réservation par email et WhatsApp avec tous les détails du client. Vous pouvez répondre directement ou utiliser notre tableau de bord partenaire pour gérer les demandes."
-            },
-            "updates": {
-                "question": "Puis-je mettre à jour mes annonces après leur approbation?",
-                "answer": "Oui! Vous aurez accès à un tableau de bord partenaire où vous pouvez mettre à jour vos annonces, tarifs, disponibilité, photos et informations commerciales à tout moment."
-            },
-            "support": {
-                "question": "Quel type de support fournissez-vous aux partenaires?",
-                "answer": "Nous fournissons un support partenaire dédié en arabe, français et anglais. Cela inclut l'assistance à l'intégration, l'optimisation des annonces, les conseils marketing et le support technique continu."
+            "bottom": {
+                "title": "Vous ne trouvez pas votre réponse ?",
+                "textPrefix": "Notre équipe est là pour vous aider. Contactez-nous à",
+                "textSuffix": "ou discutez avec nous sur",
+                "whatsappLabel": "WhatsApp",
+                "supportHours": "Heures d'assistance : 7/7, de 09:00 à 21:00 (heure du Maroc, GMT+1)"
             }
         },
         "footerCta": {

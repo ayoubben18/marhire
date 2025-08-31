@@ -602,6 +602,11 @@
                 }
             }
         },
+        "blog": {
+            "title": "Desde nuestro blog de viajes",
+            "subtitle": "Obtén consejos internos, guías de viaje e inspiración para tu próxima aventura en Marruecos.",
+            "readMoreArticles": "Ver más artículos"
+        },
         "faq": {
             "title": "Preguntas Frecuentes",
             "items": [
@@ -628,6 +633,7 @@
             ]
         }
     },
+    
     "languages": {
         "en": "English",
         "fr": "Français",
@@ -903,16 +909,16 @@
         "partnerFaq": {
             "title": "Preguntas Frecuentes",
             "items": [
-                { "q": "¿Cuánto tarda la aprobación?", "a": "La mayoría de solicitudes se revisan en 24–48h. Si se requieren documentos adicionales, le contactaremos y finalizaremos poco después de recibirlos." },
-                { "q": "¿Cuáles son las comisiones?", "a": "Paga una comisión fija y competitiva solo en reservas confirmadas. Sin cuotas de listado ni mensuales." },
-                { "q": "¿Cómo y cuándo me pagan?", "a": "Los ingresos se pagan automáticamente cada mes por transferencia bancaria segura." },
-                { "q": "¿Puedo editar precios y disponibilidad?", "a": "Sí, desde el panel de socios puede actualizar precios, disponibilidad, fotos e información del servicio." },
-                { "q": "¿Cómo pauso mis anuncios?", "a": "Desde el panel, marque fechas como no disponibles o pause temporalmente el anuncio." },
-                { "q": "¿Horario de soporte?", "a": "Soporte 24/7 por WhatsApp y email, con respuestas más rápidas en horario laboral." },
-                { "q": "¿Hay contrato a largo plazo?", "a": "No hay compromiso a largo plazo. Puede listar con flexibilidad y dejar cuando quiera." },
-                { "q": "¿Cómo gestionan los datos?", "a": "Seguimos prácticas estrictas de privacidad y seguridad. Los datos se usan solo para procesar reservas y soporte." },
-                { "q": "¿Puedo listar en varias ciudades?", "a": "Sí, se admiten listados multi-ciudad. Indique sus ciudades de operación." },
-                { "q": "Ya estoy en otras plataformas, ¿es fácil listar aquí?", "a": "Sí. Envíe su información y le ayudamos a crear listados optimizados rápidamente." }
+                { "q": "¿Cuánto tiempo toma el proceso de aprobación?", "a": "Nuestro objetivo es revisar y aprobar las nuevas solicitudes de socios dentro de 24-48 horas. Una vez que verifiquemos sus documentos y servicios, comenzaremos inmediatamente a crear su anuncio." },
+                { "q": "¿Cuáles son las tarifas o tasas de comisión?", "a": "MarHire opera en un modelo transparente basado en comisiones. Solo paga un pequeño porcentaje cuando obtiene una reserva confirmada. No hay tarifas de registro ni costos mensuales. Para las tasas detalladas, por favor consulte nuestra página de comisiones o contáctenos." },
+                { "q": "¿Cómo y cuándo me pagan?", "a": "Procesamos los pagos a socios mensualmente mediante transferencia bancaria segura. Puede rastrear todas sus reservas, ganancias y estados de pago directamente desde su panel de socios." },
+                { "q": "¿Puedo editar mis precios y disponibilidad?", "a": "Sí. Tiene control total sobre sus anuncios. Puede actualizar precios, bloquear fechas y gestionar la disponibilidad fácilmente a través de su panel de socios dedicado en cualquier momento." },
+                { "q": "¿Cómo puedo pausar mis anuncios si estoy completamente reservado?", "a": "Puede deshabilitar temporalmente o pausar cualquiera de sus anuncios directamente desde su panel de socios con un solo clic, evitando así nuevas reservas hasta que esté listo para reactivarlas." },
+                { "q": "¿Cuáles son sus horarios de soporte para socios?", "a": "Proporcionamos soporte dedicado a socios vía WhatsApp y email. Nuestro equipo está basado en Marruecos y está disponible para ayudarle con cualquier pregunta o problema urgente 7 días a la semana." },
+                { "q": "¿Hay un contrato a largo plazo?", "a": "No, creemos en asociaciones flexibles. Puede unirse a MarHire sin ningún compromiso a largo plazo y puede elegir eliminar sus anuncios en cualquier momento, como se indica en nuestro acuerdo de asociación." },
+                { "q": "¿Cómo se manejan mis datos comerciales y de clientes?", "a": "Tomamos en serio la privacidad de los datos. Todos los datos se manejan conforme a nuestra Política de Privacidad. La información de su empresa está segura y solo compartimos lo necesario para facilitar las reservas." },
+                { "q": "¿Puedo listar mis servicios en varias ciudades como Agadir y Marrakech?", "a": "Absolutamente. Si opera en múltiples ubicaciones a través de Marruecos, puede crear y gestionar anuncios para cada ciudad bajo una sola cuenta de socio." },
+                { "q": "Ya estoy en otras plataformas. ¿Es fácil listar con MarHire?", "a": "Sí, nuestro equipo hace que sea simple. Solo proporcione los detalles de su servicio y nosotros nos encargaremos de la configuración inicial para que sus anuncios estén en línea en MarHire de manera rápida y eficiente." }
             ]
         },
         "applicationForm": {
@@ -935,29 +941,80 @@
         },
         "faq": {
             "title": "Preguntas Frecuentes",
-            "cost": {
-                "question": "¿Cuánto cuesta unirse a MarHire?",
-                "answer": "Unirse a MarHire es completamente gratis. No hay tarifas de listado por adelantado, cargos mensuales o costos ocultos. Solo ganamos una pequeña comisión cuando recibe reservas confirmadas."
+            "sections": {
+                "bookings": {
+                    "title": "Reservas y Pago",
+                    "items": [
+                        { "q": "¿Qué métodos de pago aceptan?", "a": "Ofrecemos opciones de pago flexibles. Puede pagar de forma segura en línea con la mayoría de las tarjetas de crédito principales (Visa, Mastercard, etc.). Para muchos servicios, también hay disponible una opción de 'Pago en Entrega', que le permite pagar en efectivo cuando se encuentre con su proveedor." },
+                        { "q": "¿Hay costos ocultos?", "a": "No. MarHire se compromete a una tarificación transparente. El precio total que ve en la caja incluye todas las tarifas y impuestos obligatorios. Cualquier complemento opcional está claramente indicado." },
+                        { "q": "¿Necesito pagar un depósito para mi reserva?", "a": "Depende. Muchas rentas de autos están disponibles con una opción sin depósito, que puede incluir un pequeño suplemento. Para vehículos de lujo o ciertos socios específicos, puede requerirse un depósito de garantía reembolsable en su tarjeta de crédito en el momento de la recogida. Verifique los detalles de cada anuncio." },
+                        { "q": "¿Cómo modificar o cancelar mi reserva?", "a": "Como aún no tenemos cuentas de usuario, todas las modificaciones y cancelaciones son manejadas por nuestro equipo de soporte. Por favor contáctenos por email o WhatsApp con su número de referencia de reserva." },
+                        { "q": "¿Cuándo recibiré mi reembolso después de una cancelación?", "a": "Una vez aprobado el reembolso según la política de reserva, lo procesamos inmediatamente. Generalmente toma 5-10 días hábiles para que los fondos aparezcan de vuelta en su método de pago original." },
+                        { "q": "¿Ofrecen descuentos por rentas más largas?", "a": "Sí, muchos socios ofrecen tarifas diarias reducidas para períodos de renta de auto más largos (por ejemplo, 7+ días). El descuento se calcula automáticamente y se refleja en el precio total cuando selecciona sus fechas." },
+                        { "q": "¿Cómo obtener una factura para mi reserva?", "a": "Recibirá un email de confirmación que sirve como recibo detallado. Si necesita una factura formal, por favor contacte a nuestro equipo de soporte con su número de referencia de reserva." },
+                        { "q": "¿Es seguro pagar en línea?", "a": "Absolutamente. Nuestro procesador de pagos es completamente conforme PCI y utiliza cifrado estándar de la industria. Nunca almacenamos los detalles completos de su tarjeta de crédito en nuestros servidores." }
+                    ]
+                },
+                "cars": {
+                    "title": "Autos",
+                    "items": [
+                        { "q": "¿Qué está incluido en mi renta de auto?", "a": "Las rentas estándar incluyen seguro básico (CDW), responsabilidad civil de terceros e impuestos locales. La política de kilometraje (por ejemplo, kilómetros ilimitados) a menudo depende de la duración de la renta; siempre verifique los detalles del anuncio." },
+                        { "q": "¿Cuáles son los requisitos de edad y licencia?", "a": "La edad mínima es generalmente de 21 años, pero puede ser de 23 o 25 años para ciertos autos. Debe haber tenido su licencia de conducir válida por al menos un año. \n➤ **Tip:** Recomendamos fuertemente llevar un Permiso Internacional de Conducir (PIC) para evitar cualquier problema." },
+                        { "q": "¿Puedo recibir el auto en mi aeropuerto u hotel?", "a": "Sí, la entrega en aeropuerto o hotel es un servicio estándar. Muchos socios ofrecen entrega gratuita dentro de los límites de su ciudad. Cualquier tarifa aplicable se muestra en el anuncio." },
+                        { "q": "¿Cuál es la política de combustible?", "a": "Nuestra política estándar es 'Igual-a-Igual.' Recibe el auto con cierto nivel de combustible y debe devolverlo con la misma cantidad para evitar cargos adicionales." },
+                        { "q": "¿Puedo rentar un auto en una ciudad y devolverlo en otra?", "a": "Sí, las rentas de ida entre las principales ciudades marroquíes (por ejemplo, Marrakech a Fez) son posibles. Este servicio puede incurrir en una tarifa de ida. Los viajes transfronterizos fuera de Marruecos no están permitidos." },
+                        { "q": "¿Qué debo hacer en caso de avería o accidente?", "a": "Primero, asegúrese de que todos estén seguros. Para cualquier accidente, debe contactar a la policía para obtener un reporte (*constat*), ya que es requerido para el seguro. Luego, llame al número de asistencia en carretera 24/7 en su voucher de renta." }
+                    ]
+                },
+                "drivers": {
+                    "title": "Choferes Privados y Traslados",
+                    "items": [
+                        { "q": "¿Cómo funcionan los traslados de aeropuerto?", "a": "Su chófer profesional monitoreará su vuelo y esperará en el área de llegadas con un cartel con su nombre. El precio de su traslado de aeropuerto es fijo, por lo que no tiene que preocuparse por el tráfico o costos adicionales." },
+                        { "q": "¿Los chóferes son multilingües?", "a": "Sí, nuestros chóferes privados son profesionales que generalmente hablan múltiples idiomas, incluyendo francés, árabe e inglés. Algunos también hablan español o alemán; verifique el perfil del chófer para más detalles." },
+                        { "q": "¿Puedo reservar un chófer para un traslado entre ciudades?", "a": "Absolutamente. Ofrecemos traslados interurbanos cómodos, como Marrakech a Agadir o Casablanca a Rabat. Es una excelente manera de viajar entre ciudades sin las molestias del transporte público." },
+                        { "q": "¿Qué pasa con el equipaje, asientos para niños y tiempo de espera?", "a": "Cada vehículo tiene una capacidad de equipaje especificada. Los asientos para niños pueden solicitarse con anticipación. Para traslados de aeropuerto, se incluye un tiempo de espera estándar (generalmente 60 minutos) de forma gratuita." },
+                        { "q": "¿Cómo cambiar la hora o lugar de recogida?", "a": "Para hacer cualquier cambio a su reserva de chófer privado, por favor contacte a nuestro equipo de soporte via WhatsApp o email tan pronto como sea posible, y coordinaremos con el chófer." },
+                        { "q": "¿Cómo pagar por mi chófer privado?", "a": "Como con nuestros otros servicios, puede reservar su chófer privado o traslado de aeropuerto en Marruecos pagando de forma segura en línea o eligiendo una opción de 'Pago en Efectivo' si está disponible." }
+                    ]
+                },
+                "boats": {
+                    "title": "Barcos y Actividades",
+                    "items": [
+                        { "q": "¿Qué está incluido en una renta de barco o actividad?", "a": "Varía, pero generalmente incluye equipo de seguridad, un guía/skipper y el equipo necesario. Para rentas de barcos, se especificará la política de combustible. Siempre verifique la sección 'Qué está incluido' en la página del anuncio." },
+                        { "q": "¿Qué pasa si hay mal tiempo?", "a": "La seguridad es nuestra prioridad. Si un viaje en barco o actividad al aire libre es cancelada por el proveedor debido al mal tiempo, se le ofrecerá la opción de reprogramar o recibir un reembolso completo." },
+                        { "q": "¿Puedo reservar un viaje o visita privada en barco?", "a": "Sí, muchos anuncios para rentas de barcos y actividades en ciudades como Marrakech o Agadir están disponibles como experiencias privadas, permitiéndole personalizar el itinerario con el proveedor." },
+                        { "q": "¿Hay límites de edad o medidas de seguridad para los niños?", "a": "La mayoría de las actividades son familiares, pero algunas pueden tener restricciones de edad o estatura por razones de seguridad. Los chalecos salvavidas, incluyendo tamaños para niños, son proporcionados para todos los viajes en barco. Por favor verifique los detalles del anuncio." },
+                        { "q": "¿Está disponible la recogida en hotel para actividades?", "a": "Muchas visitas y actividades incluyen recogida y entrega complementarias desde hoteles centrales. Puede verificarlo en la página del anuncio y proporcionar los detalles de su hotel durante el checkout." },
+                        { "q": "¿Cómo cancelar o modificar una reserva de actividad?", "a": "Para cancelar o modificar su actividad, por favor contacte a nuestro equipo de soporte. Asegúrese de verificar la política de cancelación en su confirmación de reserva, ya que los tiempos límite pueden variar." }
+                    ]
+                },
+                "policies": {
+                    "title": "Políticas y Jurídico",
+                    "items": [
+                        { "q": "¿Qué documentos necesito al momento de la recogida?", "a": "Para rentas de autos, necesitará su licencia de conducir, pasaporte/tarjeta de identidad y voucher de reserva. Para todos los servicios, el responsable de la reserva debe tener una identificación. Un Permiso Internacional de Conducir (PIC) es altamente recomendado para conducir." },
+                        { "q": "¿Quién es responsable de las multas de tráfico, peajes y estacionamiento?", "a": "El arrendatario es completamente responsable de todas las multas de tráfico, peajes y costos de estacionamiento incurridos. Las multas impagas serán facturadas por la agencia de renta, a menudo con cargos administrativos." },
+                        { "q": "¿Cuáles son mis opciones de seguro?", "a": "Todas las rentas de autos incluyen responsabilidad civil básica y CDW con un exceso (deducible). A menudo puede actualizar a un paquete de 'protección completa' en el mostrador de renta para reducir o eliminar este exceso." },
+                        { "q": "¿Cómo se manejan mis datos personales?", "a": "Solo recopilamos datos necesarios para completar su reserva. Para más detalles, por favor lea nuestra Política de Privacidad." },
+                        { "q": "¿Dónde puedo encontrar los términos y condiciones completos?", "a": "Todas las reservas están sujetas a nuestras reglas de plataforma. Puede revisar nuestros Términos y Condiciones completos para más información." },
+                        { "q": "¿Qué pasa si tengo una queja o problema con un proveedor?", "a": "Su satisfacción es nuestra prioridad. Por favor contacte al soporte de MarHire inmediatamente. Actuaremos como mediador para ayudar a resolver la situación con el socio local de manera justa y eficiente." }
+                    ]
+                },
+                "contact": {
+                    "title": "Contacto y Soporte",
+                    "items": [
+                        { "q": "¿Cuál es la mejor manera de contactarnos?", "a": "Para problemas urgentes, la forma más rápida es via WhatsApp. Para preguntas generales, modificaciones o cancelaciones, puede enviarnos un email a info@marhire.com." },
+                        { "q": "¿Cuáles son nuestros horarios de soporte?", "a": "Nuestro equipo de soporte está disponible 7/7, de 09:00 a 21:00 (hora de Marruecos, GMT+1)." },
+                        { "q": "¿Cuál es la diferencia entre soporte general y de emergencia?", "a": "El soporte general maneja reservas y preguntas durante horas de oficina. El soporte de emergencia (via el número en su voucher) es para problemas inmediatos en la carretera como averías y está disponible 24/7." },
+                        { "q": "¿Cuánto tiempo toma obtener una respuesta?", "a": "Nos enorgullecemos de nuestras respuestas rápidas. Los mensajes de WhatsApp generalmente se responden en minutos, mientras que los emails se responden en unas horas durante nuestra ventana de soporte." }
+                    ]
+                }
             },
-            "approval": {
-                "question": "¿Cuánto tiempo toma el proceso de aprobación?",
-                "answer": "La mayoría de las solicitudes son revisadas y aprobadas dentro de 48 horas. Podemos solicitar documentación adicional para verificar su empresa, lo que podría extender el proceso por 1-2 días hábiles."
-            },
-            "commission": {
-                "question": "¿Qué comisión cobran?",
-                "answer": "Nuestra comisión varía según la categoría de servicio y solo se cobra en reservas confirmadas. Discutiremos las tarifas exactas durante su proceso de solicitud - nuestras tarifas son siempre transparentes y competitivas."
-            },
-            "bookings": {
-                "question": "¿Cómo recibo las solicitudes de reserva?",
-                "answer": "Recibirá notificaciones de reserva por email y WhatsApp con todos los detalles del cliente. Puede responder directamente o usar nuestro panel de socios para gestionar solicitudes."
-            },
-            "updates": {
-                "question": "¿Puedo actualizar mis listados después de ser aprobados?",
-                "answer": "¡Sí! Tendrá acceso a un panel de socios donde puede actualizar sus listados, precios, disponibilidad, fotos e información comercial en cualquier momento."
-            },
-            "support": {
-                "question": "¿Qué tipo de soporte proporcionan a los socios?",
-                "answer": "Proporcionamos soporte dedicado a socios en árabe, francés e inglés. Esto incluye asistencia de incorporación, optimización de listados, orientación de marketing y soporte técnico continuo."
+            "bottom": {
+                "title": "¿No encuentra su respuesta?",
+                "textPrefix": "Nuestro equipo está listo para ayudarle. Contáctenos en",
+                "textSuffix": "o chatee con nosotros en",
+                "whatsappLabel": "WhatsApp",
+                "supportHours": "Horario de soporte: 7/7, de 09:00 a 21:00 (hora de Marruecos, GMT+1)"
             }
         },
         "footerCta": {

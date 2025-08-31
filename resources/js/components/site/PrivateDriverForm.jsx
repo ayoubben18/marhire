@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import LocationModal from "./LocationModal";
 import TimeModal from "./TimeModal";
+import CalendarPopover from "./CalendarPopover";
 import { useMediaQuery } from "react-responsive";
 import { useTranslation } from "react-i18next";
 
@@ -258,191 +259,22 @@ export default function PrivateDriverForm({ defaultCity, defaultCityId }) {
                             </div>
                             {showCalendar === "pickup" && (
                                 <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl p-4 z-[100] w-80">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                navigateMonth(-1);
-                                            }}
-                                            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
-                                        >
-                                            <ChevronLeft className="w-5 h-5 text-gray-600" />
-                                        </button>
-                                        <h3 className="font-semibold text-gray-900">
-                                            {currentDate.toLocaleDateString(
-                                                "en-US",
-                                                {
-                                                    month: "long",
-                                                    year: "numeric",
-                                                }
-                                            )}
-                                        </h3>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                navigateMonth(1);
-                                            }}
-                                            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
-                                        >
-                                            <ChevronRight className="w-5 h-5 text-gray-600" />
-                                        </button>
-                                    </div>
-                                    <div className="grid grid-cols-7 gap-1 mb-2">
-                                        {[
-                                            "Su",
-                                            "Mo",
-                                            "Tu",
-                                            "We",
-                                            "Th",
-                                            "Fr",
-                                            "Sa",
-                                        ].map((day) => (
-                                            <div
-                                                key={day}
-                                                className="text-center text-xs font-medium text-gray-500 py-2"
-                                            >
-                                                {day}
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="grid grid-cols-7 gap-1">
-                                        {calendarDays.map((day, index) => {
-                                            const isCurrentMonth =
-                                                day.getMonth() ===
-                                                currentDate.getMonth();
-                                            const isSelected =
-                                                formatYMD(day) === pickupDate;
-                                            const isToday =
-                                                day.toDateString() ===
-                                                new Date().toDateString();
-
-                                            // Check if date is at least 48 hours in advance (private driver requirement)
+                                    <CalendarPopover
+                                        selectedDate={pickupDate}
+                                        minDate={(() => { const now=new Date(); now.setDate(now.getDate()+2); now.setHours(0,0,0,0); return now; })()}
+                                        onSelect={(d) => {
+                                            setPickupDate(d);
                                             const now = new Date();
-                                            const dayStart = new Date(day);
-                                            dayStart.setHours(0, 0, 0, 0);
-
-                                            // Private driver services require 48-hour advance booking
-                                            const minDate = new Date(now);
-                                            minDate.setDate(
-                                                minDate.getDate() + 2
-                                            );
-                                            minDate.setHours(0, 0, 0, 0);
-
-                                            const isDisabled =
-                                                dayStart < minDate;
-
-                                            return (
-                                                <button
-                                                    key={index}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        if (!isDisabled) {
-                                                            const selectedDate =
-                                                                formatYMD(day);
-                                                            setPickupDate(
-                                                                selectedDate
-                                                            );
-
-                                                            // Auto-set pickup time to first available hour (48hr advance)
-                                                            const now =
-                                                                new Date();
-                                                            const minBookingDateTime =
-                                                                new Date(now);
-                                                            minBookingDateTime.setHours(
-                                                                minBookingDateTime.getHours() +
-                                                                    48
-                                                            );
-
-                                                            // Find first available hour
-                                                            for (
-                                                                let hour = 0;
-                                                                hour < 24;
-                                                                hour++
-                                                            ) {
-                                                                const selectedDateTime =
-                                                                    new Date(
-                                                                        `${selectedDate} ${hour
-                                                                            .toString()
-                                                                            .padStart(
-                                                                                2,
-                                                                                "0"
-                                                                            )}:00`
-                                                                    );
-                                                                if (
-                                                                    selectedDateTime >=
-                                                                    minBookingDateTime
-                                                                ) {
-                                                                    const timeStr = `${hour
-                                                                        .toString()
-                                                                        .padStart(
-                                                                            2,
-                                                                            "0"
-                                                                        )}:00`;
-                                                                    setPickupTime(
-                                                                        timeStr
-                                                                    );
-                                                                    break;
-                                                                }
-                                                            }
-
-                                                            setShowCalendar(
-                                                                null
-                                                            );
-                                                        }
-                                                    }}
-                                                    disabled={isDisabled}
-                                                    className={`
-                                                        p-2 text-sm rounded-md hover:bg-blue-50 transition-colors
-                                                        ${
-                                                            !isCurrentMonth
-                                                                ? "text-gray-300"
-                                                                : "text-gray-900"
-                                                        }
-                                                        ${
-                                                            isDisabled
-                                                                ? "cursor-not-allowed opacity-50 bg-gray-100"
-                                                                : "hover:bg-blue-50 cursor-pointer"
-                                                        }
-                                                        ${
-                                                            isSelected &&
-                                                            !isDisabled
-                                                                ? "bg-blue-500 text-white hvr-bg-green"
-                                                                : ""
-                                                        }
-                                                        ${
-                                                            isToday &&
-                                                            !isSelected &&
-                                                            !isDisabled
-                                                                ? "bg-blue-100 text-green-600"
-                                                                : ""
-                                                        }
-                                                    `}
-                                                >
-                                                    {day.getDate()}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-
-                                    {/* Constraint info */}
-                                    <div className="mt-3 p-2 bg-blue-50 rounded-lg">
-                                        <div className="flex items-start gap-2">
-                                            <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                                            <div className="text-xs text-blue-700">
-                                                <p className="font-medium">
-                                                    {t(
-                                                        "homeSearch.bookingRequirements"
-                                                    )}
-                                                </p>
-                                                <p>
-                                                    •{" "}
-                                                    {t(
-                                                        "homeSearch.advanceBooking48h"
-                                                    )}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                            const minDt = new Date(now);
+                                            minDt.setHours(minDt.getHours()+48);
+                                            for (let hour=0; hour<24; hour++) {
+                                                const candidate = new Date(`${d} ${String(hour).padStart(2,'0')}:00`);
+                                                if (candidate >= minDt) { setPickupTime(`${String(hour).padStart(2,'0')}:00`); break; }
+                                            }
+                                            setShowCalendar(null);
+                                        }}
+                                        onClose={() => setShowCalendar(null)}
+                                    />
                                 </div>
                             )}
                             <TimeModal

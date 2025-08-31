@@ -32,7 +32,7 @@
   .mh-scard__aside { border-left:0; border-top:1px dashed #e2e8f0; flex-direction:row; align-items:center; justify-content:space-between; }
 }
 /* UnifiedListings (uls-*) isolated namespace */
-.uls-container { position: relative; margin: 0 32px; padding: 24px; }
+.uls-container { position: relative; margin: 0; padding: 0; }
 .uls-listings { display: block; margin-bottom: 2rem; }
 .uls-listings .swiper { width: 100%; }
 .uls-listings .swiper-wrapper { display: flex !important; }
@@ -121,11 +121,11 @@ button, a, .btn, .recommendation-image, .recommendation-listing-card, .recommand
     position: relative;
 }
 .hero-section--content {
-    padding-left: 32px;
-    padding-right: 32px;
-    padding-top: 36px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 24px;
     position: relative;
-    top: 42px;
+    top: 0;
     z-index: 3;
 }
 .slogan-title {
@@ -2053,7 +2053,7 @@ span.verified {
     display: grid;
     justify-content: space-around;
     grid-template-columns: repeat(2, 1fr);
-    margin-top: -44px;
+    margin-top: 8px;
     margin-bottom: 12px;
     gap: 15px;
 }

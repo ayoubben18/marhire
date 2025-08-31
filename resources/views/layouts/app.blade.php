@@ -49,7 +49,9 @@ request()->is('*/partners') ||
 request()->is('category/*') ||
 request()->is('*/category/*') ||
 request()->is('sitemap') ||
-request()->is('*/sitemap')
+request()->is('*/sitemap') ||
+request()->is('faq') ||
+request()->is('*/faq')
 ) || $forceNotSticky;
 @endphp
 <!doctype html>

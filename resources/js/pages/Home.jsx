@@ -65,39 +65,49 @@ const Home = () => {
                     { name: t('cities.tangier'), image: 'https://marhire.bytech.ma/images/tangier.webp', listings: 40 },
                 ]}
             />
-            <ListingsByCity
-                title={t('home.sections.carRentals', 'Car Rentals by City')}
-                categories={2}
-                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
-                initialCity="Agadir"
-                perPage={8}
-            />
-            <ListingsByCity
-                title={t('home.sections.privateDrivers', 'Private Drivers by City')}
-                categories={3}
-                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
-                initialCity="Agadir"
-                perPage={8}
-            />
-            <ListingsByCity
-                title={t('home.sections.boatRentals', 'Boat Rentals by City')}
-                categories={4}
-                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
-                initialCity="Agadir"
-                perPage={8}
-            />
-            <ListingsByCity
-                title={t('home.sections.activities', 'Activities by City')}
-                categories={5}
-                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
-                initialCity="Agadir"
-                perPage={8}
-            />
-            <WhyChooseUs
-                title={t('home.why.title')}
-                subtitle={t('home.why.subtitle')}
-                features={features}
-            />
+            <div style={{ background: '#f9f4f3', padding: '0 16px' }}>
+                <ListingsByCity
+                    title={t('home.sections.carRentals', 'Car Rentals by City')}
+                    categories={2}
+                    cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
+                    initialCity="Agadir"
+                    perPage={8}
+                />
+            </div>
+            <div style={{ background: '#f9f7f3', padding: '0 16px' }}>
+                <ListingsByCity
+                    title={t('home.sections.privateDrivers', 'Private Drivers by City')}
+                    categories={3}
+                    cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
+                    initialCity="Agadir"
+                    perPage={8}
+                />
+            </div>
+            <div style={{ background: '#F7F3F9', padding: '0 16px' }}>
+                <ListingsByCity
+                    title={t('home.sections.boatRentals', 'Boat Rentals by City')}
+                    categories={4}
+                    cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
+                    initialCity="Agadir"
+                    perPage={8}
+                />
+            </div>
+            <div style={{ background: '#F3F9F7', padding: '0 16px' }}>
+                <ListingsByCity
+                    title={t('home.sections.activities', 'Activities by City')}
+                    categories={5}
+                    cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
+                    initialCity="Agadir"
+                    perPage={8}
+                />
+            </div>
+            <div style={{ background: '#F9F5F4', padding: '0 16px' }}>
+                <WhyChooseUs
+                    title={t('home.why.title')}
+                    subtitle={t('home.why.subtitle')}
+                    features={features}
+                />
+            </div>
             <HomeBlogSection />
             <FAQSection />
             <FreeTexts slug="/" />

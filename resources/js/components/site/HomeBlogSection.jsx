@@ -48,7 +48,7 @@ const HomeBlogSection = () => {
     }, []);
 
     return (
-        <section className="home-blog-section" style={{ background: '#f6faf8', padding: '36px 0' }}>
+        <section className="home-blog-section" style={{ background: '#F2F9F7', padding: '36px 0' }}>
             <div className="mh-blog-container" style={{ maxWidth: 1100, margin: '0 auto', paddingLeft: 0, paddingRight: 0 }}>
                 <div className="text-center" style={{ marginBottom: 16 }}>
                     <h2 style={{ fontWeight: 800, fontSize: '1.8rem', color: '#0f1f1b', margin: 0 }}>
