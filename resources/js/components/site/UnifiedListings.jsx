@@ -457,7 +457,7 @@ const UnifiedListings = (props) => {
                                             </h3>
                                             <p className="uls-card__location">
                                                 <span className="loc-ico"><FaLocationDot size={12} /></span>
-                                                {listing.city ? (listing.city.city_name || listing.city) : t('common.morocco', 'Morocco')}
+                                                {listing.city ? `${listing.city.city_name || listing.city}, Morocco` : t('common.morocco', 'Morocco')}
                                             </p>
                                         </div>
                                         <ListingIcons type={(() => { const id = parseInt(listing.category_id); if (id === 2) return 'cars'; if (id === 3) return 'drivers'; if (id === 4) return 'boats'; if (id === 5) return 'activities'; return 'cars'; })()} l={listing} classes={'compact'} />

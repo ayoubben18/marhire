@@ -325,7 +325,7 @@ const Recommended = ({
                                           </h3>
                                           <p className="recommendation-location">
                                               <span className="loc-ico"><FaLocationDot size={12} /></span>
-                                              {listing.city ? listing.city.city_name : t("common.morocco")}
+                                              {listing.city ? `${listing.city.city_name}, Morocco` : t("common.morocco")}
                                           </p>
                                       </div>
                                       <ListingIcons type={type} l={listing} classes={isAgencyVariant ? 'compact' : ''} />

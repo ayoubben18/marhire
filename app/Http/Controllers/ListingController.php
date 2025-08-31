@@ -1349,7 +1349,7 @@ class ListingController extends Controller
         }
         $listings = $query->latest()
             ->withCurrentTranslations()
-            ->with(['galleries', 'city', 'serviceTypeObj', 'activityTypeObj', 'pricings', 'actPricings'])
+            ->with(['galleries', 'city', 'provider', 'serviceTypeObj', 'activityTypeObj', 'pricings', 'actPricings'])
             ->skip($perPage * ($page - 1))
             ->take($perPage + 1)
             ->get();

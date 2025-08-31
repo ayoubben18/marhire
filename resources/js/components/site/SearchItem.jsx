@@ -1,19 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { IoMdPerson } from "react-icons/io";
-import { GiCarDoor } from "react-icons/gi";
-import {
-    Users,
-    Car,
-    Tag,
-    Snowflake,
-    Calendar,
-    Settings2,
-    Gauge,
-    Fuel,
-    Info,
-    UserRound,
-} from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp, FaMoneyBillWave, FaCheckCircle } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
+import { MdVerified } from "react-icons/md";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import getWtspUrl from "../utils/WhatsappMsg";
 import ListingIcons from "./ListingIcons";
@@ -34,11 +22,21 @@ const getTranslatedField = (listing, field, locale) => {
     return listing[field] || '';
 };
 
+const isDepositRequired = (value) => {
+    if (value === undefined || value === null) return false;
+    if (typeof value === 'number') return value === 1;
+    if (typeof value === 'boolean') return value === true;
+    if (typeof value === 'string') {
+        const v = value.trim().toLowerCase();
+        return v === '1' || v === 'yes' || v === 'true';
+    }
+    return false;
+};
+
 const SearchItem = ({ item, type }) => {
     const { t, i18n } = useTranslation();
     const currentLocale = i18n.language;
-    const [price, setPrice] = useState("");
-    const [unit, setUnit] = useState("");
+    const [priceParts, setPriceParts] = useState({ prefix: '', value: 0, suffix: '' });
     const [imageError, setImageError] = useState(false);
 
     // Get proper image URL with leading slash
@@ -64,36 +62,43 @@ const SearchItem = ({ item, type }) => {
         return null;
     };
 
-    const generatePrice = () => {
-        let listingPrice = "";
-        let listingLbl = "";
-        console.log(item);
-        if (type === "car") {
-            listingPrice = item.price_per_day;
-            listingLbl = t("units.perDay");
-        } else if (type === "private") {
-            const driverPrice = item.pricings[0].airport_one || 0;
-            listingPrice = item.price_per_hour;
-            listingLbl = t("units.perDay");
-        } else if (type === "boat") {
-            listingPrice = item.price_per_hour;
-            listingLbl = t("units.perHour");
-        } else {
-            listingPrice = item.act_pricings[0]?.price || 0;
-            listingLbl = t("units.perPerson");
-        }
-
-        setPrice(listingPrice);
-        setUnit(listingLbl);
+    const generatePriceParts = () => {
+        const id = parseInt(item.category_id || (type === 'car' ? 2 : type === 'private' ? 3 : type === 'boat' ? 4 : 5));
+        if (id === 2) return { prefix: t('common.from'), value: item.price_per_day || item.price || 0, suffix: `/ ${t('units.day')}` };
+        if (id === 3) return { prefix: t('common.from'), value: (item.pricings?.[0]?.airport_one) || item.price || 0, suffix: `/ ${t('units.day')}` };
+        if (id === 4) return { prefix: t('common.from'), value: item.price_per_hour || item.price || 0, suffix: `/ ${t('units.hour')}` };
+        const p = item.act_pricings?.[0]?.price || item.price_per_person || item.price || 0;
+        return { prefix: t('common.from'), value: p, suffix: `/ ${t('units.person')}` };
     };
 
     useEffect(() => {
-        generatePrice();
+        setPriceParts(generatePriceParts());
     }, []);
 
+    const getCategoryLabel = (categoryId) => {
+        const id = parseInt(categoryId || (type === 'car' ? 2 : type === 'private' ? 3 : type === 'boat' ? 4 : 5));
+        switch (id) {
+            case 2: return t('categories.carRental', 'Car Rental');
+            case 3: return t('categories.privateDriver', 'Private Driver');
+            case 4: return t('categories.boatRental', 'Boat Rental');
+            case 5: return t('categories.activity', 'Activity');
+            default: return '';
+        }
+    };
+
+    const getProviderLogo = () => {
+        const file = item?.provider?.agency_logo || item?.provider?.logo || item?.agency?.agency_logo;
+        if (!file) return '/images/default-agency.jpeg';
+        if (file.startsWith('http') || file.startsWith('/')) return file;
+        return `/${file}`;
+    };
+
     return (
-        <div className="search-item">
-            <div className="search-item__img">
+        <div className="mh-scard">
+            <span className="mh-scard__agency">
+                <img src={getProviderLogo()} alt={item?.provider?.agency_name || 'Agency'} onError={(e)=>{e.currentTarget.src='/images/default-agency.jpeg'}} />
+            </span>
+            <div className="mh-scard__image">
                 <a href={getLocalizedUrl(`details/${item.slug}`)}>
                     {item.galleries && item.galleries.length > 0 && !imageError ? (
                         <SmartImage
@@ -101,50 +106,46 @@ const SearchItem = ({ item, type }) => {
                             fallbackSrcs={getFallbackImageUrl(item.galleries[0].file_path) || []}
                             alt={getTranslatedField(item, 'title', currentLocale)}
                             onError={() => setImageError(true)}
+                            className="mh-scard__img"
                         />
                     ) : (
                         <img
                             src="/images/not-found.png"
                             alt={getTranslatedField(item, 'title', currentLocale)}
+                            className="mh-scard__img"
                         />
                     )}
                 </a>
             </div>
-            <div className="search-item__content">
-                <h2 className="search-item__title">{getTranslatedField(item, 'title', currentLocale)}</h2>
-                <p className="search-item__subtitle">
-                    {item.city ? item.city.city_name : t("common.morocco")}
-                    {" • "}
-                    {t("common.findSimilar")}
+            <div className="mh-scard__content">
+                <span className="mh-scard__cat">{getCategoryLabel(item.category_id)}</span>
+                <h3 className="mh-scard__title">
+                    <a href={getLocalizedUrl(`details/${item.slug}`)}>{getTranslatedField(item, 'title', currentLocale)}</a>
+                    <span className="mh-scard__subtitle"> {t('listing.misc.orSimilar', 'or similar')}</span>
+                </h3>
+                <p className="mh-scard__location">
+                    <span className="ico"><FaLocationDot size={12} /></span>
+                    {item.city ? `${item.city.city_name || item.city}, Morocco` : t('common.morocco', 'Morocco')}
                 </p>
-                <div className="search-item__price">
-                    <div className="price">{price} €</div>
-                    <div className="lbl">{unit}</div>
+                <ListingIcons type={(() => { const id = parseInt(item.category_id || (type === 'car' ? 2 : type === 'private' ? 3 : type === 'boat' ? 4 : 5)); if (id === 2) return 'cars'; if (id === 3) return 'drivers'; if (id === 4) return 'boats'; if (id === 5) return 'activities'; return 'cars'; })()} l={item} classes={'mh-scard__features compact'} />
+                <div className="mh-scard__badges">
+                    <span className="mh-scard__badge mh-scard__badge--green"><span className="mh-scard__badge-ico"><FaCheckCircle size={12} /></span>{t('listing.trustNotes.cancellation', 'Free Cancellation')}</span>
+                    {!isDepositRequired(item.deposit_required) && (
+                        <span className="mh-scard__badge mh-scard__badge--blue"><span className="mh-scard__badge-ico"><FaMoneyBillWave size={12} /></span>{t('listing.specs.noDeposit', 'No Deposit')}</span>
+                    )}
+                    <span className="mh-scard__badge mh-scard__badge--outline"><span className="mh-scard__badge-ico"><MdVerified size={12} /></span>{t('listing.badges.verifiedPartner', 'Verified Partner')}</span>
                 </div>
-                <div className="singlelisting__features singlelisting__features__srch">
-                    {<ListingIcons type={type} l={item} />}
+                <div className="mh-scard__pricebar">
+                    <span className="mh-scard__price-from">{t('listing.pricing.startFrom', 'Start from')}</span>
+                    <span className="mh-scard__price">
+                        <span className="mh-scard__price-value">{priceParts.value}€</span>
+                        <span className="mh-scard__price-suffix">/ {priceParts.suffix.replace(/^\s*\/\s*/, '').trim()}</span>
+                    </span>
                 </div>
-                <div className="search__agency">
-                    <img
-                        src="https://mediaim.expedia.com/cars/logos/RC.png"
-                        className="singlelisting__agency__logo"
-                    />
-                    <div className="search__item__cta">
-                        <a
-                            href={getLocalizedUrl(`details/${item.slug}`)}
-                            className="cta-book-now"
-                        >
-                            <FaRegCalendarAlt size={22} /> {t("common.bookNow")}
-                        </a>
-                        <a
-                            href={getWtspUrl(item)}
-                            data-target="_blank"
-                            className="cta-wtsp"
-                        >
-                            <FaWhatsapp />
-                        </a>
-                    </div>
-                </div>
+            </div>
+            <div className="mh-scard__aside">
+                <a href={getWtspUrl(item)} target="_blank" className="mh-scard__chat" aria-label="WhatsApp"><FaWhatsapp size={18} /></a>
+                <a href={getLocalizedUrl(`details/${item.slug}`)} className="mh-scard__book">{t('common.bookNow')}</a>
             </div>
         </div>
     );

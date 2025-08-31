@@ -1,8 +1,8 @@
-import ExploreCategory from "../components/site/ExploreCategory";
 import HeroSection from "../components/site/HeroSection";
 import ListingsByCity from "../components/site/ListingsByCity";
 import WhyChooseUs from "../components/site/WhyChooseUs";
 import FAQSection from "../components/site/FAQSection";
+import HomeBlogSection from "../components/site/HomeBlogSection";
 import Footer from "../components/site/Footer";
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { BsCashStack } from "react-icons/bs";
@@ -15,6 +15,7 @@ import { useMediaQuery } from 'react-responsive';
 import BannerMobile from "../components/site/BannerMobile";
 import FreeTexts from "../components/site/FreeTexts";
 import { useTranslation } from "react-i18next";
+import ExploreCategory from "../components/site/ExploreCategory";
 
 const Home = () => {
     const { t } = useTranslation();
@@ -97,8 +98,8 @@ const Home = () => {
                 subtitle={t('home.why.subtitle')}
                 features={features}
             />
+            <HomeBlogSection />
             <FAQSection />
-            <FooterRecommendation />
             <FreeTexts slug="/" />
             <Footer />
         </>

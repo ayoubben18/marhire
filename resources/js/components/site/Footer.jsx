@@ -187,7 +187,7 @@ const Footer = () => {
         ];
 
         return (
-            <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-3 mt-2">
+            <ul className="footer-link-grid">
                 {allLinks.map((l, idx) => (
                     <li key={idx}>
                         <a href={l.href} className="d-inline-block footer-tab-link">
@@ -203,8 +203,13 @@ const Footer = () => {
         <footer style={{ color: "#203233" }} className="footer">
             <div className="footer-tabs-wrap" style={{ maxWidth: 1140, margin: '0 auto', paddingLeft: 12, paddingRight: 12 }}>
                 <style>{`
-                    .footer-tab-link { color:#627577; font-weight:500; text-decoration:none; transition: color .15s ease; }
+                    .footer-tab-link { color:#627577; font-weight:500; text-decoration:none; transition: color .15s ease; font-size:.95rem; }
                     .footer-tab-link:hover { color:#048667; text-decoration:none; }
+                    .footer-link-grid { display:grid; grid-auto-flow: column; grid-template-rows: repeat(5, minmax(0, auto)); column-gap:24px; row-gap:8px; margin-top:8px; }
+                    @media (max-width: 768px) {
+                        .footer-link-grid { grid-auto-flow: row; grid-template-rows: none; grid-template-columns: repeat(2, minmax(0,1fr)); column-gap:12px; row-gap:6px; }
+                        .footer-tabs-wrap { padding-left: 6px !important; padding-right: 6px !important; }
+                    }
                 `}</style>
                 <div className="border rounded-lg p-2 md:p-3 mb-3" style={{ background: '#f8fbfa', borderColor: '#e7eeec' }}>
                     <h3 className="text-center font-weight-bold mb-2" style={{ color: '#203233', fontSize: '1.05rem' }}>
@@ -243,6 +248,39 @@ const Footer = () => {
                 </div>
             </div>
             <div className="footer-container">
+                <FooterSection title={t('footer.exploreMarHire', 'Explore MarHire')}>
+                    <ul>
+                        <li>
+                            <a href={getLocalizedUrl('/car-search')}>{t('categories.carRental', 'Car Rentals')}</a>
+                        </li>
+                        <li>
+                            <a href={getLocalizedUrl('/private-search')}>{t('categories.privateDriver', 'Private Drivers')}</a>
+                        </li>
+                        <li>
+                            <a href={getLocalizedUrl('/boat-search')}>{t('categories.boatRental', 'Boat Rentals')}</a>
+                        </li>
+                        <li>
+                            <a href={getLocalizedUrl('/thingstodo-search')}>{t('footer.explore.activitiesTours', 'Activities & Tours')}</a>
+                        </li>
+                    </ul>
+                </FooterSection>
+                <FooterSection title={t('footer.topDestinations', 'Top Destinations')}>
+                    <ul>
+                        {[
+                            { key: 'agadir', label: t('cities.agadir', 'Agadir') },
+                            { key: 'marrakech', label: t('cities.marrakech', 'Marrakech') },
+                            { key: 'casablanca', label: t('cities.casablanca', 'Casablanca') },
+                            { key: 'fes', label: t('cities.fes', 'Fes') },
+                            { key: 'tangier', label: t('cities.tangier', 'Tangier') },
+                            { key: 'essaouira', label: t('cities.essaouira', 'Essaouira') },
+                            { key: 'rabat', label: t('cities.rabat', 'Rabat') },
+                        ].map((city) => (
+                            <li key={city.key}>
+                                <a href={getLocalizedUrl(`/city/${city.key}`)}>{city.label}</a>
+                            </li>
+                        ))}
+                    </ul>
+                </FooterSection>
                 <FooterSection title={t('footer.company')}>
                     <ul>
                         <li>
@@ -268,23 +306,6 @@ const Footer = () => {
                         </li>
                     </ul>
                 </FooterSection>
-                <FooterSection title={t('footer.topDestinations', 'Top Destinations')}>
-                    <ul>
-                        {[
-                            { key: 'agadir', label: t('cities.agadir', 'Agadir') },
-                            { key: 'marrakech', label: t('cities.marrakech', 'Marrakech') },
-                            { key: 'casablanca', label: t('cities.casablanca', 'Casablanca') },
-                            { key: 'fes', label: t('cities.fes', 'Fes') },
-                            { key: 'tangier', label: t('cities.tangier', 'Tangier') },
-                            { key: 'essaouira', label: t('cities.essaouira', 'Essaouira') },
-                            { key: 'rabat', label: t('cities.rabat', 'Rabat') },
-                        ].map((city) => (
-                            <li key={city.key}>
-                                <a href={getLocalizedUrl(`/city/${city.key}`)}>{city.label}</a>
-                            </li>
-                        ))}
-                    </ul>
-                </FooterSection>
                 <FooterSection title={t('footer.legalPolicy')}>
                     <ul>
                         <li>
@@ -301,21 +322,6 @@ const Footer = () => {
                         </li>
                         <li>
                             <a href={getLocalizedUrl('/insurance-conditions')}>{t('footer.insuranceConditions')}</a>
-                        </li>
-                    </ul>
-                </FooterSection>
-                <FooterSection title={t('footer.languageSupport')}>
-                    <ul>
-                        <li>
-                            <a href={getLocalizedUrl('/support')}>{t('footer.helpCenter')}</a>
-                        </li>
-                        <li>
-                            <a href="http://wa.me/212660745055">
-                                {t('navigation.whatsappChatSupport')}
-                            </a>
-                        </li>
-                        <li>
-                            <a href={getLocalizedUrl('/support')}>{t('footer.localAssistance')}</a>
                         </li>
                     </ul>
                 </FooterSection>
@@ -459,17 +465,8 @@ const Footer = () => {
                 ))}
             </div> */}
 
-            <div className="footer-socs">
-                <div className="footer-socs--col">
-                    <div className="footer-socs--title">{t('footer.paymentMethods')}</div>
-                    <div className="footer-payments">
-                        {paymentIcons.map((payment, i) => (
-                            <img src={payment.path} key={i} className="payment-icon" alt={payment.name}/>
-                        ))}
-                    </div>
-                </div>
-                <div>
-                    <div className="footer-socs--title">{t('footer.socialMedia')}</div>
+            <div className="mt-4 pt-4" style={{ borderTop: '1px solid #e5ebed' }}>
+                <div className="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
                     <div className="footer-socials">
                         {socialLinks.map((s, i) => (
                             <a
@@ -483,36 +480,15 @@ const Footer = () => {
                             </a>
                         ))}
                     </div>
+                    <div className="d-flex align-items-center gap-2">
+                        <strong style={{ marginRight: 8 }}>{t('footer.paymentsLabel', 'Payments:')}</strong>
+                        <div className="footer-payments">
+                            {paymentIcons.map((payment, i) => (
+                                <img src={payment.path} key={i} className="payment-icon" alt={payment.name} />
+                            ))}
+                        </div>
+                    </div>
                 </div>
-
-                {/* <div className="footer-socials">
-                    {socialLinks.map((s, i) => (
-                        <a
-                            key={i}
-                            href={s.link}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="social-icon"
-                        >
-                            {s.icon}
-                        </a>
-                    ))}
-                </div> */}
-            </div>
-            <div className="footer--contactInfos">
-                <a href="mailto:info@marhire.com">
-                    <span className="footer-item__icon">
-                        <FaEnvelope />
-                    </span>{" "}
-                    info@marhire.com
-                </a>
-
-                <a href="http://wa.me/212660745055">
-                    <span className="footer-item__icon">
-                        <FaWhatsapp />
-                    </span>{" "}
-                    +212 6 60 74 50 55
-                </a>
             </div>
             <div className="footer-bottom">
                 <p className="copyright">
