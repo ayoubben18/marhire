@@ -21,10 +21,26 @@ function getTabs(t) {
     ];
 }
 
-const HeroSection = ({ withBar, text, subtitle, isFull, tab, city, cityId, breadcrumbs = [] }) => {
+const HeroSection = ({ withBar, text, subtitle, isFull, tab, city, cityId, category, breadcrumbs = [] }) => {
     const { t, i18n } = useTranslation();
     
     const [activeTab, setActiveTab] = useState(tab ? tab : "cars");
+    
+    // Determine banner class based on category or city
+    const getBannerClass = () => {
+        if (category) {
+            // Category-specific banner takes priority (e.g., banner-car-rental)
+            return `banner-${category}`;
+        } else if (city) {
+            // City-specific banner (e.g., banner-agadir)
+            const cityLower = city.toLowerCase();
+            return `banner-${cityLower}`;
+        } else {
+            // Default home banner
+            return "banner1";
+        }
+    };
+    
     const features = [
         {
             name: t("home.features.trustedPartners"),
@@ -77,7 +93,7 @@ const HeroSection = ({ withBar, text, subtitle, isFull, tab, city, cityId, bread
 
     return (
         <div className={`hero-section ${isFull === true ? "is-full" : ""}`}>
-            <div className="hero-section--banner banner1">
+            <div className={`hero-section--banner ${getBannerClass()}`}>
                 <div className="hero--bg-overlay"></div>
                 <div className="hero-section--content">
                     <div className="slogan">

@@ -15,15 +15,15 @@ import CityCarousel from "./CityCarousel";
 import { useTranslation } from "react-i18next";
 
 const CITY_IMAGE_MAP = {
-    Marrakech: "https://marhire.bytech.ma/images/cities/marrakech.jpg",
-    Agadir: "https://marhire.bytech.ma/images/cities/agadir.jpg",
-    Casablanca: "https://marhire.bytech.ma/images/cities/casablanca.jpg",
-    Fez: "https://marhire.bytech.ma/images/cities/fez.jpg",
-    Tangier: "https://marhire.bytech.ma/images/cities/tangier.jpg",
-    Essaouira: "https://marhire.bytech.ma/images/cities/essaouira.jpg",
-    Rabat: "https://marhire.bytech.ma/images/cities/rabat.jpg",
-    "El Jadida": "https://marhire.bytech.ma/images/cities/rabat.jpg",
-    Dakhla: "https://marhire.bytech.ma/images/cities/rabat.jpg",
+    Marrakech: "/images/cities/marrakech.jpg",
+    Agadir: "/images/cities/agadir.jpg",
+    Casablanca: "/images/cities/casablanca.jpg",
+    Fez: "/images/cities/fez.jpg",
+    Tangier: "/images/cities/tangier.jpg",
+    Essaouira: "/images/cities/essaouira.jpg",
+    Rabat: "/images/cities/rabat.jpg",
+    "El Jadida": "/images/cities/rabat.jpg",
+    Dakhla: "/images/cities/rabat.jpg",
 };
 
 const buildItems = (titlePrefix, cityCounts) => {
@@ -441,6 +441,7 @@ const UnifiedCategory = ({ slug, city }) => {
                 tab={cfg.tab}
                 city={city}
                 cityId={cityId}
+                category={slug}
                 breadcrumbs={[
                     { name: 'Home', href: '' },
                     { name: cfg.categoryKey === 'cars' ? 'Car Rental' : (cfg.categoryKey === 'drivers' ? 'Private Driver' : (cfg.categoryKey === 'boats' ? 'Boat Rental' : 'Things To Do')), href: `/category/${slug}` },

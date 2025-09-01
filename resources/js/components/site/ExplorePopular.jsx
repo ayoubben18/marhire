@@ -5,11 +5,11 @@ import { getLocalizedUrl } from "../../utils/localeManager";
 const ExplorePopular = ({ title, subtitle }) => {
     const { t } = useTranslation();
     const cities = [
-        { name: t("cities.agadir"), slug: "Agadir", listings: 40, image: "https://marhire.bytech.ma/images/agadir.webp" },
-        { name: t("cities.marrakech"), slug: "Marrakech", listings: 40, image: "https://marhire.bytech.ma/images/marrakech.webp" },
-        { name: t("cities.casablanca"), slug: "Casablanca", listings: 40, image: "https://marhire.bytech.ma/images/casablanca2.webp" },
-        { name: t("cities.fes"), slug: "Fes", listings: 40, image: "https://marhire.bytech.ma/images/fez.webp" },
-        { name: t("cities.tangier"), slug: "Tangier", listings: 40, image: "https://marhire.bytech.ma/images/tangier.webp" },
+        { name: t("cities.agadir"), slug: "Agadir", listings: 40, image: "/images/cities/agadir.jpg" },
+        { name: t("cities.marrakech"), slug: "Marrakech", listings: 40, image: "/images/cities/marrakech.jpg" },
+        { name: t("cities.casablanca"), slug: "Casablanca", listings: 40, image: "/images/cities/casablanca.jpg" },
+        { name: t("cities.fes"), slug: "Fes", listings: 40, image: "/images/cities/fez.jpg" },
+        { name: t("cities.tangier"), slug: "Tangier", listings: 40, image: "/images/cities/tangier.jpg" },
     ];
 
     return (

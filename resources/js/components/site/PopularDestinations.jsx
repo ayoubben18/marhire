@@ -8,14 +8,14 @@ import { getLocalizedUrl } from "../../utils/localeManager";
 
 // Local image map for popular Moroccan cities
 const CITY_IMAGE_MAP = {
-    Marrakech: "https://marhire.bytech.ma/images/cities/marrakech.jpg",
-    Agadir: "https://marhire.bytech.ma/images/cities/agadir.jpg",
-    Casablanca: "https://marhire.bytech.ma/images/cities/casablanca.jpg",
-    Fes: "https://marhire.bytech.ma/images/cities/fez.jpg",
-    Fez: "https://marhire.bytech.ma/images/cities/fez.jpg",
-    Tangier: "https://marhire.bytech.ma/images/cities/tangier.jpg",
-    Essaouira: "https://marhire.bytech.ma/images/cities/essaouira.jpg",
-    Rabat: "https://marhire.bytech.ma/images/cities/rabat.jpg",
+    Marrakech: "/images/cities/marrakech.jpg",
+    Agadir: "/images/cities/agadir.jpg",
+    Casablanca: "/images/cities/casablanca.jpg",
+    Fes: "/images/cities/fez.jpg",
+    Fez: "/images/cities/fez.jpg",
+    Tangier: "/images/cities/tangier.jpg",
+    Essaouira: "/images/cities/essaouira.jpg",
+    Rabat: "/images/cities/rabat.jpg",
 };
 
 const toSlug = (name = "") => name.toString().trim().toLowerCase().replace(/\s+/g, "-");

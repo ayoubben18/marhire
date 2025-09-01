@@ -234,13 +234,13 @@ button, a, .btn, .recommendation-image, .recommendation-listing-card, .recommand
     background: white;
     color: #000;
 }
-/* .hero--bg-overlay {
-    background-color: #00000078;
+.hero--bg-overlay {
+    background-color: rgba(0, 0, 0, 0.35);
     position: absolute;
     width: 100%;
     height: 100%;
     border-radius: 14px;
-} */
+}
 .searchbox {
     padding-top: 24px;
 }
@@ -1207,7 +1207,64 @@ form.application-form {
     margin: 0 auto;
 }
 .banner1 {
-    background-image: url("https://marhire.bytech.ma/images/hero1.png");
+    background-image: url("/images/hero/home-hero.jpg");
+    background-size: cover;
+}
+
+/* City-specific hero backgrounds */
+.banner-agadir {
+    background-image: url("/images/hero/agadir-hero.jpg");
+    background-size: cover;
+}
+
+.banner-casablanca {
+    background-image: url("/images/hero/casablanca-hero.jpg");
+    background-size: cover;
+}
+
+.banner-essaouira {
+    background-image: url("/images/hero/essaouira-hero.jpg");
+    background-size: cover;
+}
+
+.banner-fes {
+    background-image: url("/images/hero/fes-hero.jpg");
+    background-size: cover;
+}
+
+.banner-marrakech {
+    background-image: url("/images/hero/marrakech-hero.jpg");
+    background-size: cover;
+}
+
+.banner-rabat {
+    background-image: url("/images/hero/rabat-hero.jpg");
+    background-size: cover;
+}
+
+.banner-tangier {
+    background-image: url("/images/hero/tangier-hero.jpg");
+    background-size: cover;
+}
+
+/* Category Banner Classes */
+.banner-car-rental {
+    background-image: url("/images/hero/car-rental-hero.jpg");
+    background-size: cover;
+}
+
+.banner-private-driver {
+    background-image: url("/images/hero/private-driver-hero.jpg");
+    background-size: cover;
+}
+
+.banner-boats {
+    background-image: url("/images/hero/boat-rental-hero.jpg");
+    background-size: cover;
+}
+
+.banner-things-to-do {
+    background-image: url("/images/hero/things-to-do-hero.jpg");
     background-size: cover;
 }
 .bg-green {

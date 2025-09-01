@@ -53,37 +53,37 @@ const City = ({ city }) => {
         {
             name: "Marrakech",
             listings: 120,
-            image: "https://marhire.bytech.ma/images/cities/marrakech.jpg",
+            image: "/images/cities/marrakech.jpg",
         },
         {
             name: "Agadir",
             listings: 90,
-            image: "https://marhire.bytech.ma/images/cities/agadir.jpg",
+            image: "/images/cities/agadir.jpg",
         },
         {
             name: "Casablanca",
             listings: 100,
-            image: "https://marhire.bytech.ma/images/cities/casablanca.jpg",
+            image: "/images/cities/casablanca.jpg",
         },
         {
             name: "Fez",
             listings: 70,
-            image: "https://marhire.bytech.ma/images/cities/fez.jpg",
+            image: "/images/cities/fez.jpg",
         },
         {
             name: "Tangier",
             listings: 80,
-            image: "https://marhire.bytech.ma/images/cities/tangier.jpg",
+            image: "/images/cities/tangier.jpg",
         },
         {
             name: "Essaouira",
             listings: 30,
-            image: "https://marhire.bytech.ma/images/cities/essaouira.jpg",
+            image: "/images/cities/essaouira.jpg",
         },
         {
             name: "Rabat",
             listings: 40,
-            image: "https://marhire.bytech.ma/images/cities/rabat.jpg",
+            image: "/images/cities/rabat.jpg",
         },
     ];
     const faqs = [
@@ -131,7 +131,7 @@ A debit/credit card or cash (based on deposit policy)`,
 
     return (
         <>
-            <HeroSection withBar={true} text={city} />
+            <HeroSection withBar={true} text={city} city={city} />
             <WhyChooseUs
                 title={`Why Book with MarHire in ${city}`}
                 subtitle=""

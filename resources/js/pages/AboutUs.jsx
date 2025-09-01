@@ -65,11 +65,11 @@ const AboutUs = () => {
                 subtitle={""}
                 centered={true}
                 items={[
-                    { name: t('cities.agadir'), slug: 'agadir', image: 'https://marhire.bytech.ma/images/agadir.webp', listings: 40 },
-                    { name: t('cities.marrakech'), slug: 'marrakech', image: 'https://marhire.bytech.ma/images/marrakech.webp', listings: 40 },
-                    { name: t('cities.casablanca'), slug: 'casablanca', image: 'https://marhire.bytech.ma/images/casablanca2.webp', listings: 40 },
-                    { name: t('cities.fes'), slug: 'fes', image: 'https://marhire.bytech.ma/images/fez.webp', listings: 40 },
-                    { name: t('cities.tangier'), slug: 'tangier', image: 'https://marhire.bytech.ma/images/tangier.webp', listings: 40 },
+                    { name: t('cities.agadir'), slug: 'agadir', image: '/images/cities/agadir.jpg', listings: 40 },
+                    { name: t('cities.marrakech'), slug: 'marrakech', image: '/images/cities/marrakech.jpg', listings: 40 },
+                    { name: t('cities.casablanca'), slug: 'casablanca', image: '/images/cities/casablanca.jpg', listings: 40 },
+                    { name: t('cities.fes'), slug: 'fes', image: '/images/cities/fez.jpg', listings: 40 },
+                    { name: t('cities.tangier'), slug: 'tangier', image: '/images/cities/tangier.jpg', listings: 40 },
                 ]}
             />
             <ContactUsBox />
