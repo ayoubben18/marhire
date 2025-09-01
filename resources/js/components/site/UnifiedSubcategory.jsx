@@ -207,6 +207,7 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
                 tab={meta.tab}
                 city={city}
                 cityId={cityId}
+                category={categorySlug}
                 breadcrumbs={[
                     { name: 'Home', href: '' },
                     { name: (meta.key === 'cars' ? 'Car Rental' : (meta.key === 'drivers' ? 'Private Driver' : (meta.key === 'boats' ? 'Boat Rental' : 'Things To Do'))), href: `/category/${categorySlug}` },
