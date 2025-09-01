@@ -22,6 +22,12 @@ class SendScheduledReminders extends Command
         $emailService = app(EmailServiceInterface::class);
         
         foreach ($reminders as $reminder) {
+            // Skip if booking doesn't exist
+            if (!$reminder->booking) {
+                $reminder->update(['status' => 'cancelled']);
+                continue;
+            }
+            
             if ($reminder->booking->status !== 'confirmed') {
                 $reminder->update(['status' => 'cancelled']);
                 continue;
