@@ -217,18 +217,28 @@
             $.ajax({
                 url: "{{ route('agencies.delete') }}",
                 type: 'post',
-                data: {id: id},
+                data: {
+                    id: id,
+                    _token: '{{ csrf_token() }}'
+                },
                 success: function(data){
                     if(data == 'success')
                     {
                         swal({
                             title: "Supprimé!",
-                            text: "Votre annonce a été bien supprimer",
+                            text: "Votre agence a été bien supprimée",
                             icon: "success",
                         }).then((value) => {
                             location.reload();
                         });
                     }
+                },
+                error: function(xhr, status, error){
+                    swal({
+                        title: "Erreur!",
+                        text: "Une erreur s'est produite lors de la suppression",
+                        icon: "error",
+                    });
                 }
             });
         });

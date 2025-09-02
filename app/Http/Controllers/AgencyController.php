@@ -139,6 +139,32 @@ class AgencyController extends Controller
         return 'success';
     }
 
+    public function delete(Request $request)
+    {
+        $agency = Agency::findOrFail($request->id);
+        
+        // Delete agency logo if exists
+        if($agency->agency_logo) {
+            $publicPath = public_path($agency->agency_logo);
+            $cPanelPath = str_replace('/public/', '/public_html/', $publicPath);
+            
+            if (file_exists($publicPath)) {
+                unlink($publicPath);
+            } elseif (file_exists($cPanelPath)) {
+                unlink($cPanelPath);
+            }
+        }
+        
+        // Delete related records
+        AgencyFeature::where('agency_id', $agency->id)->delete();
+        AgencySubCategory::where('agency_id', $agency->id)->delete();
+        
+        // Delete the agency
+        $agency->delete();
+        
+        return 'success';
+    }
+
     public function update(Request $request)
     {
         $request->validate([
