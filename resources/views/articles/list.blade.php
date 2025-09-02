@@ -25,7 +25,6 @@
                         <tr>
                             <th class="sorting">Title</th>
                             <th class="sorting">Category</th>
-                            <th class="sorting">Translations</th>
                             <th class="sorting">Created At</th>
                             <th class="sorting">Actions</th>
                         </tr>
@@ -35,14 +34,7 @@
                         <tr>
                             <td>{{ $article->title }}</td>
                             <td>{{ $article->category ? $article->category->category : 'No Category' }}</td>
-                            <td>
-                                @php
-                                    $frTranslation = $article->translations->where('locale', 'fr')->first();
-                                    $esTranslation = $article->translations->where('locale', 'es')->first();
-                                @endphp
-                                <span class="badge bg-{{ $frTranslation ? 'success' : 'secondary' }} me-1">FR</span>
-                                <span class="badge bg-{{ $esTranslation ? 'success' : 'secondary' }}">ES</span>
-                            </td>
+                          
                             <td>{{ $article->created_at }}</td>
                             <td>
                                 <a href="{{ route('articles.edit', $article->id) }}">
