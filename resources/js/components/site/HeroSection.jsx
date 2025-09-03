@@ -185,7 +185,7 @@ const HeroSection = ({
                         {subtitle ? (
                             <p className="slogan-subtitle">{subtitle}</p>
                         ) : null}
-                        {withBar && (
+                        {/* {withBar && (
                             <div className="features-icons">
                                 {features.map((item, index) => (
                                     <span className="features-icons__item">
@@ -194,7 +194,7 @@ const HeroSection = ({
                                     </span>
                                 ))}
                             </div>
-                        )}
+                        )} */}
                     </div>
                     <div className="searchbox">
                         {withBar && (
@@ -259,7 +259,7 @@ const HeroSection = ({
                 .nav-link-page:hover { text-decoration: underline; }
 
                 /* New isolated hero tabs styles (unique classnames) */
-                .mh-hero-tabs { margin-bottom: 12px; }
+                .mh-hero-tabs { margin-bottom: -20px; max-width: 800px; margin-left: auto; margin-right: auto; }
                 .mh-hero-tabs__bar { position: relative; display: flex; align-items: center; gap: 10px; background: rgba(18,24,38,0.8); padding: 6px; border-radius: 9999px; }
                 .mh-hero-tabs__bar::after { content: ""; position: absolute; inset: 0; border: 1px solid rgba(255,255,255,0.25); border-radius: inherit; pointer-events: none; }
                 .mh-hero-tab { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 14px; color: rgba(255,255,255,0.92); background: transparent; border: 0; border-radius: 9999px; font-size: 14px; font-weight: 600; line-height: 1; cursor: pointer; transition: background-color .2s ease, color .2s ease; }
@@ -276,6 +276,8 @@ const HeroSection = ({
 
                 /* Match CarRentalForm mobile breakpoint (isMobile: max-width: 900px) */
                 @media (max-width: 900px) {
+                    /* Tabs container should be full-width on mobile, with tighter gap above form */
+                    .mh-hero-tabs { max-width: none; margin-bottom: 10px; }
                     /* Increase top padding on mobile to avoid squashed title */
                     .hero-section--content { padding-top: 24px; }
                     /* Title and badges responsive adjustments */
@@ -298,6 +300,8 @@ const HeroSection = ({
                     .mh-hero-tab--active:focus,
                     .mh-hero-tab--active:active { background: #ffffff !important; color: #0f172a !important; box-shadow: 0 4px 12px rgba(255,255,255,0.15); }
                 }
+
+                
 
                 @media (max-width: 520px) {
                     .mh-hero-tab { gap: 4px; padding: 6px 8px; font-size: 12px; }
