@@ -85,6 +85,11 @@ const Home = () => {
                         image: "/images/cities/tangier.jpg",
                         listings: 40,
                     },
+                    {
+                        name: t("cities.essaouira"),
+                        image: "/images/cities/essaouira.jpg",
+                        listings: 30,
+                    },
                 ]}
             />
             <div style={{ background: "#f9f4f3", padding: "0 16px" }}>
@@ -98,6 +103,7 @@ const Home = () => {
                         "Fez",
                         "Tangier",
                         "Rabat",
+                        "Essaouira",
                     ]}
                     initialCity="Agadir"
                     perPage={8}
@@ -117,6 +123,7 @@ const Home = () => {
                         "Fez",
                         "Tangier",
                         "Rabat",
+                        "Essaouira",
                     ]}
                     initialCity="Agadir"
                     perPage={8}
@@ -136,6 +143,7 @@ const Home = () => {
                         "Fez",
                         "Tangier",
                         "Rabat",
+                        "Essaouira",
                     ]}
                     initialCity="Agadir"
                     perPage={8}
@@ -152,6 +160,7 @@ const Home = () => {
                         "Fez",
                         "Tangier",
                         "Rabat",
+                        "Essaouira",
                     ]}
                     initialCity="Agadir"
                     perPage={8}

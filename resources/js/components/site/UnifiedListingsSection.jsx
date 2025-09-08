@@ -116,7 +116,7 @@ const UnifiedListingsSection = ({
     };
 
     const getWtspUrl = (listing) => {
-        const url = `https://marhire.bytech.ma/details/${listing.slug}`;
+        const url = `https://marhire.com/details/${listing.slug}`;
         const titleTxt = resolveTitle(listing, currentLocale);
         const text = t("messages.whatsappInterest", { title: titleTxt, url });
         return `https://wa.me/+212660745055?text=${encodeURIComponent(text)}`;
@@ -218,7 +218,7 @@ const UnifiedListingsSection = ({
                                         <ListingIcons type={(() => { const id = parseInt(listing.category_id); if (id === 2) return 'cars'; if (id === 3) return 'drivers'; if (id === 4) return 'boats'; if (id === 5) return 'activities'; return 'cars'; })()} l={listing} classes={"compact"} />
                                         <div className="agency-badges">
                                             <span className="agency-badge green"><span className="ico"><FaCheckCircle size={12} /></span>{t('listing.trustNotes.cancellation', 'Free Cancellation')}</span>
-                                            {!isDepositRequired(listing.deposit_required) && (
+                                            {!isDepositRequired(listing.deposit_required) && parseInt(listing.category_id) === 2 && (
                                                 <span className="agency-badge blue"><span className="ico"><FaMoneyBillWave size={12} /></span>{t('listing.specs.noDeposit', 'No Deposit')}</span>
                                             )}
                                             <span className="agency-badge outline"><span className="ico"><MdVerified size={12} /></span>{t('listing.badges.verifiedPartner', 'Verified Partner')}</span>

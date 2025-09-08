@@ -19,32 +19,32 @@ import FreeTexts from "../components/site/FreeTexts";
 const City = ({ city }) => {
     const features = [
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
+            icon: "https://marhire.com/images/icons/icon2.webp",
             title: "Transparent prices, no hidden fees",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon10.webp",
+            icon: "https://marhire.com/images/icons/icon10.webp",
             title: "No deposit required on most listings",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon5.webp",
+            icon: "https://marhire.com/images/icons/icon5.webp",
             title: "Free delivery and flexible pickups",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon3.webp",
+            icon: "https://marhire.com/images/icons/icon3.webp",
             title: "Local verified partners only",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon1.svg",
+            icon: "https://marhire.com/images/icons/icon1.svg",
             title: "24/7 multilingual support",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon9.webp",
+            icon: "https://marhire.com/images/icons/icon9.webp",
             title: "Instant booking + WhatsApp inquiry",
             desc: "",
         },

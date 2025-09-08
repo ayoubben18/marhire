@@ -17,32 +17,32 @@ const AboutUs = () => {
 
     const features = [
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
+            icon: "https://marhire.com/images/icons/icon2.webp",
             title: t('features.verifiedPartners', 'Verified Local Partners'),
             desc: t('aboutPage.features.verifiedDesc', 'All agencies are screened and approved.'),
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon10.webp",
+            icon: "https://marhire.com/images/icons/icon10.webp",
             title: t('features.transparentPricing', 'Transparent Pricing'),
             desc: t('aboutPage.features.transparentDesc', 'No hidden fees, clear policies.'),
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon5.webp",
+            icon: "https://marhire.com/images/icons/icon5.webp",
             title: t('features.multilingualSupport', 'Multilingual Support'),
             desc: t('aboutPage.features.multilingualDesc', 'English, French, Arabic service.'),
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon3.webp",
+            icon: "https://marhire.com/images/icons/icon3.webp",
             title: t('features.digitalExperience', 'Full Digital Experience'),
             desc: t('aboutPage.features.digitalDesc', 'Book online in minutes.'),
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon1.svg",
+            icon: "https://marhire.com/images/icons/icon1.svg",
             title: t('aboutPage.features.noDeposit', 'No Deposit on Most Rentals'),
             desc: t('aboutPage.features.noDepositDesc', 'Especially for economy vehicles.'),
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon9.webp",
+            icon: "https://marhire.com/images/icons/icon9.webp",
             title: t('aboutPage.features.allInOne', 'All-in-One Platform'),
             desc: t('aboutPage.features.allInOneDesc', 'Cars, drivers, boats, tours & more.'),
         },

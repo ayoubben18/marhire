@@ -445,21 +445,22 @@
                                         <div class="form-control-wrap">
                                             <select class="form-control select2-single" name="deposit_required" id="deposit_required">
                                                 <option value="yes" {{ old('deposit_required', isset($listing) ? $listing->deposit_required : 'yes') == 'yes' ? 'selected' : '' }}>Yes</option>
-                                                <option value="no" {{ old('deposit_required', isset($listing) ? $listing->deposit_required : '') == 'no' ? 'selected' : '' }}>No</option>
+                                                <option value="no" {{ old('deposit_required', isset($listing) ? $listing->deposit_required : 'no') == 'no' ? 'selected' : '' }}>No</option>
                                             </select>
                                             <small class="error d-none">Required field.</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 deposit" data-categories="2">
+                                <div class="col-md-4 deposit d-none" data-categories="2">
                                     <div class="form-group">
-                                        <label for="deposit_amount" class="form-label">Deposit Amount</label>
+                                        <label for="deposit_amount" class="form-label">Deposit Amount<span class="lbl-obligatoire deposit-required-asterisk" style="display: none;">*</span></label>
                                         <div class="form-control-wrap">
                                             <input type="number" step="any" class="form-control" name="deposit_amount" id="deposit_amount" value="{{ old('deposit_amount', isset($listing) ? $listing->deposit_amount : '1000') }}" placeholder="Deposit Amount" />
+                                            <small class="error d-none">Deposit amount is required when deposit is set to Yes.</small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 deposit" data-categories="2">
+                                <div class="col-md-4 deposit d-none" data-categories="2">
                                     <div class="form-group">
                                         <label for="deposit_note" class="form-label">Deposit Note</label>
                                         <div class="form-control-wrap">
@@ -540,38 +541,6 @@
                                                 @endforeach
                                             </div>
                                             <small class="error d-none">Required field.</small>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Boat Deposit Fields -->
-                                <div class="col-md-4" data-categories="4">
-                                    <div class="form-group">
-                                        <label for="deposit_required_boat" class="form-label">Deposit Required</label>
-                                        <div class="form-control-wrap">
-                                            <select class="form-control select2-single" name="deposit_required" id="deposit_required_boat">
-                                                <option value="no" {{ old('deposit_required', isset($listing) ? $listing->deposit_required : 'no') == 'no' ? 'selected' : '' }}>No</option>
-                                                <option value="yes" {{ old('deposit_required', isset($listing) ? $listing->deposit_required : '') == 'yes' ? 'selected' : '' }}>Yes</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 boat-deposit" style="display: none;">
-                                    <div class="form-group">
-                                        <label for="deposit_amount" class="form-label">Deposit Amount</label>
-                                        <div class="form-control-wrap">
-                                            <input type="number" step="any" class="form-control" name="deposit_amount" id="deposit_amount_boat" value="{{ old('deposit_amount', isset($listing) ? $listing->deposit_amount : '') }}" placeholder="Deposit Amount" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 boat-deposit" style="display: none;">
-                                    <div class="form-group">
-                                        <label for="deposit_currency" class="form-label">Deposit Currency</label>
-                                        <div class="form-control-wrap">
-                                            <select class="form-control select2-single" name="deposit_currency" id="deposit_currency">
-                                                <option value="EUR" {{ old('deposit_currency', isset($listing) ? $listing->deposit_currency : 'EUR') == 'EUR' ? 'selected' : '' }}>EUR</option>
-                                                <option value="USD" {{ old('deposit_currency', isset($listing) ? $listing->deposit_currency : '') == 'USD' ? 'selected' : '' }}>USD</option>
-                                                <option value="MAD" {{ old('deposit_currency', isset($listing) ? $listing->deposit_currency : '') == 'MAD' ? 'selected' : '' }}>MAD</option>
-                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -1093,15 +1062,103 @@
         stepper = currentStep;
     }
 
+    // Helper function to show field error
+    function showFieldError(field, message) {
+        if (!field) return;
+        
+        field.classList.add("is-invalid");
+        const errorElement = field.closest('.form-control-wrap')?.querySelector('.error');
+        if (errorElement) {
+            errorElement.textContent = message || 'This field is required.';
+            errorElement.classList.remove('d-none');
+        }
+    }
+    
+    // Helper function to clear field error
+    function clearFieldError(field) {
+        if (!field) return;
+        
+        field.classList.remove("is-invalid");
+        const errorElement = field.closest('.form-control-wrap')?.querySelector('.error');
+        if (errorElement) {
+            errorElement.classList.add('d-none');
+        }
+    }
+    
+    // Validate conditional fields based on other field values
+    function validateConditionalFields(categoryId, step) {
+        let valid = true;
+        
+        // Car rental deposit validation
+        if (categoryId === 2 && step === 'step1') {
+            const depositRequired = document.getElementById('deposit_required');
+            const depositAmount = document.getElementById('deposit_amount');
+            const depositContainer = depositAmount?.closest('.deposit');
+            
+            // First check if deposit_required field itself has a value
+            if (!depositRequired || !depositRequired.value) {
+                showFieldError(depositRequired, 'Please select if deposit is required.');
+                valid = false;
+            } else {
+                clearFieldError(depositRequired);
+                
+                // Then check deposit amount if deposit is required and visible
+                if (depositRequired.value.toLowerCase() === 'yes' && 
+                    depositContainer && !depositContainer.classList.contains('d-none')) {
+                    
+                    if (!depositAmount.value || parseFloat(depositAmount.value) <= 0) {
+                        showFieldError(depositAmount, 'Deposit amount must be greater than 0 when deposit is required.');
+                        valid = false;
+                    } else {
+                        clearFieldError(depositAmount);
+                    }
+                } else {
+                    // Clear any errors if deposit not required
+                    clearFieldError(depositAmount);
+                }
+            }
+        }
+        
+        // Activities group size validation
+        if (categoryId === 5 && step === 'step1') {
+            const privateOrGroup = document.getElementById('private_or_group');
+            
+            if (privateOrGroup && privateOrGroup.value === 'Group') {
+                const minSize = document.getElementById('group_size_min');
+                const maxSize = document.getElementById('group_size_max');
+                
+                if (!minSize?.value || parseInt(minSize.value) < 1) {
+                    showFieldError(minSize, 'Minimum group size is required for group activities.');
+                    valid = false;
+                } else {
+                    clearFieldError(minSize);
+                }
+                
+                if (!maxSize?.value || parseInt(maxSize.value) < 1) {
+                    showFieldError(maxSize, 'Maximum group size is required for group activities.');
+                    valid = false;
+                } else if (minSize?.value && parseInt(maxSize.value) < parseInt(minSize.value)) {
+                    showFieldError(maxSize, 'Maximum group size must be greater than or equal to minimum.');
+                    valid = false;
+                } else {
+                    clearFieldError(maxSize);
+                }
+            }
+        }
+        
+        return valid;
+    }
+
     function validateForm() {
         const categoryId = parseInt(document.querySelector('[name="category_id"]').value);
         let requiredFields = ['title', 'category_id', 'city_id', 'provider_id'];
 
         const categoryRequiredMap = {
-            2: ['car_types', 'car_model', 'year', 'fuel_type', 'transmission', 'seats', 'doors', 'ac', 'mileage_policy', 'fuel_policy', 'driver_requirement', 'deposit_required']
-            , 3: ['vehicule_type', 'vehicule_model', 'service_type', 'max_passengers', 'max_luggage', 'languages_spoken']
-            , 4: ['boat_type', 'with_captain', 'capacity', 'departure_location']
-            , 5: ['languages_spoken', 'activity_type', 'pickup', 'meeting_point', 'private_or_group', 'difficulty']
+            // Note: deposit_required removed from car rental - handled in conditional validation
+            2: ['car_types', 'car_model', 'year', 'fuel_type', 'transmission', 'seats', 'doors', 'ac', 'mileage_policy', 'fuel_policy', 'driver_requirement'],
+            3: ['vehicule_type', 'vehicule_model', 'service_type', 'max_passengers', 'max_luggage', 'languages_spoken'],
+            4: ['boat_type', 'with_captain', 'capacity', 'departure_location'],
+            5: ['languages_spoken', 'activity_type', 'pickup', 'meeting_point', 'private_or_group', 'difficulty']
         };
 
         if (categoryRequiredMap[categoryId]) {
@@ -1113,6 +1170,7 @@
         if (stepper == 1) {
             const step1 = document.getElementById("step1");
 
+            // Validate required fields
             requiredFields.forEach(fieldName => {
                 // Special handling for car_types multi-select
                 if (fieldName === 'car_types') {
@@ -1130,17 +1188,18 @@
                     }
                 } else {
                     const input = step1.querySelector(`[id="${fieldName}"]`);
-                    const errorElement = input ? input.closest('.form-control-wrap').querySelector('.error') : null;
                     if (input && !input.value.trim()) {
-                        input.classList.add("is-invalid");
-                        if (errorElement) errorElement.classList.remove('d-none');
+                        showFieldError(input, 'This field is required.');
                         valid = false;
                     } else if (input) {
-                        input.classList.remove("is-invalid");
-                        if (errorElement) errorElement.classList.add('d-none');
+                        clearFieldError(input);
                     }
                 }
             });
+            
+            // Validate conditional fields separately
+            const conditionalValid = validateConditionalFields(categoryId, 'step1');
+            valid = valid && conditionalValid;
         }
 
         return valid;
@@ -1156,14 +1215,6 @@
             }
         });
         
-        // Special handling for boat deposit fields (category 4)
-        // They should only show if deposit_required_boat is 'yes'
-        if (categoryId == 4) {
-            const boatDepositRequired = $('#deposit_required_boat').val();
-            if (boatDepositRequired !== 'yes' && boatDepositRequired !== 'Yes') {
-                $('.boat-deposit').hide();
-            }
-        }
         
         // Duration fields are now handled automatically by data-categories attributes
     }
@@ -1184,8 +1235,9 @@
         // Initialize car types multi-select functionality
         initializeCarTypesMultiSelect();
         
-        // Initialize boat deposit fields visibility
-        initializeBoatDepositFields();
+        
+        // Initialize car deposit fields visibility
+        initializeCarDepositFields();
         
         // Load existing data if editing
         @if(isset($listing))
@@ -1381,26 +1433,55 @@
 
         $('#deposit_required').change(function() {
             const depositRequired = $(this).val();
+            const depositAmount = document.getElementById('deposit_amount');
+
+            // Clear any existing validation errors
+            clearFieldError(this);
+            clearFieldError(depositAmount);
 
             if (depositRequired == 'yes' || depositRequired == 'Yes') {
                 $('.deposit').removeClass('d-none');
+                // Show required asterisk and add required attribute
+                $('.deposit-required-asterisk').show();
+                $('#deposit_amount').prop('required', true);
             } else {
                 $('#deposit_amount').val('');
                 $('#deposit_note').val('');
                 $('.deposit').addClass('d-none');
+                // Hide required asterisk and remove required attribute
+                $('.deposit-required-asterisk').hide();
+                $('#deposit_amount').prop('required', false);
+                // Clear validation errors when hiding
+                clearFieldError(depositAmount);
+            }
+        });
+        
+        // Clear error when deposit amount changes
+        $('#deposit_amount').on('input', function() {
+            if (this.value && parseFloat(this.value) > 0) {
+                clearFieldError(this);
             }
         });
 
-        // Handle boat deposit fields visibility
-        $('#deposit_required_boat').change(function() {
-            const boatDepositRequired = $(this).val();
 
-            if (boatDepositRequired == 'yes' || boatDepositRequired == 'Yes') {
-                $('.boat-deposit').show();
-            } else {
-                $('#deposit_amount_boat').val('');
-                $('#deposit_currency').val('EUR');
-                $('.boat-deposit').hide();
+        // Handle form submission - disable hidden category fields to prevent conflicts
+        $('form').on('submit', function(e) {
+            const categoryId = parseInt($('#category_id').val());
+            
+            // Disable fields that don't belong to the current category
+            $('[data-categories]').each(function() {
+                const allowed = $(this).data('categories').toString().split(',');
+                if (!allowed.includes(categoryId.toString())) {
+                    // Disable all form inputs in this hidden category container
+                    $(this).find('input, select, textarea').prop('disabled', true);
+                }
+            });
+            
+            // For non-car categories, ensure car deposit field is disabled
+            if (categoryId !== 2) {
+                $('#deposit_required').prop('disabled', true);
+                $('#deposit_amount').prop('disabled', true);
+                $('#deposit_note').prop('disabled', true);
             }
         });
 
@@ -1675,20 +1756,6 @@
             $('.deposit').addClass('d-none');
         }
         
-        // Handle boat deposit fields visibility
-        if (listing.boat_deposit_required === 'yes' || listing.boat_deposit_required === 'Yes') {
-            $('.boat-deposit').show();
-        } else {
-            $('.boat-deposit').hide();
-        }
-        
-        // Initialize boat deposit fields on page load
-        const currentBoatDepositRequired = $('#deposit_required_boat').val();
-        if (currentBoatDepositRequired === 'yes' || currentBoatDepositRequired === 'Yes') {
-            $('.boat-deposit').show();
-        } else {
-            $('.boat-deposit').hide();
-        }
         
         // Handle group size fields visibility
         if (listing.private_or_group === 'Private') {
@@ -2022,13 +2089,30 @@
         }
     }
     
-    function initializeBoatDepositFields() {
-        // Initialize boat deposit fields visibility on page load
-        const currentBoatDepositRequired = $('#deposit_required_boat').val();
-        if (currentBoatDepositRequired === 'yes' || currentBoatDepositRequired === 'Yes') {
-            $('.boat-deposit').show();
+    
+    function initializeCarDepositFields() {
+        // Initialize car deposit fields visibility on page load
+        const categoryId = parseInt($('#category_id').val());
+        
+        // Only initialize car deposit fields if category is car rental (2)
+        if (categoryId === 2) {
+            const currentCarDepositRequired = $('#deposit_required').val();
+            if (currentCarDepositRequired === 'yes' || currentCarDepositRequired === 'Yes') {
+                $('.deposit').removeClass('d-none');
+                // Show required asterisk and add required attribute
+                $('.deposit-required-asterisk').show();
+                $('#deposit_amount').prop('required', true);
+            } else {
+                $('.deposit').addClass('d-none');
+                // Hide required asterisk and remove required attribute
+                $('.deposit-required-asterisk').hide();
+                $('#deposit_amount').prop('required', false);
+            }
         } else {
-            $('.boat-deposit').hide();
+            // Hide car deposit fields if not car rental category
+            $('.deposit').addClass('d-none');
+            $('.deposit-required-asterisk').hide();
+            $('#deposit_amount').prop('required', false);
         }
     }
     

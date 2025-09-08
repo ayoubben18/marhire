@@ -73,7 +73,7 @@ const Recommended = ({
         
         return null;
     };
-    const cities = ["Agadir", "Marrakech", "Casablanca", "Tangier", "Fes"];
+    const cities = ["Agadir", "Marrakech", "Casablanca", "Tangier", "Fes", "Essaouira"];
     const config = {
         cars: {
             title: t("home.recommended.cars.title"),
@@ -232,7 +232,7 @@ const Recommended = ({
     };
 
     const getWtspUrl = (listing) => {
-        const url = `https://marhire.bytech.ma/details/${listing.slug}`;
+        const url = `https://marhire.com/details/${listing.slug}`;
         const title = getTranslatedField(listing, 'title', currentLocale);
         const text = t("messages.whatsappInterest", {
             title: title,
@@ -332,7 +332,7 @@ const Recommended = ({
                                       {isAgencyVariant && (
                                           <div className="agency-badges">
                                               <span className="agency-badge green"><span className="ico"><FaCheckCircle size={12} /></span>{t('listing.trustNotes.cancellation', 'Free Cancellation')}</span>
-                                              {!isDepositRequired(listing.deposit_required) && (
+                                              {!isDepositRequired(listing.deposit_required) && type === "cars" && (
                                                   <span className="agency-badge blue"><span className="ico"><FaMoneyBillWave size={12} /></span>{t('listing.specs.noDeposit', 'No Deposit')}</span>
                                               )}
                                               <span className="agency-badge outline"><span className="ico"><MdVerified size={12} /></span>{t('listing.badges.verifiedPartner', 'Verified Partner')}</span>

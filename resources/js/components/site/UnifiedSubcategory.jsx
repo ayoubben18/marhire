@@ -81,22 +81,22 @@ const toTitle = (slug) => {
 const buildCarSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
     const baseFeatures = [
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon10.webp",
+            icon: "https://marhire.com/images/icons/icon10.webp",
             title: "Full Insurance Included",
             desc: "All rentals include insurance. Optional low-excess upgrades available.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon3.webp",
+            icon: "https://marhire.com/images/icons/icon3.webp",
             title: "Available at Major Airports",
             desc: "Pick up your rental directly from the airport in Marrakech, Agadir, Casablanca, and more.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon1.svg",
+            icon: "https://marhire.com/images/icons/icon1.svg",
             title: "24/7 Customer Support",
             desc: "Local support team available on WhatsApp to assist you anytime.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon9.webp",
+            icon: "https://marhire.com/images/icons/icon9.webp",
             title: "Transparent Pricing",
             desc: "The price you see is the price you pay. No surprises on arrival.",
         },
@@ -105,12 +105,12 @@ const buildCarSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
     if (subcategorySlug === "dacia" || subcategorySlug === "audi") {
         return [
             {
-                icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
+                icon: "https://marhire.com/images/icons/icon2.webp",
                 title: `Reliable ${subcategoryName} Vehicles`,
                 desc: `${subcategoryName} models are known for their reliability and ability to handle Moroccan roads.`,
             },
             {
-                icon: "https://marhire.bytech.ma/images/icons/icon5.webp",
+                icon: "https://marhire.com/images/icons/icon5.webp",
                 title: "Spacious and Practical",
                 desc: "Enjoy ample space for passengers and luggage, perfect for families and road trips.",
             },
@@ -121,12 +121,12 @@ const buildCarSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
     if (subcategorySlug === "suv" || subcategorySlug === "mpv") {
         return [
             {
-                icon: "https://marhire.bytech.ma/images/icons/icon5.webp",
+                icon: "https://marhire.com/images/icons/icon5.webp",
                 title: "Extra Space and Comfort",
                 desc: `${subcategoryName}s offer superior space for passengers and luggage.`,
             },
             {
-                icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
+                icon: "https://marhire.com/images/icons/icon2.webp",
                 title: "Perfect for Family Trips",
                 desc: "Ideal for families exploring Morocco's diverse terrain.",
             },
@@ -137,12 +137,12 @@ const buildCarSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
     if (subcategorySlug === "sedan" || subcategorySlug === "hatchback") {
         return [
             {
-                icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
+                icon: "https://marhire.com/images/icons/icon2.webp",
                 title: "Fuel Efficient Options",
                 desc: `${subcategoryName}s offer excellent fuel economy for long distance travel.`,
             },
             {
-                icon: "https://marhire.bytech.ma/images/icons/icon5.webp",
+                icon: "https://marhire.com/images/icons/icon5.webp",
                 title: "Easy to Park and Maneuver",
                 desc: "Perfect for navigating narrow streets in Moroccan medinas.",
             },
@@ -228,7 +228,7 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
             />
 
             <PopularDestinations
-                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
+                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat", "Essaouira"]}
             />
 
             <FreeTexts slug={`category/${categorySlug}/subcategory/${subcategorySlug}`} />

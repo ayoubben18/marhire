@@ -160,9 +160,9 @@ class CategoryValidationService
             'departure_location' => 'required|string|max:255',
             
             // Optional deposit fields (boat-specific)
-            'deposit_required' => 'sometimes|nullable|in:yes,no',
-            'deposit_amount' => 'required_if:deposit_required,yes|nullable|numeric|min:0',
-            'deposit_currency' => 'required_if:deposit_required,yes|nullable|string|max:3|in:EUR,USD,MAD',
+            'boat_deposit_required' => 'sometimes|nullable|in:yes,no',
+            'deposit_amount' => 'required_if:boat_deposit_required,yes|nullable|numeric|min:0',
+            'deposit_currency' => 'required_if:boat_deposit_required,yes|nullable|string|max:3|in:EUR,USD,MAD',
             'deposit_note' => 'nullable|string|max:500',
             
             // Optional purpose tags

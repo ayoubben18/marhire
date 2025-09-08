@@ -775,8 +775,9 @@ class ListingController extends Controller
             'fuel_policy' => $request->fuel_policy,
             'driver_requirement' => $request->driver_requirement,
             'deposit_required' => $request->deposit_required,
-            'deposit_amount' => $request->deposit_amount,
-            'deposit_note' => $request->deposit_note
+            // Handle deposit amount conditionally (only store if deposit is required)
+            'deposit_amount' => ($request->deposit_required === 'yes') ? $request->deposit_amount : null,
+            'deposit_note' => ($request->deposit_required === 'yes') ? $request->deposit_note : null
         ];
 
         // Handle multi-select car_types as JSON array
@@ -856,9 +857,6 @@ class ListingController extends Controller
             'with_captain' => $request->with_captain,
             'capacity' => $request->capacity,
             'departure_location' => $request->departure_location,
-            // Optional deposit fields for boat rentals
-            'deposit_required' => $request->deposit_required ?? null,
-            'deposit_currency' => $request->deposit_currency ?? null,
         ];
 
         // Handle duration options with validation
@@ -870,10 +868,6 @@ class ListingController extends Controller
         } else {
             $data['duration_options'] = null;
         }
-
-        // Handle deposit amount conditionally
-        $data['deposit_amount'] = ($request->deposit_required === 'yes') ? $request->deposit_amount : null;
-        $data['deposit_note'] = ($request->deposit_required === 'yes') ? $request->deposit_note : null;
 
         // Handle optional purpose tags
         if ($request->has('purpose_tags') && is_array($request->purpose_tags)) {

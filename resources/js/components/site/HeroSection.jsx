@@ -54,19 +54,19 @@ const HeroSection = ({
     const features = [
         {
             name: t("home.features.trustedPartners"),
-            icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
+            icon: "https://marhire.com/images/icons/icon2.webp",
         },
         {
             name: t("home.features.noHiddenFees"),
-            icon: "https://marhire.bytech.ma/images/icons/icon1.svg",
+            icon: "https://marhire.com/images/icons/icon1.svg",
         },
         {
             name: t("home.features.instantBooking"),
-            icon: "https://marhire.bytech.ma/images/icons/icon3.webp",
+            icon: "https://marhire.com/images/icons/icon3.webp",
         },
         {
             name: t("home.features.noDeposit"),
-            icon: "https://marhire.bytech.ma/images/icons/icon4.svg",
+            icon: "https://marhire.com/images/icons/icon4.svg",
         },
     ];
 

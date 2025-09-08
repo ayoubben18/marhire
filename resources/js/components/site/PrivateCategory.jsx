@@ -18,64 +18,64 @@ import FreeTexts from "./FreeTexts";
 const PrivateCategory = ({ city }) => {
     const features = [
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
+            icon: "https://marhire.com/images/icons/icon2.webp",
             title: "Professional Chauffeurs",
             desc: "Experienced, licensed drivers with local expertise.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon10.webp",
+            icon: "https://marhire.com/images/icons/icon10.webp",
             title: "Multilingual Service",
             desc: "Most drivers speak English, French, and Arabic.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon5.webp",
+            icon: "https://marhire.com/images/icons/icon5.webp",
             title: "Hotel & Airport Pickup",
             desc: "Door-to-door comfort in all major Moroccan cities.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon1.svg",
+            icon: "https://marhire.com/images/icons/icon1.svg",
             title: "24/7 Support on WhatsApp",
             desc: "We stay connected before, during, and after your journey.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon9.webp",
+            icon: "https://marhire.com/images/icons/icon9.webp",
             title: "Clean & Comfortable Vehicles",
             desc: "All cars are air-conditioned and professionally maintained.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon3.webp",
+            icon: "https://marhire.com/images/icons/icon3.webp",
             title: "Fixed Rates - No Hidden Fees",
             desc: "What you see is what you pay — guaranteed.",
         },
     ];
     const cityFeatures = [
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
+            icon: "https://marhire.com/images/icons/icon2.webp",
             title: "Licensed, Experienced Drivers",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon10.webp",
+            icon: "https://marhire.com/images/icons/icon10.webp",
             title: "English, French & Arabic Spoken",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon5.webp",
+            icon: "https://marhire.com/images/icons/icon5.webp",
             title: "Sedans, SUVs & MPVs - Clean & A/C",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon1.svg",
+            icon: "https://marhire.com/images/icons/icon1.svg",
             title: `Free Airport or Hotel Pickup in ${city}`,
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon9.webp",
+            icon: "https://marhire.com/images/icons/icon9.webp",
             title: "Fixed Transparent Pricing - No Surprises",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon3.webp",
+            icon: "https://marhire.com/images/icons/icon3.webp",
             title: `24/7 WhatsApp Support - Local Experts in ${city}`,
             desc: "",
         },
@@ -85,32 +85,32 @@ const PrivateCategory = ({ city }) => {
         {
             name: "Private Driver in Marrakech",
             listings: 100,
-            image: "https://marhire.bytech.ma/images/cities/marrakech.jpg",
+            image: "https://marhire.com/images/cities/marrakech.jpg",
         },
         {
             name: "Private Driver in Agadir",
             listings: 80,
-            image: "https://marhire.bytech.ma/images/cities/agadir.jpg",
+            image: "https://marhire.com/images/cities/agadir.jpg",
         },
         {
             name: "Private Driver in Casablanca",
             listings: 120,
-            image: "https://marhire.bytech.ma/images/cities/casablanca.jpg",
+            image: "https://marhire.com/images/cities/casablanca.jpg",
         },
         {
             name: "Private Driver in Fez",
             listings: 70,
-            image: "https://marhire.bytech.ma/images/cities/fez.jpg",
+            image: "https://marhire.com/images/cities/fez.jpg",
         },
         {
             name: "Private Driver in Tangier",
             listings: 60,
-            image: "https://marhire.bytech.ma/images/cities/tangier.jpg",
+            image: "https://marhire.com/images/cities/tangier.jpg",
         },
         {
             name: "Private Driver in Rabat",
             listings: 50,
-            image: "https://marhire.bytech.ma/images/cities/rabat.jpg",
+            image: "https://marhire.com/images/cities/rabat.jpg",
         },
     ];
 

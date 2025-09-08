@@ -8,6 +8,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import axios from "axios";
 import SmartImage from "../SmartImage";
 import { useTranslation } from "react-i18next";
+import getWtspUrl from "../utils/WhatsappMsg";
 import { getLocalizedUrl } from "../../utils/localeManager";
 
 // Helper function to get translated field with fallback
@@ -81,17 +82,6 @@ const RelatedProducts = ({ category = 2, loading }) => {
         }
     };
 
-    const getWtspUrl = (listing) => {
-        const url = `https://marhire.bytech.ma/details/${listing.slug}`;
-        const title = getTranslatedField(listing, 'title', currentLocale);
-        const message = encodeURIComponent(
-            `Hello,\nI am interested in booking this rental:\n\nTitle:${title} \n\nURL: ${url}\n\nCould you please provide more details about availability, pricing, and the booking process?\n\nThank you!`
-        );
-
-        const whatsappLink = `https://wa.me/+212660745055?text=${message}`;
-
-        return whatsappLink;
-    };
 
     useEffect(() => {
         if (!category) return; // Don't fetch if category is not available yet

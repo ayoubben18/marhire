@@ -112,6 +112,14 @@ const Search = ({ type }) => {
             const value = params.get(key);
             if (value) obj[key] = value;
         });
+        
+        // For boat category, if no URL parameters exist, ensure the search still works
+        // by not requiring specific destination or boat_type filters
+        if (type === 'boat' && Object.keys(obj).length === 0) {
+            // Don't add any filters, let the API return all boat listings
+            return obj;
+        }
+        
         return obj;
     };
 

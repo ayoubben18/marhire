@@ -56,32 +56,32 @@ const CarCategory = ({ city }) => {
 
     const cityFeatures = [
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
+            icon: "https://marhire.com/images/icons/icon2.webp",
             title: "No Deposit on Most Cars - Ideal for Tourists",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon10.webp",
+            icon: "https://marhire.com/images/icons/icon10.webp",
             title: "Full Insurance Included - Drive with Confidence",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon5.webp",
+            icon: "https://marhire.com/images/icons/icon5.webp",
             title: "Wide Range of Cars - Cheap, Luxury, SUV, Family",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon3.webp",
+            icon: "https://marhire.com/images/icons/icon3.webp",
             title: `Free Delivery - ${city} Airport, Hotels & Riads`,
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon1.svg",
+            icon: "https://marhire.com/images/icons/icon1.svg",
             title: `Free Delivery - ${city} Airport, Hotels & Riads`,
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon9.webp",
+            icon: "https://marhire.com/images/icons/icon9.webp",
             title: "Transparent Prices - No Hidden Fees at Pickup",
             desc: "",
         },
@@ -91,37 +91,37 @@ const CarCategory = ({ city }) => {
         {
             name: "Car Rental in Marrakech",
             listings: 120,
-            image: "https://marhire.bytech.ma/images/cities/marrakech.jpg",
+            image: "https://marhire.com/images/cities/marrakech.jpg",
         },
         {
             name: "Car Rental in Agadir",
             listings: 90,
-            image: "https://marhire.bytech.ma/images/cities/agadir.jpg",
+            image: "https://marhire.com/images/cities/agadir.jpg",
         },
         {
             name: "Car Rental in Casablanca",
             listings: 100,
-            image: "https://marhire.bytech.ma/images/cities/casablanca.jpg",
+            image: "https://marhire.com/images/cities/casablanca.jpg",
         },
         {
             name: "Car Rental in Fez",
             listings: 70,
-            image: "https://marhire.bytech.ma/images/cities/fez.jpg",
+            image: "https://marhire.com/images/cities/fez.jpg",
         },
         {
             name: "Car Rental in Tangier",
             listings: 80,
-            image: "https://marhire.bytech.ma/images/cities/tangier.jpg",
+            image: "https://marhire.com/images/cities/tangier.jpg",
         },
         {
             name: "Car Rental in Essaouira",
             listings: 30,
-            image: "https://marhire.bytech.ma/images/cities/essaouira.jpg",
+            image: "https://marhire.com/images/cities/essaouira.jpg",
         },
         {
             name: "Car Rental in Rabat",
             listings: 40,
-            image: "https://marhire.bytech.ma/images/cities/rabat.jpg",
+            image: "https://marhire.com/images/cities/rabat.jpg",
         },
     ];
 

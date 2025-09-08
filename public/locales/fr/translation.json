@@ -43,7 +43,7 @@
         "readMore": "Lire la suite"
     },
     "messages": {
-        "whatsappInterest": "Bonjour, je suis intéressé par la réservation de cette location.\n\nTitre: {{title}}\n\nURL: {{url}}\n\nPourriez-vous me fournir plus de détails sur la disponibilité, les prix et le processus de réservation?\n\nMerci!"
+        "whatsappInterest": "Bonjour l'équipe MarHire,\nJe suis intéressé par l'annonce suivante:\nTitre de l'annonce: {{title}}\nLien de l'annonce: {{url}}\nPourriez-vous confirmer la disponibilité, le prix et fournir des détails supplémentaires?"
     },
     "cities": {
         "morocco": "Maroc",

@@ -79,9 +79,9 @@ const Agency = ({ slug }) => {
     };
 
     const getWtspUrl = () => {
-        const url = `https://marhire.bytech.ma/agency/${slug}`;
+        const url = `https://marhire.com/agency/${slug}`;
         const message = encodeURIComponent(
-            `Hello,\nI am interested in booking:\n\Agency:${agency.agency_name} \n\nURL: ${url}\n\nCould you please provide more details about availability, pricing, and the booking process?\n\nThank you!`
+            `Hi MarHire team,\nI'm interested in the following agency:\nAgency: ${agency.agency_name}\nAgency Link: ${url}\nCould you please confirm availability, price, and provide any additional details?`
         );
         // For WhatsApp link:
         const whatsappLink = `https://wa.me/+212660745055?text=${message}`;

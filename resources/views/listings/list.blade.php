@@ -12,9 +12,6 @@
             </div>
         </div>
         <div>
-            <a href="{{ route('listings.translationTest', ['locale' => app()->getLocale()]) }}" class="btn btn-outline-primary mr-2">
-                <i class="icon ni ni-globe"></i> Translation Manager
-            </a>
             <a href="{{ route('listings.new') }}" class="btn-signup">Add</a>
         </div>
     </div>

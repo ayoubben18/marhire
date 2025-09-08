@@ -130,7 +130,7 @@ const SearchItem = ({ item, type }) => {
                 <ListingIcons type={(() => { const id = parseInt(item.category_id || (type === 'car' ? 2 : type === 'private' ? 3 : type === 'boat' ? 4 : 5)); if (id === 2) return 'cars'; if (id === 3) return 'drivers'; if (id === 4) return 'boats'; if (id === 5) return 'activities'; return 'cars'; })()} l={item} classes={'mh-scard__features compact'} />
                 <div className="mh-scard__badges">
                     <span className="mh-scard__badge mh-scard__badge--green"><span className="mh-scard__badge-ico"><FaCheckCircle size={12} /></span>{t('listing.trustNotes.cancellation', 'Free Cancellation')}</span>
-                    {!isDepositRequired(item.deposit_required) && (
+                    {!isDepositRequired(item.deposit_required) && parseInt(item.category_id || (type === 'car' ? 2 : type === 'private' ? 3 : type === 'boat' ? 4 : 5)) === 2 && (
                         <span className="mh-scard__badge mh-scard__badge--blue"><span className="mh-scard__badge-ico"><FaMoneyBillWave size={12} /></span>{t('listing.specs.noDeposit', 'No Deposit')}</span>
                     )}
                     <span className="mh-scard__badge mh-scard__badge--outline"><span className="mh-scard__badge-ico"><MdVerified size={12} /></span>{t('listing.badges.verifiedPartner', 'Verified Partner')}</span>

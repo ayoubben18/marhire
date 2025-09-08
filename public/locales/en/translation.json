@@ -45,7 +45,7 @@
         "noListingsFound": "No listings found"
     },
     "messages": {
-        "whatsappInterest": "Hello, I am interested in booking this rental.\n\nTitle: {{title}}\n\nURL: {{url}}\n\nCould you please provide more details about availability, pricing, and the booking process?\n\nThank you!"
+        "whatsappInterest": "Hi MarHire team,\nI'm interested in the following listing:\nListing Title: {{title}}\nListing Link: {{url}}\nCould you please confirm availability, price, and provide any additional details?"
     },
     "cities": {
         "morocco": "Morocco",

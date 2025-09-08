@@ -31,7 +31,7 @@ const toSlug = (name = "") => name.toString().trim().toLowerCase().replace(/\s+/
  */
 const CityCarousel = ({
     title,
-    cities = ["Agadir", "Marrakech", "Casablanca", "Fes", "Tangier", "Rabat"],
+    cities = ["Agadir", "Marrakech", "Casablanca", "Fes", "Tangier", "Rabat", "Essaouira"],
     basePath = "",
     exploreHref = "/city",
     exploreText = null,

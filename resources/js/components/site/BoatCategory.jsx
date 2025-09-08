@@ -18,32 +18,32 @@ import FreeTexts from "./FreeTexts";
 const BoatCategory = ({ city }) => {
     const features = [
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
+            icon: "https://marhire.com/images/icons/icon2.webp",
             title: "Captain Included on All Rentals",
             desc: "Every boat comes with a licensed skipper for your safety and comfort.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon10.webp",
+            icon: "https://marhire.com/images/icons/icon10.webp",
             title: "Fuel, Crew & Snacks Included",
             desc: "No surprise fees — most experiences include essentials.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon5.webp",
+            icon: "https://marhire.com/images/icons/icon5.webp",
             title: "Fishing, Sunset & Private Party Options",
             desc: "Choose a relaxing cruise or a high-energy group experience.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon3.webp",
+            icon: "https://marhire.com/images/icons/icon3.webp",
             title: "Departure from Verified Marinas",
             desc: "Agadir, Casablanca, Tangier, and more..",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon1.svg",
+            icon: "https://marhire.com/images/icons/icon1.svg",
             title: "24/7 Booking Support on WhatsApp",
             desc: "Need help choosing? We assist instantly.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon9.webp",
+            icon: "https://marhire.com/images/icons/icon9.webp",
             title: "Transparent Pricing",
             desc: "No extra taxes or fees after checkout.",
         },
@@ -51,32 +51,32 @@ const BoatCategory = ({ city }) => {
 
     const cityFeatures = [
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
+            icon: "https://marhire.com/images/icons/icon2.webp",
             title: "Licensed Boats + Skipper Included",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon10.webp",
+            icon: "https://marhire.com/images/icons/icon10.webp",
             title: "Fuel, Crew & Light Snacks Included in Most Packages",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon5.webp",
+            icon: "https://marhire.com/images/icons/icon5.webp",
             title: `Private Charters - Sunset, Fishing, Parties or Sightseeing`,
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon1.svg",
+            icon: "https://marhire.com/images/icons/icon1.svg",
             title: `Wide Fleet - From Luxury Yachts to Affordable Boats`,
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon9.webp",
+            icon: "https://marhire.com/images/icons/icon9.webp",
             title: "24/7 WhatsApp Support for Booking & Help",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon3.webp",
+            icon: "https://marhire.com/images/icons/icon3.webp",
             title: "Transparent Pricing - No Taxes or Fees After Checkout",
             desc: "",
         },
@@ -86,32 +86,32 @@ const BoatCategory = ({ city }) => {
         {
             name: "Boat Rental in Agadir",
             listings: 60,
-            image: "https://marhire.bytech.ma/images/cities/agadir.jpg",
+            image: "https://marhire.com/images/cities/agadir.jpg",
         },
         {
             name: "Boat Rental in Casablanca",
             listings: 40,
-            image: "https://marhire.bytech.ma/images/cities/casablanca.jpg",
+            image: "https://marhire.com/images/cities/casablanca.jpg",
         },
         {
             name: "Boat Rental in Tangier",
             listings: 30,
-            image: "https://marhire.bytech.ma/images/cities/tangier.jpg",
+            image: "https://marhire.com/images/cities/tangier.jpg",
         },
         {
             name: "Boat Rental in Essaouira",
             listings: 30,
-            image: "https://marhire.bytech.ma/images/cities/essaouira.jpg",
+            image: "https://marhire.com/images/cities/essaouira.jpg",
         },
         {
             name: "Boat Rental in El Jadida",
             listings: 15,
-            image: "https://marhire.bytech.ma/images/cities/rabat.jpg",
+            image: "https://marhire.com/images/cities/rabat.jpg",
         },
         {
             name: "Boat Rental in Dakhla",
             listings: 20,
-            image: "https://marhire.bytech.ma/images/cities/rabat.jpg",
+            image: "https://marhire.com/images/cities/rabat.jpg",
         },
     ];
 

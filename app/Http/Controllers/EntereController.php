@@ -393,6 +393,12 @@ class EntereController extends Controller
     {
         $skip = $request->input('skip', 0);
         $take = 6;
+        $locale = $request->input('locale', 'en');
+        
+        // Set the locale for proper translation loading
+        if (in_array($locale, ['en', 'fr', 'es'])) {
+            app()->setLocale($locale);
+        }
 
         if ($skip == 0) {
             $latest = Article::withCurrentTranslations()->with('category')->orderBy('created_at', 'desc')->first();
@@ -431,6 +437,13 @@ class EntereController extends Controller
 
     public function get_article_api(Request $request)
     {
+        $locale = $request->input('locale', 'en');
+        
+        // Set the locale for proper translation loading
+        if (in_array($locale, ['en', 'fr', 'es'])) {
+            app()->setLocale($locale);
+        }
+        
         $article = Article::withCurrentTranslations()->with('category')->where('slug', $request->slug)->first();
         
         if ($article) {

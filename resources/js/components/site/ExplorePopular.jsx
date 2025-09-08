@@ -10,6 +10,7 @@ const ExplorePopular = ({ title, subtitle }) => {
         { name: t("cities.casablanca"), slug: "Casablanca", listings: 40, image: "/images/cities/casablanca.jpg" },
         { name: t("cities.fes"), slug: "Fes", listings: 40, image: "/images/cities/fez.jpg" },
         { name: t("cities.tangier"), slug: "Tangier", listings: 40, image: "/images/cities/tangier.jpg" },
+        { name: t("cities.essaouira"), slug: "Essaouira", listings: 30, image: "/images/cities/essaouira.jpg" },
     ];
 
     return (

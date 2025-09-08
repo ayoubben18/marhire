@@ -18,32 +18,32 @@ import FreeTexts from "./FreeTexts";
 const ThingsToDoCategory = ({ city }) => {
     const features = [
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
+            icon: "https://marhire.com/images/icons/icon2.webp",
             title: "Local & Authentic Experiences",
             desc: "Curated tours run by real Moroccans, not mass-market operators.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon10.webp",
+            icon: "https://marhire.com/images/icons/icon10.webp",
             title: "Multilingual Guides",
             desc: "Most experiences available in English, French & Arabic.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon5.webp",
+            icon: "https://marhire.com/images/icons/icon5.webp",
             title: "Hotel Pickup Included",
             desc: "No need to worry about transportation - we'll come to you.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon3.webp",
+            icon: "https://marhire.com/images/icons/icon3.webp",
             title: "Free Cancellation Up to 48h Before",
             desc: "Plans change? Cancel easily at no cost.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon1.svg",
+            icon: "https://marhire.com/images/icons/icon1.svg",
             title: "Private & Family-Friendly Options",
             desc: "Tours available for couples, small groups, and children.",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon9.webp",
+            icon: "https://marhire.com/images/icons/icon9.webp",
             title: "Transparent Pricing",
             desc: "No extra booking or tourist fees. What you see is what you pay.",
         },
@@ -51,32 +51,32 @@ const ThingsToDoCategory = ({ city }) => {
 
     const cityFeatures = [
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
+            icon: "https://marhire.com/images/icons/icon2.webp",
             title: "Trusted Local Guides - Real people, not tourist traps",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon10.webp",
+            icon: "https://marhire.com/images/icons/icon10.webp",
             title: "Multilingual Tours - English, French & Arabic available",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon5.webp",
+            icon: "https://marhire.com/images/icons/icon5.webp",
             title: `Hotel Pickup Included in Most Activities`,
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon1.svg",
+            icon: "https://marhire.com/images/icons/icon1.svg",
             title: `Free Cancellation - Up to 48h before your experience`,
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon9.webp",
+            icon: "https://marhire.com/images/icons/icon9.webp",
             title: "Family-Friendly, Group & Private Options",
             desc: "",
         },
         {
-            icon: "https://marhire.bytech.ma/images/icons/icon3.webp",
+            icon: "https://marhire.com/images/icons/icon3.webp",
             title: "24/7 Booking Support on WhatsApp",
             desc: "",
         },
@@ -86,32 +86,32 @@ const ThingsToDoCategory = ({ city }) => {
         {
             name: "Things To Do in Marrakech",
             listings: 100,
-            image: "https://marhire.bytech.ma/images/cities/marrakech.jpg",
+            image: "https://marhire.com/images/cities/marrakech.jpg",
         },
         {
             name: "Things To Do in Agadir",
             listings: 80,
-            image: "https://marhire.bytech.ma/images/cities/agadir.jpg",
+            image: "https://marhire.com/images/cities/agadir.jpg",
         },
         {
             name: "Things To Do in Casablanca",
             listings: 70,
-            image: "https://marhire.bytech.ma/images/cities/casablanca.jpg",
+            image: "https://marhire.com/images/cities/casablanca.jpg",
         },
         {
             name: "Things To Do in Fez",
             listings: 60,
-            image: "https://marhire.bytech.ma/images/cities/fez.jpg",
+            image: "https://marhire.com/images/cities/fez.jpg",
         },
         {
             name: "Things To Do in Tangier",
             listings: 50,
-            image: "https://marhire.bytech.ma/images/cities/tangier.jpg",
+            image: "https://marhire.com/images/cities/tangier.jpg",
         },
         {
             name: "Things To Do in Essaouira",
             listings: 30,
-            image: "https://marhire.bytech.ma/images/cities/essaouira.jpg",
+            image: "https://marhire.com/images/cities/essaouira.jpg",
         },
     ];
 

@@ -454,14 +454,14 @@ const UnifiedCategory = ({ slug, city }) => {
             {/* New city carousel replacing old block; CTA on the right */}
             {!city &&<CityCarousel
                 title={cfg.explore && cfg.explore.title ? cfg.explore.title : "Find Car Rentals in Morocco's Top Cities"}
-                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
+                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat", "Essaouira"]}
                 basePath={`/${cfg.tab}`}
                 exploreHref={`/${cfg.tab}`}
             />
 }
             {!city &&(() => {
                 // Cities tabs to display for quick switching between top destinations
-                const defaultCityTabs = ["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"];
+                const defaultCityTabs = ["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat", "Essaouira"];
                 const sectionTitle = (cfg.titles && cfg.titles.cityBrowseTitle) ? cfg.titles.cityBrowseTitle() : "Car Hire by City";
 
                 return (
@@ -515,7 +515,7 @@ const UnifiedCategory = ({ slug, city }) => {
 
              {/* Moved popular destinations section below the listings-by-city */}
              <PopularDestinations
-                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat"]}
+                cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat", "Essaouira"]}
             />
             <FreeTexts slug={`category/${slug}`} />
             <Footer />

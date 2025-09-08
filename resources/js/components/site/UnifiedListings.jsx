@@ -339,7 +339,7 @@ const UnifiedListings = (props) => {
     };
 
     const getWtspUrl = (listing) => {
-        const url = `https://marhire.ma/details/${listing.slug}`;
+        const url = `https://marhire.com/details/${listing.slug}`;
         const titleTxt = getTranslatedField(listing, 'title');
         const text = t('messages.whatsappInterest', { title: titleTxt, url });
         return `https://wa.me/+212660745055?text=${encodeURIComponent(text)}`;
@@ -463,7 +463,7 @@ const UnifiedListings = (props) => {
                                         <ListingIcons type={(() => { const id = parseInt(listing.category_id); if (id === 2) return 'cars'; if (id === 3) return 'drivers'; if (id === 4) return 'boats'; if (id === 5) return 'activities'; return 'cars'; })()} l={listing} classes={'compact'} />
                                         <div className="uls-badges">
                                             <span className="uls-badge uls-badge--green"><span className="uls-badge__ico"><FaCheckCircle size={12} /></span>{t('listing.trustNotes.cancellation', 'Free Cancellation')}</span>
-                                            {!isDepositRequired(listing.deposit_required) && (
+                                            {!isDepositRequired(listing.deposit_required) && parseInt(listing.category_id) === 2 && (
                                                 <span className="uls-badge uls-badge--blue"><span className="uls-badge__ico"><FaMoneyBillWave size={12} /></span>{t('listing.specs.noDeposit', 'No Deposit')}</span>
                                             )}
                                             <span className="uls-badge uls-badge--outline"><span className="uls-badge__ico"><MdVerified size={12} /></span>{t('listing.badges.verifiedPartner', 'Verified Partner')}</span>
