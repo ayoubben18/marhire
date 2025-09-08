@@ -374,9 +374,11 @@
         "day": "day",
         "hour": "hour",
         "person": "person",
+        "trip": "trip",
         "perDay": "Per day",
         "perHour": "Per hour",
         "perPerson": "Per person",
+        "perTrip": "Per trip",
         "week": "week",
         "month": "month",
         "halfDay": "half-day"

@@ -138,6 +138,9 @@
       @if(isset($invoiceData['client_country']) && $invoiceData['client_country'])
       <strong>Pays:</strong> {{ $invoiceData['client_country'] }}<br />
       @endif
+      @if(isset($invoiceData['client_flight_number']) && $invoiceData['client_flight_number'])
+      <strong>Numéro de Vol:</strong> {{ $invoiceData['client_flight_number'] }}<br />
+      @endif
       @if(isset($invoiceData['client_note']) && $invoiceData['client_note'] && $invoiceData['client_note'] !== 'N/A')
       <strong>Note:</strong> {{ $invoiceData['client_note'] }}<br />
       @endif
@@ -147,7 +150,7 @@
     <p>
       <strong>Bateau:</strong> {{ $invoiceData['service_name'] }} – {{ $invoiceData['departure_location'] ?? 'Port de plaisance' }}<br />
       @if(isset($invoiceData['rental_duration']))
-      <strong>Durée de location:</strong> {{ $invoiceData['rental_duration'] }}<br />
+      <strong>Durée de location:</strong> {{ $invoiceData['rental_duration'] }}{{ is_numeric($invoiceData['rental_duration']) ? ' heures' : '' }}<br />
       @endif
       <strong>Départ:</strong> {{ $invoiceData['departure_location'] ?? 'Port de plaisance' }} – {{ $invoiceData['departure_date'] ?? $invoiceData['check_in'] }} à {{ $invoiceData['departure_time'] ?? '10:00' }}<br />
     </p>

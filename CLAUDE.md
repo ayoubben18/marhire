@@ -93,3 +93,5 @@ NEVER FUCKING RESTORE THE FILE STATUS USING GIT JUST REMOVE WHAT YOU WANT TO REM
 - remember to always parse the ints when comparing something like this just in case because I have db on my prod server diff than dev
 
 The folder src/ is a code example of how our app might look like
+
+AWLWAYS CHECK THE CORRECT SHAPE OF DATA THAT'S BEING PASSED BETWEEN FRONTEND AND BACKEND AND THEY ARE COMMUNICATING CORRECTLY SINCE WE DO NOT HAVE TYPES IN THIS APPLICATION

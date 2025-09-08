@@ -67,7 +67,7 @@ const RelatedProducts = ({ category = 2, loading }) => {
                 return `${t("common.from")} ${listing.price_per_day || 0}€ / ${t("units.day")}`;
             } else if (type === "drivers") {
                 const driverPrice = listing.pricings?.[0]?.airport_one || 0;
-                return `${t("common.from")} ${driverPrice}€ / ${t("units.day")}`;
+                return `${t("common.from")} ${driverPrice}€ / ${t("units.trip")}`;
             } else if (type === "boats") {
                 return `${t("common.from")} ${listing.price_per_hour || 0}€ / ${t("units.hour")}`;
             } else if (type === "activities") {

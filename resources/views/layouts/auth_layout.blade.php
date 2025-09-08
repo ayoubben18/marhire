@@ -10,7 +10,7 @@
     <title>{{ config('business_name', 'Bytech') }}: @yield('title')</title>
 
     <!-- Favicon -->
-    <link rel="icon"  href="{{ asset('images/favicon.png') }}"/>
+    <link rel="icon"  href="{{ asset('images/favicon.ico') }}"/>
 
     <script>
         const root = document.querySelector(':root');

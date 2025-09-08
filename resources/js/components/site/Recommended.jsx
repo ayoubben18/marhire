@@ -222,7 +222,7 @@ const Recommended = ({
             return { prefix: t("common.from"), value: listing.price_per_day, suffix: `/ ${t("units.day")}` };
         } else if (type === "drivers") {
             const driverPrice = listing.pricings[0].airport_one || 0;
-            return { prefix: t("common.from"), value: driverPrice, suffix: `/ ${t("units.day")}` };
+            return { prefix: t("common.from"), value: driverPrice, suffix: `/ ${t("units.trip")}` };
         } else if (type === "boats") {
             return { prefix: t("common.from"), value: listing.price_per_hour, suffix: `/ ${t("units.hour")}` };
         } else {

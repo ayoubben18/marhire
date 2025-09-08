@@ -136,7 +136,7 @@ request()->is('*/faq')
     @endif
     
     {{-- Favicon --}}
-    <link rel="icon" href="{{ asset('images/favicon.png') }}" />
+    <link rel="icon" href="{{ asset('images/favicon.ico') }}" />
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css" />
     <!-- Font Awesome -->

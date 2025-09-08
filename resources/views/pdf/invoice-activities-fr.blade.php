@@ -132,8 +132,14 @@
       <strong>Nom:</strong> {{ $invoiceData['client_name'] }}<br />
       <strong>Email:</strong> {{ $invoiceData['client_email'] }}<br />
       <strong>Téléphone:</strong> {{ $invoiceData['client_phone'] }}<br />
+      @if(isset($invoiceData['client_dob']) && $invoiceData['client_dob'])
+      <strong>Date de Naissance:</strong> {{ $invoiceData['client_dob'] }}<br />
+      @endif
       @if(isset($invoiceData['client_country']) && $invoiceData['client_country'])
       <strong>Pays:</strong> {{ $invoiceData['client_country'] }}<br />
+      @endif
+      @if(isset($invoiceData['client_flight_number']) && $invoiceData['client_flight_number'])
+      <strong>Numéro de Vol:</strong> {{ $invoiceData['client_flight_number'] }}<br />
       @endif
       @if(isset($invoiceData['client_note']) && $invoiceData['client_note'] && $invoiceData['client_note'] !== 'N/A')
       <strong>Note:</strong> {{ $invoiceData['client_note'] }}<br />
@@ -146,7 +152,7 @@
       @if(isset($invoiceData['activity_duration']))
       <strong>Durée:</strong> {{ $invoiceData['activity_duration'] }}<br />
       @endif
-      <strong>Date:</strong> {{ $invoiceData['activity_date'] ?? $invoiceData['check_in'] }} à {{ $invoiceData['activity_time'] ?? '10:00' }}<br />
+      <strong>Date:</strong> {{ $invoiceData['activity_date'] ?? $invoiceData['check_in'] }}@if(isset($invoiceData['time_preference']) && $invoiceData['time_preference']) | <strong>Préférence d'Heure:</strong> {{ ucfirst($invoiceData['time_preference']) }}@endif<br />
       @if(isset($invoiceData['activity_type']))
       <strong>Type:</strong> {{ $invoiceData['activity_type'] }}<br />
       @endif

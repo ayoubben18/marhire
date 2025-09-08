@@ -108,7 +108,7 @@ const UnifiedListingsSection = ({
     const generatePriceParts = (listing) => {
         const id = parseInt(listing.category_id);
         if (id === 2) return { prefix: t("common.from"), value: listing.price_per_day || listing.price || 0, suffix: `/ ${t("units.day")}` };
-        if (id === 3) return { prefix: t("common.from"), value: (listing.pricings?.[0]?.airport_one) || listing.price || 0, suffix: `/ ${t("units.day")}` };
+        if (id === 3) return { prefix: t("common.from"), value: (listing.pricings?.[0]?.airport_one) || listing.price || 0, suffix: `/ ${t("units.trip")}` };
         if (id === 4) return { prefix: t("common.from"), value: listing.price_per_hour || listing.price || 0, suffix: `/ ${t("units.hour")}` };
         // 5 activities
         const p = listing.act_pricings?.[0]?.price || listing.price_per_person || listing.price || 0;

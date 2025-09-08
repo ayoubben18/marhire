@@ -65,7 +65,7 @@ const SearchItem = ({ item, type }) => {
     const generatePriceParts = () => {
         const id = parseInt(item.category_id || (type === 'car' ? 2 : type === 'private' ? 3 : type === 'boat' ? 4 : 5));
         if (id === 2) return { prefix: t('common.from'), value: item.price_per_day || item.price || 0, suffix: `/ ${t('units.day')}` };
-        if (id === 3) return { prefix: t('common.from'), value: (item.pricings?.[0]?.airport_one) || item.price || 0, suffix: `/ ${t('units.day')}` };
+        if (id === 3) return { prefix: t('common.from'), value: (item.pricings?.[0]?.airport_one) || item.price || 0, suffix: `/ ${t('units.trip')}` };
         if (id === 4) return { prefix: t('common.from'), value: item.price_per_hour || item.price || 0, suffix: `/ ${t('units.hour')}` };
         const p = item.act_pricings?.[0]?.price || item.price_per_person || item.price || 0;
         return { prefix: t('common.from'), value: p, suffix: `/ ${t('units.person')}` };

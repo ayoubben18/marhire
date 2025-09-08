@@ -37,16 +37,14 @@ const socialLinks = [
 ];
 
 const paymentIcons = [
-    {name:'Union', path:'https://marhire.bytech.ma/images/payments/unionpay.png'},
-    {name:'MasterCard', path:'https://marhire.bytech.ma/images/payments/mastercard.png'},
-    {name:'Visa', path:'https://marhire.bytech.ma/images/payments/visa.png'},
-    {name:'Amex', path:'https://marhire.bytech.ma/images/payments/amex.png'},
-    {name:'JCB', path:'https://marhire.bytech.ma/images/payments/jcb.png'},
-    {name:'Diners', path:'https://marhire.bytech.ma/images/payments/diners.png'},
-    {name:'Discover', path:'https://marhire.bytech.ma/images/payments/discover.png'},
-    {name:'Apple Pay', path:'https://marhire.bytech.ma/images/payments/applepay.png'},
-    {name:'Paypal', path:'https://marhire.bytech.ma/images/payments/paypal.png'},
-    {name:'CMI', path:'https://marhire.bytech.ma/images/payments/cmi.png'},
+    {name:'UnionPay', path:'/images/pay/unionpay.png'},
+    {name:'MasterCard', path:'/images/pay/mastercard.png'},
+    {name:'Visa', path:'/images/pay/visa.png'},
+    {name:'Amex', path:'/images/pay/amex.png'},
+    {name:'Diners', path:'/images/pay/diners.png'},
+    {name:'Apple Pay', path:'/images/pay/applepay.png'},
+    {name:'Paypal', path:'/images/pay/paypal.png'},
+    {name:'CMI', path:'/images/pay/cmi.png'},
 ];
 
 const FooterSection = ({ title, children }) => {

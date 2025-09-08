@@ -138,6 +138,9 @@
       @if(isset($invoiceData['client_country']) && $invoiceData['client_country'])
       <strong>País:</strong> {{ $invoiceData['client_country'] }}<br />
       @endif
+      @if(isset($invoiceData['client_flight_number']) && $invoiceData['client_flight_number'])
+      <strong>Número de Vuelo:</strong> {{ $invoiceData['client_flight_number'] }}<br />
+      @endif
       @if(isset($invoiceData['client_note']) && $invoiceData['client_note'] && $invoiceData['client_note'] !== 'N/A')
       <strong>Nota:</strong> {{ $invoiceData['client_note'] }}<br />
       @endif

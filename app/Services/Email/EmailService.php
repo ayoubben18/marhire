@@ -437,6 +437,23 @@ class EmailService implements EmailServiceInterface
             } else {
                 $dropoffLocation = $pickupLocation;
             }
+        } elseif ($booking->category_id == 3) { // Private Driver
+            // Pickup city from city_a_id
+            if ($booking->city_a_id) {
+                $pickupCity = \App\Models\City::find($booking->city_a_id);
+                $pickupLocation = $pickupCity ? $pickupCity->city_name : 'N/A';
+            } else {
+                $pickupLocation = $booking->listing && $booking->listing->city ? $booking->listing->city->city_name : 'N/A';
+            }
+            
+            // Dropoff city from city_b_id
+            if ($booking->city_b_id) {
+                $dropoffCity = \App\Models\City::find($booking->city_b_id);
+                $dropoffLocation = $dropoffCity ? $dropoffCity->city_name : $pickupLocation;
+            } else {
+                // For airport transfers, dropoff might be same as pickup
+                $dropoffLocation = $pickupLocation;
+            }
         } elseif ($booking->listing && $booking->listing->city) {
             $pickupLocation = $booking->listing->city->city_name ?? 'N/A';
             $dropoffLocation = $pickupLocation;
@@ -499,6 +516,7 @@ class EmailService implements EmailServiceInterface
             'client_dob' => $clientDob,
             'client_country' => $booking->country ?? $booking->country_of_residence ?? null,
             'client_note' => $booking->notes ?? $booking->additional_notes ?? null,
+            'client_flight_number' => $booking->flight_number ?? null,
             
             // Booking details
             'service_name' => $booking->listing->title ?? 'N/A',
@@ -518,7 +536,7 @@ class EmailService implements EmailServiceInterface
             // Activity specific
             'activity_date' => $booking->prefered_date ? \Carbon\Carbon::parse($booking->prefered_date)->format('Y-m-d') : null,
             'activity_time' => $booking->pickup_time ?? '10:00',
-            'activity_duration' => $booking->duration ?? $rentalDuration,
+            'activity_duration' => $this->getActivityDurationFromPricingOption($booking) ?? ($booking->duration ?? $rentalDuration),
             'activity_type' => $booking->private_or_group ?? null,
             'number_of_people' => $booking->number_of_people ?? null,
             
@@ -545,11 +563,48 @@ class EmailService implements EmailServiceInterface
             'discount_label' => $booking->discount_or_extra < 0 ? 'Discount' : 'Extra Charge',
             'grand_total' => $booking->booking_price + $booking->total_addons + $booking->discount_or_extra,
             
+            // Additional fields for enhanced invoices
+            'service_types' => $booking->service_types ?? null,
+            'road_types' => $booking->road_types ?? null,
+            'pickup_address' => $booking->pickup_address ?? null,
+            'dropoff_address' => $booking->dropoff_address ?? null,
+            'time_preference' => $booking->time_preference ?? null,
+            
             // Company info
             'company_email' => 'info@marhire.com',
             'company_phone' => '+212 660 745 055',
         ];
         
         return $data;
+    }
+
+    /**
+     * Get activity duration from pricing option based on pricing_option_id
+     */
+    private function getActivityDurationFromPricingOption($booking)
+    {
+        // Only for category 5 (activities) and if pricing_option_id exists
+        if ($booking->category_id != 5 || !$booking->pricing_option_id) {
+            return null;
+        }
+
+        try {
+            // Find the pricing option from the listing's actPricings
+            $pricingOption = \App\Models\ListingPricing::where('id', $booking->pricing_option_id)
+                ->where('listing_id', $booking->listing_id)
+                ->first();
+
+            if ($pricingOption && $pricingOption->element) {
+                return $pricingOption->element;
+            }
+        } catch (\Exception $e) {
+            \Log::warning('Failed to get activity duration from pricing option', [
+                'booking_id' => $booking->id,
+                'pricing_option_id' => $booking->pricing_option_id,
+                'error' => $e->getMessage()
+            ]);
+        }
+
+        return null;
     }
 }

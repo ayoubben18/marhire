@@ -23,32 +23,32 @@ const Home = () => {
         {
             title: t("home.why.features.localExperts.title"),
             desc: t("home.why.features.localExperts.desc"),
-            icon: "https://marhire.bytech.ma/images/icons/icon2.webp",
+            icon: <FaMapMarkedAlt />,
         },
         {
             title: t("home.why.features.transparentPricing.title"),
             desc: t("home.why.features.transparentPricing.desc"),
-            icon: "https://marhire.bytech.ma/images/icons/icon1.svg",
+            icon: <BsCashStack />,
         },
         {
             title: t("home.why.features.humanSupport.title"),
             desc: t("home.why.features.humanSupport.desc"),
-            icon: "https://marhire.bytech.ma/images/icons/icon5.webp",
+            icon: <FaHeadset />,
         },
         {
             title: t("home.why.features.airportPickup.title"),
             desc: t("home.why.features.airportPickup.desc"),
-            icon: "https://marhire.bytech.ma/images/icons/icon6.svg",
+            icon: <FaShuttleVan />,
         },
         {
             title: t("home.why.features.handpicked.title"),
             desc: t("home.why.features.handpicked.desc"),
-            icon: "https://marhire.bytech.ma/images/icons/icon7.webp",
+            icon: <FaStarHalfAlt />,
         },
         {
             title: t("home.why.features.bookNowPayLater.title"),
             desc: t("home.why.features.bookNowPayLater.desc"),
-            icon: "https://marhire.bytech.ma/images/icons/icon3.webp",
+            icon: <FaCalendarCheck />,
         },
     ];
     const isMobile = useMediaQuery({ maxWidth: 900 });

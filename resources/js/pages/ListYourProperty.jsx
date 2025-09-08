@@ -57,7 +57,7 @@ const ListYourProperty = () => {
 
            
             {/* Application Form Section */}
-            <RequirementsDocuments />
+            <RequirementsDocuments imageSrc="/images/partner-us/partner-us.jpg" imageAlt={t('joinUs.requirementsDocs.title', 'Requirements & Documents')} />
             <FairCommissions />
             <PartnerFAQ />
             <section className="form-section" id="partnership-form">

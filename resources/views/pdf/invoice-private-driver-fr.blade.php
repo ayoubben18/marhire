@@ -138,6 +138,9 @@
       @if(isset($invoiceData['client_country']) && $invoiceData['client_country'])
       <strong>Pays:</strong> {{ $invoiceData['client_country'] }}<br />
       @endif
+      @if(isset($invoiceData['client_flight_number']) && $invoiceData['client_flight_number'])
+      <strong>Numéro de Vol:</strong> {{ $invoiceData['client_flight_number'] }}<br />
+      @endif
       @if(isset($invoiceData['client_note']) && $invoiceData['client_note'] && $invoiceData['client_note'] !== 'N/A')
       <strong>Note:</strong> {{ $invoiceData['client_note'] }}<br />
       @endif
@@ -146,12 +149,21 @@
     <div class="section-title">Détails de la Réservation</div>
     <p>
       <strong>Service:</strong> {{ $invoiceData['service_name'] }}<br />
-      @if(isset($invoiceData['service_duration']))
-      <strong>Durée:</strong> {{ $invoiceData['service_duration'] }}<br />
+      @if(isset($invoiceData['service_types']) && $invoiceData['service_types'])
+      <strong>Type de Service:</strong> {{ str_replace(['airport_transfer', 'intercity'], ['Transfert Aéroport', 'Intercité'], $invoiceData['service_types']) }}<br />
+      @endif
+      @if(isset($invoiceData['road_types']) && $invoiceData['road_types'])
+      <strong>Type de Route:</strong> {{ str_replace(['one_way', 'road_trip'], ['Aller Simple', 'Aller-Retour'], $invoiceData['road_types']) }}<br />
       @endif
       <strong>Prise en charge:</strong> {{ $invoiceData['pickup_location'] ?? 'N/A' }} – {{ $invoiceData['pickup_date'] ?? $invoiceData['check_in'] }} à {{ $invoiceData['pickup_time'] ?? '09:00' }}<br />
+      @if(isset($invoiceData['pickup_address']) && $invoiceData['pickup_address'])
+      <strong>Adresse de Prise en Charge:</strong> {{ $invoiceData['pickup_address'] }}<br />
+      @endif
       @if(isset($invoiceData['dropoff_location']))
-      <strong>Dépose:</strong> {{ $invoiceData['dropoff_location'] }}
+      <strong>Dépose:</strong> {{ $invoiceData['dropoff_location'] }}<br />
+      @endif
+      @if(isset($invoiceData['dropoff_address']) && $invoiceData['dropoff_address'])
+      <strong>Adresse de Dépose:</strong> {{ $invoiceData['dropoff_address'] }}
       @endif
     </p>
 
@@ -164,7 +176,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr><td>Location journée complète{{ isset($invoiceData['service_duration']) && isset($invoiceData['hourly_rate']) ? ' (' . $invoiceData['service_duration'] . ' × €' . number_format($invoiceData['hourly_rate'], 0) . ')' : '' }}</td><td style="text-align: right;">€{{ number_format($invoiceData['booking_price'], 2) }}</td></tr>
+        <tr><td>Location voyage complète</td><td style="text-align: right;">€{{ number_format($invoiceData['booking_price'], 2) }}</td></tr>
         @if(!empty($invoiceData['addons']))
           @foreach($invoiceData['addons'] as $addon)
           <tr><td>Option: {{ $addon['name'] }}</td><td style="text-align: right;">€{{ number_format($addon['price'], 2) }}</td></tr>

@@ -135,8 +135,14 @@
         <strong>Phone:</strong> {{ $invoiceData['client_phone'] }}
       </div>
       <div>
+        @if(isset($invoiceData['client_dob']) && $invoiceData['client_dob'])
+        <strong>Date of Birth:</strong> {{ $invoiceData['client_dob'] }}<br />
+        @endif
         @if(isset($invoiceData['client_country']) && $invoiceData['client_country'])
         <strong>Country:</strong> {{ $invoiceData['client_country'] }}<br />
+        @endif
+        @if(isset($invoiceData['client_flight_number']) && $invoiceData['client_flight_number'])
+        <strong>Flight Number:</strong> {{ $invoiceData['client_flight_number'] }}<br />
         @endif
         @if(isset($invoiceData['client_note']) && $invoiceData['client_note'] && $invoiceData['client_note'] !== 'N/A')
         <strong>Note:</strong> {{ $invoiceData['client_note'] }}
@@ -153,7 +159,7 @@
       @if(isset($invoiceData['activity_type']))
       | <strong>Type:</strong> {{ $invoiceData['activity_type'] }}
       @endif<br />
-      <strong>Date:</strong> {{ $invoiceData['activity_date'] ?? $invoiceData['check_in'] }} at {{ $invoiceData['activity_time'] ?? '10:00' }}
+      <strong>Date:</strong> {{ $invoiceData['activity_date'] ?? $invoiceData['check_in'] }}@if(isset($invoiceData['time_preference']) && $invoiceData['time_preference']) | <strong>Time Preference:</strong> {{ ucfirst($invoiceData['time_preference']) }}@endif
       @if(isset($invoiceData['number_of_people']) && $invoiceData['number_of_people'] > 0)
       | <strong>People:</strong> {{ $invoiceData['number_of_people'] }}
       @endif

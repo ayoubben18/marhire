@@ -1340,14 +1340,16 @@ class ListingController extends Controller
         $page = $request->input('page', 1);
         $sortBy = $request->input('sortBy', 'Default');
 
+        // Apply sorting based on sortBy parameter
         if ($sortBy == 'Price: high to low') {
-
-        } elseif ($sortBy == 'Price: low to price') {
-
+            $query = $this->applyPriceSorting($query, $request->type, 'desc');
+        } elseif ($sortBy == 'Price: low to high') { // Fixed typo: "price" -> "high"
+            $query = $this->applyPriceSorting($query, $request->type, 'asc');
         } else {
-
+            $query->inRandomOrder(); // Default: random order for variety
         }
-        $listings = $query->latest()
+        
+        $listings = $query
             ->withCurrentTranslations()
             ->with(['galleries', 'city', 'provider', 'serviceTypeObj', 'activityTypeObj', 'pricings', 'actPricings'])
             ->skip($perPage * ($page - 1))
@@ -1463,6 +1465,47 @@ class ListingController extends Controller
                 return 5;
             default:
                 return -1;
+        }
+    }
+
+    /**
+     * Apply price sorting based on category type
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $type Category type (car, private, boat, activity)
+     * @param string $direction Sort direction (asc, desc)
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private function applyPriceSorting($query, $type, $direction = 'asc')
+    {
+        $categoryId = $this->getCategoryIDFromType($type);
+        
+        switch ($categoryId) {
+            case 2: // Cars - sort by price_per_day
+                return $query->orderBy('price_per_day', $direction);
+                
+            case 3: // Private Drivers - sort by minimum pricing from pricings table
+                return $query->leftJoin('private_listing_pricings as plp', function($join) {
+                    $join->on('listings.id', '=', 'plp.listing_id');
+                })
+                ->selectRaw('listings.*, MIN(plp.price) as min_price')
+                ->groupBy('listings.id')
+                ->orderBy('min_price', $direction);
+                
+            case 4: // Boats - sort by price_per_hour (primary) or price_per_half_day as fallback
+                return $query->orderByRaw("COALESCE(price_per_hour, price_per_half_day, price_per_day, 0) $direction");
+                
+            case 5: // Activities - sort by minimum pricing from listing_pricings table
+                return $query->leftJoin('listing_pricings as lp', function($join) {
+                    $join->on('listings.id', '=', 'lp.listing_id');
+                })
+                ->selectRaw('listings.*, MIN(CAST(lp.price AS DECIMAL(10,2))) as min_activity_price')
+                ->groupBy('listings.id')
+                ->orderBy('min_activity_price', $direction);
+                
+            default:
+                // Fallback to random sorting for unknown categories
+                return $query->inRandomOrder();
         }
     }
 

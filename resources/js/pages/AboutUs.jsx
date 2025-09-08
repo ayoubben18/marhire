@@ -51,7 +51,7 @@ const AboutUs = () => {
     return (
         <div className="page-aboutus">
             <HeroSectionAbout />
-            <StoryVision imageSrc={null} />
+            <StoryVision imageSrc="/images/about-us/our-story.jpg" imageAlt={t('aboutPage.story.title', 'Our Story & Vision')} />
             <JourneyTimeline />
             <WhyChooseUs
                 title={t('aboutPage.why.title', 'Why Choose MarHire?')}

@@ -33,7 +33,7 @@
     </script>
 
     <!-- Favicon -->
-    <link rel="icon"  href="{{ asset('images/favicon.png') }}"/>
+    <link rel="icon"  href="{{ asset('images/favicon.ico') }}"/>
     
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">

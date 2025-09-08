@@ -77,8 +77,8 @@ class FilteredListingsController extends Controller
                 }
             }
 
-            // Order by created date
-            $query->orderBy('created_at', 'desc');
+            // Order randomly for variety
+            $query->inRandomOrder();
 
             // Include translations and relations
             $query->with([

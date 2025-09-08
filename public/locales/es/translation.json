@@ -318,9 +318,11 @@
         "day": "día",
         "hour": "hora",
         "person": "persona",
+        "trip": "viaje",
         "perDay": "Por día",
         "perHour": "Por hora",
         "perPerson": "Por persona",
+        "perTrip": "Por viaje",
         "week": "semana",
         "month": "mes",
         "halfDay": "medio día"

@@ -332,7 +332,7 @@ const UnifiedListings = (props) => {
     const generatePriceParts = (listing) => {
         const id = parseInt(listing.category_id);
         if (id === 2) return { prefix: t('common.from'), value: listing.price_per_day || listing.price || 0, suffix: `/ ${t('units.day')}` };
-        if (id === 3) return { prefix: t('common.from'), value: (listing.pricings?.[0]?.airport_one) || listing.price || 0, suffix: `/ ${t('units.day')}` };
+        if (id === 3) return { prefix: t('common.from'), value: (listing.pricings?.[0]?.airport_one) || listing.price || 0, suffix: `/ ${t('units.trip')}` };
         if (id === 4) return { prefix: t('common.from'), value: listing.price_per_hour || listing.price || 0, suffix: `/ ${t('units.hour')}` };
         const p = listing.act_pricings?.[0]?.price || listing.price_per_person || listing.price || 0;
         return { prefix: t('common.from'), value: p, suffix: `/ ${t('units.person')}` };
