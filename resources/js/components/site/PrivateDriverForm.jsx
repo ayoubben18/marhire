@@ -34,6 +34,7 @@ function Modal({ open, onClose, children }) {
 }
 
 export default function PrivateDriverForm({ defaultCity, defaultCityId }) {
+    const { t } = useTranslation();
     const [pickupLocation, setPickupLocation] = useState("");
     const [dropoffLocation, setDropoffLocation] = useState(t('privateDriver.sameAsPickup'));
     const [pickupDate, setPickupDate] = useState("");
@@ -45,7 +46,6 @@ export default function PrivateDriverForm({ defaultCity, defaultCityId }) {
     const [showPickupTimeModal, setShowPickupTimeModal] = useState(false);
     const [showDropOffModal, setShowDropOffModal] = useState(false);
     const isMobile = useMediaQuery({ maxWidth: 900 });
-    const { t } = useTranslation();
 
     const formatDate = (dateString) => {
         if (!dateString) return t('privateDriver.placeholders.selectDate');
