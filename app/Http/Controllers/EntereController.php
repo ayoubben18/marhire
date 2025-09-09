@@ -121,10 +121,21 @@ class EntereController extends Controller
         if (!in_array($category, $categories) || !$this->checkSubCategoryExists($category, $subcategory))
             return abort(404);
 
+        $page = $this->SEOservice->getPage('category/' . $category . '/subcategory/' . $subcategory);
+
+        // Process token replacement on the server side
+        if ($page && $page->meta_title) {
+            $page->processed_meta_title = str_replace(['{{category}}', '{{subcategory}}', '{{city}}'], [$category ?? '', $subcategory ?? '', ''], $page->meta_title);
+        }
+        
+        if ($page && $page->meta_description) {
+            $page->processed_meta_description = str_replace(['{{category}}', '{{subcategory}}', '{{city}}'], [$category ?? '', $subcategory ?? '', ''], $page->meta_description);
+        }
 
         return view('site.subcategory')->with([
             'category' => $category,
-            'subcategory' => $subcategory
+            'subcategory' => $subcategory,
+            'page' => $page
         ]);
     }
 
@@ -145,6 +156,15 @@ class EntereController extends Controller
             return abort(404);
 
         $page = $this->SEOservice->getPage('category/' . $category . '/subcategory/' . $subcategory . '/' . $city);
+
+        // Process token replacement on the server side
+        if ($page && $page->meta_title) {
+            $page->processed_meta_title = str_replace(['{{category}}', '{{subcategory}}', '{{city}}'], [$category ?? '', $subcategory ?? '', $city ?? ''], $page->meta_title);
+        }
+        
+        if ($page && $page->meta_description) {
+            $page->processed_meta_description = str_replace(['{{category}}', '{{subcategory}}', '{{city}}'], [$category ?? '', $subcategory ?? '', $city ?? ''], $page->meta_description);
+        }
 
         return view('site.subcategory')->with([
             'category' => $category,
@@ -272,22 +292,26 @@ class EntereController extends Controller
 
     public function carsearch(Request $request)
     {
-        return view('site.search')->with('type', 'car');
+        $page = $this->SEOservice->getPage('car-search');
+        return view('site.search')->with(['type' => 'car', 'page' => $page]);
     }
 
     public function privatesearch(Request $request)
     {
-        return view('site.search')->with('type', 'private');
+        $page = $this->SEOservice->getPage('private-search');
+        return view('site.search')->with(['type' => 'private', 'page' => $page]);
     }
 
     public function boatsearch(Request $request)
     {
-        return view('site.search')->with('type', 'boat');
+        $page = $this->SEOservice->getPage('boat-search');
+        return view('site.search')->with(['type' => 'boat', 'page' => $page]);
     }
 
     public function thingstodosearch(Request $request)
     {
-        return view('site.search')->with('type', 'activity');
+        $page = $this->SEOservice->getPage('thingstodo-search');
+        return view('site.search')->with(['type' => 'activity', 'page' => $page]);
     }
 
     public function agency(Request $request, $locale = null, string $agency_name = null)
