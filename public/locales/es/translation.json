@@ -94,7 +94,7 @@
         "sortBy": "Ordenar por",
         "filterBy": "Filtrar por",
         "sortOptions": {
-            "default": "Predeterminado",
+            "default": "Recomendado",
             "priceLowHigh": "Precio: de menor a mayor",
             "priceHighLow": "Precio: de mayor a menor"
         }
@@ -492,7 +492,20 @@
         "am": "AM",
         "pm": "PM"
     },
+    "hero": {
+        "subcategory": {
+            "carRental": "Alquiler de {{subcategoryName}} en {{place}}",
+            "privateDriver": "{{subcategoryName}} con Conductor Privado en {{place}}",
+            "boatRental": "Alquiler de {{subcategoryName}} en {{place}}",
+            "activity": "{{subcategoryName}} en {{place}}"
+        }
+    },
     "listing": {
+        "badges": {
+            "freeCancellation": "Cancelación Gratuita",
+            "noDeposit": "Sin Depósito",
+            "verifiedPartner": "Socio Verificado"
+        },
         "cancellation": {
             "title": "Cancelación Gratuita",
             "description": "Asegure este precio hoy, cancele gratis hasta 6 horas antes de la recogida para obtener un reembolso del 100%."
@@ -642,8 +655,104 @@
     "categories": {
         "carRental": "Alquiler de Coche",
         "privateDriver": "Conductor Privado",
-        "boatRental": "Alquiler de Barco",
-        "activity": "Actividad"
+        "boatRental": "Alquiler de Barco", 
+        "activity": "Actividad",
+        "carRentalDetailed": {
+            "heroTitle": "Alquiler de Coches en {{city}}",
+            "heroTitleGeneral": "Alquiler de Coches en Marruecos",
+            "heroSubtitle": "Experimenta la libertad de explorar Marruecos a tu ritmo. Alquila coches de calidad con kilometraje ilimitado, sin depósito y recogida en el aeropuerto para aventuras sin complicaciones.",
+            "exploreTitle": "Explorar por Tipo de Coche",
+            "faq": {
+                "whyChoose": {
+                    "q": "¿Por qué elegir MarHire para alquiler de coches?",
+                    "a": "MarHire se asocia con agencias locales de confianza para ofrecer precios transparentes, sin tarifas ocultas, kilometraje ilimitado y recogida gratuita en el aeropuerto."
+                },
+                "requirements": {
+                    "q": "¿Qué necesito para alquilar un coche?",
+                    "a": "Necesitas una licencia de conducir válida (internacional para visitantes), ser mayor de 21 años y una tarjeta de crédito para la reserva."
+                },
+                "insurance": {
+                    "q": "¿Está incluido el seguro?",
+                    "a": "Sí, todos nuestros alquileres incluyen seguro básico. También está disponible cobertura adicional para mayor tranquilidad."
+                },
+                "fuel": {
+                    "q": "¿Qué pasa con el combustible?",
+                    "a": "Los coches se entregan con el tanque lleno y deben devolverse con el tanque lleno. Las estaciones de combustible están ampliamente disponibles."
+                }
+            }
+        },
+        "privateDriverDetailed": {
+            "heroTitle": "Conductores Privados en {{city}}",
+            "heroTitleGeneral": "Conductores Privados en Marruecos",
+            "heroSubtitle": "Viaja con comodidad, seguridad y estilo. Reserva un conductor privado profesional y multilingüe para tu traslado al aeropuerto de Marruecos, tours por la ciudad, viajes de negocios o excursiones de varios días con precios fijos y todo incluido.",
+            "exploreTitle": "Explorar por Tipo de Servicio",
+            "faq": {
+                "whyChoose": {
+                    "q": "¿Por qué elegir un conductor privado?",
+                    "a": "Nuestros conductores conocen las mejores rutas, hablan varios idiomas y te brindan comentarios locales mientras conduces con seguridad."
+                },
+                "languages": {
+                    "q": "¿Qué idiomas hablan los conductores?",
+                    "a": "La mayoría de nuestros conductores hablan árabe, francés e inglés. Muchos también hablan español y otros idiomas."
+                },
+                "vehicles": {
+                    "q": "¿Qué tipo de vehículos usan?",
+                    "a": "Nuestra flota incluye sedanes cómodos, SUVs y minivans, todos con aire acondicionado y bien mantenidos."
+                },
+                "pricing": {
+                    "q": "¿Cómo funciona el precio?",
+                    "a": "Ofrecemos precios fijos y transparentes sin cargos ocultos. Los precios incluyen conductor, combustible y kilómetros."
+                }
+            }
+        },
+        "boatsDetailed": {
+            "heroTitle": "Alquiler de Barcos en {{city}}",
+            "heroTitleGeneral": "Alquiler de Barcos en Marruecos",
+            "heroSubtitle": "Descubre la costa de Marruecos desde el agua. Desde yates de lujo hasta cruceros al atardecer, encuentra la experiencia perfecta en barco con capitanes experimentados y seguridad garantizada.",
+            "exploreTitle": "Explorar por Tipo de Barco",
+            "faq": {
+                "whyChoose": {
+                    "q": "¿Por qué elegir MarHire para alquileres de barcos?",
+                    "a": "Nos asociamos con operadores marítimos con licencia que priorizan la seguridad, tienen embarcaciones bien mantenidas y conocen las mejores aguas locales."
+                },
+                "safety": {
+                    "q": "¿Qué medidas de seguridad están en vigor?",
+                    "a": "Todos los barcos vienen con equipos de seguridad completos, capitanes certificados y seguimiento meteorológico para garantizar viajes seguros."
+                },
+                "included": {
+                    "q": "¿Qué está incluido en el alquiler?",
+                    "a": "Los alquileres incluyen capitán, combustible, equipo de seguridad y refrescos básicos. Las comidas y actividades adicionales pueden organizarse."
+                },
+                "weather": {
+                    "q": "¿Qué pasa si el clima es malo?",
+                    "a": "Monitoreamos las condiciones meteorológicas de cerca. Los viajes pueden reprogramarse o reembolsarse completamente por razones de seguridad."
+                }
+            }
+        },
+        "activitiesDetailed": {
+            "heroTitle": "Actividades en {{city}}",
+            "heroTitleGeneral": "Actividades en Marruecos",
+            "heroSubtitle": "Sumérgete en la rica cultura y aventuras de Marruecos. Desde paseos en quad por el desierto hasta tours de surf y experiencias en camello, descubre auténticas aventuras marroquíes.",
+            "exploreTitle": "Explorar por Tipo de Actividad",
+            "faq": {
+                "whyChoose": {
+                    "q": "¿Por qué reservar actividades a través de MarHire?",
+                    "a": "Seleccionamos operadores locales experimentados que ofrecen experiencias auténticas, priorizan la seguridad y brindan conocimientos culturales genuinos."
+                },
+                "difficulty": {
+                    "q": "¿Son adecuadas las actividades para principiantes?",
+                    "a": "Ofrecemos actividades para todos los niveles, desde principiantes hasta aventureros experimentados, con orientación e instrucción adecuadas."
+                },
+                "safety": {
+                    "q": "¿Qué tan seguras son las actividades?",
+                    "a": "Todos los operadores siguen estrictos protocolos de seguridad, proporcionan equipo adecuado y tienen guías experimentados para garantizar tu seguridad."
+                },
+                "group": {
+                    "q": "¿Puedo reservar para grupos?",
+                    "a": "Absolutamente. Muchas actividades ofrecen precios para grupos y pueden personalizarse para ocasiones especiales o eventos corporativos."
+                }
+            }
+        }
     },
     "footerRec": {
         "exploreMarhire": "Explorar MarHire",
@@ -1438,6 +1547,184 @@
                     "title": "Servicios de Chófer Flexibles",
                     "desc": "Reserve por hora, para un viaje específico, o para tours de varios días a través de Marruecos."
                 }
+            }
+        }
+    },
+    "features": {
+        "cars": {
+            "fullInsurance": {
+                "title": "Seguro Completo Incluido",
+                "desc": "Todos los alquileres incluyen seguro. Actualizaciones opcionales de franquicia baja disponibles."
+            },
+            "airportPickup": {
+                "title": "Disponible en Principales Aeropuertos",
+                "desc": "Recoge tu alquiler directamente desde el aeropuerto en Marrakech, Agadir, Casablanca y más."
+            },
+            "customerSupport": {
+                "title": "Soporte al Cliente 24/7",
+                "desc": "Equipo de soporte local disponible en WhatsApp para asistirte en cualquier momento."
+            },
+            "transparentPricing": {
+                "title": "Precios Transparentes",
+                "desc": "El precio que ves es el precio que pagas. Sin sorpresas al llegar."
+            },
+            "reliableVehicles": {
+                "title": "Vehículos {{subcategoryName}} Confiables",
+                "desc": "Los modelos {{subcategoryName}} son conocidos por su confiabilidad y capacidad para manejar carreteras marroquíes."
+            },
+            "spaciousPractical": {
+                "title": "Espacioso y Práctico",
+                "desc": "Disfruta de amplio espacio para pasajeros y equipaje, perfecto para familias y viajes por carretera."
+            },
+            "extraSpaceComfort": {
+                "title": "Espacio Extra y Comodidad",
+                "desc": "Los {{subcategoryName}} ofrecen espacio superior para pasajeros y equipaje."
+            },
+            "familyTrips": {
+                "title": "Perfecto para Viajes Familiares",
+                "desc": "Ideal para familias explorando el terreno diverso de Marruecos."
+            },
+            "fuelEfficient": {
+                "title": "Opciones Eficientes en Combustible",
+                "desc": "Los {{subcategoryName}} ofrecen excelente economía de combustible para viajes de larga distancia."
+            },
+            "easyParking": {
+                "title": "Fácil de Aparcar y Maniobrar",
+                "desc": "Perfecto para navegar por las calles estrechas de las medinas marroquíes."
+            }
+        },
+        "drivers": {
+            "professional": {
+                "title": "Conductores Profesionales Licenciados",
+                "desc": "Todos nuestros conductores son profesionales licenciados con años de experiencia en Marruecos."
+            },
+            "localKnowledge": {
+                "title": "Conocimiento Local y Experiencia",
+                "desc": "Nuestros conductores conocen las mejores rutas, gemas ocultas y costumbres locales para mejorar tu viaje."
+            },
+            "flexibleScheduling": {
+                "title": "Programación Flexible",
+                "desc": "Personaliza tu itinerario con horarios de recogida flexibles y ajustes de ruta."
+            },
+            "multilingual": {
+                "title": "Servicio Multilingüe",
+                "desc": "Los conductores hablan varios idiomas incluyendo inglés, francés, árabe y bereber."
+            },
+            "spaciousSuv": {
+                "title": "Comodidad SUV Espaciosa",
+                "desc": "Viaja cómodamente con SUVs espaciosos perfectos para familias y grupos de hasta 7 personas."
+            },
+            "allTerrain": {
+                "title": "Capacidad Todo Terreno",
+                "desc": "Los SUVs manejan el terreno diverso de Marruecos desde calles de ciudad hasta carreteras de montaña con facilidad."
+            },
+            "executiveSedan": {
+                "title": "Servicio Sedán Ejecutivo",
+                "desc": "Transporte profesional en sedanes cómodos ideal para viajes de negocios y ocio."
+            },
+            "fuelEfficientTravel": {
+                "title": "Viaje Eficiente en Combustible",
+                "desc": "Los sedanes ofrecen excelente economía de combustible para viajes más largos a través de Marruecos."
+            },
+            "largeGroupTransport": {
+                "title": "Transporte de Grupos Grandes",
+                "desc": "Las furgonetas acomodan grupos grandes de hasta 15 pasajeros con amplio espacio para equipaje."
+            },
+            "perfectForTours": {
+                "title": "Perfecto para Tours",
+                "desc": "Ideal para tours grupales, reuniones familiares y necesidades de transporte corporativo."
+            }
+        },
+        "boats": {
+            "professionalCrew": {
+                "title": "Tripulación Profesional Incluida",
+                "desc": "Todos los alquileres de barcos incluyen miembros de tripulación experimentados para tu seguridad y comodidad."
+            },
+            "safetyEquipment": {
+                "title": "Equipo de Seguridad Completo",
+                "desc": "Equipo de seguridad completo incluyendo chalecos salvavidas, equipo de emergencia y botiquines de primeros auxilios."
+            },
+            "scenicRoutes": {
+                "title": "Rutas Costeras Pintorescas",
+                "desc": "Explora la hermosa costa de Marruecos con rutas guiadas a los mejores lugares."
+            },
+            "marineSupport": {
+                "title": "Soporte Marino 24/7",
+                "desc": "Asistencia marina de emergencia y soporte disponible en todo momento durante tu alquiler."
+            },
+            "luxuryYacht": {
+                "title": "Experiencia de Yate de Lujo",
+                "desc": "Disfruta de comodidad premium con yates espaciosos con amenidades modernas e interiores elegantes."
+            },
+            "perfectForGroups": {
+                "title": "Perfecto para Grupos",
+                "desc": "Los yates acomodan grupos más grandes con múltiples cabinas y áreas de entretenimiento."
+            },
+            "highSpeedAdventures": {
+                "title": "Aventuras de Alta Velocidad",
+                "desc": "Experimenta emocionantes paseos en lancha rápida perfectos para deportes acuáticos y tours costeros rápidos."
+            },
+            "perfectForDayTrips": {
+                "title": "Perfecto para Excursiones de Día",
+                "desc": "Ideal para excursiones cortas, viajes de pesca y actividades de deportes acuáticos."
+            },
+            "customizedExperience": {
+                "title": "Experiencia de Barco Personalizada",
+                "desc": "Adapta tu experiencia de alquiler de barco con rutas, duración y actividades personalizadas."
+            },
+            "flexibleItineraries": {
+                "title": "Itinerarios Flexibles",
+                "desc": "Crea tu aventura marina perfecta con horarios y destinos flexibles."
+            }
+        },
+        "activities": {
+            "expertGuides": {
+                "title": "Guías Locales Expertos",
+                "desc": "Guías profesionales con amplio conocimiento de la cultura, historia y paisajes de Marruecos."
+            },
+            "safetyFirst": {
+                "title": "Enfoque de Seguridad Primero",
+                "desc": "Todas las actividades incluyen briefings de seguridad completos y equipo de grado profesional."
+            },
+            "unforgettableMemories": {
+                "title": "Recuerdos Inolvidables",
+                "desc": "Crea recuerdos duraderos con experiencias únicas y oportunidades fotográficas impresionantes."
+            },
+            "activitySupport": {
+                "title": "Soporte de Actividad 24/7",
+                "desc": "Soporte las 24 horas para cualquier pregunta o asistencia durante tu aventura."
+            },
+            "thrillingQuad": {
+                "title": "Aventuras de Quad Emocionantes",
+                "desc": "Experimenta la emoción del quad a través de los terrenos diversos y paisajes de Marruecos."
+            },
+            "scenicDesertRoutes": {
+                "title": "Rutas Desérticas Pintorescas",
+                "desc": "Explora paisajes desérticos impresionantes y senderos de montaña con tours guiados en quad."
+            },
+            "authenticDesert": {
+                "title": "Experiencia Desértica Auténtica",
+                "desc": "Sumérgete en la magia del Sahara con acampada nocturna y cultura bereber tradicional."
+            },
+            "stunningDesertLandscapes": {
+                "title": "Paisajes Desérticos Impresionantes",
+                "desc": "Presencia amaneceres y atardeceres impresionantes sobre las dunas doradas del desierto de Marruecos."
+            },
+            "traditionalCamel": {
+                "title": "Trekking Tradicional en Camello",
+                "desc": "Experimenta Marruecos como los antiguos viajeros con auténticos paseos en camello por el desierto."
+            },
+            "desertSunsetViews": {
+                "title": "Vistas del Atardecer en el Desierto",
+                "desc": "Disfruta de vistas espectaculares del atardecer desde el lomo de camello a través de las dunas infinitas del Sahara."
+            },
+            "worldClassSurf": {
+                "title": "Spots de Surf de Clase Mundial",
+                "desc": "Surfea los breaks renombrados de la costa atlántica de Marruecos con olas perfectas durante todo el año."
+            },
+            "professionalSurfInstruction": {
+                "title": "Instrucción de Surf Profesional",
+                "desc": "Aprende de instructores certificados en playas aptas para principiantes o enfrenta breaks avanzados."
             }
         }
     }

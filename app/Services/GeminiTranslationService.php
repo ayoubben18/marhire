@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Listing;
 use App\Models\Article;
+use App\Models\TermsAndConditions;
 use Exception;
 
 class GeminiTranslationService
@@ -88,6 +89,43 @@ class GeminiTranslationService
         
         Log::info('Article translation completed', [
             'article_id' => $article->id,
+            'locales' => $targetLocales,
+            'translations_count' => count($translations)
+        ]);
+
+        return $translations;
+    }
+
+    /**
+     * Translate a term to target locales
+     *
+     * @param TermsAndConditions $term
+     * @param array $targetLocales
+     * @return array
+     * @throws Exception
+     */
+    public function translateTerm(TermsAndConditions $term, array $targetLocales = ['fr', 'es'])
+    {
+        if (!$this->apiKey) {
+            throw new Exception('Gemini API key not configured');
+        }
+
+        // Check rate limiting
+        if (!$this->checkRateLimit()) {
+            throw new Exception('Rate limit exceeded. Please try again later.');
+        }
+
+        // Build the structured prompt
+        $prompt = $this->buildTermTranslationPrompt($term, $targetLocales);
+        
+        // Make API request with retries
+        $response = $this->makeApiRequest($prompt);
+        
+        // Parse response
+        $translations = $this->parseTranslationResponse($response, $targetLocales);
+        
+        Log::info('Term translation completed', [
+            'term_id' => $term->id,
             'locales' => $targetLocales,
             'translations_count' => count($translations)
         ]);
@@ -208,6 +246,69 @@ class GeminiTranslationService
         $prompt .= "CRITICAL: For the content field containing HTML, you must preserve ALL HTML tags, attributes, and structure exactly as they appear. ";
         $prompt .= "Only translate the text content between HTML tags, never modify, remove, or alter any HTML markup. ";
         $prompt .= "Example: '<p>Hello <strong>world</strong></p>' becomes '<p>Bonjour <strong>monde</strong></p>' in French. ";
+        $prompt .= "Return ONLY a valid JSON object with the following structure (no markdown, no explanations):\n";
+        $prompt .= "{\n";
+        
+        foreach ($targetLocales as $locale) {
+            $prompt .= "  \"$locale\": {\n";
+            foreach (array_keys($translatableFields) as $field) {
+                $prompt .= "    \"$field\": \"translated text\",\n";
+            }
+            $prompt = rtrim($prompt, ",\n") . "\n";
+            $prompt .= "  },\n";
+        }
+        $prompt = rtrim($prompt, ",\n") . "\n";
+        $prompt .= "}\n\n";
+        
+        $prompt .= "Content to translate:\n";
+        $prompt .= json_encode($translatableFields, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+        return $prompt;
+    }
+
+    /**
+     * Build structured prompt for term translation
+     *
+     * @param TermsAndConditions $term
+     * @param array $targetLocales
+     * @return string
+     */
+    protected function buildTermTranslationPrompt(TermsAndConditions $term, array $targetLocales)
+    {
+        $translatableFields = [
+            'title' => $term->title,
+            'content' => $term->content,
+        ];
+
+        // Remove null/empty fields
+        $translatableFields = array_filter($translatableFields, function($value) {
+            return !is_null($value) && $value !== '';
+        });
+
+        $localeNames = [
+            'fr' => 'French',
+            'es' => 'Spanish',
+            'ar' => 'Arabic',
+            'de' => 'German',
+            'it' => 'Italian',
+            'pt' => 'Portuguese',
+            'ru' => 'Russian',
+            'zh' => 'Chinese',
+            'ja' => 'Japanese'
+        ];
+
+        $targetLanguages = array_map(function($locale) use ($localeNames) {
+            return $localeNames[$locale] ?? $locale;
+        }, $targetLocales);
+
+        $prompt = "You are a professional translator specializing in legal documents and terms of service. ";
+        $prompt .= "Translate the following terms and conditions content from English to " . implode(' and ', $targetLanguages) . ". ";
+        $prompt .= "Maintain a formal, professional tone appropriate for legal documentation. ";
+        $prompt .= "Preserve any specific legal terms, company names, and jurisdictional references as appropriate. ";
+        $prompt .= "Ensure the translation maintains the legal intent and meaning of the original text. ";
+        $prompt .= "CRITICAL: For the content field containing HTML, you must preserve ALL HTML tags, attributes, and structure exactly as they appear. ";
+        $prompt .= "Only translate the text content between HTML tags, never modify, remove, or alter any HTML markup. ";
+        $prompt .= "Example: '<p>Terms of <strong>Service</strong></p>' becomes '<p>Conditions de <strong>Service</strong></p>' in French. ";
         $prompt .= "Return ONLY a valid JSON object with the following structure (no markdown, no explanations):\n";
         $prompt .= "{\n";
         

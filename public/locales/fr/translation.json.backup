@@ -1745,5 +1745,154 @@
                 "desc": "Apprenez avec des instructeurs certifiés sur des plages adaptées aux débutants ou affrontez des breaks avancés."
             }
         }
+    },
+    "categories": {
+        "carRental": {
+            "heroTitle": "Location de Voiture à {{place}}",
+            "heroSubtitle": "Des voitures de ville agiles pour naviguer dans les médinas aux SUV spacieux pour votre road trip familial, trouvez le véhicule parfait. Comparez les offres d'agences locales de confiance pour une location de voiture pas chère avec tarification transparente et réservation instantanée.",
+            "exploreTitle": "Louer une Voiture au Maroc par Ville",
+            "exploreSubtitle": "Choisissez parmi des centaines de voitures dans les destinations les plus populaires du Maroc.",
+            "tabsTitle": "Parcourir la Location de Voiture à {{city}} par Type de Véhicule",
+            "tabsTitleGeneral": "Location de Voiture Économique, Luxe & SUV Maroc",
+            "tabsSubtitle": "Louez le Bon Véhicule à {{city}} - SUV, Luxe, MPV & Plus",
+            "tabsSubtitleGeneral": "Trouvez un véhicule qui correspond à votre style et budget",
+            "cityOnlyTitle": "Meilleures Offres de Location de Voiture à {{city}} avec MarHire",
+            "cityOnlySubtitle": "Annonces de Location de Voiture en Vedette à {{city}} - Comparez les Prix & Caractéristiques",
+            "cityBrowseTitle": "Location de Voiture par Ville",
+            "brandBrowseTitle": "Parcourir la Location de Voiture par Marque",
+            "faqTitle": "Questions Fréquemment Posées - Location de Voiture à {{city}}",
+            "faq": {
+                "airportPickup": {
+                    "question": "Proposez-vous une prise en charge de voiture de location à l'aéroport de {{city}} ?",
+                    "answer": "Oui, nous offrons une livraison gratuite à et depuis l'Aéroport de {{city}}, hôtels, ou toute adresse dans la ville. Vous pouvez sélectionner votre lieu de prise en charge et de retour préféré lors du processus de réservation."
+                },
+                "noDeposit": {
+                    "question": "Puis-je louer une voiture à {{city}} sans dépôt ?",
+                    "answer": "Absolument. Beaucoup de nos modèles économiques et compacts viennent avec une politique \"Sans Dépôt\", ce qui signifie que vous pouvez louer une voiture à {{city}} sans paiement de caution initial. Les exigences de dépôt, le cas échéant, sont clairement indiquées sur chaque annonce."
+                },
+                "insurance": {
+                    "question": "L'assurance complète est-elle incluse dans le prix de location de voiture ?",
+                    "answer": "Oui, toutes les locations viennent avec une couverture d'assurance standard incluse par défaut. Vous pouvez également choisir de mettre à niveau vers une assurance à faible franchise lors du checkout pour réduire votre responsabilité financière en cas d'accident."
+                },
+                "documents": {
+                    "question": "Quels documents ai-je besoin pour louer une voiture à {{city}} ?",
+                    "answer": "Pour louer une voiture au Maroc, vous aurez besoin de :\\n• Un permis de conduire valide (original)\\n• Votre passeport\\n• Un permis de conduire international (requis si votre permis n'est pas en français, arabe, ou anglais)\\n• Une carte de crédit/débit (si un dépôt est requis ou vous pouvez le payer en espèces)"
+                },
+                "minimumAge": {
+                    "question": "Quel est l'âge minimum pour louer une voiture à {{city}} ?",
+                    "answer": "L'âge minimum de location est de 26 ans.\\nLes conducteurs entre 21 et 25 ans peuvent toujours louer une voiture mais devront payer des frais de jeune conducteur. Les frais supplémentaires seront clairement affichés au moment de la réservation."
+                },
+                "cancellation": {
+                    "question": "Puis-je annuler ou modifier ma réservation de voiture de location ?",
+                    "answer": "Oui, vous pouvez annuler votre réservation gratuitement jusqu'à 48 heures avant l'heure de prise en charge prévue. Si vous annulez dans les 48 heures, des frais d'annulation peuvent s'appliquer. Les modifications de dates, type de voiture, ou lieux sont soumises à disponibilité."
+                },
+                "mileage": {
+                    "question": "Y a-t-il des restrictions de kilométrage sur les locations de voiture à {{city}} ?",
+                    "answer": "La plupart de nos voitures viennent avec des kilomètres illimités, vous permettant d'explorer le Maroc librement. Toute exception (par exemple, kilométrage plafonné sur certaines voitures de luxe) sera clairement affichée dans les détails de l'annonce."
+                },
+                "extras": {
+                    "question": "Quels extras puis-je ajouter à ma réservation ?",
+                    "answer": "Vous pouvez personnaliser votre location avec :\\n• Sièges pour enfants\\n• Rehausseurs\\n• Conducteurs supplémentaires\\n• Porte-planches de surf (pour MPV/SUV)\\nChaque extra vient avec un tarif fixe et peut être sélectionné lors du checkout."
+                },
+                "support": {
+                    "question": "Comment puis-je contacter le support si j'ai besoin d'aide avant ou pendant ma location ?",
+                    "answer": "Notre équipe de support locale est disponible 24/7 sur WhatsApp pour assister avec toute question ou problème. Les détails de contact sont inclus dans votre email de confirmation."
+                }
+            }
+        },
+        "boats": {
+            "heroTitle": "Location de Bateau à {{place}}",
+            "heroSubtitle": "Des balades palpitantes en jet ski à Agadir aux charters de yachts de luxe à Tanger, découvrez la magnifique côte et les lacs du Maroc. Réservez un voyage de pêche inoubliable, une croisière au coucher du soleil, ou une excursion en bateau privé.",
+            "exploreTitle": "Meilleures Locations de Bateau au Maroc par Ville",
+            "exploreSubtitle": "Trouvez des bateaux disponibles dans les principales villes côtières du Maroc.",
+            "tabsTitle": "Parcourir les Locations de Bateau à {{city}} par Type",
+            "tabsTitleGeneral": "Locations de Bateau, Yacht & Voyage de Pêche par Type",
+            "tabsSubtitle": "Choisissez l'Expérience Parfaite - Yachts, Bateaux de Pêche & Plus",
+            "tabsSubtitleGeneral": "Choisissez votre expérience parfaite sur l'eau.",
+            "cityOnlyTitle": "Meilleures Offres de Location de Bateau à {{city}} - Mis à Jour Quotidiennement",
+            "cityOnlySubtitle": "Annonces de Bateau en Vedette à {{city}} - Comparez les Prix & Services",
+            "faqTitle": "Questions Fréquemment Posées - Location de Bateau à {{city}}",
+            "faq": {
+                "captain": {
+                    "question": "Le capitaine est-il inclus dans la location de bateau ?",
+                    "answer": "Oui. Tous les bateaux listés sur MarHire à {{city}} incluent un capitaine/skipper licencié pour opérer le bateau. Vous n'avez pas besoin d'un permis bateau."
+                },
+                "included": {
+                    "question": "Qu'est-ce qui est inclus dans le prix ?",
+                    "answer": "La plupart des locations de bateau incluent :\\n• Skipper\\n• Carburant\\n• Gilets de sauvetage\\n• Collations légères & boissons non alcoolisées (sur certains bateaux)\\nVérifiez chaque annonce pour les inclusions exactes."
+                },
+                "cancellation": {
+                    "question": "Puis-je annuler ou modifier ma location de bateau à {{city}} ?",
+                    "answer": "Oui, vous pouvez annuler gratuitement jusqu'à 48 heures avant l'heure de location. Dans les 48h, des frais d'annulation peuvent s'appliquer."
+                },
+                "capacity": {
+                    "question": "Combien de personnes puis-je amener sur le bateau ?",
+                    "answer": "Chaque bateau a une capacité clairement listée. Vous pouvez filtrer par :\\n• 2-4 personnes (romantique ou petits groupes)\\n• 6-8 personnes (voyages familiaux)\\n• 10-15+ personnes (tours de groupe ou fêtes)"
+                },
+                "types": {
+                    "question": "Quels types de bateaux sont disponibles à {{city}} ?",
+                    "answer": "Nous offrons :\\n• Yachts de luxe\\n• Bateaux rapides\\n• Bateaux de pêche\\n• Bateaux de fête\\n• Navires de croisière bien-être/coucher du soleil\\nTous les navires sont vérifiés et respectent les normes de sécurité maritime."
+                },
+                "food": {
+                    "question": "Puis-je apporter de la nourriture ou de l'alcool à bord ?",
+                    "answer": "Oui, sur la plupart des locations privées. Certains bateaux offrent aussi du catering ou des options BYO. Veuillez vérifier la section \"Qu'est-ce qui est Inclus / Non Inclus\" ou demander via WhatsApp."
+                },
+                "departure": {
+                    "question": "D'où partent les bateaux à {{city}} ?",
+                    "answer": "Les points de départ varient par bateau mais incluent typiquement :\\n• Marina de la ville\\n• Quais de plage\\n• Accès marina privée\\nL'emplacement exact sera affiché après réservation."
+                },
+                "advance": {
+                    "question": "Combien de temps à l'avance dois-je réserver ?",
+                    "answer": "Nous recommandons de réserver au moins 2 jours à l'avance, surtout pour les week-ends. Les réservations le jour même peuvent être possibles—contactez simplement notre équipe sur WhatsApp."
+                }
+            }
+        },
+        "activities": {
+            "heroTitle": "Choses à Faire à {{place}}",
+            "heroSubtitle": "Découvrez et réservez les meilleures activités que le Maroc a à offrir. Des excursions désertiques palpitantes et tours en quad aux visites guidées authentiques dans un riad de Marrakech, votre prochaine aventure commence ici.",
+            "exploreTitle": "Top des Choses à Faire au Maroc par Ville",
+            "exploreSubtitle": "Trouvez des activités dans les destinations les plus excitantes du Maroc.",
+            "tabsTitle": "Parcourir les Meilleures Activités à {{city}} par Type",
+            "tabsTitleGeneral": "Parcourir par Type d'Activité",
+            "tabsSubtitle": "Trouvez la Bonne Expérience - Aventure, Culture, Nourriture & Plus",
+            "tabsSubtitleGeneral": "Choisissez parmi les catégories d'expérience les plus populaires.",
+            "cityOnlyTitle": "Meilleures Expériences à {{city}} - Mis à Jour Quotidiennement",
+            "cityOnlySubtitle": "Tours & Activités en Vedette à {{city}} - Comparez les Prix & Points Forts",
+            "faqTitle": "Questions Fréquemment Posées - Choses à Faire à {{city}}",
+            "faq": {
+                "guides": {
+                    "question": "Les activités à {{city}} sont-elles dirigées par des guides licenciés ?",
+                    "answer": "Oui. Tous nos partenaires sont des fournisseurs locaux vérifiés, et de nombreux guides sont officiellement licenciés. Nous examinons chaque expérience pour la sécurité, l'authenticité, et la qualité."
+                },
+                "pickup": {
+                    "question": "La prise en charge à l'hôtel est-elle incluse dans les réservations d'activité ?",
+                    "answer": "La plupart des activités offrent une prise en charge gratuite depuis votre hôtel, riad, ou un point de rencontre central à {{city}}. Vous verrez les informations exactes de prise en charge avant de réserver."
+                },
+                "cancellation": {
+                    "question": "Puis-je annuler ma réservation d'activité ?",
+                    "answer": "Oui. Toutes les activités sur MarHire incluent une annulation gratuite jusqu'à 48 heures avant l'heure prévue. Les annulations dans les 48h peuvent engendrer des frais."
+                },
+                "private": {
+                    "question": "Y a-t-il des expériences privées disponibles à {{city}} ?",
+                    "answer": "Oui ! Vous pouvez filtrer les annonces pour montrer seulement les tours privés, ou le mentionner quand vous nous contactez via WhatsApp."
+                },
+                "capacity": {
+                    "question": "Combien de personnes peuvent rejoindre une activité ?",
+                    "answer": "Cela varie. La plupart des activités de groupe permettent 4-12 personnes.\\nLes expériences privées peuvent être arrangées pour 1 à 20+ invités — contactez-nous pour des forfaits groupe personnalisés."
+                },
+                "children": {
+                    "question": "Les enfants sont-ils autorisés dans les expériences ?",
+                    "answer": "Oui. De nombreuses activités sont adaptées aux familles et clairement marquées comme telles. En cas de doute, contactez-nous et nous vous guiderons vers la meilleure option."
+                },
+                "languages": {
+                    "question": "Dans quelles langues les tours sont-ils offerts ?",
+                    "answer": "La plupart des activités sont offertes en anglais, français, et arabe. Certaines peuvent aussi être disponibles en espagnol ou allemand sur demande."
+                },
+                "bring": {
+                    "question": "Dois-je apporter quelque chose ?",
+                    "answer": "Pour la plupart des expériences, nous fournissons tout. Cependant, pour les activités extérieures ou de plage, nous recommandons :\\n• Chaussures confortables\\n• Crème solaire\\n• Copie d'ID ou passeport\\nVérifiez l'annonce pour toute note additionnelle."
+                }
+            }
         }
+    }
 }

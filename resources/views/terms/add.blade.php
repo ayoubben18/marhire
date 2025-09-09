@@ -62,12 +62,27 @@
         </div>
     </div>
 </div>
+
+@include('terms.partials.ai-translation-generator')
+@include('terms.partials.translation-viewer')
+
 </form>
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <script>
+    // Initialize window.editorInstances if not exists
+    if (!window.editorInstances) {
+        window.editorInstances = {};
+    }
+
     document.querySelectorAll('.editor').forEach((element) => {
         ClassicEditor
             .create(element)
+            .then(editor => {
+                // Store editor instance globally
+                const fieldName = element.getAttribute('name') || element.id || 'content';
+                window.editorInstances[fieldName] = editor;
+                console.log(`CKEditor instance '${fieldName}' stored globally`);
+            })
             .catch(error => {
                 console.error(error);
             });

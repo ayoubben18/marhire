@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import HeroSection from "./HeroSection";
 import WhyChooseUs from "./WhyChooseUs";
 import ListingsByCity from "./ListingsByCity";
@@ -99,27 +100,27 @@ const toTitle = (slug) => {
 };
 
 // Car subcategory specific features (reused from existing subcategory logic)
-const buildCarSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
+const buildCarSubcategoryFeatures = (subcategoryName, subcategorySlug, t) => {
     const baseFeatures = [
         {
             icon: <FaShieldAlt />,
-            title: "Full Insurance Included",
-            desc: "All rentals include insurance. Optional low-excess upgrades available.",
+            title: t("features.cars.fullInsurance.title", "Full Insurance Included"),
+            desc: t("features.cars.fullInsurance.desc", "All rentals include insurance. Optional low-excess upgrades available."),
         },
         {
             icon: <FaPlane />,
-            title: "Available at Major Airports",
-            desc: "Pick up your rental directly from the airport in Marrakech, Agadir, Casablanca, and more.",
+            title: t("features.cars.airportPickup.title", "Available at Major Airports"),
+            desc: t("features.cars.airportPickup.desc", "Pick up your rental directly from the airport in Marrakech, Agadir, Casablanca, and more."),
         },
         {
             icon: <FaHeadset />,
-            title: "24/7 Customer Support",
-            desc: "Local support team available on WhatsApp to assist you anytime.",
+            title: t("features.cars.customerSupport.title", "24/7 Customer Support"),
+            desc: t("features.cars.customerSupport.desc", "Local support team available on WhatsApp to assist you anytime."),
         },
         {
             icon: <FaDollarSign />,
-            title: "Transparent Pricing",
-            desc: "The price you see is the price you pay. No surprises on arrival.",
+            title: t("features.cars.transparentPricing.title", "Transparent Pricing"),
+            desc: t("features.cars.transparentPricing.desc", "The price you see is the price you pay. No surprises on arrival."),
         },
     ];
 
@@ -127,13 +128,13 @@ const buildCarSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
         return [
             {
                 icon: <FaCar />,
-                title: `Reliable ${subcategoryName} Vehicles`,
-                desc: `${subcategoryName} models are known for their reliability and ability to handle Moroccan roads.`,
+                title: t("features.cars.reliableVehicles.title", "Reliable {{subcategoryName}} Vehicles", { subcategoryName }),
+                desc: t("features.cars.reliableVehicles.desc", "{{subcategoryName}} models are known for their reliability and ability to handle Moroccan roads.", { subcategoryName }),
             },
             {
                 icon: <FaUsers />,
-                title: "Spacious and Practical",
-                desc: "Enjoy ample space for passengers and luggage, perfect for families and road trips.",
+                title: t("features.cars.spaciousPractical.title", "Spacious and Practical"),
+                desc: t("features.cars.spaciousPractical.desc", "Enjoy ample space for passengers and luggage, perfect for families and road trips."),
             },
             ...baseFeatures,
         ];
@@ -143,13 +144,13 @@ const buildCarSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
         return [
             {
                 icon: <FaUsers />,
-                title: "Extra Space and Comfort",
-                desc: `${subcategoryName}s offer superior space for passengers and luggage.`,
+                title: t("features.cars.extraSpaceComfort.title", "Extra Space and Comfort"),
+                desc: t("features.cars.extraSpaceComfort.desc", "{{subcategoryName}}s offer superior space for passengers and luggage.", { subcategoryName }),
             },
             {
                 icon: <FaCar />,
-                title: "Perfect for Family Trips",
-                desc: "Ideal for families exploring Morocco's diverse terrain.",
+                title: t("features.cars.familyTrips.title", "Perfect for Family Trips"),
+                desc: t("features.cars.familyTrips.desc", "Ideal for families exploring Morocco's diverse terrain."),
             },
             ...baseFeatures,
         ];
@@ -159,13 +160,13 @@ const buildCarSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
         return [
             {
                 icon: <FaGasPump />,
-                title: "Fuel Efficient Options",
-                desc: `${subcategoryName}s offer excellent fuel economy for long distance travel.`,
+                title: t("features.cars.fuelEfficient.title", "Fuel Efficient Options"),
+                desc: t("features.cars.fuelEfficient.desc", "{{subcategoryName}}s offer excellent fuel economy for long distance travel.", { subcategoryName }),
             },
             {
                 icon: <FaParking />,
-                title: "Easy to Park and Maneuver",
-                desc: "Perfect for navigating narrow streets in Moroccan medinas.",
+                title: t("features.cars.easyParking.title", "Easy to Park and Maneuver"),
+                desc: t("features.cars.easyParking.desc", "Perfect for navigating narrow streets in Moroccan medinas."),
             },
             ...baseFeatures,
         ];
@@ -175,27 +176,27 @@ const buildCarSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
 };
 
 // Driver subcategory specific features
-const buildDriverSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
+const buildDriverSubcategoryFeatures = (subcategoryName, subcategorySlug, t) => {
     const baseDriverFeatures = [
         {
             icon: <FaUserTie />,
-            title: "Professional Licensed Drivers",
-            desc: "All our drivers are licensed professionals with years of experience in Morocco.",
+            title: t("features.drivers.professional.title", "Professional Licensed Drivers"),
+            desc: t("features.drivers.professional.desc", "All our drivers are licensed professionals with years of experience in Morocco."),
         },
         {
             icon: <FaMapMarkedAlt />,
-            title: "Local Knowledge & Expertise",
-            desc: "Our drivers know the best routes, hidden gems, and local customs to enhance your trip.",
+            title: t("features.drivers.localKnowledge.title", "Local Knowledge & Expertise"),
+            desc: t("features.drivers.localKnowledge.desc", "Our drivers know the best routes, hidden gems, and local customs to enhance your trip."),
         },
         {
             icon: <FaClock />,
-            title: "Flexible Scheduling",
-            desc: "Customize your itinerary with flexible pickup times and route adjustments.",
+            title: t("features.drivers.flexibleScheduling.title", "Flexible Scheduling"),
+            desc: t("features.drivers.flexibleScheduling.desc", "Customize your itinerary with flexible pickup times and route adjustments."),
         },
         {
             icon: <FaLanguage />,
-            title: "Multilingual Service",
-            desc: "Drivers speak multiple languages including English, French, Arabic, and Berber.",
+            title: t("features.drivers.multilingual.title", "Multilingual Service"),
+            desc: t("features.drivers.multilingual.desc", "Drivers speak multiple languages including English, French, Arabic, and Berber."),
         },
     ];
 
@@ -203,13 +204,13 @@ const buildDriverSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
         return [
             {
                 icon: <FaUsers />,
-                title: "Spacious SUV Comfort",
-                desc: "Travel in comfort with spacious SUVs perfect for families and groups up to 7 people.",
+                title: t("features.drivers.spaciousSuv.title", "Spacious SUV Comfort"),
+                desc: t("features.drivers.spaciousSuv.desc", "Travel in comfort with spacious SUVs perfect for families and groups up to 7 people."),
             },
             {
                 icon: <FaCar />,
-                title: "All-Terrain Capability",
-                desc: "SUVs handle Morocco's diverse terrain from city streets to mountain roads with ease.",
+                title: t("features.drivers.allTerrain.title", "All-Terrain Capability"),
+                desc: t("features.drivers.allTerrain.desc", "SUVs handle Morocco's diverse terrain from city streets to mountain roads with ease."),
             },
             ...baseDriverFeatures,
         ];
@@ -219,13 +220,13 @@ const buildDriverSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
         return [
             {
                 icon: <FaCar />,
-                title: "Executive Sedan Service",
-                desc: "Professional transportation in comfortable sedans ideal for business and leisure travel.",
+                title: t("features.drivers.executiveSedan.title", "Executive Sedan Service"),
+                desc: t("features.drivers.executiveSedan.desc", "Professional transportation in comfortable sedans ideal for business and leisure travel."),
             },
             {
                 icon: <FaGasPump />,
-                title: "Fuel-Efficient Travel",
-                desc: "Sedans offer excellent fuel economy for longer journeys across Morocco.",
+                title: t("features.drivers.fuelEfficientTravel.title", "Fuel-Efficient Travel"),
+                desc: t("features.drivers.fuelEfficientTravel.desc", "Sedans offer excellent fuel economy for longer journeys across Morocco."),
             },
             ...baseDriverFeatures,
         ];
@@ -235,13 +236,13 @@ const buildDriverSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
         return [
             {
                 icon: <FaUsers />,
-                title: "Large Group Transportation",
-                desc: "Vans accommodate large groups up to 15 passengers with ample luggage space.",
+                title: t("features.drivers.largeGroupTransport.title", "Large Group Transportation"),
+                desc: t("features.drivers.largeGroupTransport.desc", "Vans accommodate large groups up to 15 passengers with ample luggage space."),
             },
             {
                 icon: <FaCar />,
-                title: "Perfect for Tours",
-                desc: "Ideal for group tours, family reunions, and corporate transportation needs.",
+                title: t("features.drivers.perfectForTours.title", "Perfect for Tours"),
+                desc: t("features.drivers.perfectForTours.desc", "Ideal for group tours, family reunions, and corporate transportation needs."),
             },
             ...baseDriverFeatures,
         ];
@@ -251,27 +252,27 @@ const buildDriverSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
 };
 
 // Boat subcategory specific features
-const buildBoatSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
+const buildBoatSubcategoryFeatures = (subcategoryName, subcategorySlug, t) => {
     const baseBoatFeatures = [
         {
             icon: <FaAnchor />,
-            title: "Professional Crew Included",
-            desc: "All boat rentals include experienced crew members for your safety and comfort.",
+            title: t("features.boats.professionalCrew.title", "Professional Crew Included"),
+            desc: t("features.boats.professionalCrew.desc", "All boat rentals include experienced crew members for your safety and comfort."),
         },
         {
             icon: <FaLifeRing />,
-            title: "Full Safety Equipment",
-            desc: "Complete safety gear including life jackets, emergency equipment, and first aid kits.",
+            title: t("features.boats.safetyEquipment.title", "Full Safety Equipment"),
+            desc: t("features.boats.safetyEquipment.desc", "Complete safety gear including life jackets, emergency equipment, and first aid kits."),
         },
         {
             icon: <FaCompass />,
-            title: "Scenic Coastal Routes",
-            desc: "Explore Morocco's beautiful coastline with guided routes to the best spots.",
+            title: t("features.boats.scenicRoutes.title", "Scenic Coastal Routes"),
+            desc: t("features.boats.scenicRoutes.desc", "Explore Morocco's beautiful coastline with guided routes to the best spots."),
         },
         {
             icon: <FaHeadset />,
-            title: "24/7 Marine Support",
-            desc: "Emergency marine assistance and support available at all times during your rental.",
+            title: t("features.boats.marineSupport.title", "24/7 Marine Support"),
+            desc: t("features.boats.marineSupport.desc", "Emergency marine assistance and support available at all times during your rental."),
         },
     ];
 
@@ -279,13 +280,13 @@ const buildBoatSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
         return [
             {
                 icon: <FaAnchor />,
-                title: "Luxury Yacht Experience",
-                desc: "Enjoy premium comfort with spacious yachts featuring modern amenities and elegant interiors.",
+                title: t("features.boats.luxuryYacht.title", "Luxury Yacht Experience"),
+                desc: t("features.boats.luxuryYacht.desc", "Enjoy premium comfort with spacious yachts featuring modern amenities and elegant interiors."),
             },
             {
                 icon: <FaUsers />,
-                title: "Perfect for Groups",
-                desc: "Yachts accommodate larger groups with multiple cabins and entertainment areas.",
+                title: t("features.boats.perfectForGroups.title", "Perfect for Groups"),
+                desc: t("features.boats.perfectForGroups.desc", "Yachts accommodate larger groups with multiple cabins and entertainment areas."),
             },
             ...baseBoatFeatures,
         ];
@@ -295,13 +296,13 @@ const buildBoatSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
         return [
             {
                 icon: <FaAnchor />,
-                title: "High-Speed Adventures",
-                desc: "Experience thrilling speedboat rides perfect for water sports and quick coastal tours.",
+                title: t("features.boats.highSpeedAdventures.title", "High-Speed Adventures"),
+                desc: t("features.boats.highSpeedAdventures.desc", "Experience thrilling speedboat rides perfect for water sports and quick coastal tours."),
             },
             {
                 icon: <FaSun />,
-                title: "Perfect for Day Trips",
-                desc: "Ideal for short excursions, fishing trips, and water sports activities.",
+                title: t("features.boats.perfectForDayTrips.title", "Perfect for Day Trips"),
+                desc: t("features.boats.perfectForDayTrips.desc", "Ideal for short excursions, fishing trips, and water sports activities."),
             },
             ...baseBoatFeatures,
         ];
@@ -311,13 +312,13 @@ const buildBoatSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
         return [
             {
                 icon: <FaAnchor />,
-                title: "Customized Boat Experience",
-                desc: "Tailor your boat rental experience with custom routes, duration, and activities.",
+                title: t("features.boats.customizedExperience.title", "Customized Boat Experience"),
+                desc: t("features.boats.customizedExperience.desc", "Tailor your boat rental experience with custom routes, duration, and activities."),
             },
             {
                 icon: <FaCompass />,
-                title: "Flexible Itineraries",
-                desc: "Create your perfect marine adventure with flexible scheduling and destinations.",
+                title: t("features.boats.flexibleItineraries.title", "Flexible Itineraries"),
+                desc: t("features.boats.flexibleItineraries.desc", "Create your perfect marine adventure with flexible scheduling and destinations."),
             },
             ...baseBoatFeatures,
         ];
@@ -327,27 +328,27 @@ const buildBoatSubcategoryFeatures = (subcategoryName, subcategorySlug) => {
 };
 
 // Activity subcategory specific features
-const buildActivitySubcategoryFeatures = (subcategoryName, subcategorySlug) => {
+const buildActivitySubcategoryFeatures = (subcategoryName, subcategorySlug, t) => {
     const baseActivityFeatures = [
         {
             icon: <FaUserTie />,
-            title: "Expert Local Guides",
-            desc: "Professional guides with extensive knowledge of Morocco's culture, history, and landscapes.",
+            title: t("features.activities.expertGuides.title", "Expert Local Guides"),
+            desc: t("features.activities.expertGuides.desc", "Professional guides with extensive knowledge of Morocco's culture, history, and landscapes."),
         },
         {
             icon: <FaShieldAlt />,
-            title: "Safety First Approach",
-            desc: "All activities include comprehensive safety briefings and professional-grade equipment.",
+            title: t("features.activities.safetyFirst.title", "Safety First Approach"),
+            desc: t("features.activities.safetyFirst.desc", "All activities include comprehensive safety briefings and professional-grade equipment."),
         },
         {
             icon: <FaCamera />,
-            title: "Unforgettable Memories",
-            desc: "Create lasting memories with unique experiences and stunning photo opportunities.",
+            title: t("features.activities.unforgettableMemories.title", "Unforgettable Memories"),
+            desc: t("features.activities.unforgettableMemories.desc", "Create lasting memories with unique experiences and stunning photo opportunities."),
         },
         {
             icon: <FaHeadset />,
-            title: "24/7 Activity Support",
-            desc: "Round-the-clock support for any questions or assistance during your adventure.",
+            title: t("features.activities.activitySupport.title", "24/7 Activity Support"),
+            desc: t("features.activities.activitySupport.desc", "Round-the-clock support for any questions or assistance during your adventure."),
         },
     ];
 
@@ -355,13 +356,13 @@ const buildActivitySubcategoryFeatures = (subcategoryName, subcategorySlug) => {
         return [
             {
                 icon: <FaMountain />,
-                title: "Thrilling Quad Adventures",
-                desc: "Experience the excitement of quad biking through Morocco's diverse terrains and landscapes.",
+                title: t("features.activities.thrillingQuad.title", "Thrilling Quad Adventures"),
+                desc: t("features.activities.thrillingQuad.desc", "Experience the excitement of quad biking through Morocco's diverse terrains and landscapes."),
             },
             {
                 icon: <FaSun />,
-                title: "Scenic Desert Routes",
-                desc: "Explore stunning desert landscapes and mountain trails with guided quad bike tours.",
+                title: t("features.activities.scenicDesertRoutes.title", "Scenic Desert Routes"),
+                desc: t("features.activities.scenicDesertRoutes.desc", "Explore stunning desert landscapes and mountain trails with guided quad bike tours."),
             },
             ...baseActivityFeatures,
         ];
@@ -371,13 +372,13 @@ const buildActivitySubcategoryFeatures = (subcategoryName, subcategorySlug) => {
         return [
             {
                 icon: <FaSun />,
-                title: "Authentic Desert Experience",
-                desc: "Immerse yourself in the magic of the Sahara with overnight camping and traditional Berber culture.",
+                title: t("features.activities.authenticDesert.title", "Authentic Desert Experience"),
+                desc: t("features.activities.authenticDesert.desc", "Immerse yourself in the magic of the Sahara with overnight camping and traditional Berber culture."),
             },
             {
                 icon: <FaMountain />,
-                title: "Stunning Desert Landscapes",
-                desc: "Witness breathtaking sunrises and sunsets over the golden dunes of Morocco's desert.",
+                title: t("features.activities.stunningDesertLandscapes.title", "Stunning Desert Landscapes"),
+                desc: t("features.activities.stunningDesertLandscapes.desc", "Witness breathtaking sunrises and sunsets over the golden dunes of Morocco's desert."),
             },
             ...baseActivityFeatures,
         ];
@@ -387,13 +388,13 @@ const buildActivitySubcategoryFeatures = (subcategoryName, subcategorySlug) => {
         return [
             {
                 icon: <FaSun />,
-                title: "Traditional Camel Trekking",
-                desc: "Experience Morocco like ancient travelers with authentic camel rides through the desert.",
+                title: t("features.activities.traditionalCamel.title", "Traditional Camel Trekking"),
+                desc: t("features.activities.traditionalCamel.desc", "Experience Morocco like ancient travelers with authentic camel rides through the desert."),
             },
             {
                 icon: <FaMountain />,
-                title: "Desert Sunset Views",
-                desc: "Enjoy spectacular sunset views from camelback across the endless Sahara dunes.",
+                title: t("features.activities.desertSunsetViews.title", "Desert Sunset Views"),
+                desc: t("features.activities.desertSunsetViews.desc", "Enjoy spectacular sunset views from camelback across the endless Sahara dunes."),
             },
             ...baseActivityFeatures,
         ];
@@ -403,13 +404,13 @@ const buildActivitySubcategoryFeatures = (subcategoryName, subcategorySlug) => {
         return [
             {
                 icon: <FaSun />,
-                title: "World-Class Surf Spots",
-                desc: "Surf Morocco's renowned Atlantic coast breaks with perfect waves year-round.",
+                title: t("features.activities.worldClassSurf.title", "World-Class Surf Spots"),
+                desc: t("features.activities.worldClassSurf.desc", "Surf Morocco's renowned Atlantic coast breaks with perfect waves year-round."),
             },
             {
                 icon: <FaHiking />,
-                title: "Professional Surf Instruction",
-                desc: "Learn from certified instructors at beginner-friendly beaches or tackle advanced breaks.",
+                title: t("features.activities.professionalSurfInstruction.title", "Professional Surf Instruction"),
+                desc: t("features.activities.professionalSurfInstruction.desc", "Learn from certified instructors at beginner-friendly beaches or tackle advanced breaks."),
             },
             ...baseActivityFeatures,
         ];
@@ -419,6 +420,7 @@ const buildActivitySubcategoryFeatures = (subcategoryName, subcategorySlug) => {
 };
 
 const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
+    const { t } = useTranslation();
     const meta = getCategoryMeta(categorySlug);
     const cityId = city ? getCityId(city) : null;
     const subcategoryId = getSubcategoryId(meta.key, subcategorySlug);
@@ -434,18 +436,18 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
     ];
 
     const buildHeroText = () => {
-        const place = city || "Morocco";
+        const place = city || t("common.morocco", "Morocco");
         switch (meta.key) {
             case "cars":
-                return `${subcategoryName} Car Rental in ${place}`;
+                return t("hero.subcategory.carRental", "{{subcategoryName}} Car Rental in {{place}}", { subcategoryName, place });
             case "drivers":
-                return `${subcategoryName} with Private Driver in ${place}`;
+                return t("hero.subcategory.privateDriver", "{{subcategoryName}} with Private Driver in {{place}}", { subcategoryName, place });
             case "boats":
-                return `${subcategoryName} Boat Rental in ${place}`;
+                return t("hero.subcategory.boatRental", "{{subcategoryName}} Boat Rental in {{place}}", { subcategoryName, place });
             case "activities":
-                return `${subcategoryName} in ${place}`;
+                return t("hero.subcategory.activity", "{{subcategoryName}} in {{place}}", { subcategoryName, place });
             default:
-                return `${subcategoryName} in ${place}`;
+                return t("hero.subcategory.activity", "{{subcategoryName}} in {{place}}", { subcategoryName, place });
         }
     };
 
@@ -454,7 +456,7 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
             return (
                 <WhyChooseUs
                     title={`Why Rent a ${subcategoryName} in ${city || "Morocco"}?`}
-                    features={buildCarSubcategoryFeatures(subcategoryName, (subcategorySlug || "").toLowerCase())}
+                    features={buildCarSubcategoryFeatures(subcategoryName, (subcategorySlug || "").toLowerCase(), t)}
                 />
             );
         }
@@ -463,7 +465,7 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
             return (
                 <WhyChooseUs
                     title={`Why Book a ${subcategoryName} Private Driver in ${city || "Morocco"}?`}
-                    features={buildDriverSubcategoryFeatures(subcategoryName, (subcategorySlug || "").toLowerCase())}
+                    features={buildDriverSubcategoryFeatures(subcategoryName, (subcategorySlug || "").toLowerCase(), t)}
                 />
             );
         }
@@ -472,7 +474,7 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
             return (
                 <WhyChooseUs
                     title={`Why Rent a ${subcategoryName} in ${city || "Morocco"}?`}
-                    features={buildBoatSubcategoryFeatures(subcategoryName, (subcategorySlug || "").toLowerCase())}
+                    features={buildBoatSubcategoryFeatures(subcategoryName, (subcategorySlug || "").toLowerCase(), t)}
                 />
             );
         }
@@ -481,7 +483,7 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
             return (
                 <WhyChooseUs
                     title={`Why Book ${subcategoryName} in ${city || "Morocco"}?`}
-                    features={buildActivitySubcategoryFeatures(subcategoryName, (subcategorySlug || "").toLowerCase())}
+                    features={buildActivitySubcategoryFeatures(subcategoryName, (subcategorySlug || "").toLowerCase(), t)}
                 />
             );
         }

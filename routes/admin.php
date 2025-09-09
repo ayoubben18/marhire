@@ -95,6 +95,9 @@ Route::name('terms.')->middleware(['auth'])->prefix('terms')->group(function () 
     Route::get('/edit/{id}', [TermsController::class, 'edit'])->name('edit');
     Route::post('/update', [TermsController::class, 'update'])->name('update');
     Route::post('/delete', [TermsController::class, 'delete'])->name('delete');
+    
+    // Translation routes
+    Route::post('/translate-preview', [TermsController::class, 'translatePreview'])->name('translatePreview');
 });
 
 // Cities Management

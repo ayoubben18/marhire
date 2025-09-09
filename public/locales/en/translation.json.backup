@@ -96,7 +96,7 @@
         "sortBy": "Sort By",
         "filterBy": "Filter by",
         "sortOptions": {
-            "default": "Recommended",
+            "default": "Default",
             "priceLowHigh": "Price: low to high",
             "priceHighLow": "Price: high to low"
         }
@@ -1865,5 +1865,154 @@
                 "desc": "Learn from certified instructors at beginner-friendly beaches or tackle advanced breaks."
             }
         }
+    },
+    "categories": {
+        "carRental": {
+            "heroTitle": "Car Rental in {{place}}",
+            "heroSubtitle": "From agile city cars for navigating the medinas to spacious SUVs for your family road trip, find the perfect vehicle. Compare deals from trusted local agencies for cheap car rental with transparent pricing and instant booking.",
+            "exploreTitle": "Rent a Car in Morocco by City",
+            "exploreSubtitle": "Choose from hundreds of cars in Morocco's top destinations.",
+            "tabsTitle": "Browse Car Hire in {{city}} by Vehicle Type",
+            "tabsTitleGeneral": "Cheap, Luxury & SUV Car Rental Morocco",
+            "tabsSubtitle": "Rent the Right Vehicle in {{city}} - SUVs, Luxury, MPVs & More",
+            "tabsSubtitleGeneral": "Find a vehicle that suits your style and budget",
+            "cityOnlyTitle": "Best Car Rental Deals in {{city}} with MarHire",
+            "cityOnlySubtitle": "Featured Car Hire Listings in {{city}} - Compare Prices & Features",
+            "cityBrowseTitle": "Car Hire by City",
+            "brandBrowseTitle": "Browse Car Hire by Brand",
+            "faqTitle": "Frequently Asked Questions - Car Hire in {{city}}",
+            "faq": {
+                "airportPickup": {
+                    "question": "Do you offer airport car rental pickup in {{city}}?",
+                    "answer": "Yes, we offer free delivery to and from {{city}} Airport, hotels, or any address in the city. You can select your preferred pick-up and drop-off location during the booking process."
+                },
+                "noDeposit": {
+                    "question": "Can I rent a car in {{city}} without a deposit?",
+                    "answer": "Absolutely. Many of our economy and compact models come with a \"No Deposit\" policy, which means you can rent a car in {{city}} with no upfront security payment. Deposit requirements, if any, are clearly stated on each listing."
+                },
+                "insurance": {
+                    "question": "Is full insurance included in the car rental price?",
+                    "answer": "Yes, all rentals come with standard insurance coverage included by default. You can also choose to upgrade to low-excess insurance during checkout to reduce your financial liability in case of an accident."
+                },
+                "documents": {
+                    "question": "What documents do I need to rent a car in {{city}}?",
+                    "answer": "To rent a car in Morocco, you'll need:\\n• A valid driver's license (original)\\n• Your passport\\n• An international driving permit (required if your license is not in French, Arabic, or English)\\n• A credit/debit card (if a deposit is required or you can pay it cash)"
+                },
+                "minimumAge": {
+                    "question": "What is the minimum age to rent a car in {{city}}?",
+                    "answer": "The minimum rental age is 26 years old.\\nDrivers between 21 and 25 years old can still rent a car but will incur a young driver fee. The extra charge will be clearly shown at the time of booking."
+                },
+                "cancellation": {
+                    "question": "Can I cancel or change my car rental reservation?",
+                    "answer": "Yes, you can cancel your booking for free up to 48 hours before the scheduled pick-up time. If you cancel within 48 hours, a cancellation fee may apply. Changes to dates, car type, or locations are subject to availability."
+                },
+                "mileage": {
+                    "question": "Are there any mileage restrictions on car rentals in {{city}}?",
+                    "answer": "Most of our cars come with unlimited kilometers, allowing you to explore Morocco freely. Any exceptions (e.g., capped mileage on some luxury cars) will be clearly displayed in the listing details."
+                },
+                "extras": {
+                    "question": "What extras can I add to my booking?",
+                    "answer": "You can customize your rental with:\\n• Child Seats\\n• Booster Seats\\n• Extra Drivers\\n• Surf Racks (for MPV/SUV)\\nEach extra comes at a fixed fee and can be selected during checkout."
+                },
+                "support": {
+                    "question": "How can I contact support if I need help before or during my rental?",
+                    "answer": "Our local support team is available 24/7 on WhatsApp to assist with any questions or issues. Contact details are included in your confirmation email."
+                }
+            }
+        },
+        "boats": {
+            "heroTitle": "Boat Rental in {{place}}",
+            "heroSubtitle": "From thrilling jet ski rides in Agadir to luxury yacht charters in Tangier, discover Morocco's stunning coastline and lakes. Book an unforgettable fishing trip, sunset cruise, or private boat tour.",
+            "exploreTitle": "Best Boat Rentals in Morocco by City",
+            "exploreSubtitle": "Find available boats in Morocco's top coastal cities.",
+            "tabsTitle": "Browse Boat Rentals in {{city}} by Type",
+            "tabsTitleGeneral": "Boat, Yacht & Fishing Trip Rentals by Type",
+            "tabsSubtitle": "Choose the Perfect Experience - Yachts, Fishing Boats & More",
+            "tabsSubtitleGeneral": "Choose your perfect experience on the water.",
+            "cityOnlyTitle": "Best Boat Rental Deals in {{city}} - Updated Daily",
+            "cityOnlySubtitle": "Featured Boat Listings in {{city}} - Compare Prices & Services",
+            "faqTitle": "Frequently Asked Questions - Boat Rental in {{city}}",
+            "faq": {
+                "captain": {
+                    "question": "Is the captain included in the boat rental?",
+                    "answer": "Yes. All boats listed on MarHire in {{city}} include a licensed captain/skipper to operate the boat. You don't need a boat license."
+                },
+                "included": {
+                    "question": "What's included in the price?",
+                    "answer": "Most boat rentals include:\\n• Skipper\\n• Fuel\\n• Life jackets\\n• Light snacks & soft drinks (on select boats)\\nCheck each listing for exact inclusions."
+                },
+                "cancellation": {
+                    "question": "Can I cancel or modify my boat rental in {{city}}?",
+                    "answer": "Yes, you can cancel for free up to 48 hours before the rental time. Inside 48h, cancellation fees may apply."
+                },
+                "capacity": {
+                    "question": "How many people can I bring on the boat?",
+                    "answer": "Each boat has a clearly listed capacity. You can filter by:\\n• 2-4 people (romantic or small groups)\\n• 6-8 people (family trips)\\n• 10-15+ people (group tours or parties)"
+                },
+                "types": {
+                    "question": "What types of boats are available in {{city}}?",
+                    "answer": "We offer:\\n• Luxury yachts\\n• Speedboats\\n• Fishing boats\\n• Party boats\\n• Wellness/sunset cruise vessels\\nAll vessels are verified and meet maritime safety standards."
+                },
+                "food": {
+                    "question": "Can I bring food or alcohol on board?",
+                    "answer": "Yes, on most private rentals. Some boats also offer catering or BYO options. Please check the \"What's Included / Not Included\" section or ask via WhatsApp."
+                },
+                "departure": {
+                    "question": "Where do the boats depart from in {{city}}?",
+                    "answer": "Departure points vary by boat but typically include:\\n• City marina\\n• Beachside docks\\n• Private marina access\\nExact location will be shown after booking."
+                },
+                "advance": {
+                    "question": "How far in advance should I book?",
+                    "answer": "We recommend booking at least 2 days in advance, especially for weekends. Same-day bookings may be possible—just contact our team on WhatsApp."
+                }
+            }
+        },
+        "activities": {
+            "heroTitle": "Things To Do in {{place}}",
+            "heroSubtitle": "Discover and book the best activities Morocco has to offer. From thrilling desert day trips and quad bike tours to authentic guided tours in a Marrakech riad, your next adventure starts here.",
+            "exploreTitle": "Top Things to Do in Morocco by City",
+            "exploreSubtitle": "Find activities in Morocco's most exciting destinations.",
+            "tabsTitle": "Browse Top Activities in {{city}} by Type",
+            "tabsTitleGeneral": "Browse by Activity Type",
+            "tabsSubtitle": "Find the Right Experience - Adventure, Culture, Food & More",
+            "tabsSubtitleGeneral": "Choose from the most popular experience categories.",
+            "cityOnlyTitle": "Best Experiences in {{city}} - Updated Daily",
+            "cityOnlySubtitle": "Featured Tours & Activities in {{city}} - Compare Prices & Highlights",
+            "faqTitle": "Frequently Asked Questions - Things to Do in {{city}}",
+            "faq": {
+                "guides": {
+                    "question": "Are activities in {{city}} led by licensed guides?",
+                    "answer": "Yes. All our partners are local, verified providers, and many guides are officially licensed. We vet each experience for safety, authenticity, and quality."
+                },
+                "pickup": {
+                    "question": "Is hotel pickup included in activity bookings?",
+                    "answer": "Most activities offer free pickup from your hotel, riad, or a central meeting point in {{city}}. You'll see exact pickup info before booking."
+                },
+                "cancellation": {
+                    "question": "Can I cancel my activity booking?",
+                    "answer": "Yes. All activities on MarHire include free cancellation up to 48 hours before the scheduled time. Cancellations within 48h may incur fees."
+                },
+                "private": {
+                    "question": "Are there private experiences available in {{city}}?",
+                    "answer": "Yes! You can filter listings to show private tours only, or mention it when contacting us via WhatsApp."
+                },
+                "capacity": {
+                    "question": "How many people can join an activity?",
+                    "answer": "It varies. Most group activities allow 4-12 people.\\nPrivate experiences can be arranged for 1 to 20+ guests — contact us for custom group packages."
+                },
+                "children": {
+                    "question": "Are children allowed in the experiences?",
+                    "answer": "Yes. Many activities are family-friendly and clearly marked as such. If unsure, contact us and we'll guide you to the best option."
+                },
+                "languages": {
+                    "question": "What languages are the tours offered in?",
+                    "answer": "Most activities are offered in English, French, and Arabic. Some may also be available in Spanish or German upon request."
+                },
+                "bring": {
+                    "question": "Do I need to bring anything?",
+                    "answer": "For most experiences, we provide everything. However, for outdoor or beach activities, we recommend:\\n• Comfortable shoes\\n• Sunscreen\\n• ID or passport copy\\nCheck the listing for any additional notes."
+                }
+            }
         }
+    }
 }

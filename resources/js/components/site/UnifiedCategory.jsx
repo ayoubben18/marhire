@@ -34,15 +34,14 @@ const buildItems = (titlePrefix, cityCounts) => {
     }));
 };
 
-const CATEGORY_CONFIG = {
+const buildCategoryConfig = (t) => ({
     "car-rental": {
         tab: "cars",
         type: "cars",
         categoryKey: "cars",
         heroText: (city) =>
-            city ? `Car Rental in ${city}` : "Car Rental in Morocco",
-        heroSub: () =>
-            "From agile city cars for navigating the medinas to spacious SUVs for your family road trip, find the perfect vehicle. Compare deals from trusted local agencies for cheap car rental with transparent pricing and instant booking.",
+            city ? t('categories.carRentalDetailed.heroTitle', { city }) : t('categories.carRentalDetailed.heroTitleGeneral'),
+        heroSub: () => t('categories.carRentalDetailed.heroSubtitle'),
         explore: {
             show: true,
             title: "Rent a Car in Morocco by City",
@@ -138,10 +137,9 @@ const CATEGORY_CONFIG = {
         categoryKey: "drivers",
         heroText: (city) =>
             city
-                ? `Rent Private Driver in ${city}`
-                : "Private Drivers in Morocco",
-        heroSub: () =>
-            "Travel with comfort, safety, and style. Book a professional, multilingual private driver for your Morocco airport transfer, city tours, business trips, or multi-day excursions with fixed, all-inclusive pricing.",
+                ? t('categories.privateDriverDetailed.heroTitle', { city })
+                : t('categories.privateDriverDetailed.heroTitleGeneral'),
+        heroSub: () => t('categories.privateDriverDetailed.heroSubtitle'),
         explore: {
             show: true,
             title: "Private Driver Services in Morocco by City",
@@ -230,9 +228,8 @@ const CATEGORY_CONFIG = {
         type: "boats",
         categoryKey: "boats",
         heroText: (city) =>
-            city ? `Boat Rental in ${city}` : "Boat Rental in Morocco",
-        heroSub: () =>
-            "From thrilling jet ski rides in Agadir to luxury yacht charters in Tangier, discover Morocco's stunning coastline and lakes. Book an unforgettable fishing trip, sunset cruise, or private boat tour.",
+            city ? t('categories.boatsDetailed.heroTitle', { city }) : t('categories.boatsDetailed.heroTitleGeneral'),
+        heroSub: () => t('categories.boatsDetailed.heroSubtitle'),
         explore: {
             show: true,
             title: "Best Boat Rentals in Morocco by City",
@@ -316,9 +313,8 @@ const CATEGORY_CONFIG = {
         type: "activities",
         categoryKey: "activities",
         heroText: (city) =>
-            city ? `Things To Do in ${city}` : "Things To Do in Morocco",
-        heroSub: () =>
-            "Discover and book the best activities Morocco has to offer. From thrilling desert day trips and quad bike tours to authentic guided tours in a Marrakech riad, your next adventure starts here.",
+            city ? t('categories.activitiesDetailed.heroTitle', { city }) : t('categories.activitiesDetailed.heroTitleGeneral'),
+        heroSub: () => t('categories.activitiesDetailed.heroSubtitle'),
         explore: {
             show: true,
             title: "Top Things to Do in Morocco by City",
@@ -399,10 +395,11 @@ const CATEGORY_CONFIG = {
             ],
         },
     },
-};
+});
 
 const UnifiedCategory = ({ slug, city }) => {
-    const cfg = CATEGORY_CONFIG[slug] || CATEGORY_CONFIG["car-rental"];
+    const { t } = useTranslation();
+    const cfg = buildCategoryConfig(t)[slug] || buildCategoryConfig(t)["car-rental"];
     const categoryId = (() => {
         switch (cfg.categoryKey) {
             case "cars": return 2;

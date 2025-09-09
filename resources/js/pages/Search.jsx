@@ -236,8 +236,29 @@ const Search = ({ type }) => {
                                     </button>
                                 </div>
                             )}
-                            {!isMobile && (
-                                <div className="search__sortby">
+                            
+                            {/* Sort dropdown - responsive styling */}
+                            <div className="search__sortby">
+                                {isMobile ? (
+                                    <div className="mobile-sort-container">
+                                        <span className="mobile-sort-label">{t('search.sortBy')}:</span>
+                                        <select
+                                            className="mobile-sort-select"
+                                            value={sortBy}
+                                            onChange={handleSortChange}
+                                        >
+                                            <option value={t('search.sortOptions.default')}>
+                                                {t('search.sortOptions.default')}
+                                            </option>
+                                            <option value={t('search.sortOptions.priceLowHigh')}>
+                                                {t('search.sortOptions.priceLowHigh')}
+                                            </option>
+                                            <option value={t('search.sortOptions.priceHighLow')}>
+                                                {t('search.sortOptions.priceHighLow')}
+                                            </option>
+                                        </select>
+                                    </div>
+                                ) : (
                                     <FormControl
                                         sx={{ minWidth: 180 }}
                                         size="small"
@@ -263,8 +284,8 @@ const Search = ({ type }) => {
                                             </MenuItem>
                                         </Select>
                                     </FormControl>
-                                </div>
-                            )}
+                                )}
+                            </div>
                             {filterLoading ? (
                                 renderSkeletonItems(4)
                             ) : (

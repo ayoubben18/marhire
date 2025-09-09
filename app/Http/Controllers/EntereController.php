@@ -408,9 +408,22 @@ class EntereController extends Controller
     public function legal_content_api(Request $request)
     {
         $type = $request->type;
-        $legal = TermsAndConditions::where('title', $type)->firstOrFail();
+        $locale = $request->input('locale', 'en');
+        app()->setLocale($locale);
+        
+        $legal = TermsAndConditions::withCurrentTranslations()
+            ->where('title', $type)
+            ->firstOrFail();
+        
+        if ($legal) {
+            $legal->translated_fields = $legal->getCurrentTranslatedData();
+        }
 
-        return response()->json(['content' => $legal->content, 'type' => $type]);
+        return response()->json([
+            'content' => $legal->content, 
+            'type' => $type,
+            'translated_fields' => $legal->translated_fields ?? null
+        ]);
     }
 
     public function get_articles_api(Request $request)

@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import { useMediaQuery } from "react-responsive";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 import ListingIcons from "./ListingIcons";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -40,6 +45,7 @@ const useUnifiedListingsData = ({
     perPage = 8,
     page = 1,
     locale = null,
+    sortBy = null,
     onDataLoaded = null,
     onError = null,
     autoLoad = true,
@@ -84,6 +90,11 @@ const useUnifiedListingsData = ({
             locale: locale || i18n.language || 'en'
         };
 
+        // Add sorting if provided
+        if (sortBy) {
+            params.sortBy = sortBy;
+        }
+
         // Handle categories
         const normalizedCategories = normalizeCategories(categories);
         if (normalizedCategories && normalizedCategories.length > 0) {
@@ -115,7 +126,7 @@ const useUnifiedListingsData = ({
         }
 
         return params;
-    }, [categoriesKey, subcategoriesKey, citiesKey, agenciesKey, perPage, page, locale, i18n.language]);
+    }, [categoriesKey, subcategoriesKey, citiesKey, agenciesKey, perPage, page, locale, sortBy, i18n.language]);
 
     // Fetch listings from API
     const controllerRef = useRef(null);
@@ -276,6 +287,7 @@ const UnifiedListings = (props) => {
         disableHeading = false,
         useSubcategoryFilter = false, // whether to use subcategory filtering
         subcategoryType = null, // 'type' or 'brand' for cars
+        enableSorting = false, // whether to show sorting functionality
         // data props forwarded as-is
         categories,
         subcategories,
@@ -292,8 +304,15 @@ const UnifiedListings = (props) => {
     const { t, i18n } = useTranslation();
     const pathMatch = typeof window !== 'undefined' ? window.location.pathname.match(/^\/(\w{2})(?:\/|$)/) : null;
     const currentLocale = locale || (pathMatch ? pathMatch[1] : (i18n.language || 'en'));
+    const isMobile = useMediaQuery({ maxWidth: 900 });
 
     const [activeTab, setActiveTab] = useState(tabs && tabs.length > 0 ? tabs[0].name || tabs[0] : null);
+    const [sortBy, setSortBy] = useState(t('search.sortOptions.default'));
+
+    // Handle sort change
+    const handleSortChange = (e) => {
+        setSortBy(e.target.value);
+    };
 
     // Determine effective cities and subcategories from tabs
     let effectiveCities = cities;
@@ -322,6 +341,7 @@ const UnifiedListings = (props) => {
         perPage,
         page,
         locale: currentLocale,
+        sortBy: enableSorting ? sortBy : null,
         onDataLoaded,
         onError,
         autoLoad,
@@ -396,6 +416,54 @@ const UnifiedListings = (props) => {
                 </>
             )}
 
+            {enableSorting && (
+                <div className="uls-sort-controls mb-4">
+                    {isMobile ? (
+                        <div className="mobile-sort-container">
+                            <span className="mobile-sort-label">{t('search.sortBy')}:</span>
+                            <select
+                                className="mobile-sort-select"
+                                value={sortBy}
+                                onChange={handleSortChange}
+                            >
+                                <option value={t('search.sortOptions.default')}>
+                                    {t('search.sortOptions.default')}
+                                </option>
+                                <option value={t('search.sortOptions.priceLowHigh')}>
+                                    {t('search.sortOptions.priceLowHigh')}
+                                </option>
+                                <option value={t('search.sortOptions.priceHighLow')}>
+                                    {t('search.sortOptions.priceHighLow')}
+                                </option>
+                            </select>
+                        </div>
+                    ) : (
+                        <FormControl sx={{ minWidth: 180 }} size="small">
+                            <InputLabel id="uls-sort-label">
+                                {t('search.sortBy')}
+                            </InputLabel>
+                            <Select
+                                labelId="uls-sort-label"
+                                id="uls-sort"
+                                value={sortBy}
+                                label={t('search.sortBy')}
+                                onChange={handleSortChange}
+                            >
+                                <MenuItem value={t('search.sortOptions.default')}>
+                                    {t('search.sortOptions.default')}
+                                </MenuItem>
+                                <MenuItem value={t('search.sortOptions.priceLowHigh')}>
+                                    {t('search.sortOptions.priceLowHigh')}
+                                </MenuItem>
+                                <MenuItem value={t('search.sortOptions.priceHighLow')}>
+                                    {t('search.sortOptions.priceHighLow')}
+                                </MenuItem>
+                            </Select>
+                        </FormControl>
+                    )}
+                </div>
+            )}
+
             <div className="uls-listings swiper-mode">
                 {loading ? (
                     Array(4)
@@ -462,9 +530,9 @@ const UnifiedListings = (props) => {
                                         </div>
                                         <ListingIcons type={(() => { const id = parseInt(listing.category_id); if (id === 2) return 'cars'; if (id === 3) return 'drivers'; if (id === 4) return 'boats'; if (id === 5) return 'activities'; return 'cars'; })()} l={listing} classes={'compact'} />
                                         <div className="uls-badges">
-                                            <span className="uls-badge uls-badge--green"><span className="uls-badge__ico"><FaCheckCircle size={12} /></span>{t('listing.trustNotes.cancellation', 'Free Cancellation')}</span>
+                                            <span className="uls-badge uls-badge--green"><span className="uls-badge__ico"><FaCheckCircle size={12} /></span>{t('listing.badges.freeCancellation', 'Free Cancellation')}</span>
                                             {!isDepositRequired(listing.deposit_required) && parseInt(listing.category_id) === 2 && (
-                                                <span className="uls-badge uls-badge--blue"><span className="uls-badge__ico"><FaMoneyBillWave size={12} /></span>{t('listing.specs.noDeposit', 'No Deposit')}</span>
+                                                <span className="uls-badge uls-badge--blue"><span className="uls-badge__ico"><FaMoneyBillWave size={12} /></span>{t('listing.badges.noDeposit', 'No Deposit')}</span>
                                             )}
                                             <span className="uls-badge uls-badge--outline"><span className="uls-badge__ico"><MdVerified size={12} /></span>{t('listing.badges.verifiedPartner', 'Verified Partner')}</span>
                                         </div>
@@ -482,6 +550,7 @@ const UnifiedListings = (props) => {
                     </Swiper>
                 )}
             </div>
+
         </section>
     );
 };
