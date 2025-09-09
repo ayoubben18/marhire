@@ -1,13 +1,15 @@
 import { HiOutlineMail } from "react-icons/hi";
 import { FaPhone } from "react-icons/fa6";
+import { useTranslation } from 'react-i18next';
 
 const ContactUsBox = () => {
+    const { t } = useTranslation();
     return (
         <section className="contact-section">
             <div className="container">
                 <div className="card">
-                    <h2 className="title">Contact Us</h2>
-                    <p className="desc">Have questions or need help with a booking? Our team is here for you.</p>
+                    <h2 className="title">{t('contact.title')}</h2>
+                    <p className="desc">{t('contact.description')}</p>
                     <div className="methods">
                         <a className="pill" href="mailto:info@marhire.com">
                             <span className="ico"><HiOutlineMail size={16} /></span>
@@ -19,7 +21,7 @@ const ContactUsBox = () => {
                         </a>
                     </div>
                     <div className="sep"></div>
-                    <p className="foot">Chat support available 24/7 on WhatsApp.</p>
+                    <p className="foot">{t('contact.whatsappSupport')}</p>
                 </div>
             </div>
 

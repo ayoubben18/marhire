@@ -1483,7 +1483,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams, for
                         {selectedAddons && selectedAddons.length > 0 && listing?.addons && (
                             <>
                                 <div className="border-t pt-2">
-                                    <div className="text-sm font-medium text-gray-700 mb-2">Add-ons:</div>
+                                    <div className="text-sm font-medium text-gray-700 mb-2">{t('booking.addons')}</div>
                                     {selectedAddons.map(addonId => {
                                         const addon = listing.addons.find(item => item.addon.id === addonId);
                                         if (!addon) return null;
@@ -1521,7 +1521,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams, for
                                         <Tooltip 
                                             title={
                                                 <div className="p-2">
-                                                    <p className="font-semibold mb-2">Available Rates:</p>
+                                                    <p className="font-semibold mb-2">{t('booking.availableRates')}</p>
                                                     <div className="space-y-1">
                                                         <p>• Hourly (0.5-1.5h): €{priceDetails.priceBreakdown.hourly}/hour</p>
                                                         <p>• Half-day (2-4h): €{priceDetails.priceBreakdown.halfDay} flat</p>
@@ -1596,7 +1596,7 @@ const BookingFrm = ({ loading, listingId, categoryId, listing, searchParams, for
                                 title="WhatsApp"
                             >
                                 <FaWhatsapp size={20} />
-                                <span className="font-medium">WhatsApp</span>
+                                <span className="font-medium">{t('booking.whatsapp')}</span>
                             </a>
                         </>
                     ) : (

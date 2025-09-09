@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { MapPin, Calendar, Search, ChevronDown, Anchor, Users, Clock } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 const SearchBoatForm = () => {
+    const { t } = useTranslation();
     const [destination, setDestination] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
-    const [selectedBoatType, setSelectedBoatType] = useState("Any type");
+    const [selectedBoatType, setSelectedBoatType] = useState(t('boatSearch.boatTypes.any'));
     const [showCalendar, setShowCalendar] = useState(false);
     const [showBoatTypes, setShowBoatTypes] = useState(false);
     const [isSelectingEndDate, setIsSelectingEndDate] = useState(false);
@@ -13,9 +15,9 @@ const SearchBoatForm = () => {
     const [showPeopleModal, setShowPeopleModal] = useState(false);
 
     const boatTypes = [
-        { id: "any", name: "Any type" },
-        { id: "yakht", name: "Yakht" },
-        { id: "speedboat", name: "SpeedBoat" }
+        { id: "any", name: t('boatSearch.boatTypes.any') },
+        { id: "yakht", name: t('boatSearch.boatTypes.yacht') },
+        { id: "speedboat", name: t('boatSearch.boatTypes.speedboat') }
     ];
 
     const formatDate = (dateString) => {
@@ -28,12 +30,12 @@ const SearchBoatForm = () => {
     };
 
     const getDateRangeText = () => {
-        if (!startDate && !endDate) return "Jul 15 - Jul 16";
+        if (!startDate && !endDate) return t('boatSearch.defaultDateRange');
         if (startDate && !endDate)
-            return `${formatDate(startDate)} - Select end date`;
+            return `${formatDate(startDate)} - ${t('boatSearch.placeholders.selectEndDate')}`;
         if (startDate && endDate)
             return `${formatDate(startDate)} - ${formatDate(endDate)}`;
-        return "Select dates";
+        return t('boatSearch.placeholders.selectDates');
     };
 
     const handleDateClick = () => {
@@ -79,7 +81,7 @@ const SearchBoatForm = () => {
 
         alert(
             `Searching for ${selectedBoatType} to: ${
-                destination || "Any destination"
+                destination || t('boatSearch.placeholders.anyDestination')
             }\nDates: ${startDate} to ${endDate}`
         );
     };
@@ -218,7 +220,7 @@ const SearchBoatForm = () => {
                                 type="text"
                                 value={destination}
                                 onChange={(e) => setDestination(e.target.value)}
-                                placeholder="Where are you going?"
+                                placeholder={t('boatSearch.placeholders.destination')}
                                 className="w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 pr-12"
                             />
                             <MapPin className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -252,10 +254,10 @@ const SearchBoatForm = () => {
                                 <div className="mb-4">
                                     <h3 className="font-semibold text-gray-800 mb-2">
                                         {!startDate
-                                            ? "Select start date"
+                                            ? t('boatSearch.placeholders.selectStartDate')
                                             : isSelectingEndDate
-                                            ? "Select end date"
-                                            : "Select dates"}
+                                            ? t('boatSearch.placeholders.selectEndDate')
+                                            : t('boatSearch.placeholders.selectDates')}
                                     </h3>
                                     <div className="text-sm text-gray-600">
                                         July 2025
@@ -265,13 +267,13 @@ const SearchBoatForm = () => {
                                 {/* Calendar Header */}
                                 <div className="grid grid-cols-7 gap-1 mb-2">
                                     {[
-                                        "Sun",
-                                        "Mon",
-                                        "Tue",
-                                        "Wed",
-                                        "Thu",
-                                        "Fri",
-                                        "Sat",
+                                        t('boatSearch.weekDays.sun'),
+                                        t('boatSearch.weekDays.mon'),
+                                        t('boatSearch.weekDays.tue'),
+                                        t('boatSearch.weekDays.wed'),
+                                        t('boatSearch.weekDays.thu'),
+                                        t('boatSearch.weekDays.fri'),
+                                        t('boatSearch.weekDays.sat'),
                                     ].map((day) => (
                                         <div
                                             key={day}

@@ -35,7 +35,7 @@ function Modal({ open, onClose, children }) {
 
 export default function PrivateDriverForm({ defaultCity, defaultCityId }) {
     const [pickupLocation, setPickupLocation] = useState("");
-    const [dropoffLocation, setDropoffLocation] = useState("Same as pickup");
+    const [dropoffLocation, setDropoffLocation] = useState(t('privateDriver.sameAsPickup'));
     const [pickupDate, setPickupDate] = useState("");
     const [pickupTime, setPickupTime] = useState("");
     const [guests, setGuests] = useState(1);
@@ -48,7 +48,7 @@ export default function PrivateDriverForm({ defaultCity, defaultCityId }) {
     const { t } = useTranslation();
 
     const formatDate = (dateString) => {
-        if (!dateString) return "Select date";
+        if (!dateString) return t('privateDriver.placeholders.selectDate');
         const date = new Date(dateString);
         const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         const months = [
@@ -115,14 +115,14 @@ export default function PrivateDriverForm({ defaultCity, defaultCityId }) {
 
         // Determine service type based on locations
         const serviceType =
-            dropoffLocation === "Same as pickup" ? "hourly" : "point-to-point";
+            dropoffLocation === t('privateDriver.sameAsPickup') ? "hourly" : "point-to-point";
 
         const searchParams = {
             category: 3, // Private driver category
             service_type: serviceType,
             city_a: pickupLocation,
             city_b:
-                dropoffLocation === "Same as pickup"
+                dropoffLocation === t('privateDriver.sameAsPickup')
                     ? pickupLocation
                     : dropoffLocation,
             date: pickupDate,
@@ -155,7 +155,7 @@ export default function PrivateDriverForm({ defaultCity, defaultCityId }) {
 
     useEffect(() => {
         setPickupLocation(getParam("pickup") || defaultCity || "");
-        setDropoffLocation(getParam("dropoff") || "Same as pickup");
+        setDropoffLocation(getParam("dropoff") || t('privateDriver.sameAsPickup'));
         setPickupDate(getParam("pickup_date") || "");
         setPickupTime(getParam("pickup_time") || "");
         setGuests(getParam("persons") || 1);
@@ -181,7 +181,7 @@ export default function PrivateDriverForm({ defaultCity, defaultCityId }) {
                                 onChange={(e) =>
                                     setPickupLocation(e.target.value)
                                 }
-                                placeholder="Airport, city, station, region, district..."
+                                placeholder={t('privateDriver.placeholders.location')}
                                 className="w-full text-lg font-semibold text-gray-900 placeholder-gray-400 border-none outline-none bg-transparent mh-input"
                             />
                             <LocationModal

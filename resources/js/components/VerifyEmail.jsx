@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './VerifyEmail.css';
 import MarkEmailReadOutlinedIcon from '@mui/icons-material/MarkEmailReadOutlined';
 
 const VerifyEmail = () => {
     const { email } = useParams();
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [emailSent, setEmailSent] = useState(false);
@@ -18,11 +20,11 @@ const VerifyEmail = () => {
         try {
             const response = axios.post("/api/email/resend", { email });
 
-            setMessage("L'e-mail de vérification a été renvoyé avec succès.");
+            setMessage(t('verifyEmail.successMessage'));
             
         } catch(error) {
             console.log(error);
-            setMessage("Une erreur s'est produite lors de l'envoi de l'e-mail.");
+            setMessage(t('verifyEmail.errorMessage'));
         }
         setLoading(false);
         setEmailSent(true);
@@ -46,17 +48,16 @@ const VerifyEmail = () => {
                                 </div>
                             </div>
                             <div className="card-body">
-                                 <h3 className="text-center">Verifier votre email</h3>
-                                 <p className="mb-0">Vous êtes presque là ! Nous avons envoyé un e-mail de vérification à :</p>
+                                 <h3 className="text-center">{t('verifyEmail.title')}</h3>
+                                 <p className="mb-0">{t('verifyEmail.almostThere')}</p>
                                  <p><b>{ email }</b></p>
                                  <p>
-                                    Vérifiez votre boîte de réception et cliquez sur le lien pour vérifier votre compte. 
-                                    Si vous ne trouvez pas l'email, vérifiez votre dossier de spam ou de courrier indésirable. Vous pouvez également demander un nouvel envoi en cas de problème.
+                                    {t('verifyEmail.instructions')}
                                  </p>
                                  <div className="d-flex justify-content-center">
                                     { !emailSent
                                       ? <button onClick={resendEmail} className="btn btn-success" disabled={ loading }>
-                                         <span className="ml-1">{ loading ? "Renvoi en cours..." :"Renvoyer l'email"}</span>
+                                         <span className="ml-1">{ loading ? t('verifyEmail.resending') : t('verifyEmail.resendButton')}</span>
                                        </button>
                                      :<p style={{color:'green'}}>{message}</p>}
                                  </div>

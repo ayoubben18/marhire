@@ -47,6 +47,98 @@
     "messages": {
         "whatsappInterest": "Hi MarHire team,\nI'm interested in the following listing:\nListing Title: {{title}}\nListing Link: {{url}}\nCould you please confirm availability, price, and provide any additional details?"
     },
+    "verifyEmail": {
+        "title": "Verify your email",
+        "successMessage": "Verification email has been resent successfully.",
+        "errorMessage": "An error occurred while sending the email.",
+        "almostThere": "You're almost there! We've sent a verification email to:",
+        "instructions": "Check your inbox and click the link to verify your account. If you can't find the email, check your spam or junk folder. You can also request a new one if there are any issues.",
+        "resending": "Resending...",
+        "resendButton": "Resend email"
+    },
+    "boatSearch": {
+        "boatTypes": {
+            "any": "Any type",
+            "yacht": "Yacht",
+            "speedboat": "Speedboat"
+        },
+        "placeholders": {
+            "destination": "Where are you going?",
+            "selectDates": "Select dates",
+            "selectStartDate": "Select start date",
+            "selectEndDate": "Select end date",
+            "anyDestination": "Any destination"
+        },
+        "defaultDateRange": "Jul 15 - Jul 16",
+        "weekDays": {
+            "sun": "Sun",
+            "mon": "Mon",
+            "tue": "Tue",
+            "wed": "Wed",
+            "thu": "Thu",
+            "fri": "Fri",
+            "sat": "Sat"
+        }
+    },
+    "privateDriver": {
+        "placeholders": {
+            "location": "Airport, city, station, region, district...",
+            "selectDate": "Select date"
+        },
+        "sameAsPickup": "Same as pickup"
+    },
+    "contact": {
+        "title": "Contact Us",
+        "description": "Have questions or need help with a booking? Our team is here for you.",
+        "whatsappSupport": "Chat support available 24/7 on WhatsApp."
+    },
+    "search": {
+        "sortBy": "Sort By",
+        "filterBy": "Filter by",
+        "sortOptions": {
+            "default": "Default",
+            "priceLowHigh": "Price: low to high",
+            "priceHighLow": "Price: high to low"
+        }
+    },
+    "booking": {
+        "addons": "Add-ons:",
+        "availableRates": "Available Rates:",
+        "whatsapp": "WhatsApp",
+        "pricing": {
+            "price": "Price",
+            "extraAddons": "Extra / Addons",
+            "included": "Included",
+            "total": "Total"
+        }
+    },
+    "footer": {
+        "services": {
+            "carRental": {
+                "luxury": "Luxury Car Rental Morocco",
+                "cheap": "Cheap Car Rental Morocco",
+                "inCity": "Car Rental in {{city}}"
+            },
+            "privateDriver": {
+                "airport": "Airport Transfer Morocco",
+                "intercity": "Intercity Drivers Morocco",
+                "inCity": "Private Driver {{city}}"
+            },
+            "boats": {
+                "yacht": "Yacht Charter Morocco",
+                "sunset": "Sunset Cruise Agadir",
+                "fishing": "Fishing Boats Morocco",
+                "party": "Party Boat Rentals",
+                "inCity": "Boat Rental {{city}}"
+            },
+            "activities": {
+                "camel": "Camel Rides in Morocco",
+                "quad": "Quad Biking in Morocco",
+                "surfing": "Surfing in Morocco",
+                "hiking": "Hiking in Morocco"
+            }
+        }
+    },
     "cities": {
         "morocco": "Morocco",
         "agadir": "Agadir",

@@ -18,6 +18,7 @@ import SearchItem from "../components/site/SearchItem";
 import ProgressBar from "../components/site/ProgressBar";
 import axios from "axios";
 import BoatForm from "../components/site/BoatForm";
+import { useTranslation } from 'react-i18next';
 import { useMediaQuery } from "react-responsive";
 import { IoFilter } from "react-icons/io5";
 
@@ -72,6 +73,7 @@ const renderSkeletonItems = (count = 4) => (
 );
 
 const Search = ({ type }) => {
+    const { t } = useTranslation();
     // Get current locale from URL path or localStorage as fallback
     const pathMatch = window.location.pathname.match(/^\/([a-z]{2})(?:\/|$)/);
     const currentLocale = pathMatch ? pathMatch[1] : (localStorage.getItem('i18nextLng') || 'en');
@@ -89,7 +91,7 @@ const Search = ({ type }) => {
     const [hasMore, setHasMore] = useState(true);
     const [filterLoading, setFilterLoading] = useState(false);
     const [results, setResults] = useState([]);
-    const [sortBy, setSortBy] = useState("Default");
+    const [sortBy, setSortBy] = useState(t('search.sortOptions.default'));
     const [showMobileFilters, setShowMobileFilters] = useState(false);
     const isMobile = useMediaQuery({ maxWidth: 900 });
 
@@ -241,23 +243,23 @@ const Search = ({ type }) => {
                                         size="small"
                                     >
                                         <InputLabel id="sort-by-label">
-                                            Sort By
+                                            {t('search.sortBy')}
                                         </InputLabel>
                                         <Select
                                             labelId="sort-by-label"
                                             id="sort-by"
                                             value={sortBy}
-                                            label="Sort By"
+                                            label={t('search.sortBy')}
                                             onChange={handleSortChange}
                                         >
-                                            <MenuItem value="Default">
-                                                Default
+                                            <MenuItem value={t('search.sortOptions.default')}>
+                                                {t('search.sortOptions.default')}
                                             </MenuItem>
-                                            <MenuItem value="Price: low to high">
-                                                Price: low to high
+                                            <MenuItem value={t('search.sortOptions.priceLowHigh')}>
+                                                {t('search.sortOptions.priceLowHigh')}
                                             </MenuItem>
-                                            <MenuItem value="Price: high to low">
-                                                Price: high to low
+                                            <MenuItem value={t('search.sortOptions.priceHighLow')}>
+                                                {t('search.sortOptions.priceHighLow')}
                                             </MenuItem>
                                         </Select>
                                     </FormControl>

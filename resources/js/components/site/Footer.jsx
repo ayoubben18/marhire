@@ -339,10 +339,10 @@ const Footer = () => {
                             </li>
                         ))}
                         <li>
-                            <a href="#">Luxury Car Rental Morocco</a>
+                            <a href="#">{t('footer.services.carRental.luxury')}</a>
                         </li>
                         <li>
-                            <a href="#">Cheap Car Rental Morocco</a>
+                            <a href="#">{t('footer.services.carRental.cheap')}</a>
                         </li>
                     </ul>
                 </FooterSection>
@@ -362,10 +362,10 @@ const Footer = () => {
                             </li>
                         ))}
                         <li>
-                            <a href="#">Airport Transfer Morocco</a>
+                            <a href="#">{t('footer.services.privateDriver.airport')}</a>
                         </li>
                         <li>
-                            <a href="#">Intercity Drivers Morocco</a>
+                            <a href="#">{t('footer.services.privateDriver.intercity')}</a>
                         </li>
                     </ul>
                 </FooterSection>
@@ -385,16 +385,16 @@ const Footer = () => {
                             </li>
                         ))}
                         <li>
-                            <a href="#">Yacht Charter Morocco</a>
+                            <a href="#">{t('footer.services.boats.yacht')}</a>
                         </li>
                         <li>
-                            <a href="#">Sunset Cruise Agadir</a>
+                            <a href="#">{t('footer.services.boats.sunset')}</a>
                         </li>
                         <li>
-                            <a href="#">Fishing Boats Morocco</a>
+                            <a href="#">{t('footer.services.boats.fishing')}</a>
                         </li>
                         <li>
-                            <a href="#">Party Boat Rentals</a>
+                            <a href="#">{t('footer.services.boats.party')}</a>
                         </li>
                     </ul>
                 </FooterSection>
@@ -402,16 +402,16 @@ const Footer = () => {
                 <FooterSection title="Things to Do">
                     <ul>
                         <li>
-                            <a href="#">Camel Rides in Morocco</a>
+                            <a href="#">{t('footer.services.activities.camel')}</a>
                         </li>
                         <li>
-                            <a href="#">Quad Biking in Morocco</a>
+                            <a href="#">{t('footer.services.activities.quad')}</a>
                         </li>
                         <li>
-                            <a href="#">Surfing in Morocco</a>
+                            <a href="#">{t('footer.services.activities.surfing')}</a>
                         </li>
                         <li>
-                            <a href="#">Hiking in Morocco</a>
+                            <a href="#">{t('footer.services.activities.hiking')}</a>
                         </li>
                         <li>
                             <a href="#">Cultural Tours in Morocco</a>

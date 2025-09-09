@@ -45,6 +45,98 @@
     "messages": {
         "whatsappInterest": "Hola equipo MarHire,\nEstoy interesado en el siguiente anuncio:\nTítulo del anuncio: {{title}}\nEnlace del anuncio: {{url}}\n¿Podrían confirmar la disponibilidad, el precio y proporcionar detalles adicionales?"
     },
+    "verifyEmail": {
+        "title": "Verifica tu correo electrónico",
+        "successMessage": "El correo de verificación ha sido reenviado con éxito.",
+        "errorMessage": "Se produjo un error al enviar el correo electrónico.",
+        "almostThere": "¡Ya casi terminas! Hemos enviado un correo de verificación a:",
+        "instructions": "Revisa tu bandeja de entrada y haz clic en el enlace para verificar tu cuenta. Si no encuentras el correo, revisa tu carpeta de spam o correo no deseado. También puedes solicitar uno nuevo si hay algún problema.",
+        "resending": "Reenviando...",
+        "resendButton": "Reenviar correo"
+    },
+    "boatSearch": {
+        "boatTypes": {
+            "any": "Cualquier tipo",
+            "yacht": "Yate",
+            "speedboat": "Lancha rápida"
+        },
+        "placeholders": {
+            "destination": "¿A dónde vas?",
+            "selectDates": "Seleccionar fechas",
+            "selectStartDate": "Seleccionar fecha de inicio",
+            "selectEndDate": "Seleccionar fecha de fin",
+            "anyDestination": "Cualquier destino"
+        },
+        "defaultDateRange": "15 jul - 16 jul",
+        "weekDays": {
+            "sun": "Dom",
+            "mon": "Lun",
+            "tue": "Mar",
+            "wed": "Mié",
+            "thu": "Jue",
+            "fri": "Vie",
+            "sat": "Sáb"
+        }
+    },
+    "privateDriver": {
+        "placeholders": {
+            "location": "Aeropuerto, ciudad, estación, región, distrito...",
+            "selectDate": "Seleccionar fecha"
+        },
+        "sameAsPickup": "Igual que la recogida"
+    },
+    "contact": {
+        "title": "Contáctanos",
+        "description": "¿Tienes preguntas o necesitas ayuda con una reserva? Nuestro equipo está aquí para ti.",
+        "whatsappSupport": "Soporte por chat disponible 24/7 en WhatsApp."
+    },
+    "search": {
+        "sortBy": "Ordenar por",
+        "filterBy": "Filtrar por",
+        "sortOptions": {
+            "default": "Predeterminado",
+            "priceLowHigh": "Precio: de menor a mayor",
+            "priceHighLow": "Precio: de mayor a menor"
+        }
+    },
+    "booking": {
+        "addons": "Extras:",
+        "availableRates": "Tarifas disponibles:",
+        "whatsapp": "WhatsApp",
+        "pricing": {
+            "price": "Precio",
+            "extraAddons": "Extras / Complementos",
+            "included": "Incluido",
+            "total": "Total"
+        }
+    },
+    "footer": {
+        "services": {
+            "carRental": {
+                "luxury": "Alquiler de coches de lujo Marruecos",
+                "cheap": "Alquiler de coches baratos Marruecos",
+                "inCity": "Alquiler de coches en {{city}}"
+            },
+            "privateDriver": {
+                "airport": "Transfer aeropuerto Marruecos",
+                "intercity": "Conductores interurbanos Marruecos",
+                "inCity": "Conductor privado {{city}}"
+            },
+            "boats": {
+                "yacht": "Charter de yate Marruecos",
+                "sunset": "Crucero al atardecer Agadir",
+                "fishing": "Barcos de pesca Marruecos",
+                "party": "Alquiler de barcos de fiesta",
+                "inCity": "Alquiler de barcos {{city}}"
+            },
+            "activities": {
+                "camel": "Paseos en camello en Marruecos",
+                "quad": "Quad en Marruecos",
+                "surfing": "Surf en Marruecos",
+                "hiking": "Senderismo en Marruecos"
+            }
+        }
+    },
     "cities": {
         "morocco": "Marruecos",
         "agadir": "Agadir",

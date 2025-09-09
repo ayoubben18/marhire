@@ -6,8 +6,10 @@ import PriceRangeSlider from "./PriceRangeSlider";
 import NumberSlider from "./NumberSlider";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useTranslation } from 'react-i18next';
 
 const SearchFilter = ({ category, filters, onChange }) => {
+    const { t } = useTranslation();
     const [dynamicOptions, setDynamicOptions] = useState([]);
     const FILTERS_SCHEMA = {
         car: [
@@ -206,7 +208,7 @@ const SearchFilter = ({ category, filters, onChange }) => {
 
     return (
         <aside className="search__filters">
-            <h2>Filter by</h2>
+            <h2>{t('search.filterBy')}</h2>
             {FILTERS_SCHEMA[category].map((field) => (
                 <div key={field.key} className="search__filters__item">
                     <label className="search__filters__item__lbl">
