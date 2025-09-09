@@ -400,39 +400,20 @@ class EntereController extends Controller
             app()->setLocale($locale);
         }
 
-        if ($skip == 0) {
-            $latest = Article::withCurrentTranslations()->with('category')->orderBy('created_at', 'desc')->first();
-            $rest = Article::withCurrentTranslations()->with('category')->orderBy('created_at', 'desc')
-                ->skip(1)
-                ->take($take)
-                ->get();
+        // Get articles with unified structure - no artificial latest/articles split
+        $articles = Article::withCurrentTranslations()->with('category')->orderBy('created_at', 'desc')
+            ->skip($skip)
+            ->take($take)
+            ->get();
 
-            // Add translated fields for easy frontend consumption
-            $latest['translated_fields'] = $latest ? $latest->getCurrentTranslatedData() : [];
-            
-            foreach ($rest as $article) {
-                $article['translated_fields'] = $article->getCurrentTranslatedData();
-            }
-
-            return response()->json([
-                'latest' => $latest,
-                'articles' => $rest,
-            ]);
-        } else {
-            $rest = Article::withCurrentTranslations()->with('category')->orderBy('created_at', 'desc')
-                ->skip($skip)
-                ->take($take)
-                ->get();
-
-            // Add translated fields for easy frontend consumption
-            foreach ($rest as $article) {
-                $article['translated_fields'] = $article->getCurrentTranslatedData();
-            }
-
-            return response()->json([
-                'articles' => $rest,
-            ]);
+        // Add translated fields for easy frontend consumption
+        foreach ($articles as $article) {
+            $article['translated_fields'] = $article->getCurrentTranslatedData();
         }
+
+        return response()->json([
+            'articles' => $articles,
+        ]);
     }
 
     public function get_article_api(Request $request)

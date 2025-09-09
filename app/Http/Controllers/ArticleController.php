@@ -67,12 +67,32 @@ class ArticleController extends Controller
             'user_id' => Auth::id()
         ]);
 
+        // Create English translation from main article data
+        $translationService = new TranslationService();
+        $englishTranslation = [
+            'en' => [
+                'title' => $request->title,
+                'short_description' => $request->short_description,
+                'content' => $request->content,
+                'meta_title' => $request->meta_title,
+                'meta_description' => $request->meta_description,
+            ]
+        ];
+        
+        try {
+            $translationService->updateTranslations($article, $englishTranslation);
+        } catch (\Exception $e) {
+            Log::warning('Failed to save English translation for new article', [
+                'article_id' => $article->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+
         // Save pending translations if they exist
         if ($request->has('pending_translations')) {
             try {
                 $pendingTranslations = json_decode($request->input('pending_translations'), true);
                 if ($pendingTranslations && is_array($pendingTranslations)) {
-                    $translationService = new TranslationService();
                     $translationService->updateTranslations($article, $pendingTranslations);
                 }
             } catch (\Exception $e) {
@@ -143,13 +163,33 @@ class ArticleController extends Controller
             'schema' => $request->schema,
             'category_id' => $request->category_id,
         ]);
+
+        // Update English translation from main article data
+        $translationService = new TranslationService();
+        $englishTranslation = [
+            'en' => [
+                'title' => $request->title,
+                'short_description' => $request->short_description,
+                'content' => $request->content,
+                'meta_title' => $request->meta_title,
+                'meta_description' => $request->meta_description,
+            ]
+        ];
+        
+        try {
+            $translationService->updateTranslations($article, $englishTranslation);
+        } catch (\Exception $e) {
+            Log::warning('Failed to update English translation for article', [
+                'article_id' => $article->id,
+                'error' => $e->getMessage()
+            ]);
+        }
         
         // Save pending translations if they exist
         if ($request->has('pending_translations')) {
             try {
                 $pendingTranslations = json_decode($request->input('pending_translations'), true);
                 if ($pendingTranslations && is_array($pendingTranslations)) {
-                    $translationService = new TranslationService();
                     $translationService->updateTranslations($article, $pendingTranslations);
                 }
             } catch (\Exception $e) {

@@ -138,9 +138,9 @@ const Sitemap = () => {
     const [articles, setArticles] = useState([]);
     const [partners, setPartners] = useState([]);
     useEffect(() => {
-        axios.get('/api/get_articles_api').then(r => setArticles(r.data.articles || [])).catch(() => setArticles([]));
+        axios.get('/api/get_articles_api', { params: { locale: i18n.language } }).then(r => setArticles(r.data.articles || [])).catch(() => setArticles([]));
         axios.get('/api/get_active_agencies').then(r => setPartners(r.data.agencies || [])).catch(() => setPartners([]));
-    }, []);
+    }, [i18n.language]);
 
     const articleLinks = useMemo(() => (articles || []).map(a => ({ href: getLocalizedUrl(`/article/${a.slug}`), title: getTranslatedField(a, 'title', i18n.language) || 'Article' })), [articles, i18n.language]);
     const partnerLinks = useMemo(() => (partners || []).map(p => ({ href: getLocalizedUrl(`/agency/${p.slug}`), title: `${p.agency_name}${p.city?.city_name ? ' (' + p.city.city_name + ')' : ''}` })), [partners, i18n.language]);

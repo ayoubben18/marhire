@@ -29,7 +29,6 @@ const Blog = () => {
     const [loading, setLoading] = useState(true);
     const [hasMore, setHasMore] = useState(false);
     const [skip, setSkip] = useState(0);
-    const [lastBlog, setLastBlog] = useState(null);
     const [articles, setArticles] = useState([]);
 
     useEffect(() => {
@@ -37,11 +36,12 @@ const Blog = () => {
             const fetchArticles = async () => {
                 try {
                     console.log('Fetching articles with locale:', currentLocale);
-                    const response = await axios.get("/api/get_articles_api");
+                    const response = await axios.get("/api/get_articles_api", {
+                        params: { locale: currentLocale }
+                    });
                     console.log('Articles response:', response.data);
-                    setLastBlog(response.data.latest);
                     setArticles(response.data.articles);
-                    setSkip(response.data.articles.length + 1);
+                    setSkip(response.data.articles.length);
                     setHasMore(response.data.articles.length === 6);
                 } catch (err) {
                     console.error(err);
@@ -52,7 +52,7 @@ const Blog = () => {
 
             fetchArticles();
         }, 500);
-    }, []);
+    }, [currentLocale]);
 
     useEffect(() => {
         console.log(articles);
@@ -63,7 +63,7 @@ const Blog = () => {
 
         try {
             const response = await axios.get("/api/get_articles_api", {
-                params: { skip: skip },
+                params: { skip: skip, locale: currentLocale },
             });
             setArticles((prev) => [...prev, ...response.data.articles]);
             setHasMore(response.data.articles.length === 6);
@@ -124,7 +124,11 @@ const Blog = () => {
                     articles.map((article) => (
                         <a className="blog-card" key={article.slug} href={`/${currentLocale}/article/${article.slug}`}>
                             <div className="blog-card__image">
-                                <img src={"/" + article.featured_img} alt={getTranslatedField(article,'title',currentLocale)} />
+                                <img 
+                                    src={article.featured_img ? "/" + article.featured_img : "/images/not-found.png"} 
+                                    alt={getTranslatedField(article,'title',currentLocale)}
+                                    onError={(e) => {e.target.src = "/images/not-found.png"}}
+                                />
                             </div>
                             <div className="blog-card__content">
                                 {article.category && (<span className="badge badge--secondary">{article.category.category}</span>)}

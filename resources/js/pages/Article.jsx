@@ -30,7 +30,7 @@ const Article = ({ slug }) => {
             try {
                 console.log('Fetching article with locale:', currentLocale, 'slug:', slug);
                 const response = await axios.get("/api/get_article_api", {
-                    params: { slug: slug },
+                    params: { slug: slug, locale: currentLocale },
                 });
                 console.log('Article response:', response.data);
                 setArticle(response.data.article);
@@ -40,7 +40,7 @@ const Article = ({ slug }) => {
         };
 
         fetchArticle();
-    }, []);
+    }, [currentLocale, slug]);
 
     return (
         <>

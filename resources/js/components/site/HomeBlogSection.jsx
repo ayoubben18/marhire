@@ -32,7 +32,9 @@ const HomeBlogSection = () => {
         let mounted = true;
         const fetchArticles = async () => {
             try {
-                const response = await axios.get("/api/get_articles_api", { params: { limit: 10 } });
+                const response = await axios.get("/api/get_articles_api", { 
+                    params: { limit: 10, locale: currentLocale } 
+                });
                 if (!mounted) return;
                 const list = response?.data?.articles || [];
                 setArticles(list.slice(0, 10));
@@ -45,7 +47,7 @@ const HomeBlogSection = () => {
         };
         fetchArticles();
         return () => { mounted = false; };
-    }, []);
+    }, [currentLocale]);
 
     return (
         <section className="home-blog-section" style={{ background: '#F2F9F7', padding: '36px 0' }}>
