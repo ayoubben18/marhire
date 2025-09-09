@@ -33,6 +33,7 @@ Route::get('get_agency', [AgencyController::class, 'get_agency']);
 Route::get('get_active_agencies', [AgencyController::class, 'get_active_agencies']);
 Route::get('get_cities', [CityController::class, 'get_cities']);
 Route::get('get_categories', [CategoryController::class, 'get_categories']);
+Route::get('get_subcategories_api', [CategoryController::class, 'get_subcategories_api']);
 Route::get('get_search_results', [ListingController::class, 'get_search_results']);
 Route::get('get_listing', [ListingController::class, 'get_listing']);
 Route::get('related_products', [ListingController::class, 'related_products']);

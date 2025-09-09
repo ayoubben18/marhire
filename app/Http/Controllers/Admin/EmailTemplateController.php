@@ -83,7 +83,7 @@ class EmailTemplateController extends Controller
     
     private function replaceVariables($text, $booking)
     {
-        $adminEmail = config('mail.admin_address', 'admin@marhire.com');
+        $adminEmail = EmailSetting::getAdminEmail();
         
         $replacements = [
             '{{client_name}}' => $booking->name,

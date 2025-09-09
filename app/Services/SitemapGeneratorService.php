@@ -4,8 +4,11 @@ namespace App\Services;
 
 use App\Models\Agency;
 use App\Models\Article;
+use App\Models\Category;
 use App\Models\City;
 use App\Models\Listing;
+use App\Models\SubCategory;
+use App\Models\SubCategoryOption;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use XMLWriter;
@@ -116,11 +119,17 @@ class SitemapGeneratorService
         // Process categories
         $this->addCategoryPages($writer, $locale);
         
+        // Process subcategories (chunked)
+        $this->addSubCategoryPages($writer, $locale);
+        
         // Process cities (chunked)
         $this->addCityPages($writer, $locale);
         
         // Process category + city combinations
         $this->addCategoryCityPages($writer, $locale);
+        
+        // Process subcategory + city combinations
+        $this->addSubCategoryCityPages($writer, $locale);
         
         // Process articles (chunked)
         $this->addArticlePages($writer, $locale);
@@ -147,9 +156,14 @@ class SitemapGeneratorService
             '/about-us' => ['priority' => 0.8, 'changefreq' => 'monthly'],
             '/how-we-work' => ['priority' => 0.8, 'changefreq' => 'monthly'],
             '/list-your-property' => ['priority' => 0.8, 'changefreq' => 'monthly'],
+            '/partners' => ['priority' => 0.8, 'changefreq' => 'monthly'],
             '/faq' => ['priority' => 0.8, 'changefreq' => 'monthly'],
             '/support' => ['priority' => 0.8, 'changefreq' => 'monthly'],
             '/blog' => ['priority' => 0.8, 'changefreq' => 'weekly'],
+            '/car-search' => ['priority' => 0.8, 'changefreq' => 'daily'],
+            '/private-search' => ['priority' => 0.8, 'changefreq' => 'daily'],
+            '/boat-search' => ['priority' => 0.8, 'changefreq' => 'daily'],
+            '/thingstodo-search' => ['priority' => 0.8, 'changefreq' => 'daily'],
             '/terms-conditions' => ['priority' => 0.7, 'changefreq' => 'yearly'],
             '/privacy-policy' => ['priority' => 0.7, 'changefreq' => 'yearly'],
             '/cookie-policy' => ['priority' => 0.7, 'changefreq' => 'yearly'],
@@ -181,6 +195,42 @@ class SitemapGeneratorService
                 'changefreq' => 'weekly'
             ]);
         }
+    }
+    
+    /**
+     * Add subcategory option pages (car types like SUV, Sedan, etc.) using chunked queries
+     */
+    private function addSubCategoryPages(XMLWriter $writer, string $locale): void
+    {
+        SubCategoryOption::select('sub_category_options.id', 'sub_category_options.option', 'sub_category_options.updated_at', 
+                                  'categories.category', 'categories.id as category_id')
+            ->join('sub_categories', 'sub_category_options.subcategory_id', '=', 'sub_categories.id')
+            ->join('categories', 'sub_categories.id_category', '=', 'categories.id')
+            ->orderBy('sub_category_options.id')
+            ->chunk(self::CHUNK_SIZE, function ($options) use ($writer, $locale) {
+                foreach ($options as $option) {
+                    if ($this->urlCount >= self::MAX_URLS_PER_SITEMAP) {
+                        return false; // Stop chunking
+                    }
+                    
+                    // Map category IDs to slugs (matching existing route logic)
+                    $categorySlugMap = [
+                        2 => 'car-rental',
+                        3 => 'private-driver', 
+                        4 => 'boat-rental',
+                        5 => 'things-to-do'
+                    ];
+                    
+                    $categorySlug = $categorySlugMap[$option->category_id] ?? strtolower(str_replace(' ', '-', $option->category));
+                    $optionSlug = strtolower(str_replace(' ', '-', $option->option));
+                    $path = "/category/{$categorySlug}/subcategory/{$optionSlug}";
+                    $this->writeUrl($writer, $path, $locale, [
+                        'priority' => 0.8,
+                        'changefreq' => 'weekly',
+                        'lastmod' => $option->updated_at
+                    ]);
+                }
+            });
     }
     
     /**
@@ -228,6 +278,48 @@ class SitemapGeneratorService
                     }
                 });
         }
+    }
+    
+    /**
+     * Add subcategory option + city combination pages (car types + cities)
+     */
+    private function addSubCategoryCityPages(XMLWriter $writer, string $locale): void
+    {
+        SubCategoryOption::select('sub_category_options.id', 'sub_category_options.option', 
+                                  'categories.category', 'categories.id as category_id')
+            ->join('sub_categories', 'sub_category_options.subcategory_id', '=', 'sub_categories.id')
+            ->join('categories', 'sub_categories.id_category', '=', 'categories.id')
+            ->orderBy('sub_category_options.id')
+            ->chunk(self::CHUNK_SIZE, function ($options) use ($writer, $locale) {
+                foreach ($options as $option) {
+                    City::select('id', 'city_name')
+                        ->orderBy('id')
+                        ->chunk(self::CHUNK_SIZE, function ($cities) use ($writer, $locale, $option) {
+                            foreach ($cities as $city) {
+                                if ($this->urlCount >= self::MAX_URLS_PER_SITEMAP) {
+                                    return false;
+                                }
+                                
+                                // Map category IDs to slugs (matching existing route logic)
+                                $categorySlugMap = [
+                                    2 => 'car-rental',
+                                    3 => 'private-driver', 
+                                    4 => 'boat-rental',
+                                    5 => 'things-to-do'
+                                ];
+                                
+                                $categorySlug = $categorySlugMap[$option->category_id] ?? strtolower(str_replace(' ', '-', $option->category));
+                                $optionSlug = strtolower(str_replace(' ', '-', $option->option));
+                                $citySlug = strtolower($city->city_name);
+                                $path = "/category/{$categorySlug}/subcategory/{$optionSlug}/city/{$citySlug}";
+                                $this->writeUrl($writer, $path, $locale, [
+                                    'priority' => 0.7,
+                                    'changefreq' => 'weekly'
+                                ]);
+                            }
+                        });
+                }
+            });
     }
     
     /**

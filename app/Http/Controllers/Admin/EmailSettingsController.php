@@ -22,7 +22,7 @@ class EmailSettingsController extends Controller
         $settings = [
             'sender_email' => EmailSetting::get('sender_email', env('MAIL_FROM_ADDRESS', 'noreply@marhire.com')),
             'sender_name' => EmailSetting::get('sender_name', env('MAIL_FROM_NAME', 'MarHire')),
-            'admin_email' => EmailSetting::get('admin_email', env('MAIL_ADMIN_ADDRESS', 'admin@marhire.com')),
+            'admin_email' => EmailSetting::get('admin_email', env('ADMIN_MAIL', 'admin@marhire.com')),
             'reminder_hours' => EmailSetting::get('reminder_hours', 48),
         ];
         

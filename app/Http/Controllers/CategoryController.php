@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\SubCategory;
+use App\Models\SubCategoryOption;
 use App\Models\Listing;
 use App\Models\ListingAddon;
 use App\Models\Agency;
@@ -139,5 +140,17 @@ class CategoryController extends Controller
         $categories = Category::orderBy('category')->get();
 
         return response()->json(['categories' => $categories]);
+    }
+
+    public function get_subcategories_api(Request $request)
+    {
+        $subcategoryOptions = SubCategoryOption::select('sub_category_options.id', 'sub_category_options.option', 
+                                                        'categories.category', 'categories.id as category_id')
+                                               ->join('sub_categories', 'sub_category_options.subcategory_id', '=', 'sub_categories.id')
+                                               ->join('categories', 'sub_categories.id_category', '=', 'categories.id')
+                                               ->orderBy('sub_category_options.option')
+                                               ->get();
+
+        return response()->json(['subcategories' => $subcategoryOptions]);
     }
 }

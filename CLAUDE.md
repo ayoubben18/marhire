@@ -40,6 +40,33 @@ npm run dev  # Compile new changes instead of npm run production
 -   Important tables: listings, bookings, agencies, cities, categories
 -   The cities table uses `city_name` column, not `name`
 
+### CRITICAL: Category Hierarchy Structure
+
+**IMPORTANT**: The category hierarchy has 3 levels with specific naming that can be confusing:
+
+1. **Categories** (Main service types):
+   - Car Rental (ID: 2)
+   - Private Driver (ID: 3)
+   - Boat Rental (ID: 4)
+   - Things to Do (ID: 5)
+
+2. **SubCategories** (Internal grouping - NOT user-facing):
+   - Examples: "Car Type", "Car Model", "Service Type", "Vehicle Type"
+   - These are organizational containers, NOT what users browse
+
+3. **SubCategoryOptions** (ACTUAL user-facing subcategories):
+   - Car types: "SUV", "Sedan", "Hatchback", "MPV"
+   - Service types: "Airport Transfer", "Daily Private Driver", "Business Travel"
+   - Boat types: "Yacht", "Speedboat"
+   - Activity types: "Quad", "Desert", "Camel Ride", "Surf"
+
+**KEY RULE**: When working with "subcategories" in routes, sitemaps, or user interfaces, you are actually working with **SubCategoryOptions**, NOT SubCategories. The existing URL pattern `/category/{category}/subcategory/{slug}` validates against SubCategoryOptions, not SubCategories.
+
+**Database Tables**:
+- `categories` - Main categories
+- `sub_categories` - Internal groupings (not directly user-facing)
+- `sub_category_options` - Actual car types/services (what users see and browse)
+
 ## Development Notes
 
 -   Prefer using `npm run dev` over `npm run production` for development work

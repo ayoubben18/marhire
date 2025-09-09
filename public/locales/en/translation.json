@@ -85,6 +85,45 @@
         "title": "Frequently Asked Questions",
         "subtitle": "Find quick answers to your questions about booking car rentals, private drivers, tours, and activities in Morocco."
     },
+    "sitemap": {
+        "breadcrumb": "Sitemap",
+        "title": "Sitemap",
+        "subtitle": "Navigate MarHire pages and resources in one place.",
+        "main": {
+            "home": "Homepage",
+            "about": "About Us",
+            "support": "Support & Help Center",
+            "partner": "Become a Partner",
+            "ourPartners": "Our Partners",
+            "faq": "Frequently Asked Questions",
+            "blog": "Travel Blog",
+            "search": "Search All Listings"
+        },
+        "categories": {
+            "cars": "Car Rentals",
+            "drivers": "Private Drivers",
+            "boats": "Boat Rentals",
+            "activities": "Activities & Tours"
+        },
+        "sections": {
+            "main": "Main Pages",
+            "categories": "Category Pages",
+            "subcategories": "Browse by Car Type & Service",
+            "cities": "City Guides",
+            "catCity": "Search by Category & City",
+            "subcatCity": "Search by Car Type & City",
+            "articles": "Blog Articles",
+            "partners": "Our Partners",
+            "legal": "Legal"
+        },
+        "legal": {
+            "terms": "Terms & Conditions",
+            "privacy": "Privacy Policy",
+            "cookies": "Cookie Policy",
+            "cancellation": "Cancellation Policy",
+            "insurance": "Insurance Conditions"
+        }
+    },
     "footer": {
         "company": "Company",
         "legalPolicy": "Legal & Policy",

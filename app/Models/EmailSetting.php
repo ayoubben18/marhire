@@ -59,7 +59,8 @@ class EmailSetting extends Model
      */
     public static function getAdminEmail()
     {
-        return self::get('admin_email', config('mail.admin_address', 'admin@marhire.com'));
+        // First try database setting, then ADMIN_MAIL from .env, then fallback
+        return self::get('admin_email', env('ADMIN_MAIL', config('mail.admin_address', 'admin@marhire.com')));
     }
     
     /**

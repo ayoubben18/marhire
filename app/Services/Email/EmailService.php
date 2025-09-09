@@ -19,6 +19,14 @@ class EmailService implements EmailServiceInterface
     protected $emailLogRepository;
     protected $pdfService;
 
+    // Admin-specific email subjects
+    protected $adminSubjects = [
+        'booking_received' => '🎉 New Booking Received - {{listing_title}}',
+        'booking_confirmed' => '✅ Booking Confirmed - {{booking_reference}}', 
+        'booking_cancelled' => '❌ Booking Cancelled - {{booking_reference}}',
+        'booking_reminder' => '⏰ Booking Reminder - {{booking_reference}}'
+    ];
+
     public function __construct(EmailLogRepository $emailLogRepository, PDFService $pdfService)
     {
         $this->emailLogRepository = $emailLogRepository;
@@ -115,13 +123,21 @@ class EmailService implements EmailServiceInterface
             if ($template) {
                 // Use database template
                 $subject = $this->replaceVariables($template->subject, $booking);
+                
+                // Override subject for admin recipients with custom admin subjects
+                if ($this->isAdminRecipient($recipient) && isset($this->adminSubjects[$emailType])) {
+                    $subject = $this->replaceVariables($this->adminSubjects[$emailType], $booking);
+                }
+                
                 $body = $this->replaceVariables($template->body_html, $booking);
                 
                 Log::info('Sending email with DatabaseTemplateEmail', [
                     'recipient' => $recipient,
                     'locale' => $locale,
                     'has_pdf' => !empty($pdfPath),
-                    'pdf_path' => $pdfPath
+                    'pdf_path' => $pdfPath,
+                    'is_admin' => $this->isAdminRecipient($recipient),
+                    'subject_override' => $this->isAdminRecipient($recipient) && isset($this->adminSubjects[$emailType])
                 ]);
                 
                 Mail::to($recipient)->send(new DatabaseTemplateEmail($subject, $body, $pdfPath, $locale));
@@ -211,8 +227,13 @@ class EmailService implements EmailServiceInterface
 
     protected function determineRecipientType(string $email): string
     {
-        $adminEmail = config('mail.admin_address', 'admin@marhire.com');
+        $adminEmail = EmailSetting::getAdminEmail();
         return $email === $adminEmail ? 'admin' : 'customer';
+    }
+    
+    protected function isAdminRecipient(string $email): bool
+    {
+        return $email === EmailSetting::getAdminEmail();
     }
     
     /**

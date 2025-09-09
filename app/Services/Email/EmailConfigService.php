@@ -16,7 +16,7 @@ class EmailConfigService
 
     public function getAdminEmail(): string
     {
-        return env('MAIL_ADMIN_ADDRESS', 'admin@marhire.com');
+        return \App\Models\EmailSetting::getAdminEmail();
     }
 
     public function getMailer(): string

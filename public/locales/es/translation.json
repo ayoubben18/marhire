@@ -83,6 +83,45 @@
         "title": "Preguntas Frecuentes",
         "subtitle": "Encuentra respuestas rápidas a tus preguntas sobre reservar alquileres de coches, conductores privados, tours y actividades en Marruecos."
     },
+    "sitemap": {
+        "breadcrumb": "Mapa del sitio",
+        "title": "Mapa del sitio",
+        "subtitle": "Navega por las páginas y recursos de MarHire en un solo lugar.",
+        "main": {
+            "home": "Página de inicio",
+            "about": "Acerca de nosotros",
+            "support": "Centro de ayuda y soporte",
+            "partner": "Convertirse en socio",
+            "ourPartners": "Nuestros socios",
+            "faq": "Preguntas frecuentes",
+            "blog": "Blog de viajes",
+            "search": "Buscar todos los anuncios"
+        },
+        "categories": {
+            "cars": "Alquiler de coches",
+            "drivers": "Conductores privados",
+            "boats": "Alquiler de barcos",
+            "activities": "Actividades y tours"
+        },
+        "sections": {
+            "main": "Páginas principales",
+            "categories": "Páginas de categorías",
+            "subcategories": "Explorar por tipo de coche y servicio",
+            "cities": "Guías de ciudades",
+            "catCity": "Buscar por categoría y ciudad",
+            "subcatCity": "Buscar por tipo de coche y ciudad",
+            "articles": "Artículos del blog",
+            "partners": "Nuestros socios",
+            "legal": "Legal"
+        },
+        "legal": {
+            "terms": "Términos y condiciones",
+            "privacy": "Política de privacidad",
+            "cookies": "Política de cookies",
+            "cancellation": "Política de cancelación",
+            "insurance": "Condiciones de seguro"
+        }
+    },
     "footer": {
         "company": "Empresa",
         "legalPolicy": "Legal y Políticas",

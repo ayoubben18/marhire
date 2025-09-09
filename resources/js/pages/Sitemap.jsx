@@ -137,13 +137,55 @@ const Sitemap = () => {
 
     const [articles, setArticles] = useState([]);
     const [partners, setPartners] = useState([]);
+    const [subcategories, setSubcategories] = useState([]);
     useEffect(() => {
         axios.get('/api/get_articles_api', { params: { locale: i18n.language } }).then(r => setArticles(r.data.articles || [])).catch(() => setArticles([]));
         axios.get('/api/get_active_agencies').then(r => setPartners(r.data.agencies || [])).catch(() => setPartners([]));
+        axios.get('/api/get_subcategories_api').then(r => setSubcategories(r.data.subcategories || [])).catch(() => setSubcategories([]));
     }, [i18n.language]);
 
     const articleLinks = useMemo(() => (articles || []).map(a => ({ href: getLocalizedUrl(`/article/${a.slug}`), title: getTranslatedField(a, 'title', i18n.language) || 'Article' })), [articles, i18n.language]);
     const partnerLinks = useMemo(() => (partners || []).map(p => ({ href: getLocalizedUrl(`/agency/${p.slug}`), title: `${p.agency_name}${p.city?.city_name ? ' (' + p.city.city_name + ')' : ''}` })), [partners, i18n.language]);
+    
+    const subcategoryLinks = useMemo(() => (subcategories || []).map(s => {
+        // Map category IDs to slugs (matching existing route logic)
+        const categorySlugMap = {
+            2: 'car-rental',
+            3: 'private-driver', 
+            4: 'boat-rental',
+            5: 'things-to-do'
+        };
+        
+        const categorySlug = categorySlugMap[s.category_id] || s.category?.toLowerCase().replace(/\s+/g, '-') || 'category';
+        const optionSlug = s.option?.toLowerCase().replace(/\s+/g, '-') || 'option';
+        return {
+            href: getLocalizedUrl(`/category/${categorySlug}/subcategory/${optionSlug}`), 
+            title: `${s.option} (${s.category || ''})`
+        };
+    }), [subcategories, i18n.language]);
+    
+    const subcategoryCityLinks = useMemo(() => {
+        const links = [];
+        // Map category IDs to slugs (matching existing route logic)
+        const categorySlugMap = {
+            2: 'car-rental',
+            3: 'private-driver', 
+            4: 'boat-rental',
+            5: 'things-to-do'
+        };
+        
+        for (const subcat of (subcategories || [])) {
+            for (const city of cities) {
+                const categorySlug = categorySlugMap[subcat.category_id] || subcat.category?.toLowerCase().replace(/\s+/g, '-') || 'category';
+                const optionSlug = subcat.option?.toLowerCase().replace(/\s+/g, '-') || 'option';
+                links.push({
+                    href: getLocalizedUrl(`/category/${categorySlug}/subcategory/${optionSlug}/city/${city.slug}`),
+                    title: `${subcat.option} — ${city.name} (${subcat.category || ''})`
+                });
+            }
+        }
+        return links;
+    }, [subcategories, i18n.language]);
 
     const legalPages = useMemo(() => ([
         { href: getLocalizedUrl('/terms-conditions'), title: t('sitemap.legal.terms', 'Terms & Conditions') },
@@ -163,12 +205,22 @@ const Sitemap = () => {
                 <Section title={t('sitemap.sections.categories', 'Category Pages')}>
                     <LinkGrid items={categoryPages} />
                 </Section>
+                {subcategoryLinks.length > 0 && (
+                    <Section title={t('sitemap.sections.subcategories', 'Browse by Subcategory')}>
+                        <LinkGrid items={subcategoryLinks} />
+                    </Section>
+                )}
                 <Section title={t('sitemap.sections.cities', 'City Guides')}>
                     <LinkGrid items={cityPages} />
                 </Section>
                 <Section title={t('sitemap.sections.catCity', 'Search by Category & City')}>
                     <LinkGrid items={categoryCityLinks} />
                 </Section>
+                {subcategoryCityLinks.length > 0 && (
+                    <Section title={t('sitemap.sections.subcatCity', 'Search by Subcategory & City')}>
+                        <LinkGrid items={subcategoryCityLinks} />
+                    </Section>
+                )}
                 {articleLinks.length > 0 && (
                     <Section title={t('sitemap.sections.articles', 'Blog Articles')}>
                         <LinkGrid items={articleLinks} />
