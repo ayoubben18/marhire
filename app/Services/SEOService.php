@@ -90,7 +90,14 @@ class SEOService
                 return Listing::where('slug', $slug)->withCurrentTranslations()->first();
             } else {
                 if (!Schema::hasTable('pages')) { return null; }
+                
+                // First try exact match
                 $page = Page::where('slug', $slug)->withCurrentTranslations()->first();
+                
+                // If no exact match, try wildcard pattern matching for template pages
+                if (!$page) {
+                    $page = $this->findPageByPattern($slug);
+                }
                 
                 // Add translated_fields for API consumption
                 if ($page) {
@@ -103,6 +110,27 @@ class SEOService
             // Fail safe: never break navigation due to missing tables/content
             return null;
         }
+    }
+    
+    /**
+     * Find a page by matching wildcard patterns
+     */
+    protected function findPageByPattern($slug)
+    {
+        // Get all pages that contain wildcards
+        $wildcardPages = Page::where('slug', 'like', '%*%')->withCurrentTranslations()->get();
+        
+        foreach ($wildcardPages as $page) {
+            // Convert wildcard pattern to regex
+            $pattern = str_replace(['*', '/'], ['[^/]+', '\/'], $page->slug);
+            $pattern = '/^' . $pattern . '$/';
+            
+            if (preg_match($pattern, $slug)) {
+                return $page;
+            }
+        }
+        
+        return null;
     }
     
     /**

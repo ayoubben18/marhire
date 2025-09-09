@@ -155,7 +155,7 @@ class EntereController extends Controller
         if (!in_array($category, $categories) || !$this->checkSubCategoryExists($category, $subcategory))
             return abort(404);
 
-        $page = $this->SEOservice->getPage('category/' . $category . '/subcategory/' . $subcategory . '/' . $city);
+        $page = $this->SEOservice->getPage('category/' . $category . '/subcategory/' . $subcategory . '/city/' . $city);
 
         // Process token replacement on the server side
         if ($page && $page->meta_title) {
