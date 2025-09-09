@@ -1298,15 +1298,12 @@ class ListingController extends Controller
 
         //Boat
         // Handle both boat_type (frontend format) and boatType (backend format)
-        $boatTypeParam = null;
-        if ($request->filled('boatType')) {
-            $boatTypeParam = $request->boatType;
+        if ($request->filled('boatType') && $request->boatType != 'Any type') {
+            $boatTypeParam = is_array($request->boatType) ? $request->boatType : [$request->boatType];
+            $query->whereIn('boat_type', $boatTypeParam);
         } elseif ($request->filled('boat_type') && $request->boat_type != 'Any Type') {
-            // Convert frontend boat_type to array format like boatType
+            // Legacy support for boat_type parameter
             $boatTypeParam = is_array($request->boat_type) ? $request->boat_type : [$request->boat_type];
-        }
-        
-        if ($boatTypeParam) {
             $query->whereIn('boat_type', $boatTypeParam);
         }
 
