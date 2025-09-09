@@ -50,7 +50,7 @@ const FILTER_FIELDS = {
         "dropoff_time",
         "persons",
     ],
-    boat: ["destination", "boat_type", "start_date", "end_date"],
+    boat: ["destination", "boatType", "start_date", "end_date"],
     activity: ["destination", "start_date", "end_date"],
 };
 

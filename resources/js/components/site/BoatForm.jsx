@@ -141,7 +141,7 @@ const BoatForm = ({ defaultCity, defaultCityId }) => {
 
         const searchParams = {
             category: 4, // Boat rental category
-            boat_type: selectedBoatType,
+            boatType: selectedBoatType,
             city: destination,
             date: startDate,
             time: time,
@@ -155,7 +155,7 @@ const BoatForm = ({ defaultCity, defaultCityId }) => {
 
         const params = new URLSearchParams({
             destination: destination,
-            boat_type: selectedBoatType,
+            boatType: selectedBoatType,
             start_date: startDate,
             end_date: endDate,
             time: time,
@@ -167,7 +167,7 @@ const BoatForm = ({ defaultCity, defaultCityId }) => {
 
     useEffect(() => {
         console.log("Destination: ", getParam("destination") || defaultCity || "");
-        setSelectedBoatType(getParam("boat_type") || "Any type");
+        setSelectedBoatType(getParam("boatType") || "Any type");
         setDestination(getParam("destination") || defaultCity || "");
         setStartDate(getParam("start_date") || "");
         setEndDate(getParam("end_date") || "");

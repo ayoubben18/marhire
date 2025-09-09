@@ -1297,20 +1297,17 @@ class ListingController extends Controller
         }
 
         //Boat
-        if (!$request->filled('boatType') && $request->filled('boat_type') && $request->boat_type != 'Any Type') {
-            if ($request->boat_type == 'Yakht') {
-                $boatID = 55;
-            } elseif ($request->boat_type == 'SpeedBoat') {
-                $boatID = 56;
-            } else {
-                $boatID = 67;
-            }
-
-            $query->where('boat_type', $boatID);
-        }
-
+        // Handle both boat_type (frontend format) and boatType (backend format)
+        $boatTypeParam = null;
         if ($request->filled('boatType')) {
-            $query->whereIn('boat_type', $request->boatType);
+            $boatTypeParam = $request->boatType;
+        } elseif ($request->filled('boat_type') && $request->boat_type != 'Any Type') {
+            // Convert frontend boat_type to array format like boatType
+            $boatTypeParam = is_array($request->boat_type) ? $request->boat_type : [$request->boat_type];
+        }
+        
+        if ($boatTypeParam) {
+            $query->whereIn('boat_type', $boatTypeParam);
         }
 
         if ($request->filled('withCaptain')) {
