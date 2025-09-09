@@ -106,7 +106,7 @@ class CategoryValidationService
             
             // Deposit information
             'deposit_required' => 'required|in:yes,no',
-            'deposit_amount' => 'required_if:deposit_required,yes|nullable|numeric|min:0',
+            'deposit_amount' => 'nullable|numeric|min:0',
             'deposit_note' => 'nullable|string|max:500'
         ];
     }
@@ -161,7 +161,7 @@ class CategoryValidationService
             
             // Optional deposit fields (boat-specific)
             'boat_deposit_required' => 'sometimes|nullable|in:yes,no',
-            'deposit_amount' => 'required_if:boat_deposit_required,yes|nullable|numeric|min:0',
+            'deposit_amount' => 'nullable|numeric|min:0',
             'deposit_currency' => 'required_if:boat_deposit_required,yes|nullable|string|max:3|in:EUR,USD,MAD',
             'deposit_note' => 'nullable|string|max:500',
             
@@ -304,7 +304,7 @@ class CategoryValidationService
             'car_types.*.exists' => 'One or more selected car types are invalid.',
             'duration_options.*.numeric' => 'Duration must be a valid number.',
             'group_size_max.min' => 'Maximum group size must be greater than or equal to minimum group size.',
-            'deposit_amount.required_if' => 'Deposit amount is required when deposit is set to yes.',
+            'deposit_amount.numeric' => 'Deposit amount must be a valid number.',
             'deposit_currency.required_if' => 'Deposit currency is required when deposit is set to yes.',
             'year.max' => 'Year cannot be more than 2 years in the future.',
             'capacity.max' => 'Boat capacity cannot exceed 100 passengers.',

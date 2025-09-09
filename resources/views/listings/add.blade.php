@@ -1102,20 +1102,8 @@
             } else {
                 clearFieldError(depositRequired);
                 
-                // Then check deposit amount if deposit is required and visible
-                if (depositRequired.value.toLowerCase() === 'yes' && 
-                    depositContainer && !depositContainer.classList.contains('d-none')) {
-                    
-                    if (!depositAmount.value || parseFloat(depositAmount.value) <= 0) {
-                        showFieldError(depositAmount, 'Deposit amount must be greater than 0 when deposit is required.');
-                        valid = false;
-                    } else {
-                        clearFieldError(depositAmount);
-                    }
-                } else {
-                    // Clear any errors if deposit not required
-                    clearFieldError(depositAmount);
-                }
+                // Always clear any errors for deposit amount (no validation required)
+                clearFieldError(depositAmount);
             }
         }
         
@@ -1441,16 +1429,14 @@
 
             if (depositRequired == 'yes' || depositRequired == 'Yes') {
                 $('.deposit').removeClass('d-none');
-                // Show required asterisk and add required attribute
-                $('.deposit-required-asterisk').show();
-                $('#deposit_amount').prop('required', true);
+                // Don't show asterisk - deposit amount is optional
+                $('.deposit-required-asterisk').hide();
             } else {
                 $('#deposit_amount').val('');
                 $('#deposit_note').val('');
                 $('.deposit').addClass('d-none');
-                // Hide required asterisk and remove required attribute
+                // Hide required asterisk
                 $('.deposit-required-asterisk').hide();
-                $('#deposit_amount').prop('required', false);
                 // Clear validation errors when hiding
                 clearFieldError(depositAmount);
             }
@@ -2099,20 +2085,17 @@
             const currentCarDepositRequired = $('#deposit_required').val();
             if (currentCarDepositRequired === 'yes' || currentCarDepositRequired === 'Yes') {
                 $('.deposit').removeClass('d-none');
-                // Show required asterisk and add required attribute
-                $('.deposit-required-asterisk').show();
-                $('#deposit_amount').prop('required', true);
+                // Don't show asterisk - deposit amount is optional
+                $('.deposit-required-asterisk').hide();
             } else {
                 $('.deposit').addClass('d-none');
-                // Hide required asterisk and remove required attribute
+                // Hide required asterisk
                 $('.deposit-required-asterisk').hide();
-                $('#deposit_amount').prop('required', false);
             }
         } else {
             // Hide car deposit fields if not car rental category
             $('.deposit').addClass('d-none');
             $('.deposit-required-asterisk').hide();
-            $('#deposit_amount').prop('required', false);
         }
     }
     

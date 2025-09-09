@@ -166,10 +166,10 @@ const CarRentalSpecs = ({ listing, t }) => {
         {
             icon: FaMoneyBillWave,
             label: t('listing.specs.deposit', 'Deposit'),
-            value: listing.deposit_required === 1 || listing.deposit_required === '1' || listing.deposit_required === true
+            value: listing.deposit_required === 'yes' || listing.deposit_required === 'Yes'
                 ? `${t('listing.specs.deposit_required', 'Deposit Required')}${listing.deposit_amount ? ` (${listing.deposit_amount} ${t('common.currency', 'MAD')})` : ''}`
                 : t('listing.specs.no_deposit', 'No Deposit'),
-            iconColor: listing.deposit_required === 1 || listing.deposit_required === '1' || listing.deposit_required === true
+            iconColor: listing.deposit_required === 'yes' || listing.deposit_required === 'Yes'
                 ? "text-[#048667]" 
                 : "text-[#048667]"
         }
