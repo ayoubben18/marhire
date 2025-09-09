@@ -84,13 +84,20 @@ class SEOService
         try {
             if ($type === 'article') {
                 if (!Schema::hasTable('articles')) { return null; }
-                return Article::where('slug', $slug)->first();
+                return Article::where('slug', $slug)->withCurrentTranslations()->first();
             } elseif ($type === 'listing') {
                 if (!Schema::hasTable('listings')) { return null; }
-                return Listing::where('slug', $slug)->first();
+                return Listing::where('slug', $slug)->withCurrentTranslations()->first();
             } else {
                 if (!Schema::hasTable('pages')) { return null; }
-                return Page::where('slug', $slug)->first();
+                $page = Page::where('slug', $slug)->withCurrentTranslations()->first();
+                
+                // Add translated_fields for API consumption
+                if ($page) {
+                    $page->translated_fields = $page->getCurrentTranslatedData();
+                }
+                
+                return $page;
             }
         } catch (\Throwable $e) {
             // Fail safe: never break navigation due to missing tables/content

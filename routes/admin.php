@@ -55,6 +55,12 @@ Route::name('pages.')->middleware(['auth'])->prefix('pages')->group(function () 
     Route::get('/edit/{id}', [PageController::class, 'edit'])->name('edit');
     Route::post('/update', [PageController::class, 'update'])->name('update');
     Route::post('/delete', [PageController::class, 'delete'])->name('delete');
+    
+    // Translation routes
+    Route::post('/translate-preview', [PageController::class, 'translatePreview'])->name('translatePreview');
+    Route::get('/{id}/translations', [PageController::class, 'getTranslations'])->name('getTranslations');
+    Route::post('/{id}/translations', [PageController::class, 'updateTranslations'])->name('updateTranslations');
+    Route::delete('/{id}/translations', [PageController::class, 'deleteTranslations'])->name('deleteTranslations');
 });
 
 // Categories Management

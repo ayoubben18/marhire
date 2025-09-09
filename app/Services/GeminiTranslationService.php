@@ -540,4 +540,114 @@ class GeminiTranslationService
         
         return $results;
     }
+
+    /**
+     * Translate a page to target locales
+     *
+     * @param \App\Models\Page $page
+     * @param array $targetLocales
+     * @return array
+     * @throws Exception
+     */
+    public function translatePage($page, array $targetLocales = ['fr', 'es'])
+    {
+        if (!$this->apiKey) {
+            throw new Exception('Gemini API key not configured');
+        }
+
+        // Check rate limiting
+        if (!$this->checkRateLimit()) {
+            throw new Exception('Rate limit exceeded. Please try again later.');
+        }
+
+        // Build the structured prompt
+        $prompt = $this->buildPageTranslationPrompt($page, $targetLocales);
+        
+        // Make API request with retries
+        $response = $this->makeApiRequest($prompt);
+        
+        // Parse response
+        $translations = $this->parseTranslationResponse($response, $targetLocales);
+        
+        Log::info('Page translation completed', [
+            'locales' => $targetLocales,
+            'translations_count' => count($translations)
+        ]);
+
+        return $translations;
+    }
+
+    /**
+     * Build structured prompt for page translation
+     *
+     * @param \App\Models\Page $page
+     * @param array $targetLocales
+     * @return string
+     */
+    protected function buildPageTranslationPrompt($page, array $targetLocales)
+    {
+        $translatableFields = [
+            'meta_title' => $page->meta_title,
+            'meta_description' => $page->meta_description,
+            'content_sections' => $page->content_sections,
+        ];
+
+        // Remove null/empty fields
+        $translatableFields = array_filter($translatableFields, function($value) {
+            return !is_null($value) && $value !== '' && $value !== [];
+        });
+
+        // Handle content_sections specifically
+        if (isset($translatableFields['content_sections'])) {
+            // Ensure it's an array (could be JSON string from database)
+            if (is_string($translatableFields['content_sections'])) {
+                $translatableFields['content_sections'] = json_decode($translatableFields['content_sections'], true) ?: [];
+            }
+        }
+
+        $localeNames = [
+            'fr' => 'French',
+            'es' => 'Spanish',
+            'ar' => 'Arabic',
+            'de' => 'German',
+            'it' => 'Italian',
+            'pt' => 'Portuguese',
+            'ru' => 'Russian',
+            'zh' => 'Chinese',
+            'ja' => 'Japanese'
+        ];
+
+        $targetLanguages = array_map(function($locale) use ($localeNames) {
+            return $localeNames[$locale] ?? $locale;
+        }, $targetLocales);
+
+        $prompt = "You are a professional translator specializing in web page and SEO content. ";
+        $prompt .= "Translate the following page content from English to " . implode(' and ', $targetLanguages) . ". ";
+        $prompt .= "Maintain a professional tone suitable for the web. ";
+        $prompt .= "Preserve any specific names, locations, and technical terms as appropriate. ";
+        $prompt .= "For SEO fields (meta_title, meta_description), ensure they are optimized for search engines in the target language. ";
+        $prompt .= "For content_sections, translate both title and text fields within each section. ";
+        $prompt .= "Return ONLY a valid JSON object with the following structure (no markdown, no explanations):\n";
+        $prompt .= "{\n";
+        
+        foreach ($targetLocales as $locale) {
+            $prompt .= "  \"$locale\": {\n";
+            foreach (array_keys($translatableFields) as $field) {
+                if ($field === 'content_sections') {
+                    $prompt .= "    \"$field\": [{\"title\": \"translated title\", \"text\": \"translated text\"}],\n";
+                } else {
+                    $prompt .= "    \"$field\": \"translated text\",\n";
+                }
+            }
+            $prompt = rtrim($prompt, ",\n") . "\n";
+            $prompt .= "  },\n";
+        }
+        $prompt = rtrim($prompt, ",\n") . "\n";
+        $prompt .= "}\n\n";
+        
+        $prompt .= "Content to translate:\n";
+        $prompt .= json_encode($translatableFields, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+        return $prompt;
+    }
 }

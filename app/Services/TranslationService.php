@@ -45,6 +45,11 @@ class TranslationService
             } elseif ($model instanceof \App\Models\Article) {
                 $translation->article_id = $model->id;
                 $translation->title = $model->title ?? '';
+            } elseif ($model instanceof \App\Models\Page) {
+                $translation->page_id = $model->id;
+                $translation->meta_title = $model->meta_title ?? '';
+                $translation->meta_description = $model->meta_description ?? '';
+                $translation->content_sections = $model->content_sections ?? null;
             }
             
             $translation->save();
@@ -245,6 +250,8 @@ class TranslationService
         return [
             \App\Models\Listing::class,
             \App\Models\ListingAddon::class,
+            \App\Models\Article::class,
+            \App\Models\Page::class,
             // Add other translatable models here as they are created
         ];
     }

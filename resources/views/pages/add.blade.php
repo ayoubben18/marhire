@@ -95,6 +95,9 @@
 
                 <button type="button" class="btn btn-outline-primary mt-3" id="add-section">+ Add Section</button>
 
+                {{-- Translation UI Components --}}
+                @include('pages.partials.translation-generator')
+
                 <div class="d-flex justify-content-end align-items-center mt-4">
                     <button type="submit" class="btn-signup">Save</button>
                 </div>
@@ -102,6 +105,9 @@
         </div>
     </div>
 </form>
+
+{{-- Include Translation UI Components --}}
+@include('pages.partials.translation-viewer')
 <script>
     let sectionIndex = {{
             old('content_sections') ? count(old('content_sections')) : 0

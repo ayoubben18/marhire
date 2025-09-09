@@ -77,7 +77,25 @@
                 <h5>Content Sections</h5>
                 <div id="sections-wrapper">
                     @php
-                        $sections = old('content_sections', $page->content_sections ?? []);
+                        $rawSections = old('content_sections', $page->content_sections ?? []);
+                        
+                        // Handle both array and JSON string formats
+                        if (is_string($rawSections)) {
+                            try {
+                                $sections = json_decode($rawSections, true) ?? [];
+                            } catch (Exception $e) {
+                                $sections = [];
+                            }
+                        } elseif (is_array($rawSections)) {
+                            $sections = $rawSections;
+                        } else {
+                            $sections = [];
+                        }
+                        
+                        // Ensure $sections is always an array
+                        if (!is_array($sections)) {
+                            $sections = [];
+                        }
                     @endphp
 
                     @foreach($sections as $index => $section)
@@ -97,6 +115,9 @@
 
                 <button type="button" class="btn btn-outline-primary mt-3" id="add-section">+ Add Section</button>
 
+                {{-- Translation UI Components --}}
+                @include('pages.partials.translation-generator')
+
                 <div class="d-flex justify-content-end align-items-center mt-4">
                     <button type="submit" class="btn-signup">Update</button>
                 </div>
@@ -105,8 +126,11 @@
     </div>
 </form>
 
+{{-- Include Translation UI Components --}}
+@include('pages.partials.translation-viewer')
+
 <script>
-    let sectionIndex = {{ count($sections) }};
+    let sectionIndex = {{ count($sections ?? []) }};
 
     document.getElementById('add-section').addEventListener('click', function() {
         const wrapper = document.getElementById('sections-wrapper');
