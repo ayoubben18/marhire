@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getLocalizedUrl } from "../../utils/localeManager";
+import axios from "axios";
 import {
     FaFacebookF,
     FaInstagram,
@@ -83,6 +84,57 @@ const FooterSection = ({ title, children }) => {
 const Footer = () => {
     const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState('cars');
+    const [dynamicSubcategories, setDynamicSubcategories] = useState({
+        cars: [],
+        drivers: [],
+        boats: [],
+        activities: []
+    });
+
+    // Fetch subcategories dynamically from API
+    useEffect(() => {
+        axios.get('/api/get_subcategories_api')
+            .then(response => {
+                if (response.data && response.data.subcategories) {
+                    const grouped = processSubcategories(response.data.subcategories);
+                    setDynamicSubcategories(grouped);
+                }
+            })
+            .catch(error => {
+                console.error('Failed to fetch subcategories:', error);
+            });
+    }, []);
+
+    // Process and group subcategories by category, limiting to 4 per category
+    const processSubcategories = (subcategories) => {
+        const categoryMap = { 
+            2: 'cars', 
+            3: 'drivers', 
+            4: 'boats', 
+            5: 'activities' 
+        };
+        
+        const grouped = { 
+            cars: [], 
+            drivers: [], 
+            boats: [], 
+            activities: [] 
+        };
+        
+        // Group subcategories by category
+        subcategories.forEach(sub => {
+            const categoryKey = categoryMap[sub.category_id];
+            if (categoryKey && grouped[categoryKey].length < 4) {
+                grouped[categoryKey].push({
+                    key: sub.option.toLowerCase().replace(/\s+/g, '-'),
+                    label: sub.option,
+                    id: sub.id
+                });
+            }
+        });
+        
+        return grouped;
+    };
 
     const CITIES = [
         { key: 'agadir', label: t('cities.agadir', 'Agadir') },
@@ -99,14 +151,6 @@ const Footer = () => {
             icon: <FaCar className="mr-2" />,
             title: t('footerTabs.cars', 'Cars'),
             slug: 'car-rental',
-            subcategories: [
-                { key: 'suv', label: t('footerTabs.cars.suv', 'SUV Rental') },
-                { key: 'mpv', label: t('footerTabs.cars.mpv', 'MPV & Van Rental') },
-                { key: 'sedan', label: t('footerTabs.cars.sedan', 'Sedan Rental') },
-                { key: 'hatchback', label: t('footerTabs.cars.hatchback', 'Hatchback Rental') },
-                { key: 'dacia', label: t('footerTabs.cars.dacia', 'Dacia Rentals') },
-                { key: 'audi', label: t('footerTabs.cars.audi', 'Audi Rentals') },
-            ],
             cityLabel: (city) => t('footerTabs.cars.city', `Car Rental ${city}`),
             subcatCityLabel: (sub, city) => t('footerTabs.cars.subCity', `${sub} in ${city}`),
         },
@@ -114,13 +158,6 @@ const Footer = () => {
             icon: <FaUserTie className="mr-2" />,
             title: t('footerTabs.drivers', 'Private Drivers'),
             slug: 'private-driver',
-            subcategories: [
-                { key: 'suv', label: t('footerTabs.drivers.suv', 'SUV with Driver') },
-                { key: 'sedan', label: t('footerTabs.drivers.sedan', 'Sedan with Driver') },
-                { key: 'van', label: t('footerTabs.drivers.van', 'Van with Driver') },
-                { key: 'fourgon-large-van', label: t('footerTabs.drivers.fourgon', 'Large Van with Driver') },
-                { key: 'bus-coach', label: t('footerTabs.drivers.bus', 'Bus/Coach with Driver') },
-            ],
             cityLabel: (city) => t('footerTabs.drivers.city', `Private Driver ${city}`),
             subcatCityLabel: (sub, city) => t('footerTabs.drivers.subCity', `${sub} ${t('footerTabs.drivers.in','in')} ${city}`),
         },
@@ -128,10 +165,6 @@ const Footer = () => {
             icon: <FaShip className="mr-2" />,
             title: t('footerTabs.boats', 'Boats'),
             slug: 'boats',
-            subcategories: [
-                { key: 'yacht', label: t('footerTabs.boats.yacht', 'Yacht Charters') },
-                { key: 'speedboat', label: t('footerTabs.boats.speedboat', 'Speedboat Rentals') },
-            ],
             cityLabel: (city) => t('footerTabs.boats.city', `Boat Rental ${city}`),
             subcatCityLabel: (sub, city) => t('footerTabs.boats.subCity', `${sub} ${t('footerTabs.boats.in','in')} ${city}`),
         },
@@ -139,12 +172,6 @@ const Footer = () => {
             icon: <FaMountain className="mr-2" />,
             title: t('footerTabs.activities', 'Activities'),
             slug: 'things-to-do',
-            subcategories: [
-                { key: 'quad', label: t('footerTabs.activities.quad', 'Quad Biking') },
-                { key: 'desert', label: t('footerTabs.activities.desert', 'Desert Tours') },
-                { key: 'camel-ride', label: t('footerTabs.activities.camel', 'Camel Ride Tours') },
-                { key: 'surf', label: t('footerTabs.activities.surf', 'Surf Lessons') },
-            ],
             cityLabel: (city) => t('footerTabs.activities.city', `Activities in ${city}`),
             subcatCityLabel: (sub, city) => t('footerTabs.activities.subCity', `${sub} ${t('footerTabs.activities.in','in')} ${city}`),
         },
@@ -153,16 +180,22 @@ const Footer = () => {
     const renderTabContent = () => {
         const cfg = CATEGORY_CONFIGS[activeTab];
         if (!cfg) return null;
+        
+        // Use dynamic subcategories for the current tab
+        const currentSubcategories = dynamicSubcategories[activeTab] || [];
+        
         const cityLinks = CITIES.slice(0, 6).map((c) => ({
             href: getLocalizedUrl(`/category/${cfg.slug}/city/${c.key}`),
             label: cfg.cityLabel(c.label),
         }));
-        const subcatLinks = cfg.subcategories.map((s) => ({
+        
+        const subcatLinks = currentSubcategories.map((s) => ({
             href: getLocalizedUrl(`/category/${cfg.slug}/subcategory/${s.key}`),
             label: s.label,
         }));
+        
         const subcatCityCombos = [];
-        cfg.subcategories.slice(0, 3).forEach((s) => {
+        currentSubcategories.slice(0, 3).forEach((s) => {
             CITIES.slice(0, 3).forEach((c) => {
                 subcatCityCombos.push({
                     href: getLocalizedUrl(`/category/${cfg.slug}/subcategory/${s.key}/city/${c.key}`),
