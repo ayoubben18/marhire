@@ -152,7 +152,7 @@ const Sitemap = () => {
         const categorySlugMap = {
             2: 'car-rental',
             3: 'private-driver', 
-            4: 'boat-rental',
+            4: 'boats',
             5: 'things-to-do'
         };
         
@@ -170,7 +170,7 @@ const Sitemap = () => {
         const categorySlugMap = {
             2: 'car-rental',
             3: 'private-driver', 
-            4: 'boat-rental',
+            4: 'boats',
             5: 'things-to-do'
         };
         
