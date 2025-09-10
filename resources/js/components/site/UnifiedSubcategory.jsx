@@ -516,7 +516,7 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
                 title={city ? `Available ${subcategoryName} in ${city}` : `Find ${subcategoryName} Rentals in Top Moroccan Cities`}
                 categories={meta.id}
                 subcategories={subcategoryId ? [subcategoryId] : []}
-                cities={defaultCityTabs}
+                cities={city ? [city] : defaultCityTabs}
                 initialCity={city || defaultCityTabs[0]}
                 perPage={12}
             />
