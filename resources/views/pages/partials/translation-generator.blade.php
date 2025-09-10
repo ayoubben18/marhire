@@ -102,11 +102,12 @@ function generateNewPageTranslations() {
     
     const content = collectPageFormContent();
     
-    if (!content.meta_title || content.content_sections.length === 0) {
+    // Allow translation if there's at least a title, description, or content section
+    if (!content.meta_title && !content.meta_description && content.content_sections.length === 0) {
         if (typeof swal !== 'undefined') {
-            swal('Warning', 'Please fill in the Meta Title and add at least one content section before generating translations.', 'warning');
+            swal('Warning', 'Please provide at least some content (title, description, or content sections) before generating translations.', 'warning');
         } else {
-            alert('Please fill in the Meta Title and add at least one content section before generating translations.');
+            alert('Please provide at least some content (title, description, or content sections) before generating translations.');
         }
         return;
     }
