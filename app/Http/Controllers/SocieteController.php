@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use App\Models\Societe;
+use App\Services\ImageProcessingService;
 
 class SocieteController extends Controller
 {
@@ -14,7 +15,7 @@ class SocieteController extends Controller
         return view('configuration.get')->with('societe', $societe);
     }
 
-    public function save(Request $request)
+    public function save(Request $request, ImageProcessingService $imageProcessingService)
     {
         $validated = $request->validate([
             'raison_sociale' => 'required|string',
@@ -39,16 +40,20 @@ class SocieteController extends Controller
             'color2' => $request->color2,
             'color3' => $request->color3
         ];
-        $imageName = null;
         
 		if($request->hasFile('image'))
 		{
-			$imageName = 'logo.' . $request->image->extension();  
-     
-        	$request->image->move(public_path('images'), $imageName);
-			
-			$imageName = "images/" . $imageName;
-            $updatedData['logo'] = $imageName;
+            // Use ImageProcessingService for robust image handling
+            $destination = public_path('images');
+            $baseFileName = 'logo_' . time(); // Add timestamp to avoid conflicts
+            
+            $processedImage = $imageProcessingService->processImage($request->file('image'), $destination, $baseFileName);
+            
+            if ($processedImage) {
+                $updatedData['logo'] = $processedImage['original_path'];
+            } else {
+                return back()->withErrors(['image' => 'Failed to process logo image. Please check file format and size.']);
+            }
 		}
 
         if($societe)
@@ -63,26 +68,30 @@ class SocieteController extends Controller
         return back()->with('inserted', true);
     }
 
-    public function upload(Request $request)
+    public function upload(Request $request, ImageProcessingService $imageProcessingService)
 	{
-		$imageName = null;
-		
-        
 		if($request->hasFile('image'))
 		{
-			$imageName = 'logo.' . $request->image->extension();  
-     
-        	$request->image->move(public_path('images'), $imageName);
-			
-			$imageName = 'images/' . $imageName;
+            // Use ImageProcessingService for robust image handling
+            $destination = public_path('images');
+            $baseFileName = 'logo_' . time(); // Add timestamp to avoid conflicts
+            
+            $processedImage = $imageProcessingService->processImage($request->file('image'), $destination, $baseFileName);
+            
+            if ($processedImage) {
+                $imagePath = $processedImage['original_path'];
+                
+                $soc = Societe::first();
+                $soc->update([
+                    'logo' => $imagePath
+                ]);
+                
+                return asset($imagePath);
+            } else {
+                return response()->json(['error' => 'Failed to process logo image. Please check file format and size.'], 400);
+            }
 		}
 		
-		$soc = Societe::first();
-		
-		$soc->update([
-			'logo' => $imageName
-		]);
-		
-		return asset($imageName);
+		return response()->json(['error' => 'No image file provided.'], 400);
 	}
 }

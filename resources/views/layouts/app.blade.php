@@ -283,7 +283,7 @@ request()->is('*/faq')
         <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
             <div class="head-left">
                 <a class="navbar-brand" href="/">
-                    <img src="{{ $isNotSticky ? asset(config('logo')): asset('images/logo-light.png') }}" alt="Logo">
+                    <img src="{{ $isNotSticky ? asset(config('logo') . '?v=' . time()): asset('images/logo-light.png?v=' . time()) }}" alt="Logo">
                 </a>
             </div>
             <div class="head-navs d-flex align-items-center">
@@ -323,7 +323,7 @@ request()->is('*/faq')
 
     <div class="d-block d-md-none">
         <div class="trip-mobile-header">
-            <a href="/" class="logo"><img src="{{ asset('images/logo.png') }}" alt="Logo" class="logo"></a>
+            <a href="/" class="logo"><img src="{{ asset(config('logo') . '?v=' . time()) }}" alt="Logo" class="logo"></a>
             <button class="mobile-menu-btn" id="openTripMenu" type="button"> <i class="fa fa-bars"></i></button>
         </div>
         <div class="trip-mobile-menu" id="tripMenuPanel">

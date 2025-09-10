@@ -293,8 +293,8 @@
                             </div>
                             <div class="nk-header-brand">
                                 <a href="{{ route('dashboard.index') }}" class="logo-link">
-                                    <img class="logo-light logo-img" src="{{ asset(config('logo')) }}" srcset="{{ asset(config('logo')) }} 2x" alt="logo">
-                                    <img class="logo-dark logo-img" src="{{ asset(config('logo')) }}" srcset="{{ asset(config('logo')) }} 2x" alt="logo-dark">
+                                    <img class="logo-light logo-img" src="{{ asset(config('logo') . '?v=' . time()) }}" srcset="{{ asset(config('logo') . '?v=' . time()) }} 2x" alt="logo">
+                                    <img class="logo-dark logo-img" src="{{ asset(config('logo') . '?v=' . time()) }}" srcset="{{ asset(config('logo') . '?v=' . time()) }} 2x" alt="logo-dark">
                                 </a>
                             </div>
                             <div class="nk-header-news d-none d-xl-block">
