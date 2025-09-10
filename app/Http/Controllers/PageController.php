@@ -38,6 +38,15 @@ class PageController extends Controller
             'translations' => 'nullable|string',
         ]);
 
+        // Ensure content_sections is properly handled
+        if (isset($validated['content_sections'])) {
+            // Use array_values to reindex the array and remove any gaps
+            $validated['content_sections'] = array_values($validated['content_sections']);
+        } else {
+            // If no sections provided, explicitly set to empty array
+            $validated['content_sections'] = [];
+        }
+
         $page = Page::create($validated);
 
         // Handle translations if provided
@@ -80,6 +89,15 @@ class PageController extends Controller
             'content_sections.*.text' => 'required_with:content_sections|string',
             'translations' => 'nullable|string',
         ]);
+
+        // Ensure content_sections is properly handled
+        if (isset($validated['content_sections'])) {
+            // Use array_values to reindex the array and remove any gaps
+            $validated['content_sections'] = array_values($validated['content_sections']);
+        } else {
+            // If no sections provided, explicitly set to empty array
+            $validated['content_sections'] = [];
+        }
 
         $page->update($validated);
 

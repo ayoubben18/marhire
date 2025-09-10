@@ -135,8 +135,28 @@
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('remove-section')) {
             e.target.closest('.section-item').remove();
+            // Reindex all remaining sections to ensure sequential array indices
+            reindexSections();
         }
     });
+    
+    function reindexSections() {
+        const sections = document.querySelectorAll('#sections-wrapper .section-item');
+        sections.forEach((section, index) => {
+            // Update name attributes for all inputs in this section
+            const titleInput = section.querySelector('input[name*="[title]"]');
+            const textArea = section.querySelector('textarea[name*="[text]"]');
+            
+            if (titleInput) {
+                titleInput.name = `content_sections[${index}][title]`;
+            }
+            if (textArea) {
+                textArea.name = `content_sections[${index}][text]`;
+            }
+        });
+        // Update the global section index to match the count
+        sectionIndex = sections.length;
+    }
 
 </script>
 @endsection
