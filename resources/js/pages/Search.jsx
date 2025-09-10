@@ -240,10 +240,28 @@ const Search = ({ type }) => {
                             {/* Sort dropdown - responsive styling */}
                             <div className="search__sortby">
                                 {isMobile ? (
-                                    <div className="mobile-sort-container">
-                                        <span className="mobile-sort-label">{t('search.sortBy')}:</span>
+                                    <div className="mobile-sort-container" style={{display: 'flex', alignItems: 'center', gap: '12px', width: '100%'}}>
+                                        <span className="mobile-sort-label" style={{fontSize: '14px', color: '#333', whiteSpace: 'nowrap'}}>{t('search.sortBy')}:</span>
                                         <select
                                             className="mobile-sort-select"
+                                            style={{
+                                                flex: 1,
+                                                maxWidth: '200px',
+                                                padding: '8px 12px',
+                                                paddingRight: '32px',
+                                                border: '1px solid #ddd',
+                                                borderRadius: '4px',
+                                                background: 'white',
+                                                fontSize: '14px',
+                                                color: '#333',
+                                                appearance: 'none',
+                                                WebkitAppearance: 'none',
+                                                MozAppearance: 'none',
+                                                backgroundImage: "url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23333' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e\")",
+                                                backgroundPosition: 'right 10px center',
+                                                backgroundRepeat: 'no-repeat',
+                                                backgroundSize: '14px'
+                                            }}
                                             value={sortBy}
                                             onChange={handleSortChange}
                                         >

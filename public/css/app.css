@@ -2994,50 +2994,88 @@ label.search__filters__item__lbl {
 
 /* Mobile Sort Styling to match screenshot */
 .mobile-sort-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    margin-bottom: 16px !important;
 }
 
 .mobile-sort-label {
-    font-size: 14px;
-    color: #333;
-    font-weight: 400;
-    white-space: nowrap;
+    font-size: 14px !important;
+    color: #333 !important;
+    font-weight: 400 !important;
+    white-space: nowrap !important;
+    margin-right: 8px !important;
 }
 
 .mobile-sort-select {
-    flex: 1;
-    max-width: 200px;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: white;
-    font-size: 14px;
-    color: #333;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 8px center;
-    background-repeat: no-repeat;
-    background-size: 16px;
-    padding-right: 32px;
+    flex: 1 !important;
+    max-width: 200px !important;
+    min-width: 150px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #ddd !important;
+    border-radius: 4px !important;
+    background: white !important;
+    font-size: 14px !important;
+    color: #333 !important;
+    font-family: inherit !important;
+    line-height: normal !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23333' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+    background-position: right 10px center !important;
+    background-repeat: no-repeat !important;
+    background-size: 14px !important;
+    padding-right: 32px !important;
 }
 
 .mobile-sort-select:focus {
-    outline: none;
-    border-color: #22574d;
-    box-shadow: 0 0 0 1px #22574d;
+    outline: none !important;
+    border-color: #22574d !important;
+    box-shadow: 0 0 0 1px #22574d !important;
 }
 
 @media (max-width: 900px) {
     .search__sortby {
-        justify-content: flex-start;
-        margin-bottom: 15px;
+        justify-content: flex-start !important;
+        margin-bottom: 15px !important;
     }
     
     .uls-sort-controls {
-        justify-content: flex-start;
+        justify-content: flex-start !important;
+    }
+    
+    /* Ensure mobile sort container is properly styled on mobile */
+    .search__sortby .mobile-sort-container,
+    .uls-sort-controls .mobile-sort-container {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+    
+    /* Force override any conflicting styles */
+    .search__sortby .mobile-sort-select,
+    .uls-sort-controls .mobile-sort-select {
+        flex: 1 !important;
+        max-width: 200px !important;
+        min-width: 150px !important;
+        padding: 8px 12px !important;
+        border: 1px solid #ddd !important;
+        border-radius: 4px !important;
+        background: white !important;
+        font-size: 14px !important;
+        color: #333 !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23333' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+        background-position: right 10px center !important;
+        background-repeat: no-repeat !important;
+        background-size: 14px !important;
+        padding-right: 32px !important;
     }
 }
 .search__results__pagination {
