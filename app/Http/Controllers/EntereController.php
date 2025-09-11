@@ -184,7 +184,7 @@ class EntereController extends Controller
             ],
             'private-driver' => [
                 'id' => 3,
-                'subcategories' => ['Vehicule Type'],
+                'subcategories' => ['Vehicule Type', 'Service Type', 'Vehicule Model'],
             ],
             'boats' => [
                 'id' => 4,

@@ -61,11 +61,18 @@ class FilteredListingsController extends Controller
                 if ($request->has('category_id')) {
                     $categoryId = (int)$request->category_id;
                     switch ($categoryId) {
-                        case 2: // Cars
-                            $query->whereIn('car_type', $subcategoryIds);
+                        case 2: // Cars - filter by both car_type AND car_model
+                            $query->where(function($q) use ($subcategoryIds) {
+                                $q->whereIn('car_type', $subcategoryIds)
+                                  ->orWhereIn('car_model', $subcategoryIds);
+                            });
                             break;
-                        case 3: // Drivers
-                            $query->whereIn('vehicule_type', $subcategoryIds);
+                        case 3: // Drivers - filter by vehicule_type, vehicule_model, AND service_type
+                            $query->where(function($q) use ($subcategoryIds) {
+                                $q->whereIn('vehicule_type', $subcategoryIds)
+                                  ->orWhereIn('vehicule_model', $subcategoryIds)
+                                  ->orWhereIn('service_type', $subcategoryIds);
+                            });
                             break;
                         case 4: // Boats
                             $query->whereIn('boat_type', $subcategoryIds);

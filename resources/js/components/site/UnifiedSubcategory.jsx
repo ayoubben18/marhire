@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 import HeroSection from "./HeroSection";
 import WhyChooseUs from "./WhyChooseUs";
 import ListingsByCity from "./ListingsByCity";
@@ -60,34 +61,20 @@ const getCityId = (cityName) => {
     return cityMap[cityName.toLowerCase()] || null;
 };
 
-// Known subcategory ID mappings by category
-const CAR_TYPE_IDS = { suv: 59, hatchback: 60, mpv: 61, sedan: null };
-const CAR_BRAND_IDS = { dacia: 52, audi: 54 };
-
-const DRIVER_TYPE_IDS = { suv: 72, sedan: 73, van: 74 };
-
-const BOAT_TYPE_IDS = { yacht: 55, speedboat: 56, custom: 67 };
-
-const ACTIVITY_TYPE_IDS = { quad: 57, desert: 58, "camel-ride": 78, surf: 79 };
-
-const getSubcategoryId = (categoryKey, subcategorySlug) => {
-    if (!subcategorySlug) return null;
+// Dynamic subcategory lookup function
+const getSubcategoryId = (subcategories, categoryId, subcategorySlug) => {
+    if (!subcategorySlug || !subcategories || subcategories.length === 0) return null;
+    
     const slug = String(subcategorySlug).toLowerCase();
-    if (categoryKey === "cars") {
-        if (slug in CAR_BRAND_IDS) return CAR_BRAND_IDS[slug];
-        if (slug in CAR_TYPE_IDS) return CAR_TYPE_IDS[slug];
-        return null;
-    }
-    if (categoryKey === "drivers") {
-        return DRIVER_TYPE_IDS[slug] ?? null;
-    }
-    if (categoryKey === "boats") {
-        return BOAT_TYPE_IDS[slug] ?? null;
-    }
-    if (categoryKey === "activities") {
-        return ACTIVITY_TYPE_IDS[slug] ?? null;
-    }
-    return null;
+    
+    // Find subcategory that matches the slug and category
+    const subcategory = subcategories.find(sub => {
+        // Generate slug from option name
+        const generatedSlug = sub.option?.toLowerCase().replace(/\s+/g, '-') || '';
+        return generatedSlug === slug && sub.category_id === categoryId;
+    });
+    
+    return subcategory?.id || null;
 };
 
 // Build a presentable name from slug (e.g. camel-ride -> Camel Ride)
@@ -421,10 +408,28 @@ const buildActivitySubcategoryFeatures = (subcategoryName, subcategorySlug, t) =
 
 const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
     const { t } = useTranslation();
+    const [subcategories, setSubcategories] = useState([]);
+    const [subcategoryId, setSubcategoryId] = useState(null);
+    
     const meta = getCategoryMeta(categorySlug);
     const cityId = city ? getCityId(city) : null;
-    const subcategoryId = getSubcategoryId(meta.key, subcategorySlug);
     const subcategoryName = toTitle(subcategorySlug);
+    
+    // Fetch subcategories from API
+    useEffect(() => {
+        axios.get('/api/get_subcategories_api')
+            .then(response => {
+                const allSubcategories = response.data.subcategories || [];
+                setSubcategories(allSubcategories);
+                
+                // Find the matching subcategory ID
+                const id = getSubcategoryId(allSubcategories, meta.id, subcategorySlug);
+                setSubcategoryId(id);
+            })
+            .catch(error => {
+                console.error('Error fetching subcategories:', error);
+            });
+    }, [categorySlug, subcategorySlug, meta.id]);
 
     const defaultCityTabs = [
         "Agadir",
