@@ -452,7 +452,7 @@ const UnifiedCategory = ({ slug, city }) => {
             {!city &&<CityCarousel
                 title={cfg.explore && cfg.explore.title ? cfg.explore.title : "Find Car Rentals in Morocco's Top Cities"}
                 cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat", "Essaouira"]}
-                basePath={`/${cfg.tab}`}
+                basePath={`/category/${slug}/city/`}
                 exploreHref={`/${cfg.tab}`}
             />
 }

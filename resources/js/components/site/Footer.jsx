@@ -134,26 +134,24 @@ const Footer = () => {
             }
         });
         
-        // Prioritize "Cheap" and "Luxury" for cars category first, then apply limit
+        // For cars category, show ONLY "Cheap" and "Luxury"
         if (grouped.cars.length > 0) {
-            console.log('Cars before prioritization:', grouped.cars);
-            const prioritized = [];
-            const others = [];
+            console.log('Cars before filtering:', grouped.cars);
+            const filtered = [];
             
             grouped.cars.forEach(sub => {
                 const label = sub.label.toLowerCase();
                 if (label.includes('cheap')) {
-                    prioritized.unshift(sub); // "Cheap" first
+                    filtered.unshift(sub); // "Cheap" first
                 } else if (label.includes('luxury')) {
-                    prioritized.push(sub); // "Luxury" second
-                } else {
-                    others.push(sub);
+                    filtered.push(sub); // "Luxury" second
                 }
+                // Skip all other subcategories for cars
             });
             
-            // Combine prioritized + others, then limit to 4
-            grouped.cars = [...prioritized, ...others].slice(0, 4);
-            console.log('Cars after prioritization:', grouped.cars);
+            // Use only Cheap and Luxury for cars
+            grouped.cars = filtered;
+            console.log('Cars after filtering (only Cheap & Luxury):', grouped.cars);
         }
         
         // Apply 4-item limit to other categories
@@ -212,7 +210,7 @@ const Footer = () => {
         // Use dynamic subcategories for the current tab
         const currentSubcategories = dynamicSubcategories[activeTab] || [];
         
-        const cityLinks = CITIES.slice(0, 6).map((c) => ({
+        const cityLinks = CITIES.map((c) => ({
             href: getLocalizedUrl(`/category/${cfg.slug}/city/${c.key}`),
             label: cfg.cityLabel(c.label),
         }));
@@ -223,8 +221,8 @@ const Footer = () => {
         }));
         
         const subcatCityCombos = [];
-        currentSubcategories.slice(0, 3).forEach((s) => {
-            CITIES.slice(0, 3).forEach((c) => {
+        currentSubcategories.forEach((s) => {
+            CITIES.slice(0, 5).forEach((c) => {
                 subcatCityCombos.push({
                     href: getLocalizedUrl(`/category/${cfg.slug}/subcategory/${s.key}/city/${c.key}`),
                     label: cfg.subcatCityLabel(s.label, c.label),
