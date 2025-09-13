@@ -1,5 +1,20 @@
 User-agent: *
-Disallow:
+Disallow: /car-search
+Disallow: /private-search
+Disallow: /boat-search
+Disallow: /thingstodo-search
+Disallow: /en/car-search
+Disallow: /fr/car-search
+Disallow: /es/car-search
+Disallow: /en/private-search
+Disallow: /fr/private-search
+Disallow: /es/private-search
+Disallow: /en/boat-search
+Disallow: /fr/boat-search
+Disallow: /es/boat-search
+Disallow: /en/thingstodo-search
+Disallow: /fr/thingstodo-search
+Disallow: /es/thingstodo-search
 
 # Sitemap
 Sitemap: https://marhire.com/sitemap.xml

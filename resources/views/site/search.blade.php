@@ -3,6 +3,7 @@
 @section('title', $page?->meta_title ?? 'Search Results - MarHire')
 
 @section('meta')
+    <meta name="robots" content="noindex, follow">
     @if($page)
         <meta name="title" content="{{ $page->meta_title }}">
         <meta name="description" content="{{ $page->meta_description }}">
