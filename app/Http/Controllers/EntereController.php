@@ -71,7 +71,7 @@ class EntereController extends Controller
             $slug = $locale;
             $locale = app()->getLocale();
         }
-        
+
         $categories = ['car-rental', 'private-driver', 'boats', 'things-to-do'];
 
         if (!in_array($slug, $categories))
@@ -92,7 +92,7 @@ class EntereController extends Controller
             $slug = $locale;
             $locale = app()->getLocale();
         }
-        
+
         $categories = ['car-rental', 'private-driver', 'boats', 'things-to-do'];
         $page = $this->SEOservice->getPage('category/' . $slug . '/$city');
 
@@ -115,7 +115,7 @@ class EntereController extends Controller
             $category = $locale;
             $locale = app()->getLocale();
         }
-        
+
         $categories = ['car-rental', 'private-driver', 'boats', 'things-to-do'];
 
         if (!in_array($category, $categories) || !$this->checkSubCategoryExists($category, $subcategory))
@@ -127,7 +127,7 @@ class EntereController extends Controller
         if ($page && $page->meta_title) {
             $page->processed_meta_title = str_replace(['{{category}}', '{{subcategory}}', '{{city}}'], [$category ?? '', $subcategory ?? '', ''], $page->meta_title);
         }
-        
+
         if ($page && $page->meta_description) {
             $page->processed_meta_description = str_replace(['{{category}}', '{{subcategory}}', '{{city}}'], [$category ?? '', $subcategory ?? '', ''], $page->meta_description);
         }
@@ -149,7 +149,7 @@ class EntereController extends Controller
             $category = $locale;
             $locale = app()->getLocale();
         }
-        
+
         $categories = ['car-rental', 'private-driver', 'boats', 'things-to-do'];
 
         if (!in_array($category, $categories) || !$this->checkSubCategoryExists($category, $subcategory))
@@ -161,7 +161,7 @@ class EntereController extends Controller
         if ($page && $page->meta_title) {
             $page->processed_meta_title = str_replace(['{{category}}', '{{subcategory}}', '{{city}}'], [$category ?? '', $subcategory ?? '', $city ?? ''], $page->meta_title);
         }
-        
+
         if ($page && $page->meta_description) {
             $page->processed_meta_description = str_replace(['{{category}}', '{{subcategory}}', '{{city}}'], [$category ?? '', $subcategory ?? '', $city ?? ''], $page->meta_description);
         }
@@ -230,7 +230,7 @@ class EntereController extends Controller
             $city = $locale;
             $locale = app()->getLocale();
         }
-        
+
         $page = $this->SEOservice->getPage('city/*');
 
         return view('site.city')->with('city', ucfirst(strtolower($city)))
@@ -245,7 +245,7 @@ class EntereController extends Controller
             $slug = $locale;
             $locale = app()->getLocale();
         }
-        
+
         // Be resilient in test/empty DB environments: don't 404 if listing is missing
         // Use optimized translation loading - only current locale + English fallback
         $listing = Listing::where('slug', $slug)
@@ -253,18 +253,18 @@ class EntereController extends Controller
             ->with(['city', 'provider', 'galleries'])
             ->first();
         $page = $this->SEOservice->getPage($slug, 'listing');
-        
+
         // Generate SEO meta tags with language support
         $seoData = [];
         if ($listing) {
             // Get translated meta data with fallback
             $translatedMeta = $this->SEOservice->getTranslatedMeta($listing, [
-                'meta_title', 
+                'meta_title',
                 'meta_description',
                 'title',
                 'description'
             ]);
-            
+
             $seoData = [
                 'title' => $translatedMeta['meta_title'] ?? $translatedMeta['title'] ?? $listing->title,
                 'description' => $translatedMeta['meta_description'] ?? $translatedMeta['description'] ?? Str::limit($listing->description, 160),
@@ -273,14 +273,14 @@ class EntereController extends Controller
                 'og_title' => $translatedMeta['meta_title'] ?? $translatedMeta['title'] ?? $listing->title,
                 'og_description' => $translatedMeta['meta_description'] ?? $translatedMeta['description'] ?? Str::limit($listing->description, 160),
             ];
-            
+
             // Add image if available
             if ($listing->galleries && count($listing->galleries) > 0) {
                 $seoData['og_image'] = asset($listing->galleries[0]->file_path);
                 $seoData['twitter_image'] = asset($listing->galleries[0]->file_path);
             }
         }
-        
+
         $metaTags = $this->SEOservice->generateMetaTags($seoData);
 
         return view('site.listing')
@@ -322,7 +322,7 @@ class EntereController extends Controller
             $agency_name = $locale;
             $locale = app()->getLocale();
         }
-        
+
         $agency = Agency::where('slug', $agency_name)
             ->where('status', 'Active')
             ->firstOrFail();
@@ -394,7 +394,7 @@ class EntereController extends Controller
             $slug = $locale;
             $locale = app()->getLocale();
         }
-        
+
         $article = Article::where('slug', $slug)->firstOrFail();
         $page = $this->SEOservice->getPage($slug, 'article');
 
@@ -410,17 +410,17 @@ class EntereController extends Controller
         $type = $request->type;
         $locale = $request->input('locale', 'en');
         app()->setLocale($locale);
-        
+
         $legal = TermsAndConditions::withCurrentTranslations()
             ->where('title', $type)
             ->firstOrFail();
-        
+
         if ($legal) {
             $legal->translated_fields = $legal->getCurrentTranslatedData();
         }
 
         return response()->json([
-            'content' => $legal->content, 
+            'content' => $legal->content,
             'type' => $type,
             'translated_fields' => $legal->translated_fields ?? null
         ]);
@@ -431,7 +431,7 @@ class EntereController extends Controller
         $skip = $request->input('skip', 0);
         $take = 6;
         $locale = $request->input('locale', 'en');
-        
+
         // Set the locale for proper translation loading
         if (in_array($locale, ['en', 'fr', 'es'])) {
             app()->setLocale($locale);
@@ -456,14 +456,14 @@ class EntereController extends Controller
     public function get_article_api(Request $request)
     {
         $locale = $request->input('locale', 'en');
-        
+
         // Set the locale for proper translation loading
         if (in_array($locale, ['en', 'fr', 'es'])) {
             app()->setLocale($locale);
         }
-        
+
         $article = Article::withCurrentTranslations()->with('category')->where('slug', $request->slug)->first();
-        
+
         if ($article) {
             // Add translated fields for easy frontend consumption
             $article['translated_fields'] = $article->getCurrentTranslatedData();
@@ -482,7 +482,7 @@ class EntereController extends Controller
         ]);
 
         // Now you have $validated as an array.
-        Mail::to('contact@marhire.com')->send(new \App\Mail\SendContactMail($validated));
+        Mail::to('admin@marhire.com')->send(new \App\Mail\SendContactMail($validated));
 
         return response()->json(['success' => true]);
     }
