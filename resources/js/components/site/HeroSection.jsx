@@ -99,8 +99,8 @@ const HeroSection = ({
                     typeof window !== "undefined" && bc.href.startsWith("http")
                         ? bc.href
                         : typeof window !== "undefined"
-                        ? `${window.location.origin}${bc.href}`
-                        : bc.href;
+                            ? `${window.location.origin}${bc.href}`
+                            : bc.href;
             }
             schemaItems.push(itemObj);
         });
@@ -185,16 +185,16 @@ const HeroSection = ({
                         {subtitle ? (
                             <p className="slogan-subtitle">{subtitle}</p>
                         ) : null}
-                        {/* {withBar && (
+                        {withBar && (
                             <div className="features-icons">
                                 {features.map((item, index) => (
-                                    <span className="features-icons__item">
-                                        <img src={item.icon} />
+                                    <span key={index} className="features-icons__item">
+                                        <img src={item.icon} alt={item.name} />
                                         {item.name}
                                     </span>
                                 ))}
                             </div>
-                        )} */}
+                        )}
                     </div>
                     <div className="searchbox">
                         {withBar && (
@@ -203,11 +203,10 @@ const HeroSection = ({
                                     {getTabs(t).map((tab) => (
                                         <button
                                             key={tab.key}
-                                            className={`mh-hero-tab ${
-                                                tab.key === activeTab
-                                                    ? "mh-hero-tab--active"
-                                                    : ""
-                                            }`}
+                                            className={`mh-hero-tab ${tab.key === activeTab
+                                                ? "mh-hero-tab--active"
+                                                : ""
+                                                }`}
                                             onClick={() =>
                                                 setActiveTab(tab.key)
                                             }
@@ -274,18 +273,43 @@ const HeroSection = ({
                 /* Add comfortable spacing above the title */
                 .hero-section--content { padding-top: 40px; }
 
+                /* Feature badges - show on large screens only */
+                .features-icons {
+                    display: flex;
+                    justify-content: center;
+                    gap: 24px;
+                    margin: 20px auto 0;
+                    max-width: 800px;
+                    flex-wrap: wrap;
+                }
+                .features-icons__item {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 8px;
+                    color: rgba(255,255,255,0.95);
+                    font-size: 14px;
+                    font-weight: 500;
+                    text-align: center;
+                    min-width: 120px;
+                }
+                .features-icons__item > img {
+                    width: 32px;
+                    height: 32px;
+                    object-fit: contain;
+                }
+
                 /* Match CarRentalForm mobile breakpoint (isMobile: max-width: 900px) */
                 @media (max-width: 900px) {
                     /* Tabs container should be full-width on mobile, with tighter gap above form */
                     .mh-hero-tabs { max-width: none; margin-bottom: 10px; }
                     /* Increase top padding on mobile to avoid squashed title */
                     .hero-section--content { padding-top: 24px; }
-                    /* Title and badges responsive adjustments */
+                    /* Title responsive adjustments */
                     .slogan-title { font-size: 20pt; line-height: 1.2; }
                     .slogan-subtitle { font-size: 13px; }
-                    .features-icons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; justify-items: center; }
-                    .features-icons__item { font-size: 13px; }
-                    .features-icons__item > img { width: 20px; }
+                    /* Hide feature badges on mobile */
+                    .features-icons { display: none !important; }
 
                     /* Keep desktop styling, only change layout and tighten radius to avoid overflow */
                     .mh-hero-tabs__bar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; background: rgba(18,24,38,0.8); padding: 6px; border-radius: 16px; overflow: hidden; }
@@ -301,7 +325,7 @@ const HeroSection = ({
                     .mh-hero-tab--active:active { background: #ffffff !important; color: #0f172a !important; box-shadow: 0 4px 12px rgba(255,255,255,0.15); }
                 }
 
-                
+
 
                 @media (max-width: 520px) {
                     .mh-hero-tab { gap: 4px; padding: 6px 8px; font-size: 12px; }
