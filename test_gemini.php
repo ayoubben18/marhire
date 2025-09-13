@@ -15,7 +15,9 @@ echo "API Key configured: " . (!empty($apiKey) ? 'Yes' : 'No') . "\n";
 echo "API Key length: " . strlen($apiKey) . "\n";
 
 // Test simple API call
-$url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" . $apiKey;
+$model = config('services.gemini.model');
+echo "Using model: " . $model . "\n";
+$url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key=" . $apiKey;
 
 $response = Http::withHeaders([
     'Content-Type' => 'application/json',

@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
+use Gemini\Data\GenerationConfig;
+use Gemini\Data\Schema;
+use Gemini\Enums\DataType;
+use Gemini\Enums\ResponseMimeType;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Listing;
@@ -12,21 +15,22 @@ use Exception;
 
 class GeminiTranslationService
 {
-    protected $apiKey;
-    protected $apiUrl;
+    protected $client;
     protected $model;
-    protected $maxRetries = 3;
-    protected $retryDelay = 1000; // milliseconds
 
     public function __construct()
     {
-        $this->apiKey = config('services.gemini.api_key');
-        $this->model = config('services.gemini.model', 'gemini-1.5-flash');
-        $this->apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent";
+        $apiKey = config('services.gemini.api_key');
+        if (!$apiKey) {
+            throw new Exception('Gemini API key not configured');
+        }
+
+        $this->client = \Gemini::client($apiKey);
+        $this->model = config('services.gemini.model', 'gemini-2.5-flash-lite');
     }
 
     /**
-     * Translate a listing to target locales
+     * Translate a listing to target locales using text-by-text translation
      *
      * @param Listing $listing
      * @param array $targetLocales
@@ -35,32 +39,80 @@ class GeminiTranslationService
      */
     public function translateListing(Listing $listing, array $targetLocales = ['fr', 'es'])
     {
-        if (!$this->apiKey) {
-            throw new Exception('Gemini API key not configured');
+        $translations = [];
+        $translatableFields = [
+            'title', 'description', 'short_description', 'special_notes',
+            'cancellation_policy', 'rental_terms', 'pickup_info',
+            'meta_title', 'meta_description'
+        ];
+
+        foreach ($targetLocales as $locale) {
+            $translations[$locale] = [];
+
+            foreach ($translatableFields as $field) {
+                if (!empty($listing->$field)) {
+                    try {
+                        $translations[$locale][$field] = $this->translateText(
+                            $listing->$field,
+                            $locale
+                        );
+                    } catch (Exception $e) {
+                        Log::warning("Failed to translate field {$field} for listing {$listing->id}", [
+                            'field' => $field,
+                            'listing_id' => $listing->id,
+                            'locale' => $locale,
+                            'error' => $e->getMessage()
+                        ]);
+                        // Keep original text as fallback
+                        $translations[$locale][$field] = $listing->$field;
+                    }
+                } else {
+                    $translations[$locale][$field] = '';
+                }
+            }
         }
 
-        // Check rate limiting
-        if (!$this->checkRateLimit()) {
-            throw new Exception('Rate limit exceeded. Please try again later.');
-        }
+        Log::info('Listing translation completed with text-by-text approach', [
+            'listing_id' => $listing->id,
+            'locales' => $targetLocales,
+            'fields_translated' => count($translatableFields)
+        ]);
 
-        // Build the structured prompt
-        $prompt = $this->buildTranslationPrompt($listing, $targetLocales);
-        
-        // Make API request with retries
-        $response = $this->makeApiRequest($prompt);
-        
-        // Parse and validate response
-        $translations = $this->parseTranslationResponse($response, $targetLocales);
-        
-        // Record API usage for rate limiting
-        $this->recordApiUsage();
-        
         return $translations;
     }
 
     /**
-     * Translate an article to target locales
+     * Create translation schema for structured output
+     *
+     * @param array $targetLocales
+     * @param array $fields
+     * @return Schema
+     */
+    protected function createTranslationSchema(array $targetLocales, array $fields)
+    {
+        $localeProperties = [];
+
+        foreach ($targetLocales as $locale) {
+            $fieldProperties = [];
+            foreach ($fields as $field) {
+                $fieldProperties[$field] = new Schema(type: DataType::STRING);
+            }
+
+            $localeProperties[$locale] = new Schema(
+                type: DataType::OBJECT,
+                properties: $fieldProperties
+            );
+        }
+
+        return new Schema(
+            type: DataType::OBJECT,
+            properties: $localeProperties,
+            required: $targetLocales
+        );
+    }
+
+    /**
+     * Translate an article to target locales using text-by-text translation
      *
      * @param Article $article
      * @param array $targetLocales
@@ -69,35 +121,48 @@ class GeminiTranslationService
      */
     public function translateArticle(Article $article, array $targetLocales = ['fr', 'es'])
     {
-        if (!$this->apiKey) {
-            throw new Exception('Gemini API key not configured');
+        $translations = [];
+        $translatableFields = [
+            'title', 'short_description', 'content', 'meta_title', 'meta_description'
+        ];
+
+        foreach ($targetLocales as $locale) {
+            $translations[$locale] = [];
+
+            foreach ($translatableFields as $field) {
+                if (!empty($article->$field)) {
+                    try {
+                        $translations[$locale][$field] = $this->translateText(
+                            $article->$field,
+                            $locale
+                        );
+                    } catch (Exception $e) {
+                        Log::warning("Failed to translate field {$field} for article {$article->id}", [
+                            'field' => $field,
+                            'article_id' => $article->id,
+                            'locale' => $locale,
+                            'error' => $e->getMessage()
+                        ]);
+                        // Keep original text as fallback
+                        $translations[$locale][$field] = $article->$field;
+                    }
+                } else {
+                    $translations[$locale][$field] = '';
+                }
+            }
         }
 
-        // Check rate limiting
-        if (!$this->checkRateLimit()) {
-            throw new Exception('Rate limit exceeded. Please try again later.');
-        }
-
-        // Build the structured prompt
-        $prompt = $this->buildArticleTranslationPrompt($article, $targetLocales);
-        
-        // Make API request with retries
-        $response = $this->makeApiRequest($prompt);
-        
-        // Parse response
-        $translations = $this->parseTranslationResponse($response, $targetLocales);
-        
-        Log::info('Article translation completed', [
+        Log::info('Article translation completed with text-by-text approach', [
             'article_id' => $article->id,
             'locales' => $targetLocales,
-            'translations_count' => count($translations)
+            'fields_translated' => count($translatableFields)
         ]);
 
         return $translations;
     }
 
     /**
-     * Translate a term to target locales
+     * Translate a term to target locales using text-by-text translation
      *
      * @param TermsAndConditions $term
      * @param array $targetLocales
@@ -106,28 +171,39 @@ class GeminiTranslationService
      */
     public function translateTerm(TermsAndConditions $term, array $targetLocales = ['fr', 'es'])
     {
-        if (!$this->apiKey) {
-            throw new Exception('Gemini API key not configured');
+        $translations = [];
+        $translatableFields = ['title', 'content'];
+
+        foreach ($targetLocales as $locale) {
+            $translations[$locale] = [];
+
+            foreach ($translatableFields as $field) {
+                if (!empty($term->$field)) {
+                    try {
+                        $translations[$locale][$field] = $this->translateText(
+                            $term->$field,
+                            $locale
+                        );
+                    } catch (Exception $e) {
+                        Log::warning("Failed to translate field {$field} for term {$term->id}", [
+                            'field' => $field,
+                            'term_id' => $term->id,
+                            'locale' => $locale,
+                            'error' => $e->getMessage()
+                        ]);
+                        // Keep original text as fallback
+                        $translations[$locale][$field] = $term->$field;
+                    }
+                } else {
+                    $translations[$locale][$field] = '';
+                }
+            }
         }
 
-        // Check rate limiting
-        if (!$this->checkRateLimit()) {
-            throw new Exception('Rate limit exceeded. Please try again later.');
-        }
-
-        // Build the structured prompt
-        $prompt = $this->buildTermTranslationPrompt($term, $targetLocales);
-        
-        // Make API request with retries
-        $response = $this->makeApiRequest($prompt);
-        
-        // Parse response
-        $translations = $this->parseTranslationResponse($response, $targetLocales);
-        
-        Log::info('Term translation completed', [
+        Log::info('Term translation completed with text-by-text approach', [
             'term_id' => $term->id,
             'locales' => $targetLocales,
-            'translations_count' => count($translations)
+            'fields_translated' => count($translatableFields)
         ]);
 
         return $translations;
@@ -532,10 +608,6 @@ class GeminiTranslationService
      */
     public function translateText($text, $targetLocale, $sourceLocale = 'en')
     {
-        if (!$this->apiKey) {
-            throw new Exception('Gemini API key not configured');
-        }
-
         if (empty($text)) {
             return '';
         }
@@ -554,17 +626,29 @@ class GeminiTranslationService
         $sourceLanguage = $languageMap[$sourceLocale] ?? 'English';
         $targetLanguage = $languageMap[$targetLocale] ?? 'French';
 
-        $prompt = "Translate the following text from {$sourceLanguage} to {$targetLanguage}. Return ONLY the translated text, nothing else:\n\n{$text}";
+        // Detect format type and create appropriate prompt
+        $isHtml = $this->isHtmlContent($text);
+
+        if ($isHtml) {
+            $prompt = "Translate the following HTML content from {$sourceLanguage} to {$targetLanguage}. " .
+                     "CRITICAL: Preserve ALL HTML tags, attributes, and structure exactly as they appear. " .
+                     "Only translate the text content between HTML tags, never modify, remove, or alter any HTML markup. " .
+                     "Return the complete HTML with translated text content:\n\n{$text}";
+        } else {
+            $prompt = "Translate the following text from {$sourceLanguage} to {$targetLanguage}. " .
+                     "Preserve the exact formatting and structure of the original text. " .
+                     "Return ONLY the translated text with the same formatting:\n\n{$text}";
+        }
 
         try {
-            $response = $this->makeApiRequest($prompt);
-            
-            // Extract the translated text from response
-            if (isset($response['candidates'][0]['content']['parts'][0]['text'])) {
-                return trim($response['candidates'][0]['content']['parts'][0]['text']);
-            }
-            
-            throw new Exception('Invalid response format from Gemini API');
+            $response = $this->client
+                ->generativeModel($this->model)
+                ->generateContent($prompt);
+
+            // Record API usage for rate limiting
+            $this->recordApiUsage();
+
+            return trim($response->text());
         } catch (Exception $e) {
             Log::error('Gemini translation failed for text', [
                 'error' => $e->getMessage(),
@@ -643,7 +727,7 @@ class GeminiTranslationService
     }
 
     /**
-     * Translate a page to target locales
+     * Translate a page to target locales using text-by-text translation
      *
      * @param \App\Models\Page $page
      * @param array $targetLocales
@@ -652,27 +736,96 @@ class GeminiTranslationService
      */
     public function translatePage($page, array $targetLocales = ['fr', 'es'])
     {
-        if (!$this->apiKey) {
-            throw new Exception('Gemini API key not configured');
+        $translations = [];
+
+        foreach ($targetLocales as $locale) {
+            $translations[$locale] = [];
+
+            // Translate simple text fields
+            $simpleFields = ['meta_title', 'meta_description'];
+            foreach ($simpleFields as $field) {
+                if (!empty($page->$field)) {
+                    try {
+                        $translations[$locale][$field] = $this->translateText(
+                            $page->$field,
+                            $locale
+                        );
+                    } catch (Exception $e) {
+                        Log::warning("Failed to translate field {$field} for page", [
+                            'field' => $field,
+                            'locale' => $locale,
+                            'error' => $e->getMessage()
+                        ]);
+                        // Keep original text as fallback
+                        $translations[$locale][$field] = $page->$field;
+                    }
+                } else {
+                    $translations[$locale][$field] = '';
+                }
+            }
+
+            // Handle content_sections (array of sections with title and text)
+            if (!empty($page->content_sections)) {
+                $contentSections = $page->content_sections;
+
+                // Ensure it's an array (could be JSON string from database)
+                if (is_string($contentSections)) {
+                    $contentSections = json_decode($contentSections, true) ?: [];
+                }
+
+                $translatedSections = [];
+                foreach ($contentSections as $index => $section) {
+                    $translatedSection = [];
+
+                    // Translate title
+                    if (!empty($section['title'])) {
+                        try {
+                            $translatedSection['title'] = $this->translateText(
+                                $section['title'],
+                                $locale
+                            );
+                        } catch (Exception $e) {
+                            Log::warning("Failed to translate section title for page", [
+                                'section_index' => $index,
+                                'locale' => $locale,
+                                'error' => $e->getMessage()
+                            ]);
+                            $translatedSection['title'] = $section['title'];
+                        }
+                    } else {
+                        $translatedSection['title'] = '';
+                    }
+
+                    // Translate text
+                    if (!empty($section['text'])) {
+                        try {
+                            $translatedSection['text'] = $this->translateText(
+                                $section['text'],
+                                $locale
+                            );
+                        } catch (Exception $e) {
+                            Log::warning("Failed to translate section text for page", [
+                                'section_index' => $index,
+                                'locale' => $locale,
+                                'error' => $e->getMessage()
+                            ]);
+                            $translatedSection['text'] = $section['text'];
+                        }
+                    } else {
+                        $translatedSection['text'] = '';
+                    }
+
+                    $translatedSections[] = $translatedSection;
+                }
+                $translations[$locale]['content_sections'] = $translatedSections;
+            } else {
+                $translations[$locale]['content_sections'] = [];
+            }
         }
 
-        // Check rate limiting
-        if (!$this->checkRateLimit()) {
-            throw new Exception('Rate limit exceeded. Please try again later.');
-        }
-
-        // Build the structured prompt
-        $prompt = $this->buildPageTranslationPrompt($page, $targetLocales);
-        
-        // Make API request with retries
-        $response = $this->makeApiRequest($prompt);
-        
-        // Parse response
-        $translations = $this->parseTranslationResponse($response, $targetLocales);
-        
-        Log::info('Page translation completed', [
+        Log::info('Page translation completed with text-by-text approach', [
             'locales' => $targetLocales,
-            'translations_count' => count($translations)
+            'sections_count' => is_array($page->content_sections) ? count($page->content_sections) : 0
         ]);
 
         return $translations;
@@ -750,5 +903,17 @@ class GeminiTranslationService
         $prompt .= json_encode($translatableFields, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
         return $prompt;
+    }
+
+    /**
+     * Detect if content contains HTML markup
+     *
+     * @param string $text
+     * @return bool
+     */
+    protected function isHtmlContent($text)
+    {
+        // Check for common HTML tags
+        return (bool) preg_match('/<\s*[a-zA-Z][^>]*>/', $text);
     }
 }
