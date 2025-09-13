@@ -528,6 +528,7 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
 
             <PopularDestinations
                 cities={["Agadir", "Marrakech", "Casablanca", "Fez", "Tangier", "Rabat", "Essaouira"]}
+                basePath={`/category/${categorySlug}/subcategory/${subcategorySlug}/city`}
             />
 
             <FreeTexts slug={`category/${categorySlug}/subcategory/${subcategorySlug}`} />

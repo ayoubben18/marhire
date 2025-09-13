@@ -96,6 +96,7 @@ const Footer = () => {
         axios.get('/api/get_subcategories_api')
             .then(response => {
                 if (response.data && response.data.subcategories) {
+                    console.log('Fetched subcategories:', response.data.subcategories);
                     const grouped = processSubcategories(response.data.subcategories);
                     setDynamicSubcategories(grouped);
                 }
@@ -121,16 +122,43 @@ const Footer = () => {
             activities: [] 
         };
         
-        // Group subcategories by category
+        // Group ALL subcategories by category (no 4-item limit yet)
         subcategories.forEach(sub => {
             const categoryKey = categoryMap[sub.category_id];
-            if (categoryKey && grouped[categoryKey].length < 4) {
+            if (categoryKey) {
                 grouped[categoryKey].push({
                     key: sub.option.toLowerCase().replace(/\s+/g, '-'),
                     label: sub.option,
                     id: sub.id
                 });
             }
+        });
+        
+        // Prioritize "Cheap" and "Luxury" for cars category first, then apply limit
+        if (grouped.cars.length > 0) {
+            console.log('Cars before prioritization:', grouped.cars);
+            const prioritized = [];
+            const others = [];
+            
+            grouped.cars.forEach(sub => {
+                const label = sub.label.toLowerCase();
+                if (label.includes('cheap')) {
+                    prioritized.unshift(sub); // "Cheap" first
+                } else if (label.includes('luxury')) {
+                    prioritized.push(sub); // "Luxury" second
+                } else {
+                    others.push(sub);
+                }
+            });
+            
+            // Combine prioritized + others, then limit to 4
+            grouped.cars = [...prioritized, ...others].slice(0, 4);
+            console.log('Cars after prioritization:', grouped.cars);
+        }
+        
+        // Apply 4-item limit to other categories
+        ['drivers', 'boats', 'activities'].forEach(category => {
+            grouped[category] = grouped[category].slice(0, 4);
         });
         
         return grouped;
