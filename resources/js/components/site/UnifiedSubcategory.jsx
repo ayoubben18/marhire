@@ -7,14 +7,14 @@ import ListingsByCity from "./ListingsByCity";
 import PopularDestinations from "./PopularDestinations";
 import FreeTexts from "./FreeTexts";
 import Footer from "./Footer";
-import { 
-    FaShieldAlt, 
-    FaPlane, 
-    FaHeadset, 
-    FaDollarSign, 
-    FaCar, 
-    FaUsers, 
-    FaGasPump, 
+import {
+    FaShieldAlt,
+    FaPlane,
+    FaHeadset,
+    FaDollarSign,
+    FaCar,
+    FaUsers,
+    FaGasPump,
     FaParking,
     FaUserTie,
     FaMapMarkedAlt,
@@ -64,16 +64,16 @@ const getCityId = (cityName) => {
 // Dynamic subcategory lookup function
 const getSubcategoryId = (subcategories, categoryId, subcategorySlug) => {
     if (!subcategorySlug || !subcategories || subcategories.length === 0) return null;
-    
+
     const slug = String(subcategorySlug).toLowerCase();
-    
+
     // Find subcategory that matches the slug and category
     const subcategory = subcategories.find(sub => {
         // Generate slug from option name
         const generatedSlug = sub.option?.toLowerCase().replace(/\s+/g, '-') || '';
         return generatedSlug === slug && sub.category_id === categoryId;
     });
-    
+
     return subcategory?.id || null;
 };
 
@@ -410,18 +410,18 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
     const { t } = useTranslation();
     const [subcategories, setSubcategories] = useState([]);
     const [subcategoryId, setSubcategoryId] = useState(null);
-    
+
     const meta = getCategoryMeta(categorySlug);
     const cityId = city ? getCityId(city) : null;
     const subcategoryName = toTitle(subcategorySlug);
-    
+
     // Fetch subcategories from API
     useEffect(() => {
         axios.get('/api/get_subcategories_api')
             .then(response => {
                 const allSubcategories = response.data.subcategories || [];
                 setSubcategories(allSubcategories);
-                
+
                 // Find the matching subcategory ID
                 const id = getSubcategoryId(allSubcategories, meta.id, subcategorySlug);
                 setSubcategoryId(id);
@@ -465,7 +465,7 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
                 />
             );
         }
-        
+
         if (meta.key === "drivers") {
             return (
                 <WhyChooseUs
@@ -474,7 +474,7 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
                 />
             );
         }
-        
+
         if (meta.key === "boats") {
             return (
                 <WhyChooseUs
@@ -483,7 +483,7 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
                 />
             );
         }
-        
+
         if (meta.key === "activities") {
             return (
                 <WhyChooseUs
@@ -492,7 +492,7 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
                 />
             );
         }
-        
+
         return null;
     };
 
@@ -531,7 +531,12 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
                 basePath={`/category/${categorySlug}/subcategory/${subcategorySlug}/city`}
             />
 
-            <FreeTexts slug={`category/${categorySlug}/subcategory/${subcategorySlug}`} />
+            <FreeTexts
+                slug={city ? `category/${categorySlug}/subcategory/${subcategorySlug}/city/${city}` : `category/${categorySlug}/subcategory/${subcategorySlug}`}
+                subcategory={subcategoryName}
+                city={city}
+                categorySlug={categorySlug}
+            />
 
             <Footer />
         </>
@@ -539,5 +544,3 @@ const UnifiedSubcategory = ({ categorySlug, subcategorySlug, city }) => {
 };
 
 export default UnifiedSubcategory;
-
-

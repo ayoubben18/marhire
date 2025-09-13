@@ -15,11 +15,52 @@ const getTranslatedField = (item, field, locale) => {
     return item?.[field] || '';
 };
 
-const FreeTexts = ({ slug }) => {
+const FreeTexts = ({ slug, subcategory, city, categorySlug }) => {
     const { i18n } = useTranslation();
     const currentLocale = i18n.language || 'en';
     const [pageData, setPageData] = useState(null);
     const [texts, setTexts] = useState([]);
+
+    // Helper function to get proper category name from slug
+    const getCategoryName = (slug) => {
+        switch (slug) {
+            case 'car-rental':
+                return 'Car Rental';
+            case 'private-driver':
+                return 'Private Driver';
+            case 'boats':
+                return 'Boat Rental';
+            case 'things-to-do':
+                return 'Things to Do';
+            default:
+                return slug;
+        }
+    };
+
+    // Helper function to interpolate dynamic content
+    const interpolateText = (text) => {
+        if (!text) return '';
+
+        let interpolated = text;
+
+        // Replace subcategory token
+        if (subcategory && interpolated.includes('{{subcategory}}')) {
+            interpolated = interpolated.replace(/\{\{subcategory\}\}/g, subcategory);
+        }
+
+        // Replace city token
+        if (city && interpolated.includes('{{city}}')) {
+            interpolated = interpolated.replace(/\{\{city\}\}/g, city);
+        }
+
+        // Replace category token
+        if (categorySlug && interpolated.includes('{{category}}')) {
+            const categoryName = getCategoryName(categorySlug);
+            interpolated = interpolated.replace(/\{\{category\}\}/g, categoryName);
+        }
+
+        return interpolated;
+    };
 
     useEffect(() => {
         const fetchTexts = async () => {
@@ -72,8 +113,8 @@ const FreeTexts = ({ slug }) => {
             <div className="two-col-grid">
                 {safeTexts.map((text, idx) => (
                     <div className="two-col-item" key={idx}>
-                        <h3>{text?.title || ''}</h3>
-                        <p>{text?.text || ''}</p>
+                        <h3>{interpolateText(text?.title || '')}</h3>
+                        <p>{interpolateText(text?.text || '')}</p>
                     </div>
                 ))}
             </div>
