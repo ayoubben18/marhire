@@ -251,6 +251,7 @@ const HeroSection = ({
                 .hero-section {
                     margin-left: -16px;
                     margin-right: -16px;
+                    margin-top: -60px; /* Counteract .site main margin-top gap */
                     position: relative;
                 }
 
@@ -279,7 +280,7 @@ const HeroSection = ({
 
                 /* Add comfortable spacing above the title */
                 .hero-section--content {
-                    padding-top: 40px;
+                    padding-top: 60px;
                     padding-left: 20px;
                     padding-right: 20px;
                 }
@@ -339,7 +340,7 @@ const HeroSection = ({
                     .mh-hero-tabs { max-width: none; margin-bottom: 10px; }
                     /* Increase top padding on mobile to avoid squashed title, maintain side padding */
                     .hero-section--content {
-                        padding-top: 24px;
+                        padding-top: 60px;
                         padding-left: 20px;
                         padding-right: 20px;
                     }
