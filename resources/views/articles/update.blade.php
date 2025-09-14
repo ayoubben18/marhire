@@ -37,7 +37,7 @@
                 </div>
                 @endif
                 <div class="row gy-4">
-                    <input type="hidden" name="id" value="{{ $article->id }}"/> 
+                    <input type="hidden" name="id" value="{{ $article->id }}"/>
                     <div class="col-md-6">
                     <div class="form-group">
                         <label class="form-label" for="title">Title <span class="lbl-obligatoire">*</span></label>
@@ -62,10 +62,30 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="form-group">
                         <label class="form-label" for="featured_img">Featured Image</label>
                         <div class="form-control-wrap">
+                            <div class="alert alert-info mb-2" style="padding: 8px 12px; font-size: 13px;">
+                                <i class="fa fa-info-circle"></i> <strong>Recommended:</strong> Landscape image (16:9 ratio)
+                                <br><small>Example: 1000x750px, 1600x900px, 1920x1080px</small>
+                            </div>
+                            @if($article->featured_img)
+                            <div class="current-image mb-2" id="current-image-container">
+                                <img src="{{ asset($article->featured_img) }}" alt="Current Featured Image" style="max-height: 150px; max-width: 300px; display: block; margin-bottom: 10px; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
+                                <button type="button" class="btn btn-sm btn-danger" id="delete-image-btn">
+                                    <i class="fa fa-trash"></i> Delete Image
+                                </button>
+                                <input type="hidden" name="delete_image" id="delete_image" value="0">
+                            </div>
+                            @endif
+                            <div id="new-image-preview" style="display: none; margin-bottom: 10px;">
+                                <img id="new-preview-image" src="" alt="New Image Preview" style="max-height: 150px; max-width: 300px; display: block; border: 1px solid #28a745; padding: 5px; border-radius: 4px;">
+                                <small class="text-success">New image to be uploaded</small>
+                                <div id="aspect-ratio-warning" class="text-warning mt-1" style="display: none; font-size: 12px;">
+                                    <i class="fa fa-exclamation-triangle"></i> For best results, use a landscape image (wider than it is tall)
+                                </div>
+                            </div>
                             <input type="file" class="form-control" name="featured_img" id="featured_img" placeholder="Image" accept="image/png, image/webp, image/jpeg" />
                         </div>
                     </div>
@@ -116,16 +136,16 @@
             </div>
         </div>
     </div>
-    
+
     {{-- Translation UI Components --}}
     @include('articles.partials.ai-translation-generator')
     @include('articles.partials.translation-viewer')
     </div>
-    
+
     {{-- Pass existing translations to JavaScript --}}
     <script>
         window.existingArticleTranslations = @json($article->translations->keyBy('locale')->toArray());
-        
+
         // Check if article has existing translations on page load
         document.addEventListener('DOMContentLoaded', function() {
             if (window.existingArticleTranslations && Object.keys(window.existingArticleTranslations).length > 0) {
@@ -139,7 +159,7 @@
 <script>
     // Initialize global editor instances storage
     window.editorInstances = {};
-    
+
     document.querySelectorAll('.editor').forEach((element) => {
         ClassicEditor
             .create(element)
@@ -149,19 +169,67 @@
                 if (fieldName) {
                     window.editorInstances[fieldName] = editor;
                 }
-                
+
                 // Also store on the editable element (CKEditor 5 standard)
                 const editable = editor.editing.view.document.getRoot();
                 const editableElement = editor.sourceElement.nextElementSibling.querySelector('.ck-editor__editable');
                 if (editableElement) {
                     editableElement.ckeditorInstance = editor;
                 }
-                
+
                 console.log('Editor initialized for field:', fieldName);
             })
             .catch(error => {
                 console.error('Error initializing editor:', error);
             });
+    });
+
+    // Image preview and delete functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const featuredImgInput = document.getElementById('featured_img');
+        const deleteImageBtn = document.getElementById('delete-image-btn');
+        const deleteImageInput = document.getElementById('delete_image');
+        const currentImageContainer = document.getElementById('current-image-container');
+        const newImagePreview = document.getElementById('new-image-preview');
+        const newPreviewImage = document.getElementById('new-preview-image');
+        const aspectRatioWarning = document.getElementById('aspect-ratio-warning');
+
+        // Handle file selection for preview
+        if (featuredImgInput) {
+            featuredImgInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        newPreviewImage.src = e.target.result;
+                        newImagePreview.style.display = 'block';
+
+                        // Check aspect ratio and show warning if needed
+                        newPreviewImage.onload = function() {
+                            const aspectRatio = this.naturalWidth / this.naturalHeight;
+                            if (aspectRatio < 1.2) { // Less than 6:5 ratio (close to square or portrait)
+                                aspectRatioWarning.style.display = 'block';
+                            } else {
+                                aspectRatioWarning.style.display = 'none';
+                            }
+                        };
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    newImagePreview.style.display = 'none';
+                }
+            });
+        }
+
+        // Handle delete image button
+        if (deleteImageBtn) {
+            deleteImageBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to delete the current image?')) {
+                    currentImageContainer.style.display = 'none';
+                    deleteImageInput.value = '1';
+                }
+            });
+        }
     });
 
 </script>

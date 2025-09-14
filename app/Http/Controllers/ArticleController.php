@@ -47,11 +47,14 @@ class ArticleController extends Controller
         $logo = '';
 
         if ($request->hasFile('featured_img')) {
-            $logo = 'article_' . uniqid() . '.' . $request->featured_img->extension();
+            $logoFileName = 'article_' . uniqid() . '.' . $request->featured_img->extension();
+            $destination = $this->getImagesDestination();
 
-            $request->featured_img->move(public_path('images') . '/articles', $logo);
+            $request->featured_img->move($destination, $logoFileName);
 
-            $logo = 'images/articles/' . $logo;
+            // Convert to web-accessible path for storage
+            $fullPath = $destination . '/' . $logoFileName;
+            $logo = $this->convertToWebPath($fullPath);
         }
 
         $article = Article::create([
@@ -78,7 +81,7 @@ class ArticleController extends Controller
                 'meta_description' => $request->meta_description,
             ]
         ];
-        
+
         try {
             $translationService->updateTranslations($article, $englishTranslation);
         } catch (\Exception $e) {
@@ -145,12 +148,43 @@ class ArticleController extends Controller
 
         $logo = $article->featured_img;
 
+        // Handle image deletion
+        if ($request->has('delete_image') && $request->delete_image == '1') {
+            if ($article->featured_img) {
+                // Delete old image file - check both possible paths
+                $publicPath = public_path($article->featured_img);
+                $cPanelPath = str_replace('/public/', '/public_html/', $publicPath);
+
+                if (file_exists($publicPath)) {
+                    unlink($publicPath);
+                } elseif (file_exists($cPanelPath)) {
+                    unlink($cPanelPath);
+                }
+            }
+            $logo = '';
+        }
+
         if ($request->hasFile('featured_img')) {
-            $logo = 'article_' . uniqid() . '.' . $request->featured_img->extension();
+            // Delete old image if exists - check both possible paths
+            if ($article->featured_img) {
+                $publicPath = public_path($article->featured_img);
+                $cPanelPath = str_replace('/public/', '/public_html/', $publicPath);
 
-            $request->featured_img->move(public_path('images') . '/articles', $logo);
+                if (file_exists($publicPath)) {
+                    unlink($publicPath);
+                } elseif (file_exists($cPanelPath)) {
+                    unlink($cPanelPath);
+                }
+            }
 
-            $logo = 'images/articles/' . $logo;
+            $logoFileName = 'article_' . uniqid() . '.' . $request->featured_img->extension();
+            $destination = $this->getImagesDestination();
+
+            $request->featured_img->move($destination, $logoFileName);
+
+            // Convert to web-accessible path for storage
+            $fullPath = $destination . '/' . $logoFileName;
+            $logo = $this->convertToWebPath($fullPath);
         }
 
         $article->update([
@@ -175,7 +209,7 @@ class ArticleController extends Controller
                 'meta_description' => $request->meta_description,
             ]
         ];
-        
+
         try {
             $translationService->updateTranslations($article, $englishTranslation);
         } catch (\Exception $e) {
@@ -184,7 +218,7 @@ class ArticleController extends Controller
                 'error' => $e->getMessage()
             ]);
         }
-        
+
         // Save pending translations if they exist
         if ($request->has('pending_translations')) {
             try {
@@ -222,7 +256,7 @@ class ArticleController extends Controller
         }
 
         $article = Article::findOrFail($id);
-        
+
         $request->validate([
             'locales' => 'sometimes|array',
             'locales.*' => 'string|in:fr,es,ar,de,it,pt,ru,zh,ja',
@@ -293,7 +327,7 @@ class ArticleController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             Log::error('Article translation failed', [
                 'article_id' => $id,
                 'error' => $e->getMessage(),
@@ -371,5 +405,72 @@ class ArticleController extends Controller
                 'message' => 'Translation failed: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Get the correct destination path for image uploads
+     * Handles both local development and cPanel deployment
+     *
+     * @return string
+     */
+    private function getImagesDestination(): string
+    {
+        // Use environment variable to determine if we're on cPanel
+        if (env('CPANEL_ENV', false) === true || env('CPANEL_ENV', false) === 'true') {
+            // cPanel: Use public_html/images/articles for web-accessible storage
+            $basePath = base_path();
+            $publicHtmlPath = dirname($basePath) . '/public_html/images/articles';
+
+            // Create directory if it doesn't exist
+            if (!file_exists($publicHtmlPath)) {
+                mkdir($publicHtmlPath, 0755, true);
+            }
+
+            return $publicHtmlPath;
+        }
+
+        // Local development or standard deployment: use Laravel's public path
+        $publicPath = public_path('images/articles');
+
+        // Create directory if it doesn't exist
+        if (!file_exists($publicPath)) {
+            mkdir($publicPath, 0755, true);
+        }
+
+        return $publicPath;
+    }
+
+    /**
+     * Convert absolute file path to web-accessible relative path
+     * Handles both standard Laravel public and cPanel public_html paths
+     *
+     * @param string $absolutePath
+     * @return string
+     */
+    private function convertToWebPath(string $absolutePath): string
+    {
+        // Remove various possible base paths to get the web-accessible path
+        $webPath = $absolutePath;
+
+        // Try removing public_html path (cPanel)
+        if (str_contains($webPath, '/public_html/')) {
+            $parts = explode('/public_html/', $webPath);
+            $webPath = end($parts);
+        }
+        // Try removing standard Laravel public path
+        elseif (str_contains($webPath, '/public/')) {
+            $parts = explode('/public/', $webPath);
+            $webPath = end($parts);
+        }
+        // If neither worked, try to extract just the /images/articles/ part
+        elseif (str_contains($webPath, '/images/articles/')) {
+            $parts = explode('/images/articles/', $webPath);
+            $webPath = 'images/articles/' . end($parts);
+        }
+
+        // Remove leading slash if present (we want relative path for storage)
+        $webPath = ltrim($webPath, '/');
+
+        return $webPath;
     }
 }
