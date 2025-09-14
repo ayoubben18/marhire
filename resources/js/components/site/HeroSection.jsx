@@ -247,6 +247,13 @@ const HeroSection = ({
                 </div>
             </div>
             <style>{`
+                /* Hero section reduced margins (not full-width) */
+                .hero-section {
+                    margin-left: -16px;
+                    margin-right: -16px;
+                    position: relative;
+                }
+
                 .slogan-subtitle { margin: 8px auto 0; color: #e5f1ee; font-size: 14px; line-height: 1.6; max-width: 1000px; text-align: center; padding: 0 16px; }
                 .hero-nav-path { margin-bottom: 10px; display: flex; justify-content: center; }
                 .nav-path-container { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 400; color: rgba(255,255,255,.9); }
@@ -271,7 +278,11 @@ const HeroSection = ({
                 .mh-hero-tab--active svg { color: #0f172a !important; }
 
                 /* Add comfortable spacing above the title */
-                .hero-section--content { padding-top: 40px; }
+                .hero-section--content {
+                    padding-top: 40px;
+                    padding-left: 20px;
+                    padding-right: 20px;
+                }
 
                 /* Feature badges - show on large screens only */
                 .features-icons {
@@ -299,12 +310,39 @@ const HeroSection = ({
                     object-fit: contain;
                 }
 
+                /* Responsive padding adjustments for larger screens */
+                @media (min-width: 901px) {
+                    .hero-section {
+                        margin-left: -20px;
+                        margin-right: -20px;
+                    }
+                    .hero-section--content {
+                        padding-left: 24px;
+                        padding-right: 24px;
+                    }
+                }
+
+                @media (min-width: 1200px) {
+                    .hero-section {
+                        margin-left: -24px;
+                        margin-right: -24px;
+                    }
+                    .hero-section--content {
+                        padding-left: 32px;
+                        padding-right: 32px;
+                    }
+                }
+
                 /* Match CarRentalForm mobile breakpoint (isMobile: max-width: 900px) */
                 @media (max-width: 900px) {
                     /* Tabs container should be full-width on mobile, with tighter gap above form */
                     .mh-hero-tabs { max-width: none; margin-bottom: 10px; }
-                    /* Increase top padding on mobile to avoid squashed title */
-                    .hero-section--content { padding-top: 24px; }
+                    /* Increase top padding on mobile to avoid squashed title, maintain side padding */
+                    .hero-section--content {
+                        padding-top: 24px;
+                        padding-left: 20px;
+                        padding-right: 20px;
+                    }
                     /* Title responsive adjustments */
                     .slogan-title { font-size: 20pt; line-height: 1.2; }
                     .slogan-subtitle { font-size: 13px; }
