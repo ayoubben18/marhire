@@ -34,10 +34,7 @@
     <div id="listing_root" data-slug="{{ $slug }}">
     </div>
     
-    {{-- Structured Data --}}
-    @if($listing)
-        @structureddata(['listing', $listing])
-    @endif
+    {{-- Structured Data removed to fix indexing issues --}}
     
     {{-- Legacy schema markup if available --}}
     @if($page && $page->schema_markup)
