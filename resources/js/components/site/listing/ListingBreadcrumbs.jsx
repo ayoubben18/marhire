@@ -76,8 +76,34 @@ const ListingBreadcrumbs = ({ loading, listing, currentLocale, getTranslatedFiel
     // Filter out empty breadcrumb items
     const validBreadcrumbItems = breadcrumbItems.filter(item => item.label && item.label.trim() !== '');
 
+    // Generate JSON-LD schema for breadcrumbs
+    const generateBreadcrumbSchema = () => {
+        const baseUrl = window.location.origin;
+        
+        const itemListElement = validBreadcrumbItems.map((item, index) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "name": item.label,
+            "item": item.href === '#' ? undefined : `${baseUrl}${item.href}`
+        }));
+
+        return {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": itemListElement.filter(item => item.item !== undefined)
+        };
+    };
+
     return (
         <>
+            {/* JSON-LD Schema for Breadcrumbs */}
+            <script 
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(generateBreadcrumbSchema())
+                }}
+            />
+            
             <nav className="mb-4" aria-label="Breadcrumb">
                 <ol className="flex flex-wrap items-center text-sm text-gray-600">
                 {/* Desktop: Show all breadcrumbs */}
